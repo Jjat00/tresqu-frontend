@@ -12,7 +12,6 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Header />
-      <RealExamples />
       <Hero />
       <HowItWorks />
       <Benefits />
