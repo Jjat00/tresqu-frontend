@@ -72,7 +72,9 @@ const IncomeTab = () => {
       <Card>
         <CardContent className="pt-6">
           <h3 className="text-lg font-semibold mb-4">Ingresos Mensuales</h3>
-          <ChartContainer className="h-80">
+          <ChartContainer className="h-80" config={{
+            value: { color: "#4ade80" }
+          }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyIncomeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />

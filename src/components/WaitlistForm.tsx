@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { BrandWhatsapp, BrandTelegram } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 const WaitlistForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -34,11 +34,11 @@ const WaitlistForm = () => {
             <Tabs value={authType} onValueChange={setAuthType} className="mb-6">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="whatsapp" className="flex items-center justify-center gap-2">
-                  <BrandWhatsapp className="h-4 w-4" />
+                  <MessageSquare className="h-4 w-4" />
                   WhatsApp
                 </TabsTrigger>
                 <TabsTrigger value="telegram" className="flex items-center justify-center gap-2">
-                  <BrandTelegram className="h-4 w-4" />
+                  <MessageSquare className="h-4 w-4" />
                   Telegram
                 </TabsTrigger>
               </TabsList>

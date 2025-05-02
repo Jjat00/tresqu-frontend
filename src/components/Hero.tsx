@@ -16,15 +16,15 @@ const Hero = () => {
             Registra tus gastos escribiendo como lo harías con un amigo. Así de
             simple.
           </p>
-          <Button
-            size="lg"
-            className="bg-success hover:bg-success/90 animate-fade-up"
-            style={{ animationDelay: "200ms" }}
-            as={Link}
-            to="/dashboard"
-          >
-            Comenzar ahora <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link to="/dashboard">
+            <Button
+              size="lg"
+              className="bg-success hover:bg-success/90 animate-fade-up"
+              style={{ animationDelay: "200ms" }}
+            >
+              Comenzar ahora <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
 
           <div className="mt-16 relative mx-auto max-w-md">
             <div
