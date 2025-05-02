@@ -1,65 +1,80 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import { MessageSquare } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { BrandWhatsapp, BrandTelegram } from "lucide-react";
 
 const WaitlistForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const [authType, setAuthType] = useState("whatsapp");
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "¡Código de verificación enviado!",
-        description: "Revisa WhatsApp o Telegram para completar tu inicio de sesión.",
-      });
-      setPhoneNumber("");
-    }, 1000);
+    // In a real app, this would connect to a backend API for authentication
+    // Here we just navigate to the dashboard as a simulation
+    navigate("/dashboard");
   };
 
   return (
-    <section className="py-24 bg-secondary">
+    <section className="py-16 md:py-20" id="comienza">
       <div className="container">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Comienza a usar GastosBot</h2>
-          <p className="text-muted-foreground mb-8">
-            Ingresa tu número de WhatsApp o Telegram para iniciar sesión o crear una cuenta.
-          </p>
-          
-          <form onSubmit={handleSubmit} className="glass p-6 md:p-8">
-            <div className="grid gap-4">
-              <div className="flex items-center gap-3 bg-background/50 border border-border/50 rounded-md px-3">
-                <MessageSquare className="h-5 w-5 text-muted-foreground" />
-                <Input
-                  type="tel"
-                  placeholder="Número de WhatsApp/Telegram (con código de país)"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                  className="border-0 bg-transparent focus-visible:ring-0"
+        <Card className="mx-auto max-w-md bg-card rounded-xl shadow-xl border-border/50">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold">Comienza a usar CashBot</CardTitle>
+            <CardDescription>
+              Inicia sesión con tu app de mensajería preferida
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={authType} onValueChange={setAuthType} className="mb-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="whatsapp" className="flex items-center justify-center gap-2">
+                  <BrandWhatsapp className="h-4 w-4" />
+                  WhatsApp
+                </TabsTrigger>
+                <TabsTrigger value="telegram" className="flex items-center justify-center gap-2">
+                  <BrandTelegram className="h-4 w-4" />
+                  Telegram
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="phone">Número de teléfono</Label>
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  placeholder="+52 1234567890" 
+                  value={phoneNumber} 
+                  onChange={(e) => setPhoneNumber(e.target.value)} 
+                  required 
                 />
+                <p className="text-xs text-muted-foreground">
+                  Te enviaremos un código para verificar tu número
+                </p>
               </div>
+              
               <Button 
                 type="submit" 
-                className="w-full bg-success hover:bg-success/90" 
-                disabled={isLoading}
+                className="w-full bg-success hover:bg-success/90"
               >
-                {isLoading ? "Enviando código..." : "Iniciar sesión"}
+                {authType === "whatsapp" ? "Continuar con WhatsApp" : "Continuar con Telegram"}
               </Button>
+            </form>
+          </CardContent>
+          
+          <CardFooter className="flex flex-col space-y-2 text-center border-t pt-4 text-sm text-muted-foreground">
+            <div>
+              Al iniciar sesión aceptas nuestros <a href="#" className="underline">Términos y condiciones</a> y <a href="#" className="underline">Política de privacidad</a>.
             </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              Recibirás un código de verificación en tu app de mensajería. No compartimos tu número con terceros.
-            </p>
-          </form>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     </section>
   );

@@ -1,5 +1,7 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageSquare, Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -18,6 +20,8 @@ const Hero = () => {
             size="lg"
             className="bg-success hover:bg-success/90 animate-fade-up"
             style={{ animationDelay: "200ms" }}
+            as={Link}
+            to="/dashboard"
           >
             Comenzar ahora <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
