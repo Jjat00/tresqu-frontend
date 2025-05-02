@@ -1,9 +1,16 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import { MessageSquare, Mic, MicOff, Send, X, Volume2, ChevronDown } from "lucide-react";
+
+// Add Web Speech API type declarations
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
 
 interface Message {
   type: 'bot' | 'user';
@@ -32,43 +39,46 @@ const ChatBot = () => {
   useEffect(() => {
     // Initialize speech recognition if supported
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.lang = 'es-ES';
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = false;
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.onstart = () => {
-        setIsListening(true);
-      };
-      
-      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = event.results[event.results.length - 1][0].transcript;
-        setInputMessage(transcript);
+      if (recognitionRef.current) {
+        recognitionRef.current.lang = 'es-ES';
+        recognitionRef.current.continuous = true;
+        recognitionRef.current.interimResults = false;
         
-        // Automatically send message when voice input ends
-        if (transcript.trim()) {
-          setTimeout(() => {
-            handleSendMessage(transcript);
-          }, 500);
-        }
-      };
-      
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-        setIsRecording(false);
-      };
-      
-      recognitionRef.current.onerror = (event) => {
-        console.error('Speech recognition error', event.error);
-        setIsListening(false);
-        setIsRecording(false);
-        toast({
-          title: "Error de reconocimiento de voz",
-          description: "No se pudo capturar el audio. Por favor, intenta de nuevo.",
-          variant: "destructive"
-        });
-      };
+        recognitionRef.current.onstart = () => {
+          setIsListening(true);
+        };
+        
+        recognitionRef.current.onresult = (event) => {
+          const transcript = event.results[event.results.length - 1][0].transcript;
+          setInputMessage(transcript);
+          
+          // Automatically send message when voice input ends
+          if (transcript.trim()) {
+            setTimeout(() => {
+              handleSendMessage(transcript);
+            }, 500);
+          }
+        };
+        
+        recognitionRef.current.onend = () => {
+          setIsListening(false);
+          setIsRecording(false);
+        };
+        
+        recognitionRef.current.onerror = (event) => {
+          console.error('Speech recognition error', event.error);
+          setIsListening(false);
+          setIsRecording(false);
+          toast({
+            title: "Error de reconocimiento de voz",
+            description: "No se pudo capturar el audio. Por favor, intenta de nuevo.",
+            variant: "destructive"
+          });
+        };
+      }
     }
   }, [toast]);
 
@@ -113,7 +123,7 @@ const ChatBot = () => {
     }
     
     // Add user message
-    setMessages([...messages, { type: 'user', content: message }]);
+    setMessages(prev => [...prev, { type: 'user', content: message }]);
     setInputMessage('');
     setIsProcessing(true);
     
@@ -162,7 +172,7 @@ const ChatBot = () => {
       setIsProcessing(false);
       
       // Speak the response (text-to-speech)
-      if ('speechSynthesis' in window) {
+      if ('speechSynthesis' in window && botResponse) {
         const speech = new SpeechSynthesisUtterance(botResponse);
         speech.lang = 'es-ES';
         speech.rate = 1.0;
