@@ -20,7 +20,7 @@ const Header = () => {
     }`}>
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold font-display text-success">Gastos<span className="text-white">Bot</span></span>
+          <span className="text-xl font-bold font-display text-success">Cash<span className="text-white">Bot</span></span>
         </div>
         <nav className="hidden md:flex items-center space-x-8">
           <a href="#como-funciona" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
