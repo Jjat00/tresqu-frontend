@@ -38,7 +38,7 @@ const RealExamples = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-success hover:bg-success/90">
-                Comienza ahora
+                Comenzar ahora
               </Button>
               <Button size="lg" variant="outline" className="border-success text-success hover:bg-success/10">
                 Ver cómo funciona

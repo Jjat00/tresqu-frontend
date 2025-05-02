@@ -34,7 +34,7 @@ const Header = () => {
           </a>
         </nav>
         <Button variant="default" size="sm" className="bg-success hover:bg-success/80">
-          Lista de espera
+          Comenzar ahora
         </Button>
       </div>
     </header>

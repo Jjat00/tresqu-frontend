@@ -14,7 +14,7 @@ const Hero = () => {
             Registra tus gastos escribiendo como lo harías con un amigo. Así de simple.
           </p>
           <Button size="lg" className="bg-success hover:bg-success/90 animate-fade-up" style={{ animationDelay: "200ms" }}>
-            Únete a la lista de espera <ArrowRight className="ml-2 h-4 w-4" />
+            Comenzar ahora <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           
           <div className="mt-16 relative">
