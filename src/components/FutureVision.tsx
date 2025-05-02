@@ -6,7 +6,7 @@ const futureFeatures = [
   {
     icon: <DollarSign className="h-6 w-6 text-success" />,
     title: "Envío de dinero sin complicaciones",
-    description: "Envía dinero a tus contactos solo escribiendo: "Pásale 30 mil a Juan por Nequi"."
+    description: "Envía dinero a tus contactos solo escribiendo: \"Pásale 30 mil a Juan por Nequi\"."
   },
   {
     icon: <FileText className="h-6 w-6 text-highlight" />,
