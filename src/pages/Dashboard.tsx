@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue 
 } from "@/components/ui/select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
@@ -80,56 +79,57 @@ const Dashboard = () => {
   
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard Financiero</h1>
-            <p className="text-muted-foreground">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
+          <div className="w-full sm:w-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Dashboard Financiero</h1>
+            <p className="text-sm text-muted-foreground">
               Administra tus finanzas y mantén todo bajo control.
             </p>
           </div>
           
           <Button 
             variant="outline" 
-            className="flex items-center gap-2" 
+            className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0" 
             onClick={handleShareApp}
+            size={isMobile ? "sm" : "default"}
           >
             <Share2 className="h-4 w-4" />
-            <span>Compartir CashBot</span>
+            <span className="text-sm">Compartir CashBot</span>
           </Button>
         </div>
         
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center">
           <Select 
             value={currentMonth} 
             onValueChange={setCurrentMonth}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[140px] sm:w-[180px] text-sm">
               <SelectValue placeholder="Seleccionar mes" />
             </SelectTrigger>
             <SelectContent>
               {months.map((month) => (
-                <SelectItem key={month} value={month}>
+                <SelectItem key={month} value={month} className="text-sm">
                   {month}
                 </SelectItem>
               ))}
-              <SelectItem value="year">Ver todo el año</SelectItem>
+              <SelectItem value="year" className="text-sm">Ver todo el año</SelectItem>
             </SelectContent>
           </Select>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <TabsTrigger value="expenses" className="flex-1">
+          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1">
+            <TabsTrigger value="expenses" className="text-xs sm:text-sm">
               Gastos
             </TabsTrigger>
-            <TabsTrigger value="income" className="flex-1">
+            <TabsTrigger value="income" className="text-xs sm:text-sm">
               Ingresos
             </TabsTrigger>
-            <TabsTrigger value="debt" className="flex-1">
+            <TabsTrigger value="debt" className="text-xs sm:text-sm">
               Deudas
             </TabsTrigger>
-            <TabsTrigger value="savings" className="flex-1">
+            <TabsTrigger value="savings" className="text-xs sm:text-sm">
               Ahorros
             </TabsTrigger>
           </TabsList>

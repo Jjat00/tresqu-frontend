@@ -1,6 +1,8 @@
+
 import { ArrowRight, DollarSign, FileText, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const futureFeatures = [
   {
     icon: <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-success" />,
@@ -21,15 +23,17 @@ const futureFeatures = [
       "Recibe análisis y consejos personalizados sobre tus finanzas.",
   },
 ];
+
 const FutureVision = () => {
   const isMobile = useIsMobile();
+  
   return (
     <section
       id="futuro"
       className="section-padding bg-gradient-to-b from-background to-secondary px-4 sm:px-6"
     >
       <div className="container max-w-6xl mx-auto">
-        <div className="text-center mb-10 md:mb-16">
+        <div className="text-center mb-8 md:mb-12">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
             ¿Qué sigue?
           </h2>
@@ -39,7 +43,7 @@ const FutureVision = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-5xl mx-auto mb-10 md:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
           {futureFeatures.map((feature, index) => (
             <div
               key={index}
@@ -48,11 +52,13 @@ const FutureVision = () => {
                 animationDelay: `${index * 100}ms`,
               }}
             >
-              <div className="mb-3 md:mb-4">{feature.icon}</div>
-              <h3 className="text-base md:text-lg font-semibold mb-2">
+              <div className="mb-2 md:mb-4 flex items-center justify-center sm:justify-start">
+                {feature.icon}
+              </div>
+              <h3 className="text-base md:text-lg font-semibold mb-2 text-center sm:text-left">
                 {feature.title}
               </h3>
-              <p className="text-xs md:text-sm text-muted-foreground">
+              <p className="text-xs md:text-sm text-muted-foreground text-center sm:text-left">
                 {feature.description}
               </p>
             </div>
@@ -68,4 +74,5 @@ const FutureVision = () => {
     </section>
   );
 };
+
 export default FutureVision;
