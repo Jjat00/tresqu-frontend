@@ -12,48 +12,35 @@ export const categoryData = [
 export const weeklyDataByMonth = {
   "Enero": [
     { name: "Lun 1 Ene", value: 1200 },
-    { name: "Mar 2 Ene", value: 800 },
-    { name: "Mié 3 Ene", value: 1500 },
-    { name: "Jue 4 Ene", value: 900 },
-    { name: "Vie 5 Ene", value: 1700 },
-    { name: "Sáb 6 Ene", value: 2200 },
-    { name: "Dom 7 Ene", value: 1300 },
+    { name: "Lun 8 Ene", value: 800 },
+    { name: "Lun 15 Ene", value: 1500 },
+    { name: "Lun 22 Ene", value: 900 },
+    { name: "Lun 29 Ene", value: 1700 },
   ],
   "Febrero": [
     { name: "Lun 5 Feb", value: 1400 },
-    { name: "Mar 6 Feb", value: 900 },
-    { name: "Mié 7 Feb", value: 1600 },
-    { name: "Jue 8 Feb", value: 1200 },
-    { name: "Vie 9 Feb", value: 1800 },
-    { name: "Sáb 10 Feb", value: 2400 },
-    { name: "Dom 11 Feb", value: 1500 },
+    { name: "Lun 12 Feb", value: 900 },
+    { name: "Lun 19 Feb", value: 1600 },
+    { name: "Lun 26 Feb", value: 1200 },
   ],
   "Marzo": [
     { name: "Lun 4 Mar", value: 1300 },
-    { name: "Mar 5 Mar", value: 1000 },
-    { name: "Mié 6 Mar", value: 1700 },
-    { name: "Jue 7 Mar", value: 1100 },
-    { name: "Vie 8 Mar", value: 1900 },
-    { name: "Sáb 9 Mar", value: 2500 },
-    { name: "Dom 10 Mar", value: 1600 },
+    { name: "Lun 11 Mar", value: 1000 },
+    { name: "Lun 18 Mar", value: 1700 },
+    { name: "Lun 25 Mar", value: 1100 },
   ],
   "Abril": [
     { name: "Lun 1 Abr", value: 1500 },
-    { name: "Mar 2 Abr", value: 1200 },
-    { name: "Mié 3 Abr", value: 1800 },
-    { name: "Jue 4 Abr", value: 1400 },
-    { name: "Vie 5 Abr", value: 2000 },
-    { name: "Sáb 6 Abr", value: 2600 },
-    { name: "Dom 7 Abr", value: 1700 },
+    { name: "Lun 8 Abr", value: 1200 },
+    { name: "Lun 15 Abr", value: 1800 },
+    { name: "Lun 22 Abr", value: 1400 },
+    { name: "Lun 29 Abr", value: 2000 },
   ],
   "Mayo": [
     { name: "Lun 6 May", value: 1600 },
-    { name: "Mar 7 May", value: 1300 },
-    { name: "Mié 8 May", value: 1900 },
-    { name: "Jue 9 May", value: 1500 },
-    { name: "Vie 10 May", value: 2100 },
-    { name: "Sáb 11 May", value: 2700 },
-    { name: "Dom 12 May", value: 1800 },
+    { name: "Lun 13 May", value: 1300 },
+    { name: "Lun 20 May", value: 1900 },
+    { name: "Lun 27 May", value: 1500 },
   ],
 };
 
@@ -72,6 +59,85 @@ export const yearlyData = [
   { name: "Nov", value: 7400 },
   { name: "Dic", value: 8900 },
 ];
+
+// Sample data for daily expenses for different weeks
+export const dailyExpensesByWeek = {
+  "Lun 1 Abr": [
+    { 
+      name: "Lun 1", 
+      food: 200, 
+      transport: 150, 
+      entertainment: 0, 
+      services: 0, 
+      others: 50,
+      total: 400 
+    },
+    { 
+      name: "Mar 2", 
+      food: 150, 
+      transport: 100, 
+      entertainment: 200, 
+      services: 0, 
+      others: 0,
+      total: 450 
+    },
+    { 
+      name: "Mié 3", 
+      food: 180, 
+      transport: 120, 
+      entertainment: 0, 
+      services: 300, 
+      others: 100,
+      total: 700 
+    },
+    { 
+      name: "Jue 4", 
+      food: 220, 
+      transport: 100, 
+      entertainment: 0, 
+      services: 0, 
+      others: 80,
+      total: 400 
+    },
+    { 
+      name: "Vie 5", 
+      food: 300, 
+      transport: 150, 
+      entertainment: 250, 
+      services: 0, 
+      others: 0,
+      total: 700 
+    },
+    { 
+      name: "Sáb 6", 
+      food: 350, 
+      transport: 0, 
+      entertainment: 400, 
+      services: 0, 
+      others: 150,
+      total: 900 
+    },
+    { 
+      name: "Dom 7", 
+      food: 250, 
+      transport: 0, 
+      entertainment: 300, 
+      services: 0, 
+      others: 50,
+      total: 600 
+    }
+  ],
+  "Lun 8 Abr": [
+    { name: "Lun 8", food: 220, transport: 140, entertainment: 0, services: 0, others: 40, total: 400 },
+    { name: "Mar 9", food: 170, transport: 110, entertainment: 180, services: 0, others: 0, total: 460 },
+    { name: "Mié 10", food: 190, transport: 130, entertainment: 0, services: 280, others: 90, total: 690 },
+    { name: "Jue 11", food: 210, transport: 90, entertainment: 0, services: 0, others: 70, total: 370 },
+    { name: "Vie 12", food: 320, transport: 160, entertainment: 230, services: 0, others: 0, total: 710 },
+    { name: "Sáb 13", food: 330, transport: 0, entertainment: 380, services: 0, others: 160, total: 870 },
+    { name: "Dom 14", food: 240, transport: 0, entertainment: 320, services: 0, others: 60, total: 620 }
+  ],
+  // Add more weeks as needed...
+};
 
 // Sample data for the expenses table
 export const allExpensesData = [
