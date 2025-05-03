@@ -10,9 +10,9 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   onCategoryClick
 }) => {
   const isMobile = useIsMobile();
-  return <Card className="overflow-hidden h-full py-[60px]">
+  return <Card className="overflow-hidden h-full py-0 my-[53px]">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col my-0 mx-0 px-px py-0">
-        <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">
+        <h3 className="xs:text-base sm:text-lg mb-1 xs:mb-2 text-sm font-semibold text-center px-[3px] py-[4px] mx-0 my-0">
           Gastos por Categoría
         </h3>
         <div className="flex-1 min-h-[200px] flex items-center justify-center py-0 px-0 my-[2px]">
