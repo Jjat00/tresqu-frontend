@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from "recharts";
 import { Plus, Search, Filter, Download, Share2 } from "lucide-react";
 import SubcategoryView from "./SubcategoryView";
@@ -125,6 +126,12 @@ const ExpensesTab = ({ selectedMonth = "Abril" }: ExpensesTabProps) => {
     amount: "",
     date: new Date().toISOString().split('T')[0]
   });
+  const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
+
+  // Update localSelectedMonth when prop changes
+  useEffect(() => {
+    setLocalSelectedMonth(selectedMonth);
+  }, [selectedMonth]);
 
   // Actualiza los datos del gráfico cuando cambia el mes seleccionado
   useEffect(() => {
@@ -220,13 +227,13 @@ const ExpensesTab = ({ selectedMonth = "Abril" }: ExpensesTabProps) => {
           {/* Barra de selección de meses */}
           <div className="mb-3 overflow-x-auto scrollbar-hide">
             <Tabs 
-              defaultValue={selectedMonth} 
+              defaultValue={localSelectedMonth} 
               onValueChange={(value) => {
                 if (value === "year") {
                   setViewMode("year");
                 } else {
                   setViewMode("month");
-                  setSelectedMonth(value);
+                  setLocalSelectedMonth(value);
                 }
               }}
               className="w-auto"

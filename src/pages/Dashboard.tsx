@@ -139,7 +139,7 @@ const Dashboard = () => {
           </TabsContent>
           
           <TabsContent value="income" className="p-0 min-h-[60vh]">
-            <IncomeTab selectedMonth={currentMonth} />
+            <IncomeTab />
           </TabsContent>
           
           <TabsContent value="debt" className="p-0 min-h-[60vh]">
