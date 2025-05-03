@@ -84,6 +84,7 @@ const Pricing = () => {
                 <PricingFeature included={true} text="Todo lo del Plan Básico" />
                 <PricingFeature included={true} text="Registro de ingresos, gastos , deudas y ahorros " />
                 <PricingFeature included={true} text="Estadísticas detalladas y avanzadas" />
+                <PricingFeature included={true} text="Reportes semanales, mensuales y anuales" />
                 <PricingFeature included={true} text="Sin límite de registros" />
                 <PricingFeature included={true} text="Planificación de deudas con alertas" />
                 <PricingFeature included={true} text="Seguimiento de metas de ahorro" />
