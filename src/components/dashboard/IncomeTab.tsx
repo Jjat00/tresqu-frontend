@@ -7,8 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
 import { Plus, Filter, Download, Share2 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Define income data for different time periods
 const incomeDataByPeriod = {
@@ -45,21 +46,61 @@ const allIncomeData = [
   { id: 7, description: "Intereses", category: "Inversiones", subcategory: "Depósitos", amount: 320, date: "2025-04-05" },
 ];
 
-// Income breakdown by category
+// Income breakdown by category with subcategorías
 const incomeByCategory = [
-  { category: "Empleo", amount: 17000 },
-  { category: "Freelance", amount: 7700 },
-  { category: "Inversiones", amount: 1170 },
-  { category: "Otros", amount: 1200 },
+  { 
+    category: "Empleo", 
+    amount: 17000,
+    color: "#4ade80", 
+    subcategories: [
+      { name: "Salario base", value: 15000 },
+      { name: "Bonos", value: 2000 }
+    ]
+  },
+  { 
+    category: "Freelance", 
+    amount: 7700, 
+    color: "#60a5fa",
+    subcategories: [
+      { name: "Diseño gráfico", value: 3500 },
+      { name: "Programación", value: 4200 }
+    ]
+  },
+  { 
+    category: "Inversiones", 
+    amount: 1170, 
+    color: "#f472b6",
+    subcategories: [
+      { name: "Acciones", value: 850 },
+      { name: "Depósitos", value: 320 }
+    ]
+  },
+  { 
+    category: "Otros", 
+    amount: 1200,
+    color: "#a78bfa",
+    subcategories: [
+      { name: "Ventas", value: 1200 }
+    ]
+  },
 ];
 
+// Datos para el gráfico de categorías
+const incomeCategoryData = incomeByCategory.map(item => ({
+  name: item.category,
+  value: item.amount,
+  color: item.color
+}));
+
 const IncomeTab = () => {
+  const isMobile = useIsMobile();
   const [timeFilter, setTimeFilter] = useState("month");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [chartData, setChartData] = useState(incomeDataByPeriod.month);
   const [filteredIncome, setFilteredIncome] = useState(allIncomeData);
   const [searchQuery, setSearchQuery] = useState("");
   const [newIncomeOpen, setNewIncomeOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [newIncome, setNewIncome] = useState({
     description: "",
     category: "",
@@ -134,11 +175,11 @@ const IncomeTab = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
               <SelectValue placeholder="Período" />
             </SelectTrigger>
             <SelectContent>
@@ -149,7 +190,7 @@ const IncomeTab = () => {
           </Select>
           
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
               <SelectValue placeholder="Categoría" />
             </SelectTrigger>
             <SelectContent>
@@ -161,7 +202,7 @@ const IncomeTab = () => {
             </SelectContent>
           </Select>
           
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="h-9 w-9">
             <Filter className="h-4 w-4" />
             <span className="sr-only">Filtrar</span>
           </Button>
@@ -169,12 +210,12 @@ const IncomeTab = () => {
         
         <Dialog open={newIncomeOpen} onOpenChange={setNewIncomeOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-success hover:bg-success/90">
-              <Plus className="mr-2 h-4 w-4" />
+            <Button className="bg-success hover:bg-success/90 h-9 whitespace-nowrap text-xs sm:text-sm">
+              <Plus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Nuevo ingreso
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Agregar nuevo ingreso</DialogTitle>
               <DialogDescription>
@@ -264,110 +305,156 @@ const IncomeTab = () => {
         </Dialog>
       </div>
       
-      <Card>
-        <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">Ingresos Mensuales</h3>
-          <ChartContainer className="h-80" config={{
-            value: { color: "#4ade80" }
-          }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value) => [`$${value.toLocaleString()}`, 'Monto']}
-                  labelFormatter={(label) => `Período: ${label}`}
-                />
-                <Legend />
-                <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Gráfica de ingresos por categoría (nueva) */}
         <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Ingresos por Categoría</h3>
-            <div className="space-y-4">
-              {incomeByCategory.map((item, index) => (
-                <div key={index} className="flex items-center gap-4">
-                  <div className="w-32 text-sm">{item.category}</div>
-                  <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-success"
-                      style={{ 
-                        width: `${(item.amount / incomeByCategory.reduce((sum, i) => sum + i.amount, 0)) * 100}%` 
-                      }}
-                    ></div>
-                  </div>
-                  <div className="text-sm font-medium w-24 text-right">
-                    ${item.amount.toLocaleString()}
-                  </div>
-                </div>
-              ))}
-              
-              <div className="pt-4 mt-4 border-t">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Total de ingresos</span>
-                  <span className="text-lg font-bold">
-                    ${incomeByCategory.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            </div>
+          <CardContent className="pt-4 sm:pt-6 overflow-hidden">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Ingresos por Categoría</h3>
+            <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
+              ...Object.fromEntries(
+                incomeCategoryData.map(({ name, color }) => [name, { color }])
+              )
+            }}>
+              <PieChart margin={isMobile ? { top: 5, right: 5, bottom: 5, left: 5 } : { top: 20, right: 30, left: 20, bottom: 5 }}>
+                <Pie
+                  data={incomeCategoryData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={isMobile ? 50 : 80}
+                  outerRadius={isMobile ? 70 : 110}
+                  paddingAngle={2}
+                  dataKey="value"
+                  nameKey="name"
+                  label={({ name, percent }) => 
+                    isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                  labelLine={false}
+                  onClick={(data) => setSelectedCategory(data.name)}
+                >
+                  {incomeCategoryData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={entry.color} 
+                      style={{ cursor: 'pointer' }}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const category = payload[0].name as string;
+                    const selectedCategoryData = incomeByCategory.find(item => item.category === category);
+                    
+                    return (
+                      <div className="bg-card p-3 rounded shadow border">
+                        <p className="text-sm font-semibold">{payload[0].name}</p>
+                        <p className="text-xs mb-2">${payload[0].value.toLocaleString()}</p>
+                        
+                        {selectedCategoryData && selectedCategoryData.subcategories.map((sub, i) => (
+                          <div key={i} className="flex justify-between text-xs mb-1">
+                            <span className="mr-4">{sub.name}:</span>
+                            <span>${sub.value.toLocaleString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                }} />
+              </PieChart>
+            </ChartContainer>
           </CardContent>
         </Card>
         
+        {/* Gráfica de ingresos mensuales */}
         <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Estadísticas</h3>
-            <div className="space-y-6">
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Ingreso mensual promedio (últimos 6 meses)</p>
-                <p className="text-2xl font-bold">$17,500</p>
-              </div>
-              
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Ingresos vs. mes anterior</p>
-                <div className="flex items-end gap-2">
-                  <p className="text-2xl font-bold text-success">+$3,500</p>
-                  <p className="text-sm text-success">+23.3%</p>
-                </div>
-              </div>
-              
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Proyección próximo mes</p>
-                <p className="text-xl font-semibold">$19,200</p>
-              </div>
-            </div>
+          <CardContent className="pt-4 sm:pt-6 overflow-hidden">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Ingresos Mensuales</h3>
+            <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
+              value: { color: "#4ade80" }
+            }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  data={chartData} 
+                  margin={
+                    isMobile 
+                      ? { top: 10, right: 0, left: -20, bottom: 0 }
+                      : { top: 20, right: 30, left: 20, bottom: 5 }
+                  }
+                  barSize={isMobile ? 12 : 20}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: isMobile ? 10 : 12 }}
+                    interval={isMobile ? 1 : 0}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: isMobile ? 10 : 12 }}
+                    width={isMobile ? 35 : 50}
+                    tickFormatter={(value) => 
+                      value >= 1000 ? `${Math.floor(value/1000)}k` : value
+                    }
+                  />
+                  <Tooltip 
+                    formatter={(value) => [`$${value.toLocaleString()}`, 'Monto']}
+                    labelFormatter={(label) => `Período: ${label}`}
+                  />
+                  <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
           </CardContent>
         </Card>
       </div>
       
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
-            <h3 className="text-lg font-semibold">Historial de ingresos</h3>
+        <CardContent className="pt-4 sm:pt-6">
+          <div className="space-y-4">
+            <h3 className="text-base sm:text-lg font-semibold mb-2">Estadísticas</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingreso mensual promedio</p>
+                <p className="text-xl sm:text-2xl font-bold">$17,500</p>
+              </div>
+              
+              <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingresos vs. mes anterior</p>
+                <div className="flex items-end gap-2">
+                  <p className="text-xl sm:text-2xl font-bold text-success">+$3,500</p>
+                  <p className="text-xs sm:text-sm text-success">+23.3%</p>
+                </div>
+              </div>
+              
+              <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Proyección próximo mes</p>
+                <p className="text-lg sm:text-xl font-semibold">$19,200</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardContent className="pt-4 sm:pt-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+            <h3 className="text-base sm:text-lg font-semibold">Historial de ingresos</h3>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
                 <Input
                   type="search"
                   placeholder="Buscar ingresos..."
-                  className="w-full sm:w-[250px]"
+                  className="w-full sm:w-[250px] h-9 text-xs sm:text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <div className="hidden sm:flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                  <Download className="mr-2 h-4 w-4" />
+                <Button variant="outline" size="sm" onClick={handleExportPDF} className="h-9 text-xs">
+                  <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                   PDF
                 </Button>
-                <Button variant="outline" size="sm" onClick={handleExportExcel}>
-                  <Download className="mr-2 h-4 w-4" />
+                <Button variant="outline" size="sm" onClick={handleExportExcel} className="h-9 text-xs">
+                  <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                   Excel
                 </Button>
               </div>
@@ -378,47 +465,47 @@ const IncomeTab = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Descripción</TableHead>
-                  <TableHead>Categoría</TableHead>
-                  <TableHead>Subcategoría</TableHead>
-                  <TableHead>Monto</TableHead>
-                  <TableHead>Fecha</TableHead>
+                  <TableHead className="text-xs">Descripción</TableHead>
+                  <TableHead className="text-xs">Categoría</TableHead>
+                  <TableHead className="text-xs">Subcategoría</TableHead>
+                  <TableHead className="text-xs">Monto</TableHead>
+                  <TableHead className="text-xs">Fecha</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredIncome.map((income) => (
-                  <TableRow key={income.id}>
-                    <TableCell>{income.description}</TableCell>
-                    <TableCell>{income.category}</TableCell>
-                    <TableCell>{income.subcategory}</TableCell>
-                    <TableCell>${income.amount.toLocaleString()}</TableCell>
-                    <TableCell>{new Date(income.date).toLocaleDateString()}</TableCell>
+                  <TableRow key={income.id} className="text-xs sm:text-sm">
+                    <TableCell className="py-2">{income.description}</TableCell>
+                    <TableCell className="py-2">{income.category}</TableCell>
+                    <TableCell className="py-2">{income.subcategory}</TableCell>
+                    <TableCell className="py-2">${income.amount.toLocaleString()}</TableCell>
+                    <TableCell className="py-2">{new Date(income.date).toLocaleDateString()}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
           
-          <div className="flex flex-wrap justify-between items-center gap-2 mt-4">
+          <div className="flex flex-wrap justify-between items-center gap-2 mt-3 sm:mt-4">
             <div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Total: <span className="font-semibold">${filteredIncome.reduce((sum, income) => sum + income.amount, 0).toLocaleString()}</span>
               </p>
             </div>
             
             <div className="flex sm:hidden gap-2">
-              <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                <Download className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" onClick={handleExportPDF} className="h-8 text-xs">
+                <Download className="mr-1 h-3 w-3" />
                 PDF
               </Button>
-              <Button variant="outline" size="sm" onClick={handleExportExcel}>
-                <Download className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" onClick={handleExportExcel} className="h-8 text-xs">
+                <Download className="mr-1 h-3 w-3" />
                 Excel
               </Button>
             </div>
             
-            <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto">
-              <Share2 className="mr-2 h-4 w-4" />
+            <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto h-8 sm:h-9 text-xs">
+              <Share2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Compartir CashBot
             </Button>
           </div>

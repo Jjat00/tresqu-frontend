@@ -7,11 +7,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip } from "recharts";
-import { Plus, Search, Filter, Download, Share2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from "recharts";
+import { Plus, Search, Filter, Download, Share2, Calendar, ChartBar } from "lucide-react";
 import SubcategoryView from "./SubcategoryView";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-// Sample data for the charts
+// Datos de meses
+const months = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
+
+// Sample data for the charts with specific dates
 const categoryData = [
   { name: "Alimentación", value: 2500, color: "#4ade80" },
   { name: "Transporte", value: 1500, color: "#60a5fa" },
@@ -20,26 +28,70 @@ const categoryData = [
   { name: "Otros", value: 700, color: "#fbbf24" },
 ];
 
-// Define weekly data for each month
-const weeklyData = {
-  month: [
-    { name: "Semana 1", value: 1200 },
-    { name: "Semana 2", value: 1900 },
-    { name: "Semana 3", value: 2100 },
-    { name: "Semana 4", value: 1800 },
+// Define weekly data with specific dates
+const weeklyDataByMonth = {
+  "Enero": [
+    { name: "Lun 1 Ene", value: 1200 },
+    { name: "Mar 2 Ene", value: 800 },
+    { name: "Mié 3 Ene", value: 1500 },
+    { name: "Jue 4 Ene", value: 900 },
+    { name: "Vie 5 Ene", value: 1700 },
+    { name: "Sáb 6 Ene", value: 2200 },
+    { name: "Dom 7 Ene", value: 1300 },
   ],
-  quarter: [
-    { name: "Enero", value: 7000 },
-    { name: "Febrero", value: 6500 },
-    { name: "Marzo", value: 8200 },
+  "Febrero": [
+    { name: "Lun 5 Feb", value: 1400 },
+    { name: "Mar 6 Feb", value: 900 },
+    { name: "Mié 7 Feb", value: 1600 },
+    { name: "Jue 8 Feb", value: 1200 },
+    { name: "Vie 9 Feb", value: 1800 },
+    { name: "Sáb 10 Feb", value: 2400 },
+    { name: "Dom 11 Feb", value: 1500 },
   ],
-  year: [
-    { name: "Q1", value: 21700 },
-    { name: "Q2", value: 18900 },
-    { name: "Q3", value: 23500 },
-    { name: "Q4", value: 25300 },
-  ]
+  "Marzo": [
+    { name: "Lun 4 Mar", value: 1300 },
+    { name: "Mar 5 Mar", value: 1000 },
+    { name: "Mié 6 Mar", value: 1700 },
+    { name: "Jue 7 Mar", value: 1100 },
+    { name: "Vie 8 Mar", value: 1900 },
+    { name: "Sáb 9 Mar", value: 2500 },
+    { name: "Dom 10 Mar", value: 1600 },
+  ],
+  "Abril": [
+    { name: "Lun 1 Abr", value: 1500 },
+    { name: "Mar 2 Abr", value: 1200 },
+    { name: "Mié 3 Abr", value: 1800 },
+    { name: "Jue 4 Abr", value: 1400 },
+    { name: "Vie 5 Abr", value: 2000 },
+    { name: "Sáb 6 Abr", value: 2600 },
+    { name: "Dom 7 Abr", value: 1700 },
+  ],
+  "Mayo": [
+    { name: "Lun 6 May", value: 1600 },
+    { name: "Mar 7 May", value: 1300 },
+    { name: "Mié 8 May", value: 1900 },
+    { name: "Jue 9 May", value: 1500 },
+    { name: "Vie 10 May", value: 2100 },
+    { name: "Sáb 11 May", value: 2700 },
+    { name: "Dom 12 May", value: 1800 },
+  ],
 };
+
+// Datos anuales por mes
+const yearlyData = [
+  { name: "Ene", value: 7000 },
+  { name: "Feb", value: 6500 },
+  { name: "Mar", value: 8200 },
+  { name: "Abr", value: 6700 },
+  { name: "May", value: 7500 },
+  { name: "Jun", value: 6900 },
+  { name: "Jul", value: 7800 },
+  { name: "Ago", value: 8500 },
+  { name: "Sep", value: 7200 },
+  { name: "Oct", value: 6800 },
+  { name: "Nov", value: 7400 },
+  { name: "Dic", value: 8900 },
+];
 
 // Sample data for the expenses table
 const allExpensesData = [
@@ -56,12 +108,14 @@ const allExpensesData = [
 ];
 
 const ExpensesTab = () => {
-  const [timeFilter, setTimeFilter] = useState("month");
+  const isMobile = useIsMobile();
+  const [selectedMonth, setSelectedMonth] = useState("Abril"); // Por defecto mostramos abril
+  const [viewMode, setViewMode] = useState("month"); // "month" o "year"
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filteredExpenses, setFilteredExpenses] = useState(allExpensesData);
-  const [chartData, setChartData] = useState(weeklyData.month);
+  const [chartData, setChartData] = useState(weeklyDataByMonth[selectedMonth as keyof typeof weeklyDataByMonth]);
   const [newExpenseOpen, setNewExpenseOpen] = useState(false);
   const [newExpense, setNewExpense] = useState({
     description: "",
@@ -102,8 +156,12 @@ const ExpensesTab = () => {
 
   // Update chart data when time filter changes
   useEffect(() => {
-    setChartData(weeklyData[timeFilter as keyof typeof weeklyData]);
-  }, [timeFilter]);
+    if (viewMode === "month") {
+      setChartData(weeklyDataByMonth[selectedMonth as keyof typeof weeklyDataByMonth]);
+    } else {
+      setChartData(yearlyData);
+    }
+  }, [selectedMonth, viewMode]);
 
   const handleAddExpense = () => {
     console.log("Adding new expense:", newExpense);
@@ -133,6 +191,12 @@ const ExpensesTab = () => {
     // Implementation would go here
   };
 
+  // Si un mes está seleccionado, mostramos los datos semanales de ese mes
+  // Si "year" está seleccionado, mostramos los datos anuales
+  const currentChartTitle = viewMode === "month" 
+    ? `Gastos Semanales - ${selectedMonth}` 
+    : "Gastos Anuales";
+
   // If a category is selected, show the subcategory view
   if (selectedCategory) {
     return (
@@ -144,48 +208,72 @@ const ExpensesTab = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="flex flex-wrap gap-2">
-          <Select value={timeFilter} onValueChange={setTimeFilter}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Período" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="week">Última semana</SelectItem>
-              <SelectItem value="month">Este mes</SelectItem>
-              <SelectItem value="quarter">Trimestre</SelectItem>
-              <SelectItem value="year">Este año</SelectItem>
-            </SelectContent>
-          </Select>
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between gap-3">
+        <div>
+          {/* Barra de selección de meses */}
+          <div className="mb-3 overflow-x-auto scrollbar-hide">
+            <Tabs 
+              defaultValue={selectedMonth} 
+              onValueChange={(value) => {
+                if (value === "year") {
+                  setViewMode("year");
+                } else {
+                  setViewMode("month");
+                  setSelectedMonth(value);
+                }
+              }}
+              className="w-auto"
+            >
+              <TabsList className="w-max py-1 px-0.5 h-auto">
+                {months.map((month) => (
+                  <TabsTrigger
+                    key={month}
+                    value={month}
+                    className="px-3 py-1.5 text-xs sm:text-sm"
+                  >
+                    {month}
+                  </TabsTrigger>
+                ))}
+                <TabsTrigger
+                  value="year"
+                  className="px-3 py-1.5 text-xs sm:text-sm"
+                >
+                  Ver todo el año
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
           
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Categoría" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
-              <SelectItem value="food">Alimentación</SelectItem>
-              <SelectItem value="transport">Transporte</SelectItem>
-              <SelectItem value="entertainment">Entretenimiento</SelectItem>
-              <SelectItem value="services">Servicios</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-            <span className="sr-only">Filtrar</span>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
+                <SelectValue placeholder="Categoría" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="food">Alimentación</SelectItem>
+                <SelectItem value="transport">Transporte</SelectItem>
+                <SelectItem value="entertainment">Entretenimiento</SelectItem>
+                <SelectItem value="services">Servicios</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Button variant="outline" size="icon" className="h-9 w-9">
+              <Filter className="h-4 w-4" />
+              <span className="sr-only">Filtrar</span>
+            </Button>
+          </div>
         </div>
         
         <Dialog open={newExpenseOpen} onOpenChange={setNewExpenseOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-success hover:bg-success/90">
-              <Plus className="mr-2 h-4 w-4" />
+            <Button className="bg-success hover:bg-success/90 h-9 whitespace-nowrap text-xs sm:text-sm">
+              <Plus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Nuevo gasto
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Agregar nuevo gasto</DialogTitle>
               <DialogDescription>
@@ -263,26 +351,28 @@ const ExpensesTab = () => {
         </Dialog>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Gastos por Categoría</h3>
-            <ChartContainer className="h-80" config={{
+          <CardContent className="pt-4 sm:pt-6 overflow-hidden">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Gastos por Categoría</h3>
+            <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
               ...Object.fromEntries(
                 categoryData.map(({ name, color }) => [name, { color }])
               )
             }}>
-              <PieChart>
+              <PieChart margin={isMobile ? { top: 5, right: 5, bottom: 5, left: 5 } : { top: 20, right: 30, left: 20, bottom: 5 }}>
                 <Pie
                   data={categoryData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={80}
-                  outerRadius={110}
+                  innerRadius={isMobile ? 50 : 80}
+                  outerRadius={isMobile ? 70 : 110}
                   paddingAngle={2}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => 
+                    isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
                   labelLine={false}
                   onClick={(data) => setSelectedCategory(data.name)}
                 >
@@ -312,19 +402,37 @@ const ExpensesTab = () => {
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">
-              {timeFilter === "month" ? "Gastos Semanales" : 
-               timeFilter === "quarter" ? "Gastos Mensuales" : "Gastos Trimestrales"}
-            </h3>
-            <ChartContainer className="h-80" config={{
+          <CardContent className="pt-4 sm:pt-6 overflow-hidden">
+            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">{currentChartTitle}</h3>
+            <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
               value: { color: "#4ade80" }
             }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
+                <BarChart 
+                  data={chartData} 
+                  margin={
+                    isMobile 
+                      ? { top: 10, right: 0, left: -20, bottom: 0 }
+                      : { top: 20, right: 30, left: 20, bottom: 5 }
+                  }
+                  barSize={isMobile ? 12 : 20}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: isMobile ? 8 : 12 }}
+                    interval={isMobile ? 1 : 0}
+                    angle={isMobile ? -45 : 0}
+                    textAnchor={isMobile ? "end" : "middle"}
+                    height={isMobile ? 60 : 30}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: isMobile ? 10 : 12 }}
+                    width={isMobile ? 35 : 50}
+                    tickFormatter={(value) => 
+                      value >= 1000 ? `${Math.floor(value/1000)}k` : value
+                    }
+                  />
                   <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, 'Monto']} />
                   <Bar dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -335,27 +443,27 @@ const ExpensesTab = () => {
       </div>
       
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
-            <h3 className="text-lg font-semibold">Últimos gastos</h3>
+        <CardContent className="pt-4 sm:pt-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+            <h3 className="text-base sm:text-lg font-semibold">Últimos gastos</h3>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Buscar gastos..."
-                  className="pl-8 h-9 w-full sm:w-[250px]"
+                  className="pl-8 h-9 w-full sm:w-[250px] text-xs sm:text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <div className="hidden sm:flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                  <Download className="mr-2 h-4 w-4" />
+                <Button variant="outline" size="sm" onClick={handleExportPDF} className="h-9 text-xs">
+                  <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                   PDF
                 </Button>
-                <Button variant="outline" size="sm" onClick={handleExportExcel}>
-                  <Download className="mr-2 h-4 w-4" />
+                <Button variant="outline" size="sm" onClick={handleExportExcel} className="h-9 text-xs">
+                  <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                   Excel
                 </Button>
               </div>
@@ -366,49 +474,49 @@ const ExpensesTab = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Descripción</TableHead>
-                  <TableHead>Categoría</TableHead>
-                  <TableHead>Monto</TableHead>
-                  <TableHead>Fecha</TableHead>
+                  <TableHead className="text-xs">Descripción</TableHead>
+                  <TableHead className="text-xs">Categoría</TableHead>
+                  <TableHead className="text-xs">Monto</TableHead>
+                  <TableHead className="text-xs">Fecha</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredExpenses.map((expense) => (
                   <TableRow 
                     key={expense.id} 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/50 text-xs sm:text-sm"
                     onClick={() => setSelectedCategory(expense.category)}
                   >
-                    <TableCell>{expense.description}</TableCell>
-                    <TableCell>{expense.category}</TableCell>
-                    <TableCell>${expense.amount.toLocaleString()}</TableCell>
-                    <TableCell>{new Date(expense.date).toLocaleDateString()}</TableCell>
+                    <TableCell className="py-2">{expense.description}</TableCell>
+                    <TableCell className="py-2">{expense.category}</TableCell>
+                    <TableCell className="py-2">${expense.amount.toLocaleString()}</TableCell>
+                    <TableCell className="py-2">{new Date(expense.date).toLocaleDateString()}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
           
-          <div className="flex flex-wrap justify-between items-center gap-2 mt-4">
+          <div className="flex flex-wrap justify-between items-center gap-2 mt-3 sm:mt-4">
             <div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Total: <span className="font-semibold">${filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString()}</span>
               </p>
             </div>
             
             <div className="flex sm:hidden gap-2">
-              <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                <Download className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" onClick={handleExportPDF} className="h-8 text-xs">
+                <Download className="mr-1 h-3 w-3" />
                 PDF
               </Button>
-              <Button variant="outline" size="sm" onClick={handleExportExcel}>
-                <Download className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" onClick={handleExportExcel} className="h-8 text-xs">
+                <Download className="mr-1 h-3 w-3" />
                 Excel
               </Button>
             </div>
             
-            <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto">
-              <Share2 className="mr-2 h-4 w-4" />
+            <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto h-8 sm:h-9 text-xs">
+              <Share2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Compartir CashBot
             </Button>
           </div>
