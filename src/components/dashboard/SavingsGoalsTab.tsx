@@ -197,7 +197,7 @@ const SavingsGoalsTab = () => {
           </div>
           
           <div className="flex justify-end space-x-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="mx-0 my-0 py-0 px-0">
               <Download className="mr-2 h-4 w-4" />
               Exportar PDF
             </Button>
