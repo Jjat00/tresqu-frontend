@@ -48,7 +48,6 @@ const Pricing = () => {
               <div className="space-y-3">
                 <PricingFeature included={true} text="Registro de ingresos, gastos y deudas" />
                 <PricingFeature included={true} text="Estadísticas básicas" />
-                <PricingFeature included={true} text="Hasta 10 movimientos por mes" />
                 <PricingFeature included={true} text="Interacción por texto en WhatsApp/Telegram" />
                 <PricingFeature included={false} text="Exportación de datos" />
                 <PricingFeature included={false} text="Interacción por voz" />
