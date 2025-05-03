@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
@@ -43,11 +44,9 @@ const Hero = () => {
               size="lg"
               asChild
             >
-              <Link to="#como-funciona">Cómo funciona</Link>
+              <Link to="#pricing">Ver Precios</Link>
             </Button>
           </div>
-
-          {/* Quitamos las métricas de usuarios como solicitado */}
 
           {/* Agregamos la simulación de chat de WhatsApp */}
           <div
