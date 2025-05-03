@@ -46,7 +46,7 @@ const Pricing = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="space-y-3">
-                <PricingFeature included={true} text="Registro de ingresos, gastos y deudas" />
+                <PricingFeature included={true} text="Registro de ingresos y gastos " />
                 <PricingFeature included={true} text="Estadísticas básicas" />                                                              
                 <PricingFeature included={true} text="Interacción por texto en WhatsApp/Telegram" />
                 <PricingFeature included={false} text="Exportación de datos" />
@@ -82,6 +82,7 @@ const Pricing = () => {
             <CardContent className="flex-grow">
               <div className="space-y-3">
                 <PricingFeature included={true} text="Todo lo del Plan Básico" />
+                <PricingFeature included={true} text="Registro de ingresos, gastos , deudas y ahorros " />
                 <PricingFeature included={true} text="Estadísticas detalladas y avanzadas" />
                 <PricingFeature included={true} text="Sin límite de registros" />
                 <PricingFeature included={true} text="Planificación de deudas con alertas" />
