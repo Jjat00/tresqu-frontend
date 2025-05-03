@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,68 +9,75 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Plus, BarChart3, Wallet, Download, Share2, Target } from "lucide-react";
 
 // Sample data for savings history
-const savingsHistory = [
-  { month: "Enero 2025", saved: 1500, target: 2000, percentage: 75 },
-  { month: "Febrero 2025", saved: 2200, target: 2000, percentage: 110 },
-  { month: "Marzo 2025", saved: 1800, target: 2000, percentage: 90 },
-  { month: "Abril 2025", saved: 2500, target: 2000, percentage: 125 },
-];
+const savingsHistory = [{
+  month: "Enero 2025",
+  saved: 1500,
+  target: 2000,
+  percentage: 75
+}, {
+  month: "Febrero 2025",
+  saved: 2200,
+  target: 2000,
+  percentage: 110
+}, {
+  month: "Marzo 2025",
+  saved: 1800,
+  target: 2000,
+  percentage: 90
+}, {
+  month: "Abril 2025",
+  saved: 2500,
+  target: 2000,
+  percentage: 125
+}];
 
 // Sample data for savings goals
-const savingsGoalsData = [
-  { 
-    id: 1, 
-    name: "Viaje a Cancún", 
-    target: 15000, 
-    saved: 9000, 
-    deadline: "2025-08-01", 
-    monthlyGoal: 2000,
-    progress: 60 
-  },
-  { 
-    id: 2, 
-    name: "MacBook Pro", 
-    target: 25000, 
-    saved: 5000, 
-    deadline: "2025-12-15", 
-    monthlyGoal: 3000,
-    progress: 20 
-  },
-  { 
-    id: 3, 
-    name: "Fondo de emergencia", 
-    target: 50000, 
-    saved: 20000, 
-    deadline: "2026-01-30", 
-    monthlyGoal: 3500,
-    progress: 40 
-  },
-];
-
+const savingsGoalsData = [{
+  id: 1,
+  name: "Viaje a Cancún",
+  target: 15000,
+  saved: 9000,
+  deadline: "2025-08-01",
+  monthlyGoal: 2000,
+  progress: 60
+}, {
+  id: 2,
+  name: "MacBook Pro",
+  target: 25000,
+  saved: 5000,
+  deadline: "2025-12-15",
+  monthlyGoal: 3000,
+  progress: 20
+}, {
+  id: 3,
+  name: "Fondo de emergencia",
+  target: 50000,
+  saved: 20000,
+  deadline: "2026-01-30",
+  monthlyGoal: 3500,
+  progress: 40
+}];
 const SavingsGoalsTab = () => {
   const [timeFilter, setTimeFilter] = useState("year");
   const [newGoalOpen, setNewGoalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState({
     name: "",
     target: "",
-    deadline: "",
+    deadline: ""
   });
-
   const handleCreateGoal = () => {
     // Here you would add the logic to create a new goal
     console.log("Creating new goal:", newGoal);
-    
+
     // Close the dialog and reset form
     setNewGoalOpen(false);
     setNewGoal({
       name: "",
       target: "",
-      deadline: "",
+      deadline: ""
     });
   };
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6 py-[19px]">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-wrap gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
@@ -103,34 +109,24 @@ const SavingsGoalsTab = () => {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="name" className="text-right text-sm">Nombre</label>
-                <Input
-                  id="name"
-                  value={newGoal.name}
-                  onChange={(e) => setNewGoal({...newGoal, name: e.target.value})}
-                  className="col-span-3"
-                  placeholder="Ej: Viaje a Europa"
-                />
+                <Input id="name" value={newGoal.name} onChange={e => setNewGoal({
+                ...newGoal,
+                name: e.target.value
+              })} className="col-span-3" placeholder="Ej: Viaje a Europa" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="target" className="text-right text-sm">Monto</label>
-                <Input
-                  id="target"
-                  value={newGoal.target}
-                  onChange={(e) => setNewGoal({...newGoal, target: e.target.value})}
-                  className="col-span-3"
-                  type="number"
-                  placeholder="$0.00"
-                />
+                <Input id="target" value={newGoal.target} onChange={e => setNewGoal({
+                ...newGoal,
+                target: e.target.value
+              })} className="col-span-3" type="number" placeholder="$0.00" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="deadline" className="text-right text-sm">Fecha límite</label>
-                <Input
-                  id="deadline"
-                  value={newGoal.deadline}
-                  onChange={(e) => setNewGoal({...newGoal, deadline: e.target.value})}
-                  className="col-span-3"
-                  type="date"
-                />
+                <Input id="deadline" value={newGoal.deadline} onChange={e => setNewGoal({
+                ...newGoal,
+                deadline: e.target.value
+              })} className="col-span-3" type="date" />
               </div>
             </div>
             <DialogFooter>
@@ -154,7 +150,7 @@ const SavingsGoalsTab = () => {
               <p className="text-sm text-muted-foreground">Ahorrado este mes</p>
               <p className="text-2xl font-bold text-success">$2,500</p>
               <p className="text-sm text-success flex items-center mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-1"><path d="m18 8-6-6-6 6"/><path d="M18 22H6a2 2 0 0 1-2-2V8"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-1"><path d="m18 8-6-6-6 6" /><path d="M18 22H6a2 2 0 0 1-2-2V8" /></svg>
                 12% vs. mes anterior
               </p>
             </div>
@@ -185,8 +181,7 @@ const SavingsGoalsTab = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {savingsHistory.map((month, index) => (
-                  <TableRow key={index}>
+                {savingsHistory.map((month, index) => <TableRow key={index}>
                     <TableCell>{month.month}</TableCell>
                     <TableCell>${month.saved.toLocaleString()}</TableCell>
                     <TableCell>${month.target.toLocaleString()}</TableCell>
@@ -196,8 +191,7 @@ const SavingsGoalsTab = () => {
                         <span className="text-xs w-12">{month.percentage}%</span>
                       </div>
                     </TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </div>
@@ -225,8 +219,7 @@ const SavingsGoalsTab = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {savingsGoalsData.map((goal) => (
-                <div key={goal.id} className="border rounded-lg p-4">
+              {savingsGoalsData.map(goal => <div key={goal.id} className="border rounded-lg p-4">
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <h4 className="font-semibold">{goal.name}</h4>
@@ -245,8 +238,7 @@ const SavingsGoalsTab = () => {
                     </div>
                     <Progress value={goal.progress} className="h-2" />
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </CardContent>
         </Card>
@@ -295,8 +287,6 @@ const SavingsGoalsTab = () => {
           </CardFooter>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default SavingsGoalsTab;

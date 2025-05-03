@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -11,58 +10,49 @@ import { Slider } from "@/components/ui/slider";
 import { Plus, Bell, Download, Share2, ArrowUp, ArrowDown, Calculator } from "lucide-react";
 
 // Sample data for debts
-const debtsData = [
-  { 
-    id: 1, 
-    name: "Préstamo Personal", 
-    totalAmount: 50000, 
-    remainingAmount: 35000, 
-    interestRate: 12.5, 
-    monthlyPayment: 3500, 
-    nextPaymentDate: "2025-05-15",
-    progress: 30
-  },
-  { 
-    id: 2, 
-    name: "Tarjeta de Crédito", 
-    totalAmount: 15000, 
-    remainingAmount: 6000, 
-    interestRate: 25, 
-    monthlyPayment: 1500, 
-    nextPaymentDate: "2025-05-10",
-    progress: 60
-  },
-  { 
-    id: 3, 
-    name: "Crédito Auto", 
-    totalAmount: 120000, 
-    remainingAmount: 80000, 
-    interestRate: 9.5, 
-    monthlyPayment: 4800, 
-    nextPaymentDate: "2025-05-20",
-    progress: 33
-  }
-];
-
-const paymentPlans = [
-  {
-    id: 1,
-    debtName: "Plan Agresivo - Tarjeta de Crédito",
-    description: "Aumentar pagos mensuales para liquidar en 4 meses",
-    monthlyPayment: 1800,
-    totalSavings: 950,
-    active: true
-  },
-  {
-    id: 2,
-    debtName: "Plan Optimizado - Préstamo Personal",
-    description: "Balance entre plazo y tasas de interés",
-    monthlyPayment: 3500,
-    totalSavings: 2500,
-    active: false
-  }
-];
-
+const debtsData = [{
+  id: 1,
+  name: "Préstamo Personal",
+  totalAmount: 50000,
+  remainingAmount: 35000,
+  interestRate: 12.5,
+  monthlyPayment: 3500,
+  nextPaymentDate: "2025-05-15",
+  progress: 30
+}, {
+  id: 2,
+  name: "Tarjeta de Crédito",
+  totalAmount: 15000,
+  remainingAmount: 6000,
+  interestRate: 25,
+  monthlyPayment: 1500,
+  nextPaymentDate: "2025-05-10",
+  progress: 60
+}, {
+  id: 3,
+  name: "Crédito Auto",
+  totalAmount: 120000,
+  remainingAmount: 80000,
+  interestRate: 9.5,
+  monthlyPayment: 4800,
+  nextPaymentDate: "2025-05-20",
+  progress: 33
+}];
+const paymentPlans = [{
+  id: 1,
+  debtName: "Plan Agresivo - Tarjeta de Crédito",
+  description: "Aumentar pagos mensuales para liquidar en 4 meses",
+  monthlyPayment: 1800,
+  totalSavings: 950,
+  active: true
+}, {
+  id: 2,
+  debtName: "Plan Optimizado - Préstamo Personal",
+  description: "Balance entre plazo y tasas de interés",
+  monthlyPayment: 3500,
+  totalSavings: 2500,
+  active: false
+}];
 const DebtTab = () => {
   const [timeFilter, setTimeFilter] = useState("all");
   const [filteredDebts, setFilteredDebts] = useState(debtsData);
@@ -97,7 +87,6 @@ const DebtTab = () => {
       const today = new Date();
       const sevenDaysLater = new Date();
       sevenDaysLater.setDate(today.getDate() + 7);
-      
       setFilteredDebts(debtsData.filter(debt => {
         const paymentDate = new Date(debt.nextPaymentDate);
         return paymentDate >= today && paymentDate <= sevenDaysLater;
@@ -114,21 +103,19 @@ const DebtTab = () => {
     if (simulatorValues.debtAmount > 0 && simulatorValues.monthlyPayment > 0) {
       const totalPayment = simulatorValues.monthlyPayment + simulatorValues.extraPayment;
       const monthlyInterestRate = simulatorValues.interestRate / 100 / 12;
-      
+
       // Simple calculation - not accounting for compounding interest complexity
       let balance = simulatorValues.debtAmount;
       let months = 0;
       let totalInterest = 0;
-      
-      while (balance > 0 && months < 360) { // Cap at 30 years
+      while (balance > 0 && months < 360) {
+        // Cap at 30 years
         months++;
         const interestThisMonth = balance * monthlyInterestRate;
         totalInterest += interestThisMonth;
         balance = balance + interestThisMonth - totalPayment;
-        
         if (balance <= 0) break;
       }
-      
       setSimulationResults({
         monthsToPayoff: months,
         totalInterest: Math.round(totalInterest),
@@ -136,7 +123,6 @@ const DebtTab = () => {
       });
     }
   }, [simulatorValues]);
-
   const handleAddDebt = () => {
     console.log("Adding new debt:", newDebt);
     // Here you would add logic to add the debt
@@ -150,24 +136,19 @@ const DebtTab = () => {
       nextPaymentDate: new Date().toISOString().split('T')[0]
     });
   };
-
   const handleExportPDF = () => {
     console.log("Exporting debt data to PDF");
     // Implementation would go here
   };
-
   const handleExportExcel = () => {
     console.log("Exporting debt data to Excel");
     // Implementation would go here
   };
-
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6 py-[51px]">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex items-center gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
@@ -205,68 +186,45 @@ const DebtTab = () => {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="name" className="text-right text-sm">Nombre</label>
-                <Input
-                  id="name"
-                  value={newDebt.name}
-                  onChange={(e) => setNewDebt({...newDebt, name: e.target.value})}
-                  className="col-span-3"
-                  placeholder="Ej: Préstamo Personal"
-                />
+                <Input id="name" value={newDebt.name} onChange={e => setNewDebt({
+                ...newDebt,
+                name: e.target.value
+              })} className="col-span-3" placeholder="Ej: Préstamo Personal" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="totalAmount" className="text-right text-sm">Monto total</label>
-                <Input
-                  id="totalAmount"
-                  value={newDebt.totalAmount}
-                  onChange={(e) => setNewDebt({...newDebt, totalAmount: e.target.value})}
-                  className="col-span-3"
-                  type="number"
-                  placeholder="$0.00"
-                />
+                <Input id="totalAmount" value={newDebt.totalAmount} onChange={e => setNewDebt({
+                ...newDebt,
+                totalAmount: e.target.value
+              })} className="col-span-3" type="number" placeholder="$0.00" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="remainingAmount" className="text-right text-sm">Saldo actual</label>
-                <Input
-                  id="remainingAmount"
-                  value={newDebt.remainingAmount}
-                  onChange={(e) => setNewDebt({...newDebt, remainingAmount: e.target.value})}
-                  className="col-span-3"
-                  type="number"
-                  placeholder="$0.00"
-                />
+                <Input id="remainingAmount" value={newDebt.remainingAmount} onChange={e => setNewDebt({
+                ...newDebt,
+                remainingAmount: e.target.value
+              })} className="col-span-3" type="number" placeholder="$0.00" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="interestRate" className="text-right text-sm">Tasa de interés (%)</label>
-                <Input
-                  id="interestRate"
-                  value={newDebt.interestRate}
-                  onChange={(e) => setNewDebt({...newDebt, interestRate: e.target.value})}
-                  className="col-span-3"
-                  type="number"
-                  placeholder="0.0%"
-                  step="0.1"
-                />
+                <Input id="interestRate" value={newDebt.interestRate} onChange={e => setNewDebt({
+                ...newDebt,
+                interestRate: e.target.value
+              })} className="col-span-3" type="number" placeholder="0.0%" step="0.1" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="monthlyPayment" className="text-right text-sm">Pago mensual</label>
-                <Input
-                  id="monthlyPayment"
-                  value={newDebt.monthlyPayment}
-                  onChange={(e) => setNewDebt({...newDebt, monthlyPayment: e.target.value})}
-                  className="col-span-3"
-                  type="number"
-                  placeholder="$0.00"
-                />
+                <Input id="monthlyPayment" value={newDebt.monthlyPayment} onChange={e => setNewDebt({
+                ...newDebt,
+                monthlyPayment: e.target.value
+              })} className="col-span-3" type="number" placeholder="$0.00" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="nextPaymentDate" className="text-right text-sm">Próximo pago</label>
-                <Input
-                  id="nextPaymentDate"
-                  value={newDebt.nextPaymentDate}
-                  onChange={(e) => setNewDebt({...newDebt, nextPaymentDate: e.target.value})}
-                  className="col-span-3"
-                  type="date"
-                />
+                <Input id="nextPaymentDate" value={newDebt.nextPaymentDate} onChange={e => setNewDebt({
+                ...newDebt,
+                nextPaymentDate: e.target.value
+              })} className="col-span-3" type="date" />
               </div>
             </div>
             <DialogFooter>
@@ -278,8 +236,7 @@ const DebtTab = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {filteredDebts.map((debt) => (
-          <Card key={debt.id} className="flex flex-col">
+        {filteredDebts.map(debt => <Card key={debt.id} className="flex flex-col">
             <CardContent className="pt-6 flex-1">
               <div className="flex justify-between items-start mb-2">
                 <h4 className="font-semibold">{debt.name}</h4>
@@ -321,8 +278,7 @@ const DebtTab = () => {
                 <Bell className="h-4 w-4" />
               </Button>
             </CardFooter>
-          </Card>
-        ))}
+          </Card>)}
       </div>
       
       <div className="space-y-4">
@@ -357,18 +313,13 @@ const DebtTab = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paymentPlans.map((plan) => (
-                <TableRow key={plan.id}>
+              {paymentPlans.map(plan => <TableRow key={plan.id}>
                   <TableCell className="font-medium">{plan.debtName}</TableCell>
                   <TableCell>{plan.description}</TableCell>
                   <TableCell>${plan.monthlyPayment.toLocaleString()}</TableCell>
                   <TableCell className="text-success">${plan.totalSavings.toLocaleString()}</TableCell>
                   <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      plan.active 
-                        ? "bg-success/20 text-success" 
-                        : "bg-muted text-muted-foreground"
-                    }`}>
+                    <span className={`px-2 py-1 rounded-full text-xs ${plan.active ? "bg-success/20 text-success" : "bg-muted text-muted-foreground"}`}>
                       {plan.active ? "Activo" : "Inactivo"}
                     </span>
                   </TableCell>
@@ -376,15 +327,11 @@ const DebtTab = () => {
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                         <span className="sr-only">Activar</span>
-                        {plan.active ? 
-                          <ArrowDown className="h-4 w-4" /> : 
-                          <ArrowUp className="h-4 w-4" />
-                        }
+                        {plan.active ? <ArrowDown className="h-4 w-4" /> : <ArrowUp className="h-4 w-4" />}
                       </Button>
                     </div>
                   </TableCell>
-                </TableRow>
-              ))}
+                </TableRow>)}
             </TableBody>
           </Table>
         </div>
@@ -414,13 +361,10 @@ const DebtTab = () => {
                         <label>Monto total de la deuda</label>
                         <span className="font-semibold">${simulatorValues.debtAmount.toLocaleString()}</span>
                       </div>
-                      <Slider 
-                        value={[simulatorValues.debtAmount]} 
-                        min={1000} 
-                        max={200000} 
-                        step={1000}
-                        onValueChange={(values) => setSimulatorValues({...simulatorValues, debtAmount: values[0]})} 
-                      />
+                      <Slider value={[simulatorValues.debtAmount]} min={1000} max={200000} step={1000} onValueChange={values => setSimulatorValues({
+                      ...simulatorValues,
+                      debtAmount: values[0]
+                    })} />
                     </div>
                     
                     <div className="space-y-2">
@@ -428,13 +372,10 @@ const DebtTab = () => {
                         <label>Tasa de interés anual</label>
                         <span className="font-semibold">{simulatorValues.interestRate}%</span>
                       </div>
-                      <Slider 
-                        value={[simulatorValues.interestRate]} 
-                        min={1} 
-                        max={50} 
-                        step={0.5}
-                        onValueChange={(values) => setSimulatorValues({...simulatorValues, interestRate: values[0]})} 
-                      />
+                      <Slider value={[simulatorValues.interestRate]} min={1} max={50} step={0.5} onValueChange={values => setSimulatorValues({
+                      ...simulatorValues,
+                      interestRate: values[0]
+                    })} />
                     </div>
                     
                     <div className="space-y-2">
@@ -442,13 +383,10 @@ const DebtTab = () => {
                         <label>Pago mensual actual</label>
                         <span className="font-semibold">${simulatorValues.monthlyPayment.toLocaleString()}</span>
                       </div>
-                      <Slider 
-                        value={[simulatorValues.monthlyPayment]} 
-                        min={100} 
-                        max={10000} 
-                        step={100}
-                        onValueChange={(values) => setSimulatorValues({...simulatorValues, monthlyPayment: values[0]})} 
-                      />
+                      <Slider value={[simulatorValues.monthlyPayment]} min={100} max={10000} step={100} onValueChange={values => setSimulatorValues({
+                      ...simulatorValues,
+                      monthlyPayment: values[0]
+                    })} />
                     </div>
                     
                     <div className="space-y-2">
@@ -456,13 +394,10 @@ const DebtTab = () => {
                         <label>Pago extra mensual</label>
                         <span className="font-semibold text-success">+${simulatorValues.extraPayment.toLocaleString()}</span>
                       </div>
-                      <Slider 
-                        value={[simulatorValues.extraPayment]} 
-                        min={0} 
-                        max={5000} 
-                        step={100}
-                        onValueChange={(values) => setSimulatorValues({...simulatorValues, extraPayment: values[0]})} 
-                      />
+                      <Slider value={[simulatorValues.extraPayment]} min={0} max={5000} step={100} onValueChange={values => setSimulatorValues({
+                      ...simulatorValues,
+                      extraPayment: values[0]
+                    })} />
                     </div>
                     
                     <div className="rounded-lg bg-muted p-4 mt-4">
@@ -486,15 +421,13 @@ const DebtTab = () => {
                         </div>
                       </div>
                       
-                      {simulatorValues.extraPayment > 0 && (
-                        <div className="mt-4 p-2 rounded bg-success/10 text-sm">
+                      {simulatorValues.extraPayment > 0 && <div className="mt-4 p-2 rounded bg-success/10 text-sm">
                           <p className="text-success font-semibold">
                             ¡Con pagos extra ahorrarás aproximadamente $
-                            {Math.round((simulatorValues.debtAmount * (1 + simulatorValues.interestRate / 100)) - simulationResults.totalPaid).toLocaleString()}
+                            {Math.round(simulatorValues.debtAmount * (1 + simulatorValues.interestRate / 100) - simulationResults.totalPaid).toLocaleString()}
                             !
                           </p>
-                        </div>
-                      )}
+                        </div>}
                     </div>
                   </div>
                   <DialogFooter>
@@ -520,8 +453,6 @@ const DebtTab = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default DebtTab;
