@@ -228,7 +228,7 @@ const IncomeTab = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
-  return <div className="space-y-4 md:space-y-6 mx-0 px-0 my-[50px]">
+  return <div className="space-y-4 md:space-y-6 mx-0 px-0 my-[60px]">
       <div className="flex flex-col sm:flex-row justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
