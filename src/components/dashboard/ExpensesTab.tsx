@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,9 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from "recharts";
-import { Plus, Search, Filter, Download, Share2, Calendar, ChartBar } from "lucide-react";
+import { Plus, Search, Filter, Download, Share2 } from "lucide-react";
 import SubcategoryView from "./SubcategoryView";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -107,15 +105,18 @@ const allExpensesData = [
   { id: 10, description: "Metro", category: "Transporte", amount: 150, date: "2025-04-15" },
 ];
 
-const ExpensesTab = () => {
+interface ExpensesTabProps {
+  selectedMonth?: string;
+}
+
+const ExpensesTab = ({ selectedMonth = "Abril" }: ExpensesTabProps) => {
   const isMobile = useIsMobile();
-  const [selectedMonth, setSelectedMonth] = useState("Abril"); // Por defecto mostramos abril
   const [viewMode, setViewMode] = useState("month"); // "month" o "year"
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filteredExpenses, setFilteredExpenses] = useState(allExpensesData);
-  const [chartData, setChartData] = useState(weeklyDataByMonth[selectedMonth as keyof typeof weeklyDataByMonth]);
+  const [chartData, setChartData] = useState<any[]>([]);
   const [newExpenseOpen, setNewExpenseOpen] = useState(false);
   const [newExpense, setNewExpense] = useState({
     description: "",
@@ -124,6 +125,20 @@ const ExpensesTab = () => {
     amount: "",
     date: new Date().toISOString().split('T')[0]
   });
+
+  // Actualiza los datos del gráfico cuando cambia el mes seleccionado
+  useEffect(() => {
+    if (selectedMonth === "year") {
+      setViewMode("year");
+      setChartData(yearlyData);
+    } else {
+      setViewMode("month");
+      // Usa los datos del mes seleccionado o el mes actual si no hay datos para ese mes específico
+      const monthData = weeklyDataByMonth[selectedMonth as keyof typeof weeklyDataByMonth] || 
+                         weeklyDataByMonth["Abril"]; // Usa Abril como fallback
+      setChartData(monthData);
+    }
+  }, [selectedMonth]);
 
   // Apply filters in real-time
   useEffect(() => {
@@ -153,15 +168,6 @@ const ExpensesTab = () => {
     
     setFilteredExpenses(filtered);
   }, [categoryFilter, searchQuery]);
-
-  // Update chart data when time filter changes
-  useEffect(() => {
-    if (viewMode === "month") {
-      setChartData(weeklyDataByMonth[selectedMonth as keyof typeof weeklyDataByMonth]);
-    } else {
-      setChartData(yearlyData);
-    }
-  }, [selectedMonth, viewMode]);
 
   const handleAddExpense = () => {
     console.log("Adding new expense:", newExpense);

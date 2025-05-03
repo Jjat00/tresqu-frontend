@@ -7,14 +7,29 @@ import IncomeTab from "@/components/dashboard/IncomeTab";
 import DebtTab from "@/components/dashboard/DebtTab";
 import SavingsGoalsTab from "@/components/dashboard/SavingsGoalsTab";
 import ChatBot from "@/components/ChatBot";
-import { Share2 } from "lucide-react";
+import { Share2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue 
+} from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
   const [isMobile, setIsMobile] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState("");
   const { toast } = useToast();
+  
+  // Define los meses del año
+  const months = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
   
   // Check if the device is mobile based on window size
   useEffect(() => {
@@ -26,6 +41,13 @@ const Dashboard = () => {
     window.addEventListener("resize", checkMobile);
     
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+  
+  // Detecta el mes actual al cargar el componente
+  useEffect(() => {
+    const date = new Date();
+    const monthIndex = date.getMonth();
+    setCurrentMonth(months[monthIndex]);
   }, []);
   
   const handleShareApp = () => {
@@ -77,6 +99,25 @@ const Dashboard = () => {
           </Button>
         </div>
         
+        <div className="flex justify-between items-center mb-4">
+          <Select 
+            value={currentMonth} 
+            onValueChange={setCurrentMonth}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Seleccionar mes" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((month) => (
+                <SelectItem key={month} value={month}>
+                  {month}
+                </SelectItem>
+              ))}
+              <SelectItem value="year">Ver todo el año</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-2">
             <TabsTrigger value="expenses" className="flex-1">
@@ -94,11 +135,11 @@ const Dashboard = () => {
           </TabsList>
           
           <TabsContent value="expenses" className="p-0 min-h-[60vh]">
-            <ExpensesTab />
+            <ExpensesTab selectedMonth={currentMonth} />
           </TabsContent>
           
           <TabsContent value="income" className="p-0 min-h-[60vh]">
-            <IncomeTab />
+            <IncomeTab selectedMonth={currentMonth} />
           </TabsContent>
           
           <TabsContent value="debt" className="p-0 min-h-[60vh]">
