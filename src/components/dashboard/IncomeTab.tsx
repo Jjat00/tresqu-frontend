@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,77 +12,148 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 // Define income data for different time periods
 const incomeDataByPeriod = {
-  month: [
-    { name: "Ene", value: 15000 },
-    { name: "Feb", value: 15000 },
-    { name: "Mar", value: 17500 },
-    { name: "Abr", value: 15000 },
-    { name: "May", value: 18500 },
-  ],
-  quarter: [
-    { name: "Q1 2024", value: 42000 },
-    { name: "Q2 2024", value: 45500 },
-    { name: "Q3 2024", value: 47000 },
-    { name: "Q4 2024", value: 48500 },
-    { name: "Q1 2025", value: 51000 },
-  ],
-  year: [
-    { name: "2022", value: 165000 },
-    { name: "2023", value: 180000 },
-    { name: "2024", value: 183000 },
-    { name: "2025", value: 51000 },
-  ]
+  month: [{
+    name: "Ene",
+    value: 15000
+  }, {
+    name: "Feb",
+    value: 15000
+  }, {
+    name: "Mar",
+    value: 17500
+  }, {
+    name: "Abr",
+    value: 15000
+  }, {
+    name: "May",
+    value: 18500
+  }],
+  quarter: [{
+    name: "Q1 2024",
+    value: 42000
+  }, {
+    name: "Q2 2024",
+    value: 45500
+  }, {
+    name: "Q3 2024",
+    value: 47000
+  }, {
+    name: "Q4 2024",
+    value: 48500
+  }, {
+    name: "Q1 2025",
+    value: 51000
+  }],
+  year: [{
+    name: "2022",
+    value: 165000
+  }, {
+    name: "2023",
+    value: 180000
+  }, {
+    name: "2024",
+    value: 183000
+  }, {
+    name: "2025",
+    value: 51000
+  }]
 };
 
 // Sample data for the income table
-const allIncomeData = [
-  { id: 1, description: "Salario", category: "Empleo", subcategory: "Salario base", amount: 15000, date: "2025-05-01" },
-  { id: 2, description: "Freelance - Diseño", category: "Freelance", subcategory: "Diseño gráfico", amount: 3500, date: "2025-04-25" },
-  { id: 3, description: "Dividendos", category: "Inversiones", subcategory: "Acciones", amount: 850, date: "2025-04-20" },
-  { id: 4, description: "Venta de artículos", category: "Otros", subcategory: "Ventas", amount: 1200, date: "2025-04-18" },
-  { id: 5, description: "Bonificación", category: "Empleo", subcategory: "Bonos", amount: 2000, date: "2025-04-15" },
-  { id: 6, description: "Freelance - Desarrollo", category: "Freelance", subcategory: "Programación", amount: 4200, date: "2025-04-10" },
-  { id: 7, description: "Intereses", category: "Inversiones", subcategory: "Depósitos", amount: 320, date: "2025-04-05" },
-];
+const allIncomeData = [{
+  id: 1,
+  description: "Salario",
+  category: "Empleo",
+  subcategory: "Salario base",
+  amount: 15000,
+  date: "2025-05-01"
+}, {
+  id: 2,
+  description: "Freelance - Diseño",
+  category: "Freelance",
+  subcategory: "Diseño gráfico",
+  amount: 3500,
+  date: "2025-04-25"
+}, {
+  id: 3,
+  description: "Dividendos",
+  category: "Inversiones",
+  subcategory: "Acciones",
+  amount: 850,
+  date: "2025-04-20"
+}, {
+  id: 4,
+  description: "Venta de artículos",
+  category: "Otros",
+  subcategory: "Ventas",
+  amount: 1200,
+  date: "2025-04-18"
+}, {
+  id: 5,
+  description: "Bonificación",
+  category: "Empleo",
+  subcategory: "Bonos",
+  amount: 2000,
+  date: "2025-04-15"
+}, {
+  id: 6,
+  description: "Freelance - Desarrollo",
+  category: "Freelance",
+  subcategory: "Programación",
+  amount: 4200,
+  date: "2025-04-10"
+}, {
+  id: 7,
+  description: "Intereses",
+  category: "Inversiones",
+  subcategory: "Depósitos",
+  amount: 320,
+  date: "2025-04-05"
+}];
 
 // Income breakdown by category with subcategorías
-const incomeByCategory = [
-  { 
-    category: "Empleo", 
-    amount: 17000,
-    color: "#4ade80", 
-    subcategories: [
-      { name: "Salario base", value: 15000 },
-      { name: "Bonos", value: 2000 }
-    ]
-  },
-  { 
-    category: "Freelance", 
-    amount: 7700, 
-    color: "#60a5fa",
-    subcategories: [
-      { name: "Diseño gráfico", value: 3500 },
-      { name: "Programación", value: 4200 }
-    ]
-  },
-  { 
-    category: "Inversiones", 
-    amount: 1170, 
-    color: "#f472b6",
-    subcategories: [
-      { name: "Acciones", value: 850 },
-      { name: "Depósitos", value: 320 }
-    ]
-  },
-  { 
-    category: "Otros", 
-    amount: 1200,
-    color: "#a78bfa",
-    subcategories: [
-      { name: "Ventas", value: 1200 }
-    ]
-  },
-];
+const incomeByCategory = [{
+  category: "Empleo",
+  amount: 17000,
+  color: "#4ade80",
+  subcategories: [{
+    name: "Salario base",
+    value: 15000
+  }, {
+    name: "Bonos",
+    value: 2000
+  }]
+}, {
+  category: "Freelance",
+  amount: 7700,
+  color: "#60a5fa",
+  subcategories: [{
+    name: "Diseño gráfico",
+    value: 3500
+  }, {
+    name: "Programación",
+    value: 4200
+  }]
+}, {
+  category: "Inversiones",
+  amount: 1170,
+  color: "#f472b6",
+  subcategories: [{
+    name: "Acciones",
+    value: 850
+  }, {
+    name: "Depósitos",
+    value: 320
+  }]
+}, {
+  category: "Otros",
+  amount: 1200,
+  color: "#a78bfa",
+  subcategories: [{
+    name: "Ventas",
+    value: 1200
+  }]
+}];
 
 // Datos para el gráfico de categorías
 const incomeCategoryData = incomeByCategory.map(item => ({
@@ -91,7 +161,6 @@ const incomeCategoryData = incomeByCategory.map(item => ({
   value: item.amount,
   color: item.color
 }));
-
 const IncomeTab = () => {
   const isMobile = useIsMobile();
   const [timeFilter, setTimeFilter] = useState("month");
@@ -113,30 +182,20 @@ const IncomeTab = () => {
   // Apply filters in real-time
   useEffect(() => {
     let filtered = [...allIncomeData];
-    
+
     // Apply category filter
     if (categoryFilter !== "all") {
-      filtered = filtered.filter(income => 
-        income.category.toLowerCase() === categoryFilter.replace("salary", "empleo")
-          .replace("freelance", "freelance")
-          .replace("investments", "inversiones")
-          .replace("other", "otros")
-      );
+      filtered = filtered.filter(income => income.category.toLowerCase() === categoryFilter.replace("salary", "empleo").replace("freelance", "freelance").replace("investments", "inversiones").replace("other", "otros"));
     }
-    
+
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(income => 
-        income.description.toLowerCase().includes(query) || 
-        income.category.toLowerCase().includes(query) ||
-        income.subcategory.toLowerCase().includes(query)
-      );
+      filtered = filtered.filter(income => income.description.toLowerCase().includes(query) || income.category.toLowerCase().includes(query) || income.subcategory.toLowerCase().includes(query));
     }
-    
+
     // Sort by date (most recent first)
     filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    
     setFilteredIncome(filtered);
   }, [categoryFilter, searchQuery]);
 
@@ -144,7 +203,6 @@ const IncomeTab = () => {
   useEffect(() => {
     setChartData(incomeDataByPeriod[timeFilter as keyof typeof incomeDataByPeriod]);
   }, [timeFilter]);
-
   const handleAddIncome = () => {
     console.log("Adding new income:", newIncome);
     // Here you would add logic to add the income
@@ -158,24 +216,19 @@ const IncomeTab = () => {
       recurring: false
     });
   };
-
   const handleExportPDF = () => {
     console.log("Exporting income data to PDF");
     // Implementation would go here
   };
-
   const handleExportExcel = () => {
     console.log("Exporting income data to Excel");
     // Implementation would go here
   };
-
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
-
-  return (
-    <div className="space-y-4 md:space-y-6">
+  return <div className="space-y-4 md:space-y-6 mx-0 px-0 my-[50px]">
       <div className="flex flex-col sm:flex-row justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
@@ -225,20 +278,17 @@ const IncomeTab = () => {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="description" className="text-right text-sm">Descripción</label>
-                <Input
-                  id="description"
-                  value={newIncome.description}
-                  onChange={(e) => setNewIncome({...newIncome, description: e.target.value})}
-                  className="col-span-3"
-                  placeholder="Ej: Salario mensual"
-                />
+                <Input id="description" value={newIncome.description} onChange={e => setNewIncome({
+                ...newIncome,
+                description: e.target.value
+              })} className="col-span-3" placeholder="Ej: Salario mensual" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="category" className="text-right text-sm">Categoría</label>
-                <Select 
-                  value={newIncome.category} 
-                  onValueChange={(value) => setNewIncome({...newIncome, category: value})}
-                >
+                <Select value={newIncome.category} onValueChange={value => setNewIncome({
+                ...newIncome,
+                category: value
+              })}>
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Seleccionar categoría" />
                   </SelectTrigger>
@@ -250,49 +300,34 @@ const IncomeTab = () => {
                   </SelectContent>
                 </Select>
               </div>
-              {newIncome.category && (
-                <div className="grid grid-cols-4 items-center gap-4">
+              {newIncome.category && <div className="grid grid-cols-4 items-center gap-4">
                   <label htmlFor="subcategory" className="text-right text-sm">Subcategoría</label>
-                  <Input
-                    id="subcategory"
-                    value={newIncome.subcategory}
-                    onChange={(e) => setNewIncome({...newIncome, subcategory: e.target.value})}
-                    className="col-span-3"
-                    placeholder="Ej: Salario base"
-                  />
-                </div>
-              )}
+                  <Input id="subcategory" value={newIncome.subcategory} onChange={e => setNewIncome({
+                ...newIncome,
+                subcategory: e.target.value
+              })} className="col-span-3" placeholder="Ej: Salario base" />
+                </div>}
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="amount" className="text-right text-sm">Monto</label>
-                <Input
-                  id="amount"
-                  value={newIncome.amount}
-                  onChange={(e) => setNewIncome({...newIncome, amount: e.target.value})}
-                  className="col-span-3"
-                  type="number"
-                  placeholder="$0.00"
-                />
+                <Input id="amount" value={newIncome.amount} onChange={e => setNewIncome({
+                ...newIncome,
+                amount: e.target.value
+              })} className="col-span-3" type="number" placeholder="$0.00" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="date" className="text-right text-sm">Fecha</label>
-                <Input
-                  id="date"
-                  value={newIncome.date}
-                  onChange={(e) => setNewIncome({...newIncome, date: e.target.value})}
-                  className="col-span-3"
-                  type="date"
-                />
+                <Input id="date" value={newIncome.date} onChange={e => setNewIncome({
+                ...newIncome,
+                date: e.target.value
+              })} className="col-span-3" type="date" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <label className="text-right text-sm">Recurrente</label>
                 <div className="flex items-center space-x-2 col-span-3">
-                  <input 
-                    type="checkbox" 
-                    id="recurring" 
-                    checked={newIncome.recurring}
-                    onChange={(e) => setNewIncome({...newIncome, recurring: e.target.checked})}
-                    className="rounded border-gray-300" 
-                  />
+                  <input type="checkbox" id="recurring" checked={newIncome.recurring} onChange={e => setNewIncome({
+                  ...newIncome,
+                  recurring: e.target.checked
+                })} className="rounded border-gray-300" />
                   <label htmlFor="recurring" className="text-sm">Es un ingreso recurrente mensual</label>
                 </div>
               </div>
@@ -311,55 +346,51 @@ const IncomeTab = () => {
           <CardContent className="pt-4 sm:pt-6 overflow-hidden">
             <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Ingresos por Categoría</h3>
             <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
-              ...Object.fromEntries(
-                incomeCategoryData.map(({ name, color }) => [name, { color }])
-              )
+            ...Object.fromEntries(incomeCategoryData.map(({
+              name,
+              color
+            }) => [name, {
+              color
+            }]))
+          }}>
+              <PieChart margin={isMobile ? {
+              top: 5,
+              right: 5,
+              bottom: 5,
+              left: 5
+            } : {
+              top: 20,
+              right: 30,
+              left: 20,
+              bottom: 5
             }}>
-              <PieChart margin={isMobile ? { top: 5, right: 5, bottom: 5, left: 5 } : { top: 20, right: 30, left: 20, bottom: 5 }}>
-                <Pie
-                  data={incomeCategoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={isMobile ? 50 : 80}
-                  outerRadius={isMobile ? 70 : 110}
-                  paddingAngle={2}
-                  dataKey="value"
-                  nameKey="name"
-                  label={({ name, percent }) => 
-                    isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                  labelLine={false}
-                  onClick={(data) => setSelectedCategory(data.name)}
-                >
-                  {incomeCategoryData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.color} 
-                      style={{ cursor: 'pointer' }}
-                    />
-                  ))}
+                <Pie data={incomeCategoryData} cx="50%" cy="50%" innerRadius={isMobile ? 50 : 80} outerRadius={isMobile ? 70 : 110} paddingAngle={2} dataKey="value" nameKey="name" label={({
+                name,
+                percent
+              }) => isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`} labelLine={false} onClick={data => setSelectedCategory(data.name)}>
+                  {incomeCategoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} style={{
+                  cursor: 'pointer'
+                }} />)}
                 </Pie>
-                <Tooltip content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const category = payload[0].name as string;
-                    const selectedCategoryData = incomeByCategory.find(item => item.category === category);
-                    
-                    return (
-                      <div className="bg-card p-3 rounded shadow border">
+                <Tooltip content={({
+                active,
+                payload
+              }) => {
+                if (active && payload && payload.length) {
+                  const category = payload[0].name as string;
+                  const selectedCategoryData = incomeByCategory.find(item => item.category === category);
+                  return <div className="bg-card p-3 rounded shadow border">
                         <p className="text-sm font-semibold">{payload[0].name}</p>
                         <p className="text-xs mb-2">${payload[0].value.toLocaleString()}</p>
                         
-                        {selectedCategoryData && selectedCategoryData.subcategories.map((sub, i) => (
-                          <div key={i} className="flex justify-between text-xs mb-1">
+                        {selectedCategoryData && selectedCategoryData.subcategories.map((sub, i) => <div key={i} className="flex justify-between text-xs mb-1">
                             <span className="mr-4">{sub.name}:</span>
                             <span>${sub.value.toLocaleString()}</span>
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  }
-                  return null;
-                }} />
+                          </div>)}
+                      </div>;
+                }
+                return null;
+              }} />
               </PieChart>
             </ChartContainer>
           </CardContent>
@@ -370,35 +401,30 @@ const IncomeTab = () => {
           <CardContent className="pt-4 sm:pt-6 overflow-hidden">
             <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Ingresos Mensuales</h3>
             <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
-              value: { color: "#4ade80" }
-            }}>
+            value: {
+              color: "#4ade80"
+            }
+          }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={chartData} 
-                  margin={
-                    isMobile 
-                      ? { top: 10, right: 0, left: -20, bottom: 0 }
-                      : { top: 20, right: 30, left: 20, bottom: 5 }
-                  }
-                  barSize={isMobile ? 12 : 20}
-                >
+                <BarChart data={chartData} margin={isMobile ? {
+                top: 10,
+                right: 0,
+                left: -20,
+                bottom: 0
+              } : {
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5
+              }} barSize={isMobile ? 12 : 20}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fontSize: isMobile ? 10 : 12 }}
-                    interval={isMobile ? 1 : 0}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: isMobile ? 10 : 12 }}
-                    width={isMobile ? 35 : 50}
-                    tickFormatter={(value) => 
-                      value >= 1000 ? `${Math.floor(value/1000)}k` : value
-                    }
-                  />
-                  <Tooltip 
-                    formatter={(value) => [`$${value.toLocaleString()}`, 'Monto']}
-                    labelFormatter={(label) => `Período: ${label}`}
-                  />
+                  <XAxis dataKey="name" tick={{
+                  fontSize: isMobile ? 10 : 12
+                }} interval={isMobile ? 1 : 0} />
+                  <YAxis tick={{
+                  fontSize: isMobile ? 10 : 12
+                }} width={isMobile ? 35 : 50} tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value} />
+                  <Tooltip formatter={value => [`$${value.toLocaleString()}`, 'Monto']} labelFormatter={label => `Período: ${label}`} />
                   <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -440,13 +466,7 @@ const IncomeTab = () => {
             <h3 className="text-base sm:text-lg font-semibold">Historial de ingresos</h3>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
-                <Input
-                  type="search"
-                  placeholder="Buscar ingresos..."
-                  className="w-full sm:w-[250px] h-9 text-xs sm:text-sm"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+                <Input type="search" placeholder="Buscar ingresos..." className="w-full sm:w-[250px] h-9 text-xs sm:text-sm" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
               </div>
               <div className="hidden sm:flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={handleExportPDF} className="h-9 text-xs">
@@ -473,15 +493,13 @@ const IncomeTab = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredIncome.map((income) => (
-                  <TableRow key={income.id} className="text-xs sm:text-sm">
+                {filteredIncome.map(income => <TableRow key={income.id} className="text-xs sm:text-sm">
                     <TableCell className="py-2">{income.description}</TableCell>
                     <TableCell className="py-2">{income.category}</TableCell>
                     <TableCell className="py-2">{income.subcategory}</TableCell>
                     <TableCell className="py-2">${income.amount.toLocaleString()}</TableCell>
                     <TableCell className="py-2">{new Date(income.date).toLocaleDateString()}</TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
           </div>
@@ -511,8 +529,6 @@ const IncomeTab = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default IncomeTab;
