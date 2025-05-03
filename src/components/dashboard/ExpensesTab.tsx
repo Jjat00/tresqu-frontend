@@ -39,7 +39,7 @@ const ExpensesTab = ({
   if (selectedCategory) {
     return <SubcategoryView category={selectedCategory} onBack={() => setSelectedCategory(null)} />;
   }
-  return <div className="space-y-3 md:space-y-6 px-1 sm:px-2 md:px-4 flex flex-col">
+  return <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[64px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="w-full xs:w-auto">
           <ExpenseFilters categoryFilter={categoryFilter} onCategoryFilterChange={setCategoryFilter} />
