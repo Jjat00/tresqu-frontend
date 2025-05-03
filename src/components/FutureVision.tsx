@@ -41,7 +41,7 @@ const FutureVision = () => {
           <p className="italic text-xs md:text-sm text-muted-foreground mb-4 md:mb-6">
             Todo, usando lenguaje natural desde tu app de mensajería favorita.
           </p>
-          <Button size={isMobile ? "default" : "lg"} className="bg-success hover:bg-success/90 text-xs md:text-sm md:px-6 md:py-3 py-0 px-0">
+          <Button size={isMobile ? "default" : "lg"} className="bg-success hover:bg-success/90 text-xs md:text-sm md:px-6 md:py-3 py-0 px-0 w-100">
             Sé parte del futuro de las finanzas personales 
             <ArrowRight className="ml-2 h-3 w-3 md:h-4 md:w-4" />
           </Button>
