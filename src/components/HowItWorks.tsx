@@ -5,7 +5,7 @@ const steps = [
   {
     icon: <MessageSquare className="h-8 w-8" />,
     title: "Escribe tu gasto",
-    description: "Envía un mensaje a GastosBot por WhatsApp o Telegram como lo harías normalmente.",
+    description: "Envía un mensaje a CashBot por WhatsApp o Telegram como lo harías normalmente.",
     example: "Gasté 15 mil en almuerzo"
   },
   {
