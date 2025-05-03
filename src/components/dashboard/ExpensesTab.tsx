@@ -50,7 +50,7 @@ const ExpensesTab = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 h-[320px] xs:h-[380px] sm:h-[420px] mx-0 px-0 my-[40px] py-0">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 h-[320px] xs:h-[380px] sm:h-[420px] py-0 my-0 px-0 mx-0">
         <CategoryPieChart onCategoryClick={setSelectedCategory} />
         <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
       </div>
