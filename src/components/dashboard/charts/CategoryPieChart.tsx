@@ -10,7 +10,7 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   onCategoryClick
 }) => {
   const isMobile = useIsMobile();
-  return <Card className="overflow-hidden h-full">
+  return <Card className="overflow-hidden h-full py-[60px]">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col my-0 mx-0 px-px py-0">
         <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">
           Gastos por Categoría
