@@ -77,7 +77,7 @@ const SavingsGoalsTab = () => {
       deadline: ""
     });
   };
-  return <div className="space-y-6 py-[19px]">
+  return <div className="space-y-6 py-0 my-[60px]">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-wrap gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
