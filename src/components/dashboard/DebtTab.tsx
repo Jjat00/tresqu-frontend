@@ -148,7 +148,7 @@ const DebtTab = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
-  return <div className="space-y-6 py-[51px]">
+  return <div className="space-y-6 py-0 my-[60px]">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex items-center gap-2">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
