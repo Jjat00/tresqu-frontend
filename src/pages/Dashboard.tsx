@@ -92,7 +92,7 @@ const Dashboard = () => {
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1 my-0 py-0 px-0">
-            <TabsTrigger value="expenses" className="text-xs sm:text-sm">
+            <TabsTrigger value="expenses" className="text-xs sm:text-sm my-[6px]">
               Gastos
             </TabsTrigger>
             <TabsTrigger value="income" className="text-xs sm:text-sm">
