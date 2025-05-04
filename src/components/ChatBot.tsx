@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import { MessageSquare, Mic, MicOff, Send, X, Volume2, ChevronDown } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Add Web Speech API type declarations
 declare global {
@@ -75,6 +76,7 @@ const ChatBot = () => {
   const messageEndRef = useRef<HTMLDivElement>(null);
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   // Speech recognition setup
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -235,20 +237,20 @@ const ChatBot = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {showChat && (
-        <div className="absolute bottom-16 right-0 w-full sm:w-96 h-[30rem] bg-card rounded-lg shadow-lg border border-border p-4 mb-4 flex flex-col animate-fade-in">
+        <div className={`absolute ${isMobile ? 'bottom-16 right-0 left-0 mx-2' : 'bottom-16 right-0'} ${isMobile ? 'w-auto' : 'w-full sm:w-96'} h-[30rem] bg-card rounded-lg shadow-lg border border-border p-3 sm:p-4 mb-4 flex flex-col animate-fade-in`}>
           <div className="flex justify-between items-center border-b pb-2 mb-2">
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center">
-                <MessageSquare className="h-4 w-4 text-success" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-success/20 flex items-center justify-center">
+                <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-success" />
               </div>
-              <span className="font-medium text-sm ml-2">CashBot</span>
+              <span className="font-medium text-xs sm:text-sm ml-2">CashBot</span>
             </div>
             <div className="flex items-center">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <ChevronDown className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="h-7 w-7 sm:h-8 sm:w-8 p-0" onClick={() => setShowChat(false)}>
+                      <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" />
                       <span className="sr-only">Minimizar</span>
                     </Button>
                   </TooltipTrigger>
@@ -261,8 +263,8 @@ const ChatBot = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <Volume2 className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="h-7 w-7 sm:h-8 sm:w-8 p-0">
+                      <Volume2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       <span className="sr-only">Activar/desactivar voz</span>
                     </Button>
                   </TooltipTrigger>
@@ -272,21 +274,21 @@ const ChatBot = () => {
                 </Tooltip>
               </TooltipProvider>
               
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setShowChat(false)}>
+              <Button variant="ghost" size="sm" className="h-7 w-7 sm:h-8 sm:w-8 p-0" onClick={() => setShowChat(false)}>
                 <span className="sr-only">Cerrar</span>
-                <X className="h-4 w-4" />
+                <X className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </div>
           </div>
           
-          <div ref={chatBodyRef} className="flex-1 overflow-auto mb-2 bg-muted/30 rounded-md p-2 space-y-2">
+          <div ref={chatBodyRef} className="flex-1 overflow-auto mb-2 bg-muted/30 rounded-md p-1 sm:p-2 space-y-1 sm:space-y-2">
             {messages.map((msg, index) => (
               <div 
                 key={index} 
-                className={`mb-2 flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`mb-1 sm:mb-2 flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div 
-                  className={`p-2 rounded-lg inline-block max-w-[80%] text-sm ${
+                  className={`p-1.5 sm:p-2 rounded-lg inline-block max-w-[85%] text-xs sm:text-sm ${
                     msg.type === 'user' 
                       ? 'bg-success text-success-foreground' 
                       : 'bg-card'
@@ -297,12 +299,12 @@ const ChatBot = () => {
               </div>
             ))}
             {isProcessing && (
-              <div className="flex justify-start mb-2">
-                <div className="bg-card p-2 rounded-lg inline-block max-w-[80%]">
+              <div className="flex justify-start mb-1 sm:mb-2">
+                <div className="bg-card p-1.5 sm:p-2 rounded-lg inline-block max-w-[85%]">
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "600ms" }}></div>
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "600ms" }}></div>
                   </div>
                 </div>
               </div>
@@ -310,14 +312,14 @@ const ChatBot = () => {
             <div ref={messageEndRef} />
           </div>
           
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-1 sm:gap-2">
             <div className="flex-1 bg-background border border-input rounded-md overflow-hidden">
               <textarea
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={isListening ? "Escuchando..." : "Escribe un mensaje o habla..."}
-                className="w-full bg-transparent px-3 py-2 text-sm resize-none focus:outline-none min-h-[40px] max-h-[120px]"
+                className="w-full bg-transparent px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm resize-none focus:outline-none min-h-[36px] max-h-[100px]"
                 rows={1}
                 disabled={isListening}
               />
@@ -329,11 +331,11 @@ const ChatBot = () => {
                   <TooltipTrigger asChild>
                     <Button 
                       variant={isRecording ? "destructive" : "secondary"}
-                      size="icon"
-                      className={isRecording ? "animate-pulse" : ""}
+                      size={isMobile ? "sm" : "icon"}
+                      className={`${isRecording ? "animate-pulse" : ""} h-8 w-8 sm:h-10 sm:w-10 p-1 sm:p-2`}
                       onClick={toggleRecording}
                     >
-                      {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                      {isRecording ? <MicOff className="h-3 w-3 sm:h-4 sm:w-4" /> : <Mic className="h-3 w-3 sm:h-4 sm:w-4" />}
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -343,17 +345,17 @@ const ChatBot = () => {
               </TooltipProvider>
               
               <Button 
-                className="ml-1 bg-success hover:bg-success/90"
+                className="ml-1 bg-success hover:bg-success/90 h-8 w-8 sm:h-10 sm:w-10 p-1 sm:p-2"
                 onClick={() => handleSendMessage()}
                 disabled={inputMessage.trim() === '' || isProcessing}
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </div>
           </div>
           
           <div className="mt-2 text-center">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[10px] sm:text-xs text-muted-foreground">
               Prueba diciendo: "Gasté $1,500 en supermercado" o "¿Cuánto gasté este mes?"
             </p>
           </div>
@@ -361,10 +363,10 @@ const ChatBot = () => {
       )}
       
       <Button 
-        className="h-14 w-14 rounded-full bg-success hover:bg-success/90 shadow-lg"
+        className={`${isMobile ? 'h-12 w-12' : 'h-14 w-14'} rounded-full bg-success hover:bg-success/90 shadow-lg`}
         onClick={() => setShowChat(prev => !prev)}
       >
-        <MessageSquare className="h-6 w-6" />
+        <MessageSquare className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'}`} />
         <span className="sr-only">Chat con CashBot</span>
       </Button>
     </div>
