@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
@@ -29,8 +30,17 @@ const Hero = () => {
               </Link>
             </Button>
 
-            <Button variant="outline" className="text-base md:text-lg w-full px-4 md:px-8 py-5 md:py-6" size="lg" asChild>
-              <Link to="#pricing">Ver Precios</Link>
+            <Button 
+              variant="outline" 
+              className="text-base md:text-lg w-full px-4 md:px-8 py-5 md:py-6 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white border-[#0088cc]" 
+              size="lg"
+              onClick={() => window.open("https://web.telegram.org/k/#@my_money_cash_bot", "_blank")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
+              </svg>
+              Bot de Telegram
             </Button>
           </div>
 
