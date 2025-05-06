@@ -45,8 +45,9 @@ const WaitlistForm = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("whatsapp");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [telegramUsername, setTelegramUsername] = useState("");
+  const [telegramPhone, setTelegramPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+57"); // Default to Colombia
+  const [telegramCountryCode, setTelegramCountryCode] = useState("+57"); // Default to Colombia
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -139,27 +140,12 @@ const WaitlistForm = () => {
                 <TabsContent value="telegram">
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="telegram-username">Usuario de Telegram</Label>
-                      <Input 
-                        id="telegram-username" 
-                        type="text" 
-                        placeholder="@usuario"
-                        value={telegramUsername}
-                        onChange={(e) => setTelegramUsername(e.target.value)}
-                        required 
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Ingresa tu nombre de usuario de Telegram (ej: @usuario)
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="telegram-phone">Número de teléfono (opcional)</Label>
+                      <Label htmlFor="telegram-phone">Número de teléfono</Label>
                       <div className="flex gap-2">
                         <div className="w-1/3">
                           <Select 
-                            value={countryCode} 
-                            onValueChange={setCountryCode}
+                            value={telegramCountryCode} 
+                            onValueChange={setTelegramCountryCode}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Código" />
@@ -177,18 +163,21 @@ const WaitlistForm = () => {
                           <Input 
                             id="telegram-phone" 
                             type="tel" 
-                            placeholder="Número sin código (opcional)"
+                            placeholder="Número sin código"
+                            value={telegramPhone}
+                            onChange={(e) => setTelegramPhone(e.target.value)}
+                            required
                           />
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Opcionalmente, puedes ingresar tu número de teléfono
+                        Ingresa tu número sin el código de país (ej: 31234567890)
                       </p>
                     </div>
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-success hover:bg-success/90"
+                      className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? "Procesando..." : "Continuar con Telegram"}
