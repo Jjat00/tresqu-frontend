@@ -7,17 +7,22 @@ import ExpensesTable from "./expenses/ExpensesTable";
 import ExpenseFilters from "./expenses/ExpenseFilters";
 import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
+import { DateRange } from "./DateRangePicker";
 
 interface ExpensesTabProps {
   selectedMonth?: string;
   activeTab?: string;
+  dateRange?: DateRange;
+  viewMode?: "day" | "week" | "month" | "year";
 }
 
 const ExpensesTab = ({
   selectedMonth = "Abril",
-  activeTab = "expenses"
+  activeTab = "expenses",
+  dateRange = { from: new Date(), to: new Date() },
+  viewMode = "month"
 }: ExpensesTabProps) => {
-  const [viewMode, setViewMode] = useState<"month" | "year">("month");
+  const [localViewMode, setLocalViewMode] = useState<"month" | "year">(viewMode === "year" ? "year" : "month");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
@@ -27,11 +32,16 @@ const ExpensesTab = ({
     setLocalSelectedMonth(selectedMonth);
     // If year is selected, update view mode
     if (selectedMonth === "year") {
-      setViewMode("year");
+      setLocalViewMode("year");
     } else {
-      setViewMode("month");
+      setLocalViewMode("month");
     }
   }, [selectedMonth]);
+
+  // Update local view mode when props change
+  useEffect(() => {
+    setLocalViewMode(viewMode === "year" ? "year" : "month");
+  }, [viewMode]);
 
   const handleAddExpense = (expense: ExpenseFormData) => {
     console.log("Adding new expense:", expense);
@@ -74,26 +84,35 @@ const ExpensesTab = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <CategoryPieChart onCategoryClick={setSelectedCategory} />
+          <CategoryPieChart 
+            onCategoryClick={setSelectedCategory}
+            dateRange={dateRange}
+          />
         </div>
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+          <ExpensesBarChart 
+            viewMode={localViewMode} 
+            selectedMonth={localSelectedMonth} 
+            dateRange={dateRange}
+          />
         </div>
       </div>
       
       {/* Gráfico comparativo */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
         <ComparativeLineChart 
-          viewMode={viewMode} 
+          viewMode={localViewMode} 
           selectedMonth={localSelectedMonth} 
           activeTab={activeTab || "expenses"}
+          dateRange={dateRange}
         />
       </div>
 
       <ExpensesTable 
         categoryFilter={categoryFilter} 
         onCategoryClick={setSelectedCategory} 
-        onShare={handleShare} 
+        onShare={handleShare}
+        dateRange={dateRange}
       />
     </div>
   );

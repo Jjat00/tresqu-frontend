@@ -11,14 +11,20 @@ import ChatBot from "@/components/ChatBot";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { isAuthenticated } from "@/services/authService";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { isAuthenticated } from "@/services/authService";
+import DateRangePicker, { DateRange } from "@/components/dashboard/DateRangePicker";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
   const isMobile = useIsMobile();
   const [currentMonth, setCurrentMonth] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange>({ 
+    from: new Date(), 
+    to: new Date() 
+  });
+  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">("month");
+  
   const {
     toast
   } = useToast();
@@ -64,6 +70,31 @@ const Dashboard = () => {
       });
     }
   };
+
+  // Manejar cambio de rango de fechas
+  const handleDateRangeChange = (newRange: DateRange) => {
+    setDateRange(newRange);
+    
+    // Actualizar el mes seleccionado si estamos en modo mes
+    if (viewMode === "month" && newRange.from) {
+      const monthIndex = newRange.from.getMonth();
+      setCurrentMonth(months[monthIndex]);
+    }
+  };
+  
+  // Manejar cambio de modo de vista
+  const handleViewModeChange = (mode: "day" | "week" | "month" | "year") => {
+    setViewMode(mode);
+    
+    // Si cambiamos a modo año, actualizar el selector de mes
+    if (mode === "year") {
+      setCurrentMonth("year");
+    } else if (mode === "month" && dateRange.from) {
+      // Si cambiamos a modo mes, actualizar al mes de la fecha seleccionada
+      const monthIndex = dateRange.from.getMonth();
+      setCurrentMonth(months[monthIndex]);
+    }
+  };
   
   return <DashboardLayout>
       <div className="space-y-4 sm:space-y-6">
@@ -82,17 +113,12 @@ const Dashboard = () => {
         </div>
         
         <div className="flex justify-between items-center">
-          <Select value={currentMonth} onValueChange={setCurrentMonth}>
-            <SelectTrigger className="w-[140px] sm:w-[180px] text-sm">
-              <SelectValue placeholder="Seleccionar mes" />
-            </SelectTrigger>
-            <SelectContent>
-              {months.map(month => <SelectItem key={month} value={month} className="text-sm">
-                  {month}
-                </SelectItem>)}
-              <SelectItem value="year" className="text-sm">Ver todo el año</SelectItem>
-            </SelectContent>
-          </Select>
+          <DateRangePicker 
+            date={dateRange}
+            onDateChange={handleDateRangeChange}
+            viewMode={viewMode}
+            onViewModeChange={handleViewModeChange}
+          />
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -115,11 +141,21 @@ const Dashboard = () => {
           </div>
           
           <TabsContent value="expenses" className="p-0 min-h-[60vh]">
-            <ExpensesTab selectedMonth={currentMonth} activeTab={activeTab} />
+            <ExpensesTab 
+              selectedMonth={currentMonth} 
+              activeTab={activeTab}
+              dateRange={dateRange}
+              viewMode={viewMode}
+            />
           </TabsContent>
           
           <TabsContent value="income" className="p-0 min-h-[60vh]">
-            <IncomeTab selectedMonth={currentMonth} activeTab={activeTab} />
+            <IncomeTab 
+              selectedMonth={currentMonth} 
+              activeTab={activeTab}
+              dateRange={dateRange}
+              viewMode={viewMode}
+            />
           </TabsContent>
           
           <TabsContent value="debt" className="p-0 min-h-[60vh]">
