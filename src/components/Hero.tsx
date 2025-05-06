@@ -7,8 +7,8 @@ const Hero = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-6 md:space-y-10 text-center">
           <div className="space-y-4 md:space-y-6 max-w-4xl">
-            <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold font-display bg-clip-text text-transparent bg-gradient-to-r from-success to-highlight animate-fade-in my-[71px]">
-              La manera más fácil de controlar tus finanzas
+            <h1 className="text-3xl md:text-5xl lg:text-9xl font-bold font-display bg-clip-text text-transparent bg-gradient-to-r from-success to-highlight animate-fade-in my-[71px]">
+              Tu Asistente Financiero Personal, Potenciado por IA
             </h1>
 
             <p
