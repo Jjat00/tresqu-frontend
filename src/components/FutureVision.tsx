@@ -39,7 +39,7 @@ const FutureVision = () => {
           </h2>
           <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
             Esto apenas comienza. Estamos construyendo un verdadero asistente
-            financiero inteligente que te ayudará a:
+            financiero potenciado por IA a:
           </p>
         </div>
 

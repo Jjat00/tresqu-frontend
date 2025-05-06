@@ -81,7 +81,7 @@ const Pricing = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="space-y-3">
-                <PricingFeature included={true} text="Todo lo del Plan Básico" />
+                <PricingFeature included={true} text="analisis financiero con IA " />
                 <PricingFeature included={true} text="Registro de ingresos, gastos , deudas y ahorros " />
                 <PricingFeature included={true} text="Estadísticas detalladas y avanzadas" />
                 <PricingFeature included={true} text="Reportes semanales, mensuales y anuales" />
