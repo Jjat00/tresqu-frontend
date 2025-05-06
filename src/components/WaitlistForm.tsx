@@ -118,7 +118,7 @@ const WaitlistForm = () => {
     <section id="login" className="section-padding bg-card">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Inicia sesión o regístrate</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Inicia sesión</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Conecta tu número de WhatsApp o Telegram para comenzar a usar CashBot. No necesitas crear contraseñas adicionales.
           </p>
