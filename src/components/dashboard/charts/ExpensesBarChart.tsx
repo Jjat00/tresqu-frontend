@@ -33,20 +33,8 @@ const monthToNumber: Record<string, number> = {
   "Diciembre": 12
 };
 
-// Paleta de colores pastel para las categorías - debe coincidir con CategoryPieChart
+// Colores más sólidos para las categorías - debe coincidir con CategoryPieChart
 const COLORS = [
-  "#F2FCE2", // Soft Green - Alimentación
-  "#D3E4FD", // Soft Blue - Tecnología
-  "#FFDEE2", // Soft Pink - Vivienda
-  "#FEF7CD", // Soft Yellow - Transporte
-  "#E5DEFF", // Soft Purple - Entretenimiento
-  "#FEC6A1", // Soft Orange - Ropa
-  "#FDE1D3", // Soft Peach - Salud
-  "#F1F0FB"  // Soft Gray - Otros
-];
-
-// Colores de borde más oscuros para contrastar con fondos pastel
-const BORDER_COLORS = [
   "#4ade80", // Green - Alimentación
   "#60a5fa", // Blue - Tecnología
   "#f472b6", // Pink - Vivienda
@@ -55,6 +43,18 @@ const BORDER_COLORS = [
   "#f97316", // Orange - Ropa
   "#fb923c", // Peach - Salud
   "#6b7280"  // Gray - Otros
+];
+
+// Colores de borde más oscuros para contrastar
+const BORDER_COLORS = [
+  "#166534", // Dark Green - Alimentación
+  "#1e40af", // Dark Blue - Tecnología
+  "#be185d", // Dark Pink - Vivienda
+  "#b45309", // Dark Yellow - Transporte
+  "#5b21b6", // Dark Purple - Entretenimiento
+  "#c2410c", // Dark Orange - Ropa
+  "#c2410c", // Dark Peach - Salud
+  "#374151"  // Dark Gray - Otros
 ];
 
 // Mapeo de categoría a índice de color

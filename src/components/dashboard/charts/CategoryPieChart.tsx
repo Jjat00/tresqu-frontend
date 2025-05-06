@@ -16,28 +16,28 @@ interface CategoryData {
   totals: number[];
 }
 
-// Paleta de colores pastel para las categorías
+// Colores más sólidos para las categorías
 const COLORS = [
-  "#F2FCE2", // Soft Green
-  "#D3E4FD", // Soft Blue
-  "#FFDEE2", // Soft Pink
-  "#FEF7CD", // Soft Yellow
-  "#E5DEFF", // Soft Purple
-  "#FEC6A1", // Soft Orange
-  "#FDE1D3", // Soft Peach
-  "#F1F0FB"  // Soft Gray
+  "#4ade80", // Green - Alimentación
+  "#60a5fa", // Blue - Tecnología
+  "#f472b6", // Pink - Vivienda
+  "#f59e0b", // Yellow - Transporte
+  "#8b5cf6", // Purple - Entretenimiento
+  "#f97316", // Orange - Ropa
+  "#fb923c", // Peach - Salud
+  "#6b7280"  // Gray - Otros
 ];
 
-// Colores de texto más oscuros para contrastar con fondos pastel
+// Colores de texto/borde para contrastar
 const TEXT_COLORS = [
-  "#4ade80", // Green
-  "#60a5fa", // Blue
-  "#f472b6", // Pink
-  "#f59e0b", // Yellow
-  "#8b5cf6", // Purple
-  "#f97316", // Orange
-  "#fb923c", // Peach
-  "#6b7280"  // Gray
+  "#166534", // Dark Green
+  "#1e40af", // Dark Blue
+  "#be185d", // Dark Pink
+  "#b45309", // Dark Yellow
+  "#5b21b6", // Dark Purple
+  "#c2410c", // Dark Orange
+  "#c2410c", // Dark Peach
+  "#374151"  // Dark Gray
 ];
 
 // Mapeo de categoría a índice de color
