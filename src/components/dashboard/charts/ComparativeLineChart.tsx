@@ -99,8 +99,8 @@ const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
           // Generar ingresos un 20-40% más altos que los gastos para datos de prueba
           const multiplier = Math.random() * 0.2 + 1.2; // Entre 1.2 y 1.4
           
-          const totalExpense = Object.values(weekData.totals).reduce(
-            (sum: number, value: any) => sum + (value || 0), 0
+          const totalExpense = Object.values(weekData.totals || {}).reduce(
+            (sum: number, value: any) => sum + (Number(value) || 0), 0
           );
           
           weekObj.incomeTotal = Math.round(totalExpense * multiplier);
@@ -110,8 +110,8 @@ const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
         // Procesamos los datos para mostrar ambas líneas
         const processedData = expensesData.map((weekData: any, index: number) => {
           // Calcular el total de gastos sumando todas las categorías
-          const totalExpense = Object.values(weekData.totals).reduce(
-            (sum: number, value: any) => sum + (value || 0), 0
+          const totalExpense = Object.values(weekData.totals || {}).reduce(
+            (sum: number, value: any) => sum + (Number(value) || 0), 0
           );
           
           // Usar el ingreso simulado
