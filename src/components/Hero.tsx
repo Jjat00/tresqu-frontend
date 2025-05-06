@@ -108,7 +108,7 @@ Monto: 20,000 COP  </p>
 Fecha: 2025-05-06  </p>
                   <p className="text-sm text-gray-800">
 Nota: Gasto en transporte</p>
-
+                  <p className="text-sm text-gray-800">
 ¿Te gustaría registrar otro gasto o consultar tu historial?
 
                   </p>
