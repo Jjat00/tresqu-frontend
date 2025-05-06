@@ -17,9 +17,7 @@ const Hero = () => {
                 animationDelay: "100ms",
               }}
             >
-              CashBot entiende tus finanzas con una simple conversación.
-              Registra gastos con texto o voz, obtén análisis inteligentes y
-              alcanza tus metas financieras.
+              CashBot utiliza IA avanzada para transformar tus conversaciones diarias en análisis financieros claros y automáticos. Registra gastos hablando o escribiendo, obtén insights inteligentes y alcanza tus metas.
             </p>
           </div>
 
