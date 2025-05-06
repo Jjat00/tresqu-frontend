@@ -30,7 +30,7 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
       throw new Error("No auth token available");
     }
     
-    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/by_category/, {
+    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/by_category/", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -122,10 +122,16 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
                   payload
                 }) => {
                   if (active && payload && payload.length) {
+                    const value = payload[0].value;
+                    // Make sure value is a number before formatting it
+                    const formattedValue = typeof value === 'number' 
+                      ? new Intl.NumberFormat('es-CO').format(value)
+                      : value;
+                      
                     return (
                       <div className="bg-card p-2 xs:p-3 rounded shadow border text-xs xs:text-sm">
                         <p className="font-semibold">{payload[0].name}</p>
-                        <p>${new Intl.NumberFormat('es-CO').format(payload[0].value)}</p>
+                        <p>${formattedValue}</p>
                         <p className="text-success mt-1 text-xs">
                           Click para ver subcategorías
                         </p>
