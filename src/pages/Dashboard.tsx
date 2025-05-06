@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -13,12 +12,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { isAuthenticated } from "@/services/authService";
-
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
   const [isMobile, setIsMobile] = useState(false);
   const [currentMonth, setCurrentMonth] = useState("");
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const navigate = useNavigate();
 
   // Define los meses del año
@@ -47,7 +47,6 @@ const Dashboard = () => {
     const monthIndex = date.getMonth();
     setCurrentMonth(months[monthIndex]);
   }, []);
-
   const handleShareApp = () => {
     if (navigator.share) {
       navigator.share({
@@ -71,9 +70,7 @@ const Dashboard = () => {
       });
     }
   };
-
-  return (
-    <DashboardLayout>
+  return <DashboardLayout>
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
           <div className="w-full sm:w-auto">
@@ -95,19 +92,17 @@ const Dashboard = () => {
               <SelectValue placeholder="Seleccionar mes" />
             </SelectTrigger>
             <SelectContent>
-              {months.map(month => (
-                <SelectItem key={month} value={month} className="text-sm">
+              {months.map(month => <SelectItem key={month} value={month} className="text-sm">
                   {month}
-                </SelectItem>
-              ))}
+                </SelectItem>)}
               <SelectItem value="year" className="text-sm">Ver todo el año</SelectItem>
             </SelectContent>
           </Select>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1 my-0 py-0 px-0">
-            <TabsTrigger value="expenses" className="text-xs sm:text-sm my-[6px]">
+          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1 py-0 px-0 my-[15px]">
+            <TabsTrigger value="expenses" className="text-xs sm:text-sm my-0">
               Gastos
             </TabsTrigger>
             <TabsTrigger value="income" className="text-xs sm:text-sm">
@@ -141,8 +136,6 @@ const Dashboard = () => {
       
       {/* ChatBot component - outside the DashboardLayout to be accessible from everywhere */}
       <ChatBot />
-    </DashboardLayout>
-  );
+    </DashboardLayout>;
 };
-
 export default Dashboard;
