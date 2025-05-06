@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -18,6 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import DateRangePickerCalendar from "./dateRangePicker/DateRangePickerCalendar";
+import { usePredefinedDateRanges, ViewMode } from "./dateRangePicker/predefinedDateRanges";
 
 export type DateRange = {
   from: Date | undefined;
@@ -27,8 +28,8 @@ export type DateRange = {
 export type DateRangePickerProps = {
   date: DateRange;
   onDateChange: (date: DateRange) => void;
-  viewMode: "day" | "week" | "month" | "year";
-  onViewModeChange: (viewMode: "day" | "week" | "month" | "year") => void;
+  viewMode: ViewMode;
+  onViewModeChange: (viewMode: ViewMode) => void;
 };
 
 export function DateRangePicker({
@@ -38,89 +39,6 @@ export function DateRangePicker({
   onViewModeChange,
 }: DateRangePickerProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
-  // Predefined date ranges
-  const dateRanges = [
-    { label: "Hoy", action: () => selectPredefinedRange("today") },
-    { label: "Ayer", action: () => selectPredefinedRange("yesterday") },
-    { label: "Esta semana", action: () => selectPredefinedRange("this_week") },
-    { label: "Última semana", action: () => selectPredefinedRange("last_week") },
-    { label: "Últimas dos semanas", action: () => selectPredefinedRange("past_two_weeks") },
-    { label: "Este mes", action: () => selectPredefinedRange("this_month") },
-    { label: "Último mes", action: () => selectPredefinedRange("last_month") },
-    { label: "Este año", action: () => selectPredefinedRange("this_year") },
-    { label: "Último año", action: () => selectPredefinedRange("last_year") },
-  ];
-
-  const selectPredefinedRange = (rangeType: string) => {
-    const today = new Date();
-    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-    let from: Date | undefined = undefined;
-    let to: Date | undefined = undefined;
-
-    switch (rangeType) {
-      case "today":
-        from = new Date(startOfDay);
-        to = new Date(startOfDay);
-        onViewModeChange("day");
-        break;
-      case "yesterday":
-        from = new Date(startOfDay);
-        from.setDate(from.getDate() - 1);
-        to = new Date(from);
-        onViewModeChange("day");
-        break;
-      case "this_week":
-        from = new Date(startOfDay);
-        // Set to the first day of the week (Monday)
-        const dayOfWeek = from.getDay();
-        const diff = from.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-        from.setDate(diff);
-        to = new Date(startOfDay);
-        onViewModeChange("week");
-        break;
-      case "last_week":
-        from = new Date(startOfDay);
-        // Set to the first day of the previous week
-        from.setDate(from.getDate() - 7 - from.getDay() + 1);
-        to = new Date(from);
-        to.setDate(to.getDate() + 6);
-        onViewModeChange("week");
-        break;
-      case "past_two_weeks":
-        from = new Date(startOfDay);
-        from.setDate(from.getDate() - 14);
-        to = new Date(startOfDay);
-        onViewModeChange("week");
-        break;
-      case "this_month":
-        from = new Date(today.getFullYear(), today.getMonth(), 1);
-        to = new Date(startOfDay);
-        onViewModeChange("month");
-        break;
-      case "last_month":
-        from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        to = new Date(today.getFullYear(), today.getMonth(), 0);
-        onViewModeChange("month");
-        break;
-      case "this_year":
-        from = new Date(today.getFullYear(), 0, 1);
-        to = new Date(startOfDay);
-        onViewModeChange("year");
-        break;
-      case "last_year":
-        from = new Date(today.getFullYear() - 1, 0, 1);
-        to = new Date(today.getFullYear() - 1, 11, 31);
-        onViewModeChange("year");
-        break;
-      default:
-        from = undefined;
-        to = undefined;
-    }
-
-    onDateChange({ from, to });
-    setIsCalendarOpen(false);
-  };
 
   // Format the date for display
   const formatDateRange = () => {
@@ -134,6 +52,13 @@ export function DateRangePicker({
 
     return `${format(date.from, "P", { locale: es })} - ${format(date.to, "P", { locale: es })}`;
   };
+
+  // Get predefined date ranges
+  const predefinedRanges = usePredefinedDateRanges(
+    onDateChange,
+    onViewModeChange,
+    () => setIsCalendarOpen(false)
+  );
 
   return (
     <div className="grid gap-2">
@@ -156,43 +81,15 @@ export function DateRangePicker({
             align="center"
             sideOffset={4}
           >
-            <div className="border-b sm:border-b-0 sm:border-r p-2 space-y-2 overflow-y-auto max-h-[250px] sm:max-h-[350px] w-full sm:w-auto">
-              {dateRanges.map((range, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="justify-start w-full"
-                  onClick={range.action}
-                >
-                  {range.label}
-                </Button>
-              ))}
-            </div>
-            <div className="p-0 overflow-x-auto">
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={date.from}
-                selected={{ from: date.from, to: date.to }}
-                onSelect={(selectedRange) => {
-                  if (selectedRange) {
-                    onDateChange({
-                      from: selectedRange.from,
-                      to: selectedRange.to || selectedRange.from
-                    });
-                  } else {
-                    onDateChange({ from: undefined, to: undefined });
-                  }
-                }}
-                numberOfMonths={1}
-                className="pointer-events-auto"
-                locale={es}
-              />
-            </div>
+            <DateRangePickerCalendar
+              date={date}
+              onDateChange={onDateChange}
+              predefinedRanges={predefinedRanges}
+            />
           </PopoverContent>
         </Popover>
 
-        <Select value={viewMode} onValueChange={(value: "day" | "week" | "month" | "year") => onViewModeChange(value)}>
+        <Select value={viewMode} onValueChange={(value: ViewMode) => onViewModeChange(value)}>
           <SelectTrigger className="w-full sm:w-[140px]">
             <SelectValue placeholder="Vista" />
           </SelectTrigger>
