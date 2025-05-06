@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
@@ -10,6 +11,12 @@ import { DateRange } from "../DateRangePicker";
 interface CategoryPieChartProps {
   onCategoryClick: (category: string) => void;
   dateRange?: DateRange;
+}
+
+// Define the missing CategoryData interface
+interface CategoryData {
+  categories: string[];
+  totals: number[];
 }
 
 // Colores más sólidos para las categorías
