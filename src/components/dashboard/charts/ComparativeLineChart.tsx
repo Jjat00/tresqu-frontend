@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { expenseData } from "../data/expenseData";
+import { allExpensesData } from "../data/expenseData";
 
 interface ComparativeLineChartProps {
   viewMode?: "month" | "year";
@@ -42,7 +42,7 @@ const ComparativeLineChart = ({
       const date = `${day}/${monthIndex + 1}`;
       
       // Obtener datos de la base de datos simulada
-      const dayExpenses = expenseData
+      const dayExpenses = allExpensesData
         .filter(expense => {
           const expenseDate = new Date(expense.date);
           return expenseDate.getDate() === day && expenseDate.getMonth() === monthIndex;
@@ -73,7 +73,7 @@ const ComparativeLineChart = ({
       const monthIndex = monthMap[month];
       
       // Calcular gastos mensuales de la base de datos simulada
-      const monthExpenses = expenseData
+      const monthExpenses = allExpensesData
         .filter(expense => {
           const expenseDate = new Date(expense.date);
           return expenseDate.getMonth() === monthIndex;
