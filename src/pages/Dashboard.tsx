@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -95,18 +96,19 @@ const Dashboard = () => {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <div className="overflow-x-auto pb-2">
-            <TabsList className="bg-muted/50 w-full min-w-[400px] grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1">
-              <TabsTrigger value="expenses" className="text-xs sm:text-sm">
+          {/* Ajustamos el contenedor de TabsList para evitar el scroll horizontal/vertical en pantallas pequeñas */}
+          <div className="pb-2">
+            <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1 bg-muted/50">
+              <TabsTrigger value="expenses" className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto">
                 Gastos
               </TabsTrigger>
-              <TabsTrigger value="income" className="text-xs sm:text-sm">
+              <TabsTrigger value="income" className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto">
                 Ingresos
               </TabsTrigger>
-              <TabsTrigger value="debt" className="text-xs sm:text-sm">
+              <TabsTrigger value="debt" className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto">
                 Deudas
               </TabsTrigger>
-              <TabsTrigger value="savings" className="text-xs sm:text-sm">
+              <TabsTrigger value="savings" className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto">
                 Ahorros
               </TabsTrigger>
             </TabsList>
