@@ -6,7 +6,7 @@ const steps = [{
   example: "Gasté 15 mil en almuerzo"
 }, {
   icon: <Send className="h-8 w-8" />,
-  title: "La Ia lo procesa",
+  title: "La IA lo procesa",
   description: "Nuestro asistente interpreta tu mensaje, categoriza y guarda el gasto automáticamente.",
   example: "✅ Gasto registrado: $15,000"
 }, {
