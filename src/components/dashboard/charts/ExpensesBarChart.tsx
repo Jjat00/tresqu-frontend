@@ -33,18 +33,46 @@ const monthToNumber: Record<string, number> = {
   "Diciembre": 12
 };
 
-// Colores para las categorías
-const categoryColors: Record<string, string> = {
-  "Alimentación": "#4ade80", // Verde
-  "Transporte": "#60a5fa", // Azul
-  "Entretenimiento": "#f472b6", // Rosa
-  "Servicios": "#a78bfa", // Morado
-  "Tecnología": "#2dd4bf", // Turquesa
-  "Vivienda": "#f97316", // Naranja
-  "Ropa": "#fb923c", // Naranja claro
-  "Salud": "#f43f5e", // Rojo
-  "Educación": "#06b6d4", // Cian
-  "Otros": "#fbbf24" // Amarillo
+// Paleta de colores pastel para las categorías - debe coincidir con CategoryPieChart
+const COLORS = [
+  "#F2FCE2", // Soft Green - Alimentación
+  "#D3E4FD", // Soft Blue - Tecnología
+  "#FFDEE2", // Soft Pink - Vivienda
+  "#FEF7CD", // Soft Yellow - Transporte
+  "#E5DEFF", // Soft Purple - Entretenimiento
+  "#FEC6A1", // Soft Orange - Ropa
+  "#FDE1D3", // Soft Peach - Salud
+  "#F1F0FB"  // Soft Gray - Otros
+];
+
+// Colores de borde más oscuros para contrastar con fondos pastel
+const BORDER_COLORS = [
+  "#4ade80", // Green - Alimentación
+  "#60a5fa", // Blue - Tecnología
+  "#f472b6", // Pink - Vivienda
+  "#f59e0b", // Yellow - Transporte
+  "#8b5cf6", // Purple - Entretenimiento
+  "#f97316", // Orange - Ropa
+  "#fb923c", // Peach - Salud
+  "#6b7280"  // Gray - Otros
+];
+
+// Mapeo de categoría a índice de color
+const categoryColors: Record<string, { fill: string, stroke: string }> = {
+  "Alimentación": { fill: COLORS[0], stroke: BORDER_COLORS[0] },
+  "Tecnología": { fill: COLORS[1], stroke: BORDER_COLORS[1] },
+  "Vivienda": { fill: COLORS[2], stroke: BORDER_COLORS[2] },
+  "Transporte": { fill: COLORS[3], stroke: BORDER_COLORS[3] },
+  "Entretenimiento": { fill: COLORS[4], stroke: BORDER_COLORS[4] },
+  "Ropa": { fill: COLORS[5], stroke: BORDER_COLORS[5] },
+  "Salud": { fill: COLORS[6], stroke: BORDER_COLORS[6] },
+  "Educación": { fill: COLORS[7], stroke: BORDER_COLORS[7] },
+  "Servicios": { fill: COLORS[0], stroke: BORDER_COLORS[0] },
+  "Mascota": { fill: COLORS[1], stroke: BORDER_COLORS[1] },
+  "Compras": { fill: COLORS[2], stroke: BORDER_COLORS[2] },
+  "Libros": { fill: COLORS[3], stroke: BORDER_COLORS[3] },
+  "Mobiliario": { fill: COLORS[4], stroke: BORDER_COLORS[4] },
+  "Otros": { fill: COLORS[7], stroke: BORDER_COLORS[7] }
 };
 
 const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
@@ -162,6 +190,14 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
     return value ? `$${value.toLocaleString('es-CO')}` : "$0";
   };
 
+  // Función para obtener colores de una categoría
+  const getCategoryColors = (category: string) => {
+    return categoryColors[category] || { 
+      fill: COLORS[7], 
+      stroke: BORDER_COLORS[7] 
+    }; // Default a Otros (gris)
+  };
+
   return (
     <Card className="overflow-hidden h-full">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col px-[15px]">
@@ -233,16 +269,21 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
                     paddingTop: 5
                   }} 
                 />
-                {categories.map((category, index) => (
-                  <Bar 
-                    key={category}
-                    dataKey={category} 
-                    stackId="a" 
-                    fill={categoryColors[category] || `hsl(${index * 30}, 70%, 60%)`}
-                    radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]} 
-                    cursor="pointer" 
-                  />
-                ))}
+                {categories.map((category, index) => {
+                  const colors = getCategoryColors(category);
+                  return (
+                    <Bar 
+                      key={category}
+                      dataKey={category} 
+                      stackId="a" 
+                      fill={colors.fill}
+                      stroke={colors.stroke}
+                      strokeWidth={1}
+                      radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]} 
+                      cursor="pointer" 
+                    />
+                  );
+                })}
               </BarChart>
             </ResponsiveContainer>
           )}

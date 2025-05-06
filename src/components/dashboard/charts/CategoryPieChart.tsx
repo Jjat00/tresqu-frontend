@@ -16,8 +16,47 @@ interface CategoryData {
   totals: number[];
 }
 
-// Custom colors for the chart
-const COLORS = ["#22c55e", "#3b82f6", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#14b8a6"];
+// Paleta de colores pastel para las categorías
+const COLORS = [
+  "#F2FCE2", // Soft Green
+  "#D3E4FD", // Soft Blue
+  "#FFDEE2", // Soft Pink
+  "#FEF7CD", // Soft Yellow
+  "#E5DEFF", // Soft Purple
+  "#FEC6A1", // Soft Orange
+  "#FDE1D3", // Soft Peach
+  "#F1F0FB"  // Soft Gray
+];
+
+// Colores de texto más oscuros para contrastar con fondos pastel
+const TEXT_COLORS = [
+  "#4ade80", // Green
+  "#60a5fa", // Blue
+  "#f472b6", // Pink
+  "#f59e0b", // Yellow
+  "#8b5cf6", // Purple
+  "#f97316", // Orange
+  "#fb923c", // Peach
+  "#6b7280"  // Gray
+];
+
+// Mapeo de categoría a índice de color
+const CATEGORY_COLOR_MAP: Record<string, number> = {
+  "Alimentación": 0,
+  "Tecnología": 1,
+  "Vivienda": 2,
+  "Transporte": 3,
+  "Entretenimiento": 4,
+  "Ropa": 5,
+  "Salud": 6,
+  "Educación": 7,
+  "Servicios": 0,
+  "Mascota": 1,
+  "Compras": 2,
+  "Libros": 3,
+  "Mobiliario": 4,
+  "Otros": 7
+};
 
 const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   onCategoryClick
@@ -53,11 +92,19 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   const processedData = React.useMemo(() => {
     if (!data) return [];
     
-    return data.categories.map((category, index) => ({
-      name: category,
-      value: data.totals[index],
-      color: COLORS[index % COLORS.length]
-    }));
+    return data.categories.map((category, index) => {
+      // Obtener el índice de color basado en la categoría, o usar el índice como fallback
+      const colorIndex = category in CATEGORY_COLOR_MAP 
+        ? CATEGORY_COLOR_MAP[category] 
+        : index % COLORS.length;
+        
+      return {
+        name: category,
+        value: data.totals[index],
+        color: COLORS[colorIndex],
+        textColor: TEXT_COLORS[colorIndex]
+      };
+    });
   }, [data]);
 
   // Show error toast if the fetch fails
@@ -112,9 +159,15 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
                   onClick={data => onCategoryClick(data.name)}
                 >
                   {processedData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} style={{
-                      cursor: "pointer"
-                    }} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={entry.color} 
+                      stroke={entry.textColor}
+                      strokeWidth={1.5}
+                      style={{
+                        cursor: "pointer"
+                      }} 
+                    />
                   ))}
                 </Pie>
                 <Tooltip content={({
