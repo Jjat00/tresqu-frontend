@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { isAuthenticated } from "@/services/authService";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
@@ -13,9 +15,12 @@ const Header = () => {
       setScrolled(window.scrollY > 10);
     };
 
+    // Verificar estado de autenticación
+    setIsLoggedIn(isAuthenticated());
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [location]);
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -43,9 +48,9 @@ const Header = () => {
                 ¿Qué sigue?
               </a>
             </nav>
-            <Link to="/dashboard">
+            <Link to={isLoggedIn ? "/dashboard" : "/login"}>
               <Button variant="default" size="sm" className="bg-success hover:bg-success/80">
-                Comenzar ahora
+                {isLoggedIn ? "Mi Dashboard" : "Comenzar ahora"}
               </Button>
             </Link>
           </>

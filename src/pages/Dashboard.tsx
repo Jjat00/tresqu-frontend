@@ -1,4 +1,6 @@
+
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ExpensesTab from "@/components/dashboard/ExpensesTab";
@@ -6,20 +8,28 @@ import IncomeTab from "@/components/dashboard/IncomeTab";
 import DebtTab from "@/components/dashboard/DebtTab";
 import SavingsGoalsTab from "@/components/dashboard/SavingsGoalsTab";
 import ChatBot from "@/components/ChatBot";
-import { Share2, ChevronDown } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { isAuthenticated } from "@/services/authService";
+
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
   const [isMobile, setIsMobile] = useState(false);
   const [currentMonth, setCurrentMonth] = useState("");
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Define los meses del año
   const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+  // Comprobar si el usuario está autenticado
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   // Check if the device is mobile based on window size
   useEffect(() => {
@@ -37,6 +47,7 @@ const Dashboard = () => {
     const monthIndex = date.getMonth();
     setCurrentMonth(months[monthIndex]);
   }, []);
+
   const handleShareApp = () => {
     if (navigator.share) {
       navigator.share({
@@ -60,7 +71,9 @@ const Dashboard = () => {
       });
     }
   };
-  return <DashboardLayout>
+
+  return (
+    <DashboardLayout>
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
           <div className="w-full sm:w-auto">
@@ -82,9 +95,11 @@ const Dashboard = () => {
               <SelectValue placeholder="Seleccionar mes" />
             </SelectTrigger>
             <SelectContent>
-              {months.map(month => <SelectItem key={month} value={month} className="text-sm">
+              {months.map(month => (
+                <SelectItem key={month} value={month} className="text-sm">
                   {month}
-                </SelectItem>)}
+                </SelectItem>
+              ))}
               <SelectItem value="year" className="text-sm">Ver todo el año</SelectItem>
             </SelectContent>
           </Select>
@@ -126,6 +141,8 @@ const Dashboard = () => {
       
       {/* ChatBot component - outside the DashboardLayout to be accessible from everywhere */}
       <ChatBot />
-    </DashboardLayout>;
+    </DashboardLayout>
+  );
 };
+
 export default Dashboard;
