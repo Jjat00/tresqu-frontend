@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import CategoryPieChart from "./charts/CategoryPieChart";
 import ExpensesBarChart from "./charts/ExpensesBarChart";
-import ExpensesLineChart from "./charts/ExpensesLineChart";
+import ComparativeLineChart from "./charts/ComparativeLineChart";
 import ExpensesTable from "./expenses/ExpensesTable";
 import ExpenseFilters from "./expenses/ExpenseFilters";
 import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
@@ -10,10 +10,12 @@ import SubcategoryView from "./SubcategoryView";
 
 interface ExpensesTabProps {
   selectedMonth?: string;
+  activeTab?: string;
 }
 
 const ExpensesTab = ({
-  selectedMonth = "Abril"
+  selectedMonth = "Abril",
+  activeTab = "expenses"
 }: ExpensesTabProps) => {
   const [viewMode, setViewMode] = useState<"month" | "year">("month");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -79,9 +81,13 @@ const ExpensesTab = ({
         </div>
       </div>
       
-      {/* Gráfico lineal */}
+      {/* Gráfico comparativo */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-        <ExpensesLineChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+        <ComparativeLineChart 
+          viewMode={viewMode} 
+          selectedMonth={localSelectedMonth} 
+          activeTab={activeTab || "expenses"}
+        />
       </div>
 
       <ExpensesTable 

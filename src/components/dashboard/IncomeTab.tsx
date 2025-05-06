@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +10,12 @@ import { Input } from "@/components/ui/input";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
 import { Plus, Filter, Download, Share2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ComparativeLineChart from "./charts/ComparativeLineChart";
+
+interface IncomeTabProps {
+  selectedMonth?: string;
+  activeTab?: string;
+}
 
 // Define income data for different time periods
 const incomeDataByPeriod = {
@@ -161,7 +168,11 @@ const incomeCategoryData = incomeByCategory.map(item => ({
   value: item.amount,
   color: item.color
 }));
-const IncomeTab = () => {
+
+const IncomeTab = ({ 
+  selectedMonth = "Abril",
+  activeTab = "income" 
+}: IncomeTabProps) => {
   const isMobile = useIsMobile();
   const [timeFilter, setTimeFilter] = useState("month");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -170,6 +181,8 @@ const IncomeTab = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [newIncomeOpen, setNewIncomeOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"month" | "year">("month");
+  const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
   const [newIncome, setNewIncome] = useState({
     description: "",
     category: "",
@@ -178,6 +191,17 @@ const IncomeTab = () => {
     date: new Date().toISOString().split('T')[0],
     recurring: false
   });
+
+  // Update localSelectedMonth when prop changes
+  useEffect(() => {
+    setLocalSelectedMonth(selectedMonth);
+    // If year is selected, update view mode
+    if (selectedMonth === "year") {
+      setViewMode("year");
+    } else {
+      setViewMode("month");
+    }
+  }, [selectedMonth]);
 
   // Apply filters in real-time
   useEffect(() => {
@@ -203,6 +227,7 @@ const IncomeTab = () => {
   useEffect(() => {
     setChartData(incomeDataByPeriod[timeFilter as keyof typeof incomeDataByPeriod]);
   }, [timeFilter]);
+
   const handleAddIncome = () => {
     console.log("Adding new income:", newIncome);
     // Here you would add logic to add the income
@@ -216,21 +241,25 @@ const IncomeTab = () => {
       recurring: false
     });
   };
+
   const handleExportPDF = () => {
     console.log("Exporting income data to PDF");
     // Implementation would go here
   };
+
   const handleExportExcel = () => {
     console.log("Exporting income data to Excel");
     // Implementation would go here
   };
+
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
-  return <div className="space-y-4 md:space-y-6 mx-0 px-0 my-[60px]">
-      <div className="flex flex-col sm:flex-row justify-between gap-3">
-        <div className="flex flex-wrap gap-2">
+
+  return <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
+      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
+        <div className="flex flex-wrap gap-2 w-full xs:w-auto">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
             <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
               <SelectValue placeholder="Período" />
@@ -263,7 +292,7 @@ const IncomeTab = () => {
         
         <Dialog open={newIncomeOpen} onOpenChange={setNewIncomeOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-success hover:bg-success/90 h-9 whitespace-nowrap text-xs sm:text-sm">
+            <Button className="bg-success hover:bg-success/90 h-9 whitespace-nowrap text-xs sm:text-sm w-full xs:w-auto mt-2 xs:mt-0">
               <Plus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Nuevo ingreso
             </Button>
@@ -340,97 +369,114 @@ const IncomeTab = () => {
         </Dialog>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Gráfica de ingresos por categoría (nueva) */}
-        <Card>
-          <CardContent className="pt-4 sm:pt-6 overflow-hidden">
-            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Ingresos por Categoría</h3>
-            <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
-            ...Object.fromEntries(incomeCategoryData.map(({
-              name,
-              color
-            }) => [name, {
-              color
-            }]))
-          }}>
-              <PieChart margin={isMobile ? {
-              top: 5,
-              right: 5,
-              bottom: 5,
-              left: 5
-            } : {
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5
-            }}>
-                <Pie data={incomeCategoryData} cx="50%" cy="50%" innerRadius={isMobile ? 50 : 80} outerRadius={isMobile ? 70 : 110} paddingAngle={2} dataKey="value" nameKey="name" label={({
-                name,
-                percent
-              }) => isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`} labelLine={false} onClick={data => setSelectedCategory(data.name)}>
-                  {incomeCategoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} style={{
-                  cursor: 'pointer'
-                }} />)}
-                </Pie>
-                <Tooltip content={({
-                active,
-                payload
-              }) => {
-                if (active && payload && payload.length) {
-                  const category = payload[0].name as string;
-                  const selectedCategoryData = incomeByCategory.find(item => item.category === category);
-                  return <div className="bg-card p-3 rounded shadow border">
-                        <p className="text-sm font-semibold">{payload[0].name}</p>
-                        <p className="text-xs mb-2">${payload[0].value.toLocaleString()}</p>
-                        
-                        {selectedCategoryData && selectedCategoryData.subcategories.map((sub, i) => <div key={i} className="flex justify-between text-xs mb-1">
-                            <span className="mr-4">{sub.name}:</span>
-                            <span>${sub.value.toLocaleString()}</span>
-                          </div>)}
-                      </div>;
-                }
-                return null;
-              }} />
-              </PieChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        {/* Gráfica de ingresos por categoría */}
+        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+          <Card className="overflow-hidden h-full flex flex-col">
+            <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
+              <h3 className="xs:text-base sm:text-lg mb-1 xs:mb-2 text-sm font-semibold text-center">
+                Ingresos por Categoría
+              </h3>
+              <div className="flex-1 min-h-[250px] sm:min-h-[300px] flex items-center justify-center">
+                <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
+                ...Object.fromEntries(incomeCategoryData.map(({
+                  name,
+                  color
+                }) => [name, {
+                  color
+                }]))
+              }}>
+                  <PieChart margin={isMobile ? {
+                  top: 5,
+                  right: 5,
+                  bottom: 5,
+                  left: 5
+                } : {
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5
+                }}>
+                    <Pie data={incomeCategoryData} cx="50%" cy="50%" innerRadius={isMobile ? 30 : 60} outerRadius={isMobile ? 55 : 90} paddingAngle={2} dataKey="value" nameKey="name" label={({
+                    name,
+                    percent
+                  }) => isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`} labelLine={false} onClick={data => setSelectedCategory(data.name)}>
+                      {incomeCategoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} stroke={entry.color === "#4ade80" ? "#166534" : "#1e40af"} strokeWidth={1.5} style={{
+                      cursor: 'pointer'
+                    }} />)}
+                    </Pie>
+                    <Tooltip content={({
+                    active,
+                    payload
+                  }) => {
+                    if (active && payload && payload.length) {
+                      const category = payload[0].name as string;
+                      const selectedCategoryData = incomeByCategory.find(item => item.category === category);
+                      return <div className="bg-card p-3 rounded shadow border">
+                            <p className="text-sm font-semibold">{payload[0].name}</p>
+                            <p className="text-xs mb-2">${payload[0].value.toLocaleString()}</p>
+                            
+                            {selectedCategoryData && selectedCategoryData.subcategories.map((sub, i) => <div key={i} className="flex justify-between text-xs mb-1">
+                                <span className="mr-4">{sub.name}:</span>
+                                <span>${sub.value.toLocaleString()}</span>
+                              </div>)}
+                          </div>;
+                    }
+                    return null;
+                  }} />
+                  </PieChart>
+                </ChartContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         
         {/* Gráfica de ingresos mensuales */}
-        <Card>
-          <CardContent className="pt-4 sm:pt-6 overflow-hidden">
-            <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">Ingresos Mensuales</h3>
-            <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
-            value: {
-              color: "#4ade80"
-            }
-          }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={isMobile ? {
-                top: 10,
-                right: 0,
-                left: -20,
-                bottom: 0
-              } : {
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5
-              }} barSize={isMobile ? 12 : 20}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" tick={{
-                  fontSize: isMobile ? 10 : 12
-                }} interval={isMobile ? 1 : 0} />
-                  <YAxis tick={{
-                  fontSize: isMobile ? 10 : 12
-                }} width={isMobile ? 35 : 50} tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value} />
-                  <Tooltip formatter={value => [`$${value.toLocaleString()}`, 'Monto']} labelFormatter={label => `Período: ${label}`} />
-                  <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+          <Card>
+            <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 overflow-hidden">
+              <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">Ingresos Mensuales</h3>
+              <ChartContainer className={`h-[calc(100%-30px)]`} config={{
+              value: {
+                color: "#4ade80"
+              }
+            }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} margin={isMobile ? {
+                  top: 10,
+                  right: 0,
+                  left: -20,
+                  bottom: 0
+                } : {
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5
+                }} barSize={isMobile ? 12 : 20}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" tick={{
+                    fontSize: isMobile ? 10 : 12
+                  }} interval={isMobile ? 1 : 0} />
+                    <YAxis tick={{
+                    fontSize: isMobile ? 10 : 12
+                  }} width={isMobile ? 35 : 50} tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value} />
+                    <Tooltip formatter={value => [`$${value.toLocaleString()}`, 'Monto']} labelFormatter={label => `Período: ${label}`} />
+                    <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      
+      {/* Gráfico comparativo */}
+      <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+        <ComparativeLineChart 
+          viewMode={viewMode} 
+          selectedMonth={localSelectedMonth} 
+          activeTab={activeTab || "income"}
+        />
       </div>
       
       <Card>
@@ -531,4 +577,5 @@ const IncomeTab = () => {
       </Card>
     </div>;
 };
+
 export default IncomeTab;

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { isAuthenticated } from "@/services/authService";
+
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
   const [isMobile, setIsMobile] = useState(false);
@@ -47,6 +49,7 @@ const Dashboard = () => {
     const monthIndex = date.getMonth();
     setCurrentMonth(months[monthIndex]);
   }, []);
+  
   const handleShareApp = () => {
     if (navigator.share) {
       navigator.share({
@@ -70,6 +73,7 @@ const Dashboard = () => {
       });
     }
   };
+  
   return <DashboardLayout>
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
@@ -117,11 +121,11 @@ const Dashboard = () => {
           </TabsList>
           
           <TabsContent value="expenses" className="p-0 min-h-[60vh]">
-            <ExpensesTab selectedMonth={currentMonth} />
+            <ExpensesTab selectedMonth={currentMonth} activeTab={activeTab} />
           </TabsContent>
           
           <TabsContent value="income" className="p-0 min-h-[60vh]">
-            <IncomeTab />
+            <IncomeTab selectedMonth={currentMonth} activeTab={activeTab} />
           </TabsContent>
           
           <TabsContent value="debt" className="p-0 min-h-[60vh]">
@@ -138,4 +142,5 @@ const Dashboard = () => {
       <ChatBot />
     </DashboardLayout>;
 };
+
 export default Dashboard;
