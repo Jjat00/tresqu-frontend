@@ -34,7 +34,7 @@ const Hero = () => {
               asChild
               size="lg"
             >
-              <Link to="/dashboard">
+              <Link to="/login">
                 <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                 Iniciar ahora
               </Link>
@@ -45,7 +45,7 @@ const Hero = () => {
               className="text-base md:text-lg w-full px-4 md:px-8 py-5 md:py-6 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white border-[#0088cc]"
               size="lg"
               onClick={() => {
-                window.location.href = "https://t.me/my_money_cash_bot";
+                window.open("https://t.me/my_money_cash_bot", "_blank");
               }}
             >
               <svg
