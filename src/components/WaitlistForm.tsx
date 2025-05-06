@@ -7,11 +7,46 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MessageSquare } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+// Array of common country codes
+const countryCodes = [
+  { code: "+1", country: "Estados Unidos/Canadá" },
+  { code: "+52", country: "México" },
+  { code: "+54", country: "Argentina" },
+  { code: "+55", country: "Brasil" },
+  { code: "+56", country: "Chile" },
+  { code: "+57", country: "Colombia" },
+  { code: "+58", country: "Venezuela" },
+  { code: "+34", country: "España" },
+  { code: "+502", country: "Guatemala" },
+  { code: "+503", country: "El Salvador" },
+  { code: "+504", country: "Honduras" },
+  { code: "+505", country: "Nicaragua" },
+  { code: "+506", country: "Costa Rica" },
+  { code: "+507", country: "Panamá" },
+  { code: "+51", country: "Perú" },
+  { code: "+591", country: "Bolivia" },
+  { code: "+593", country: "Ecuador" },
+  { code: "+595", country: "Paraguay" },
+  { code: "+598", country: "Uruguay" },
+  { code: "+1787", country: "Puerto Rico" },
+  { code: "+53", country: "Cuba" },
+  { code: "+809", country: "República Dominicana" },
+];
 
 const WaitlistForm = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("whatsapp");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [telegramUsername, setTelegramUsername] = useState("");
+  const [countryCode, setCountryCode] = useState("+57"); // Default to Colombia
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -53,16 +88,37 @@ const WaitlistForm = () => {
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="whatsapp-number">Número de WhatsApp</Label>
-                      <Input 
-                        id="whatsapp-number" 
-                        type="tel" 
-                        placeholder="+52 1234567890"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)} 
-                        required 
-                      />
+                      <div className="flex gap-2">
+                        <div className="w-1/3">
+                          <Select 
+                            value={countryCode} 
+                            onValueChange={setCountryCode}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Código" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {countryCodes.map((country) => (
+                                <SelectItem key={country.code} value={country.code}>
+                                  {country.code} {country.country}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="w-2/3">
+                          <Input 
+                            id="whatsapp-number" 
+                            type="tel" 
+                            placeholder="Número sin código"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)} 
+                            required 
+                          />
+                        </div>
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                        Ingresa tu número con código de país (ej: +52 para México)
+                        Ingresa tu número sin el código de país (ej: 31234567890)
                       </p>
                     </div>
                     
@@ -88,10 +144,45 @@ const WaitlistForm = () => {
                         id="telegram-username" 
                         type="text" 
                         placeholder="@usuario"
+                        value={telegramUsername}
+                        onChange={(e) => setTelegramUsername(e.target.value)}
                         required 
                       />
                       <p className="text-xs text-muted-foreground">
                         Ingresa tu nombre de usuario de Telegram (ej: @usuario)
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="telegram-phone">Número de teléfono (opcional)</Label>
+                      <div className="flex gap-2">
+                        <div className="w-1/3">
+                          <Select 
+                            value={countryCode} 
+                            onValueChange={setCountryCode}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Código" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {countryCodes.map((country) => (
+                                <SelectItem key={country.code} value={country.code}>
+                                  {country.code} {country.country}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="w-2/3">
+                          <Input 
+                            id="telegram-phone" 
+                            type="tel" 
+                            placeholder="Número sin código (opcional)"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Opcionalmente, puedes ingresar tu número de teléfono
                       </p>
                     </div>
                     
