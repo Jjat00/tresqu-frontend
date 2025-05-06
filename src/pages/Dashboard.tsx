@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -105,14 +104,14 @@ const Dashboard = () => {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1 py-0 px-0 my-0">
-            <TabsTrigger value="expenses" className="text-xs sm:text-sm my-0">
+          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1">
+            <TabsTrigger value="expenses" className="text-xs sm:text-sm">
               Gastos
             </TabsTrigger>
             <TabsTrigger value="income" className="text-xs sm:text-sm">
               Ingresos
             </TabsTrigger>
-            <TabsTrigger value="debt" className="text-xs sm:text-sm py-0 px-0 mx-0 my-[28px]">
+            <TabsTrigger value="debt" className="text-xs sm:text-sm">
               Deudas
             </TabsTrigger>
             <TabsTrigger value="savings" className="text-xs sm:text-sm">
