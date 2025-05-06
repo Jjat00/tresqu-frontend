@@ -24,47 +24,59 @@ const Hero = () => {
           </div>
 
           <div
-            className="flex flex-col sm:flex-row gap-4 w-full max-w-md animate-fade-in"
+            className="flex flex-col gap-8 w-full max-w-md animate-fade-in"
             style={{
               animationDelay: "200ms",
             }}
           >
-            <Button
-              className="bg-success hover:bg-success/90 text-base md:text-lg w-full px-4 md:px-8 py-5 md:py-6"
-              asChild
-              size="lg"
-            >
-              <Link to="/login">
-                <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                Iniciar ahora
-              </Link>
-            </Button>
-
-            <Button
-              variant="outline"
-              className="text-base md:text-lg w-full px-4 md:px-8 py-5 md:py-6 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white border-[#0088cc]"
-              size="lg"
-              onClick={() => {
-                window.open("https://t.me/my_money_cash_bot", "_blank");
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-2"
+            {/* Telegram Bot Registration Section */}
+            <div className="border border-border rounded-lg p-6 bg-background/50 backdrop-blur-sm shadow-sm">
+              <p className="mb-4 text-base text-muted-foreground">
+                ¿Aún no tienes cuenta? Regístrate fácilmente usando el botón de Telegram.
+              </p>
+              <Button
+                variant="outline"
+                className="text-base w-full px-4 md:px-8 py-5 md:py-6 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white border-[#0088cc]"
+                size="lg"
+                onClick={() => {
+                  window.open("https://t.me/my_money_cash_bot", "_blank");
+                }}
               >
-                <path d="m22 2-7 20-4-9-9-4Z" />
-                <path d="M22 2 11 13" />
-              </svg>
-              Bot de Telegram
-            </Button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2"
+                >
+                  <path d="m22 2-7 20-4-9-9-4Z" />
+                  <path d="M22 2 11 13" />
+                </svg>
+                Bot de Telegram
+              </Button>
+            </div>
+
+            {/* Login Section */}
+            <div className="border border-border rounded-lg p-6 bg-background/50 backdrop-blur-sm shadow-sm">
+              <p className="mb-4 text-base text-muted-foreground">
+                ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
+              </p>
+              <Button
+                className="bg-success hover:bg-success/90 text-base w-full px-4 md:px-8 py-5 md:py-6"
+                asChild
+                size="lg"
+              >
+                <Link to="/login">
+                  <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  Iniciar ahora
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {/* Agregamos la simulación de chat de WhatsApp */}
