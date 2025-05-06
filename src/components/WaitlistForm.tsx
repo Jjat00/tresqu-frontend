@@ -175,7 +175,124 @@ const WaitlistForm = () => {
     setIsSubmitting(false);
   };
   return <section id="login" className="section-padding bg-card rounded-none mx-0 my-[30px] px-0 py-[36px]">
-      
+      <div className="container max-w-6xl py-0 px-0 mx-0 my-[10px] rounded-full">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Inicia sesión</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Conecta tu número de WhatsApp o Telegram para comenzar a usar
+            CashBot. No necesitas crear contraseñas adicionales.
+          </p>
+        </div>
+
+        <div className="max-w-md px-0 mx-0 py-0">
+          <Card>
+            <CardContent className="pt-6 py-[33px] px-0 mx-[6px]">
+              {verificationStep ? <VerificationCodeForm phoneNumber={fullPhoneNumber} onVerificationSuccess={handleVerificationSuccess} onCancel={handleCancelVerification} /> : <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid grid-cols-2 mb-8">
+                    <TabsTrigger value="whatsapp" className="flex gap-2 items-center">
+                      <MessageSquare className="h-4 w-4" />
+                      WhatsApp
+                    </TabsTrigger>
+                    <TabsTrigger value="telegram" className="flex gap-2 items-center">
+                      <MessageSquare className="h-4 w-4" />
+                      Telegram
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="whatsapp">
+                    <form className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="whatsapp-number">
+                          Número de WhatsApp
+                        </Label>
+                        <div className="flex gap-2">
+                          <div className="w-1/3">
+                            <Select value={countryCode} onValueChange={setCountryCode}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Código" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {countryCodes.map(country => <SelectItem key={country.code} value={country.code}>
+                                    <span className="flex items-center gap-2">
+                                      <span className="text-lg">
+                                        {country.country}
+                                      </span>
+                                      <span>{country.code}</span>
+                                    </span>
+                                  </SelectItem>)}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="w-2/3">
+                            <Input id="whatsapp-number" type="tel" placeholder="Número sin código" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required />
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Ingresa tu número sin el código de país (ej:
+                          31234567890)
+                        </p>
+                      </div>
+
+                      <Button type="button" className="w-full bg-success hover:bg-success/90" disabled={true}>
+                        Próximamente
+                      </Button>
+
+                      <p className="text-xs text-center text-muted-foreground mt-4">
+                        Al continuar, aceptas nuestros términos de servicio y
+                        política de privacidad.
+                      </p>
+                    </form>
+                  </TabsContent>
+
+                  <TabsContent value="telegram">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="telegram-phone">
+                          Número de teléfono
+                        </Label>
+                        <div className="flex gap-2 px-[2px]">
+                          <div className="w-1/3">
+                            <Select value={telegramCountryCode} onValueChange={setTelegramCountryCode}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Código" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {countryCodes.map(country => <SelectItem key={country.code} value={country.code}>
+                                    <span className="flex items-center gap-2">
+                                      <span className="text-lg">
+                                        {country.country}
+                                      </span>
+                                      <span>{country.code}</span>
+                                    </span>
+                                  </SelectItem>)}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="w-2/3">
+                            <Input id="telegram-phone" type="tel" placeholder="Número sin código" value={telegramPhone} onChange={e => setTelegramPhone(e.target.value)} required />
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Ingresa tu número sin el código de país (ej:
+                          31234567890)
+                        </p>
+                      </div>
+
+                      <Button type="submit" className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white" disabled={isSubmitting}>
+                        {isSubmitting ? "Procesando..." : "Continuar con Telegram"}
+                      </Button>
+
+                      <p className="text-xs text-center text-muted-foreground mt-4">
+                        Al continuar, aceptas nuestros términos de servicio y
+                        política de privacidad.
+                      </p>
+                    </form>
+                  </TabsContent>
+                </Tabs>}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </section>;
 };
 export default WaitlistForm;
