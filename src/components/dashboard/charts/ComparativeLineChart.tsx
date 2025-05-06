@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -126,14 +127,14 @@ const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
         // Agregar promedios móviles (3 períodos)
         if (processedData.length > 2) {
           for (let i = 2; i < processedData.length; i++) {
-            // Promedio móvil de gastos
+            // Promedio móvil de gastos - Asegurar que todos los valores son números
             const expensesAvg = (
               Number(processedData[i].expenses || 0) + 
               Number(processedData[i-1].expenses || 0) + 
               Number(processedData[i-2].expenses || 0)
             ) / 3;
             
-            // Promedio móvil de ingresos
+            // Promedio móvil de ingresos - Asegurar que todos los valores son números
             const incomeAvg = (
               Number(processedData[i].income || 0) + 
               Number(processedData[i-1].income || 0) + 
