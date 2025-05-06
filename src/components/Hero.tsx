@@ -101,10 +101,13 @@ const Hero = () => {
                   <p className="text-sm text-gray-800">
                     
 
-Categoría: Transporte  
-Monto: 20,000 COP  
-Fecha: 2025-05-06  
-Nota: Gasto en transporte
+Categoría: Transporte </p> 
+                  <p className="text-sm text-gray-800"> 
+Monto: 20,000 COP  </p>
+                  <p className="text-sm text-gray-800">
+Fecha: 2025-05-06  </p>
+                  <p className="text-sm text-gray-800">
+Nota: Gasto en transporte</p>
 
 ¿Te gustaría registrar otro gasto o consultar tu historial?
 
