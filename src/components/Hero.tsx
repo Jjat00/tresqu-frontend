@@ -106,6 +106,8 @@ Monto: 20,000 COP
 Fecha: 2025-05-06  
 Nota: Gasto en transporte
 
+¿Te gustaría registrar otro gasto o consultar tu historial?
+
                   </p>
                   <p className="text-[10px] text-gray-600 text-right">
                     10:42 AM
