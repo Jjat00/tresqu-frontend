@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import CategoryPieChart from "./charts/CategoryPieChart";
 import ExpensesBarChart from "./charts/ExpensesBarChart";
-import ExpensesLineChart from "./charts/ExpensesLineChart";
+import ComparativeLineChart from "./charts/ComparativeLineChart";
 import ExpensesTable from "./expenses/ExpensesTable";
 import ExpenseFilters from "./expenses/ExpenseFilters";
 import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
@@ -10,10 +10,12 @@ import SubcategoryView from "./SubcategoryView";
 
 interface ExpensesTabProps {
   selectedMonth?: string;
+  activeTab?: string;
 }
 
 const ExpensesTab = ({
-  selectedMonth = "Abril"
+  selectedMonth = "Abril",
+  activeTab = "expenses"
 }: ExpensesTabProps) => {
   const [viewMode, setViewMode] = useState<"month" | "year">("month");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -70,14 +72,22 @@ const ExpensesTab = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 h-[320px] xs:h-[380px] sm:h-[420px] py-0 my-0 px-0 mx-0">
-        <CategoryPieChart onCategoryClick={setSelectedCategory} />
-        <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+          <CategoryPieChart onCategoryClick={setSelectedCategory} />
+        </div>
+        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+          <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+        </div>
       </div>
       
-      {/* Nuevo gráfico lineal */}
-      <div className="h-[280px] xs:h-[320px] sm:h-[350px] py-0 my-0 px-0 mx-0">
-        <ExpensesLineChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+      {/* Gráfico comparativo */}
+      <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+        <ComparativeLineChart 
+          viewMode={viewMode} 
+          selectedMonth={localSelectedMonth} 
+          activeTab={activeTab || "expenses"}
+        />
       </div>
 
       <ExpensesTable 

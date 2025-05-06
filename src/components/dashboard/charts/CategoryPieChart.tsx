@@ -116,8 +116,8 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   }, [error]);
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col py-0 my-[5px]">
-      <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col grow">
+    <Card className="overflow-hidden h-full flex flex-col">
+      <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
         <h3 className="xs:text-base sm:text-lg mb-1 xs:mb-2 text-sm font-semibold text-center">
           Gastos por Categoría
         </h3>

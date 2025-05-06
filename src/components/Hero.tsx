@@ -64,7 +64,7 @@ const Hero = () => {
             {/* Login Section */}
             <div className="border border-border rounded-lg p-6 bg-background/50 backdrop-blur-sm shadow-sm">
               <p className="mb-4 text-base text-muted-foreground">
-                ¿Ya tienes una cuenta? Pulsa en 'Iniciar sesión' para acceder.
+                ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
               </p>
               <Button
                 className="bg-success hover:bg-success/90 text-base w-full px-4 md:px-8 py-5 md:py-6"
@@ -73,20 +73,20 @@ const Hero = () => {
               >
                 <Link to="/login">
                   <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  Iniciar sesión
+                  Iniciar ahora
                 </Link>
               </Button>
             </div>
           </div>
 
-          {/* Agregamos la simulación de chat de WhatsApp */}
+          {/* Agregamos la simulación de chat de WhatsApp con una pequeña mejora visual */}
           <div
             className="w-full max-w-sm mx-auto mt-4 md:mt-8 animate-fade-in"
             style={{
               animationDelay: "300ms",
             }}
           >
-            <div className="bg-[#ECE5DD] rounded-lg p-3 max-w-[100%] shadow-md">
+            <div className="bg-[#ECE5DD] rounded-lg p-3 max-w-[100%] shadow-md border border-gray-200">
               <div className="flex flex-col">
                 <div className="bg-white rounded-lg p-3 mb-2 ml-auto max-w-[80%] shadow-md">
                   <p className="text-sm font-medium text-gray-800 text-left">
@@ -102,7 +102,7 @@ const Hero = () => {
                   <p className="text-sm text-gray-800"> Monto: 20,000 COP  </p>
                   <p className="text-sm text-gray-800">Fecha: 2025-05-06  </p>
                   <p className="text-sm text-gray-800">Nota: Gasto en transporte</p>
-                  <p className="text-sm text-gray-800">¿Te gustaría registrar otro gasto o consultar tu historial?</p>
+                  <p className="text-sm text-gray-800">¿Te gustaría registrar otro gasto o consultar tu historial?</p>
                   <p className="text-[10px] text-gray-600 text-right">
                     10:42 AM
                   </p>
