@@ -186,7 +186,7 @@ const WaitlistForm = () => {
 
         <div className="max-w-md mx-auto">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 px-0 mx-[6px]">
               {verificationStep ? <VerificationCodeForm phoneNumber={fullPhoneNumber} onVerificationSuccess={handleVerificationSuccess} onCancel={handleCancelVerification} /> : <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className="grid grid-cols-2 mb-8">
                     <TabsTrigger value="whatsapp" className="flex gap-2 items-center">
