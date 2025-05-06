@@ -48,11 +48,19 @@ const Header = () => {
                 ¿Qué sigue?
               </a>
             </nav>
-            <Link to={isLoggedIn ? "/dashboard" : "/login"}>
-              <Button variant="default" size="sm" className="bg-success hover:bg-success/80">
-                {isLoggedIn ? "Mi Dashboard" : "Comenzar ahora"}
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link to="/dashboard">
+                <Button variant="default" size="sm" className="bg-success hover:bg-success/80">
+                  Mi Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button variant="default" size="sm" className="bg-success hover:bg-success/80">
+                  Comenzar ahora
+                </Button>
+              </Link>
+            )}
           </>
         ) : (
           <div className="flex items-center gap-2">

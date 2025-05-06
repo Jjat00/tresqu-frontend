@@ -9,6 +9,8 @@ import WaitlistForm from "@/components/WaitlistForm";
 import Footer from "@/components/Footer";
 
 const Index = () => {
+  // No hay ninguna verificación de autenticación aquí ni redirección
+  
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Header />
