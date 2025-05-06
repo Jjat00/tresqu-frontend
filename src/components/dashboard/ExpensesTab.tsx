@@ -41,6 +41,15 @@ const ExpensesTab = ({
     // Implementation would go here
   };
 
+  const handleCategoryFilterChange = (value: string) => {
+    setCategoryFilter(value);
+    // Si se selecciona una categoría específica (que no sea "all"),
+    // y se hace clic en una categoría en el gráfico, mostrar esa subcategoría
+    if (value !== "all") {
+      setSelectedCategory(value);
+    }
+  };
+
   // If a category is selected, show the subcategory view
   if (selectedCategory) {
     return <SubcategoryView category={selectedCategory} onBack={() => setSelectedCategory(null)} />;
@@ -50,7 +59,10 @@ const ExpensesTab = ({
     <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="w-full xs:w-auto">
-          <ExpenseFilters categoryFilter={categoryFilter} onCategoryFilterChange={setCategoryFilter} />
+          <ExpenseFilters 
+            categoryFilter={categoryFilter} 
+            onCategoryFilterChange={handleCategoryFilterChange} 
+          />
         </div>
 
         <div className="w-full xs:w-auto mt-2 xs:mt-0">
@@ -68,7 +80,11 @@ const ExpensesTab = ({
         <ExpensesLineChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
       </div>
 
-      <ExpensesTable categoryFilter={categoryFilter} onCategoryClick={setSelectedCategory} onShare={handleShare} />
+      <ExpensesTable 
+        categoryFilter={categoryFilter} 
+        onCategoryClick={setSelectedCategory} 
+        onShare={handleShare} 
+      />
     </div>
   );
 };
