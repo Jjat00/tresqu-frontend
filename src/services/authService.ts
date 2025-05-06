@@ -69,16 +69,32 @@ const VERIFY_CODE_URL = `${API_BASE_URL}/auth/telegram/verify-code/`;
 // Función para solicitar código de verificación
 export const requestTelegramCode = async (phoneNumber: string): Promise<RequestCodeResponse> => {
   try {
+    console.log("Solicitando código para:", phoneNumber);
+    
+    // Verificar que el número tenga el formato correcto (con el código de país)
+    if (!phoneNumber.startsWith("+")) {
+      phoneNumber = "+" + phoneNumber;
+    }
+    
+    // Quitar el signo + para el envío, ya que el API espera el número sin el +
+    const formattedPhoneNumber = phoneNumber.replace("+", "");
+    
+    console.log("Número formateado:", formattedPhoneNumber);
+    
     const response = await fetch(REQUEST_CODE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ phone_number: phoneNumber }),
+      body: JSON.stringify({ phone_number: formattedPhoneNumber }),
     });
 
+    console.log("Status de la respuesta:", response.status);
+    
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error("Error de API:", errorText);
+      throw new Error(`Error ${response.status}: ${errorText || response.statusText}`);
     }
 
     return await response.json();
@@ -94,16 +110,30 @@ export const verifyTelegramCode = async (
   code: string
 ): Promise<VerifyCodeResponse> => {
   try {
+    // Verificar que el número tenga el formato correcto (con el código de país)
+    if (!phoneNumber.startsWith("+")) {
+      phoneNumber = "+" + phoneNumber;
+    }
+    
+    // Quitar el signo + para el envío, ya que el API espera el número sin el +
+    const formattedPhoneNumber = phoneNumber.replace("+", "");
+    
+    console.log("Verificando código para:", formattedPhoneNumber);
+    
     const response = await fetch(VERIFY_CODE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ phone_number: phoneNumber, code }),
+      body: JSON.stringify({ phone_number: formattedPhoneNumber, code }),
     });
 
+    console.log("Status de la verificación:", response.status);
+    
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error("Error al verificar código:", errorText);
+      throw new Error(`Error ${response.status}: ${errorText || response.statusText}`);
     }
 
     return await response.json();

@@ -18,7 +18,6 @@ import {
 import VerificationCodeForm from "./VerificationCodeForm";
 import { 
   requestTelegramCode, 
-  verifyTelegramCode, 
   saveAuthTokens, 
   isAuthenticated 
 } from "@/services/authService";
@@ -82,6 +81,8 @@ const WaitlistForm = () => {
       // Formatear el número de teléfono con el código de país
       const formattedPhoneNumber = `${telegramCountryCode}${telegramPhone}`;
       setFullPhoneNumber(formattedPhoneNumber);
+      
+      console.log("Enviando solicitud para:", formattedPhoneNumber);
       
       // Solicitar código de verificación
       const response = await requestTelegramCode(formattedPhoneNumber);

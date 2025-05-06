@@ -32,6 +32,9 @@ const VerificationCodeForm = ({
     setIsSubmitting(true);
     
     try {
+      console.log("Verificando código para el número:", phoneNumber);
+      console.log("Código ingresado:", verificationCode);
+      
       const response = await verifyTelegramCode(phoneNumber, verificationCode);
       
       if (response && response.access) {
