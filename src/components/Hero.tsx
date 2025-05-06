@@ -19,7 +19,7 @@ const Hero = () => {
                 animationDelay: "100ms",
               }}
             >
-              CashBot utiliza Inteligencia Artificial  para transformar tus conversaciones diarias en análisis financieros claros y automáticos. Registra gastos hablando o escribiendole a la IA 
+              CashBot utiliza Inteligencia Artificial  para hacer analisis financieros claros y automáticos. Como si fuera una conversacion con un amigo
             </p>
           </div>
 
