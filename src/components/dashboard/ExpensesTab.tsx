@@ -1,13 +1,17 @@
+
 import { useState, useEffect } from "react";
 import CategoryPieChart from "./charts/CategoryPieChart";
 import ExpensesBarChart from "./charts/ExpensesBarChart";
+import ExpensesLineChart from "./charts/ExpensesLineChart";
 import ExpensesTable from "./expenses/ExpensesTable";
 import ExpenseFilters from "./expenses/ExpenseFilters";
 import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
+
 interface ExpensesTabProps {
   selectedMonth?: string;
 }
+
 const ExpensesTab = ({
   selectedMonth = "Abril"
 }: ExpensesTabProps) => {
@@ -26,10 +30,12 @@ const ExpensesTab = ({
       setViewMode("month");
     }
   }, [selectedMonth]);
+
   const handleAddExpense = (expense: ExpenseFormData) => {
     console.log("Adding new expense:", expense);
     // Here you would add logic to add the expense
   };
+
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
@@ -39,7 +45,9 @@ const ExpensesTab = ({
   if (selectedCategory) {
     return <SubcategoryView category={selectedCategory} onBack={() => setSelectedCategory(null)} />;
   }
-  return <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
+
+  return (
+    <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="w-full xs:w-auto">
           <ExpenseFilters categoryFilter={categoryFilter} onCategoryFilterChange={setCategoryFilter} />
@@ -54,8 +62,15 @@ const ExpensesTab = ({
         <CategoryPieChart onCategoryClick={setSelectedCategory} />
         <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
       </div>
+      
+      {/* Nuevo gráfico lineal */}
+      <div className="h-[280px] xs:h-[320px] sm:h-[350px] py-0 my-0 px-0 mx-0">
+        <ExpensesLineChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+      </div>
 
       <ExpensesTable categoryFilter={categoryFilter} onCategoryClick={setSelectedCategory} onShare={handleShare} />
-    </div>;
+    </div>
+  );
 };
+
 export default ExpensesTab;
