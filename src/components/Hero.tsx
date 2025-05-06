@@ -1,6 +1,8 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
+
 const Hero = () => {
   return (
     <section className="relative overflow-hidden py-12 md:py-24 lg:py-32">
@@ -17,7 +19,9 @@ const Hero = () => {
                 animationDelay: "100ms",
               }}
             >
-              CashBot utiliza IA avanzada para transformar tus conversaciones diarias en análisis financieros claros y automáticos. Registra gastos hablando o escribiendo, obtén insights inteligentes          </div>
+              CashBot utiliza IA avanzada para transformar tus conversaciones diarias en análisis financieros claros y automáticos. Registra gastos hablando o escribiendo, obtén insights inteligentes
+            </p>
+          </div>
 
           <div
             className="flex flex-col sm:flex-row gap-4 w-full max-w-md animate-fade-in"
@@ -101,4 +105,5 @@ const Hero = () => {
     </section>
   );
 };
+
 export default Hero;
