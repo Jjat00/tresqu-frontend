@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Toolti
 import { Plus, Filter, Download, Share2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
+
 interface IncomeTabProps {
   selectedMonth?: string;
   activeTab?: string;
@@ -166,9 +168,10 @@ const incomeCategoryData = incomeByCategory.map(item => ({
   value: item.amount,
   color: item.color
 }));
-const IncomeTab = ({
+
+const IncomeTab = ({ 
   selectedMonth = "Abril",
-  activeTab = "income"
+  activeTab = "income" 
 }: IncomeTabProps) => {
   const isMobile = useIsMobile();
   const [timeFilter, setTimeFilter] = useState("month");
@@ -224,6 +227,7 @@ const IncomeTab = ({
   useEffect(() => {
     setChartData(incomeDataByPeriod[timeFilter as keyof typeof incomeDataByPeriod]);
   }, [timeFilter]);
+
   const handleAddIncome = () => {
     console.log("Adding new income:", newIncome);
     // Here you would add logic to add the income
@@ -237,18 +241,22 @@ const IncomeTab = ({
       recurring: false
     });
   };
+
   const handleExportPDF = () => {
     console.log("Exporting income data to PDF");
     // Implementation would go here
   };
+
   const handleExportExcel = () => {
     console.log("Exporting income data to Excel");
     // Implementation would go here
   };
+
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
+
   return <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="flex flex-wrap gap-2 w-full xs:w-auto">
@@ -426,7 +434,7 @@ const IncomeTab = ({
         {/* Gráfica de ingresos mensuales */}
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
           <Card>
-            <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 overflow-hidden sm:px-0 mx-0 py-0">
+            <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 overflow-hidden">
               <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">Ingresos Mensuales</h3>
               <ChartContainer className={`h-[calc(100%-30px)]`} config={{
               value: {
@@ -464,7 +472,11 @@ const IncomeTab = ({
       
       {/* Gráfico comparativo */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-        <ComparativeLineChart viewMode={viewMode} selectedMonth={localSelectedMonth} activeTab={activeTab || "income"} />
+        <ComparativeLineChart 
+          viewMode={viewMode} 
+          selectedMonth={localSelectedMonth} 
+          activeTab={activeTab || "income"}
+        />
       </div>
       
       <Card>
@@ -565,4 +577,5 @@ const IncomeTab = ({
       </Card>
     </div>;
 };
+
 export default IncomeTab;
