@@ -151,8 +151,12 @@ export function DateRangePicker({
               {formatDateRange()}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 flex" align="center">
-            <div className="border-r p-2 space-y-2 overflow-y-auto max-h-[350px]">
+          <PopoverContent 
+            className="p-0 max-w-[95vw] w-auto flex flex-col sm:flex-row overflow-hidden" 
+            align="center"
+            sideOffset={4}
+          >
+            <div className="border-b sm:border-b-0 sm:border-r p-2 space-y-2 overflow-y-auto max-h-[250px] sm:max-h-[350px] w-full sm:w-auto">
               {dateRanges.map((range, index) => (
                 <Button
                   key={index}
@@ -164,7 +168,7 @@ export function DateRangePicker({
                 </Button>
               ))}
             </div>
-            <div className="p-0">
+            <div className="p-0 overflow-x-auto">
               <Calendar
                 initialFocus
                 mode="range"
@@ -180,7 +184,7 @@ export function DateRangePicker({
                     onDateChange({ from: undefined, to: undefined });
                   }
                 }}
-                numberOfMonths={2}
+                numberOfMonths={1}
                 className="pointer-events-auto"
                 locale={es}
               />
