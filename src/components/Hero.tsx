@@ -32,7 +32,7 @@ const Hero = () => {
             {/* Telegram Bot Registration Section */}
             <div className="border border-border rounded-lg p-6 bg-background/50 backdrop-blur-sm shadow-sm">
               <p className="mb-4 text-base text-muted-foreground">
-                ¿Aún no tienes cuenta? Regístrate fácilmente usando el botón de Telegram.
+                ¿Aún no tienes cuenta? Regístrate fácilmente usando el bot de Telegram.
               </p>
               <Button
                 variant="outline"
@@ -64,7 +64,7 @@ const Hero = () => {
             {/* Login Section */}
             <div className="border border-border rounded-lg p-6 bg-background/50 backdrop-blur-sm shadow-sm">
               <p className="mb-4 text-base text-muted-foreground">
-                ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
+                ¿Ya tienes una cuenta? Pulsa en 'Iniciar sesión' para acceder.
               </p>
               <Button
                 className="bg-success hover:bg-success/90 text-base w-full px-4 md:px-8 py-5 md:py-6"
@@ -73,7 +73,7 @@ const Hero = () => {
               >
                 <Link to="/login">
                   <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  Iniciar ahora
+                  Iniciar sesión
                 </Link>
               </Button>
             </div>
