@@ -8,7 +8,7 @@ const Hero = () => {
         <div className="flex flex-col items-center justify-center space-y-6 md:space-y-10 text-center">
           <div className="space-y-4 md:space-y-6 max-w-4xl">
             <h1 className="text-3xl md:text-5xl lg:text-8xl font-bold font-display bg-clip-text text-transparent bg-gradient-to-r from-success to-highlight animate-fade-in my-[71px]">
-              Tu Asistente Financiero Personal, Potenciado por IA
+              La manera más fácil de controlar tus finanzas, Potenciado por IA
             </h1>
 
             <p
