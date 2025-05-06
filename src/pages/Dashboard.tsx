@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { isAuthenticated } from "@/services/authService";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [currentMonth, setCurrentMonth] = useState("");
   const {
     toast
@@ -31,16 +32,6 @@ const Dashboard = () => {
       navigate("/login");
     }
   }, [navigate]);
-
-  // Check if the device is mobile based on window size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   // Detecta el mes actual al cargar el componente
   useEffect(() => {
@@ -104,20 +95,22 @@ const Dashboard = () => {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="bg-muted/50 w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1">
-            <TabsTrigger value="expenses" className="text-xs sm:text-sm">
-              Gastos
-            </TabsTrigger>
-            <TabsTrigger value="income" className="text-xs sm:text-sm">
-              Ingresos
-            </TabsTrigger>
-            <TabsTrigger value="debt" className="text-xs sm:text-sm">
-              Deudas
-            </TabsTrigger>
-            <TabsTrigger value="savings" className="text-xs sm:text-sm">
-              Ahorros
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto pb-2">
+            <TabsList className="bg-muted/50 w-full min-w-[400px] grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1">
+              <TabsTrigger value="expenses" className="text-xs sm:text-sm">
+                Gastos
+              </TabsTrigger>
+              <TabsTrigger value="income" className="text-xs sm:text-sm">
+                Ingresos
+              </TabsTrigger>
+              <TabsTrigger value="debt" className="text-xs sm:text-sm">
+                Deudas
+              </TabsTrigger>
+              <TabsTrigger value="savings" className="text-xs sm:text-sm">
+                Ahorros
+              </TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="expenses" className="p-0 min-h-[60vh]">
             <ExpensesTab selectedMonth={currentMonth} activeTab={activeTab} />

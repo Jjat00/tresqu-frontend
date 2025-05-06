@@ -2,345 +2,262 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { getAccessToken } from "@/services/authService";
-import { toast } from "sonner";
-import { ChartLine } from "lucide-react";
+import { expenseData } from "../data/expenseData";
 
 interface ComparativeLineChartProps {
-  viewMode: "month" | "year";
-  selectedMonth: string;
-  activeTab: string;
+  viewMode?: "month" | "year";
+  selectedMonth?: string;
+  activeTab?: string;
 }
 
-// Mapeo de nombres de meses a números
-const monthToNumber: Record<string, number> = {
-  "Enero": 1,
-  "Febrero": 2,
-  "Marzo": 3,
-  "Abril": 4,
-  "Mayo": 5,
-  "Junio": 6,
-  "Julio": 7,
-  "Agosto": 8,
-  "Septiembre": 9,
-  "Octubre": 10,
-  "Noviembre": 11,
-  "Diciembre": 12
-};
+const ComparativeLineChart = ({ 
+  viewMode = "month", 
+  selectedMonth = "Abril",
+  activeTab = "expenses"
+}: ComparativeLineChartProps) => {
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartTitle, setChartTitle] = useState("Comparativa Gastos vs. Ingresos");
+  const [showMovingAverage, setShowMovingAverage] = useState(true);
 
-// Colores para las líneas
-const COLORS = {
-  expenses: "#8b5cf6", // Morado principal para gastos
-  income: "#4ade80", // Verde principal para ingresos
-  expensesAvg: "#60a5fa", // Azul para promedio de gastos
-  incomeAvg: "#34d399", // Verde claro para promedio de ingresos
-};
-
-const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
-  viewMode,
-  selectedMonth,
-  activeTab
-}) => {
-  const isMobile = useIsMobile();
-  const [timeData, setTimeData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Función para obtener el actual año y mes
-  const getCurrentYearMonth = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // getMonth() es 0-indexado
-    
-    if (selectedMonth !== "year") {
-      // Si se ha seleccionado un mes específico, usamos ese
-      const monthNumber = monthToNumber[selectedMonth] || month;
-      return { year, month: monthNumber };
-    }
-    
-    return { year, month };
+  // Obtener mes actual y año
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  
+  // Mapeo de nombres de meses a números (0-indexed para JavaScript Date)
+  const monthMap: Record<string, number> = {
+    "Enero": 0, "Febrero": 1, "Marzo": 2, "Abril": 3,
+    "Mayo": 4, "Junio": 5, "Julio": 6, "Agosto": 7,
+    "Septiembre": 8, "Octubre": 9, "Noviembre": 10, "Diciembre": 11
   };
 
-  // Cargar datos cuando cambia el mes seleccionado o el modo de vista
-  useEffect(() => {
-    const fetchTimeData = async () => {
-      setIsLoading(true);
-      setError(null);
+  // Generar gastos e ingresos diarios aleatorios para el mes seleccionado
+  const generateDailyData = (month: string) => {
+    const monthIndex = monthMap[month];
+    if (monthIndex === undefined) return [];
+    
+    const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
+    
+    return Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      const date = `${day}/${monthIndex + 1}`;
       
-      try {
-        const token = getAccessToken();
-        if (!token) {
-          throw new Error("No hay token de autenticación disponible");
-        }
-        
-        const { year, month } = getCurrentYearMonth();
-        
-        // Fetch expense data
-        const expensesResponse = await fetch(
-          `https://web-production-11f27.up.railway.app/api/expenses/weekly_by_category/?month=${month}&year=${year}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        
-        if (!expensesResponse.ok) {
-          throw new Error(`Error al obtener los datos de gastos: ${expensesResponse.status}`);
-        }
-        
-        const expensesData = await expensesResponse.json();
-        
-        // Para este ejemplo, generaremos datos de ingresos simulados
-        // En producción, esto debería ser un endpoint real
-        const incomeData = expensesData.map((weekData: any) => {
-          const weekObj = { ...weekData };
-          // Generar ingresos un 20-40% más altos que los gastos para datos de prueba
-          const multiplier = Math.random() * 0.2 + 1.2; // Entre 1.2 y 1.4
-          
-          const totalExpense = Object.values(weekData.totals || {}).reduce(
-            (sum: number, value: any) => sum + (Number(value) || 0), 0
-          );
-          
-          weekObj.incomeTotal = Math.round(totalExpense * multiplier);
-          return weekObj;
-        });
-        
-        // Procesamos los datos para mostrar ambas líneas
-        const processedData = expensesData.map((weekData: any, index: number) => {
-          // Calcular el total de gastos sumando todas las categorías
-          const totalExpense = Object.values(weekData.totals || {}).reduce(
-            (sum: number, value: any) => sum + (Number(value) || 0), 0
-          );
-          
-          // Usar el ingreso simulado
-          const totalIncome = incomeData[index]?.incomeTotal || 0;
-          
-          return {
-            name: weekData.week,
-            expenses: totalExpense,
-            income: totalIncome
-          };
-        });
-        
-        // Agregar promedios móviles (3 períodos)
-        if (processedData.length > 2) {
-          for (let i = 2; i < processedData.length; i++) {
-            // Promedio móvil de gastos - Asegurar que todos los valores son números
-            const expensesAvg = (
-              Number(processedData[i].expenses || 0) + 
-              Number(processedData[i-1].expenses || 0) + 
-              Number(processedData[i-2].expenses || 0)
-            ) / 3;
-            
-            // Promedio móvil de ingresos - Asegurar que todos los valores son números
-            const incomeAvg = (
-              Number(processedData[i].income || 0) + 
-              Number(processedData[i-1].income || 0) + 
-              Number(processedData[i-2].income || 0)
-            ) / 3;
-            
-            processedData[i].expensesAvg = Math.round(expensesAvg);
-            processedData[i].incomeAvg = Math.round(incomeAvg);
-          }
-        }
-        
-        setTimeData(processedData);
-      } catch (err) {
-        console.error("Error al cargar los datos comparativos:", err);
-        setError(err instanceof Error ? err.message : "Error desconocido");
-        toast.error("No se pudieron cargar los datos comparativos");
-      } finally {
-        setIsLoading(false);
+      // Obtener datos de la base de datos simulada
+      const dayExpenses = expenseData
+        .filter(expense => {
+          const expenseDate = new Date(expense.date);
+          return expenseDate.getDate() === day && expenseDate.getMonth() === monthIndex;
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0);
+      
+      // Generar ingresos simulados (más altos cada 15 y 30 días)
+      let dayIncome = 0;
+      if (day === 15 || day === daysInMonth) {
+        dayIncome = Math.random() * 200000 + 150000;
+      } else if (day % 5 === 0) {
+        dayIncome = Math.random() * 50000 + 10000;
+      } else if (Math.random() > 0.7) {
+        dayIncome = Math.random() * 15000 + 5000;
       }
+      
+      return {
+        name: date,
+        expenses: dayExpenses || Math.floor(Math.random() * 15000) + 2000,
+        income: dayIncome,
+      };
+    });
+  };
+
+  // Generar datos mensuales para todo el año
+  const generateMonthlyData = () => {
+    return Object.keys(monthMap).map(month => {
+      const monthIndex = monthMap[month];
+      
+      // Calcular gastos mensuales de la base de datos simulada
+      const monthExpenses = expenseData
+        .filter(expense => {
+          const expenseDate = new Date(expense.date);
+          return expenseDate.getMonth() === monthIndex;
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0);
+      
+      // Generar ingresos mensuales simulados
+      const baseIncome = 180000 + Math.random() * 50000;
+      const monthlyIncome = baseIncome * (1 + (monthIndex % 3) * 0.1);
+      
+      return {
+        name: month.substring(0, 3),
+        expenses: monthExpenses || Math.floor(Math.random() * 150000) + 80000,
+        income: monthlyIncome,
+      };
+    });
+  };
+
+  useEffect(() => {
+    const initializeChart = () => {
+      let processedData = [];
+      
+      if (viewMode === "month" && selectedMonth !== "year") {
+        setChartTitle(`Gastos vs. Ingresos - ${selectedMonth} ${currentYear}`);
+        processedData = generateDailyData(selectedMonth);
+      } else {
+        setChartTitle(`Gastos vs. Ingresos - ${currentYear}`);
+        processedData = generateMonthlyData();
+      }
+      
+      // Calcular saldo acumulado
+      let balance = 0;
+      processedData = processedData.map(item => {
+        balance += (Number(item.income || 0) - Number(item.expenses || 0));
+        return {
+          ...item,
+          balance
+        };
+      });
+      
+      // Agregar promedios móviles (3 períodos)
+      if (processedData.length > 2) {
+        for (let i = 2; i < processedData.length; i++) {
+          // Promedio móvil de gastos - Asegurar que todos los valores son números
+          const expAvg1 = Number(processedData[i].expenses || 0);
+          const expAvg2 = Number(processedData[i-1].expenses || 0);
+          const expAvg3 = Number(processedData[i-2].expenses || 0);
+          const expensesAvg = (expAvg1 + expAvg2 + expAvg3) / 3;
+          
+          // Promedio móvil de ingresos - Asegurar que todos los valores son números
+          const incAvg1 = Number(processedData[i].income || 0);
+          const incAvg2 = Number(processedData[i-1].income || 0);
+          const incAvg3 = Number(processedData[i-2].income || 0);
+          const incomeAvg = (incAvg1 + incAvg2 + incAvg3) / 3;
+          
+          processedData[i] = {
+            ...processedData[i],
+            expensesAvg,
+            incomeAvg
+          };
+        }
+      }
+      
+      setChartData(processedData);
     };
     
-    fetchTimeData();
-  }, [selectedMonth, viewMode]);
+    initializeChart();
+  }, [viewMode, selectedMonth]);
 
-  // Determinar el título del gráfico según el modo de vista y la pestaña activa
-  const chartTitle = React.useMemo(() => {
-    const baseTitle = activeTab === "expenses" 
-      ? "Tendencia de Gastos" 
-      : "Tendencia de Ingresos";
-      
-    if (viewMode === "month") {
-      return `${baseTitle} - ${selectedMonth}`;
-    } else {
-      return `${baseTitle} Anuales`;
-    }
-  }, [viewMode, selectedMonth, activeTab]);
-
-  // Formatear valores para el Tooltip
-  const formatTooltipValue = (value: number) => {
-    return value ? `$${value.toLocaleString('es-CO')}` : "$0";
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(value);
   };
-
-  return (
-    <Card className="overflow-hidden h-full">
-      <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col">
-        <div className="flex items-center justify-between mb-1 xs:mb-2">
-          <h3 className="text-sm xs:text-base sm:text-lg font-semibold">
-            {chartTitle}
-          </h3>
-          <ChartLine className="h-4 w-4 text-muted-foreground" />
+  
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white border rounded p-2 shadow-sm text-xs">
+          <p className="font-medium mb-1">{`${label}`}</p>
+          {payload.map((entry: any, index: number) => {
+            if (entry.name === "expensesAvg" || entry.name === "incomeAvg") {
+              if (!showMovingAverage) return null;
+              const avgType = entry.name === "expensesAvg" ? "Gastos (Prom.)" : "Ingresos (Prom.)";
+              return (
+                <p key={`avg-${index}`} className="text-xs" style={{ color: entry.color }}>
+                  {`${avgType}: ${formatCurrency(entry.value)}`}
+                </p>
+              );
+            }
+            
+            const entryLabel = entry.name === "expenses" 
+              ? "Gastos" 
+              : entry.name === "income" 
+                ? "Ingresos" 
+                : "Saldo";
+            
+            return (
+              <p key={index} className="text-xs" style={{ color: entry.color }}>
+                {`${entryLabel}: ${formatCurrency(entry.value)}`}
+              </p>
+            );
+          })}
         </div>
-        
-        <div className="flex-1 min-h-[200px] flex items-center justify-center">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
-              <p className="text-sm text-muted-foreground">Cargando datos...</p>
-            </div>
-          ) : error ? (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-destructive mb-1">Error al cargar los datos</p>
-              <p className="text-xs text-muted-foreground">{error}</p>
-            </div>
-          ) : timeData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-muted-foreground">No hay datos disponibles para este periodo</p>
-            </div>
-          ) : (
+      );
+    }
+    return null;
+  };
+  
+  return (
+    <Card className="w-full h-full">
+      <CardContent className="p-4">
+        <div className="flex flex-col h-full">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-medium sm:text-base">{chartTitle}</h3>
+          </div>
+          <div className="w-full h-[230px] xs:h-[270px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={timeData}
-                margin={isMobile ? {
-                  top: 5,
-                  right: 5,
-                  left: -15,
-                  bottom: 15
-                } : {
-                  top: 20,
-                  right: 20,
-                  left: 0,
-                  bottom: 15
-                }}
+                data={chartData}
+                margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: isMobile ? 8 : 12 }}
-                  interval={isMobile ? 1 : 0}
-                  angle={isMobile ? -45 : 0}
-                  textAnchor={isMobile ? "end" : "middle"}
-                  height={isMobile ? 50 : 30}
+                  dataKey="name"
+                  tick={{ fontSize: 10 }}
+                  tickLine={false}
+                  axisLine={false}
                 />
                 <YAxis 
-                  tick={{ fontSize: isMobile ? 8 : 12 }}
-                  width={isMobile ? 30 : 50}
-                  tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value.toString()}
-                />
-                <Tooltip
-                  formatter={(value, name) => {
-                    const formattedValue = formatTooltipValue(value as number);
-                    let label = name;
-                    
-                    if (name === 'expenses') label = 'Gastos';
-                    if (name === 'income') label = 'Ingresos';
-                    if (name === 'expensesAvg') label = 'Prom. Gastos (3 sem)';
-                    if (name === 'incomeAvg') label = 'Prom. Ingresos (3 sem)';
-                    
-                    return [formattedValue, label];
-                  }}
-                  contentStyle={{
-                    fontSize: isMobile ? "10px" : "12px",
-                    backgroundColor: "hsl(var(--card))",
-                    borderColor: "hsl(var(--border))",
-                    borderRadius: "0.5rem"
-                  }}
-                  labelStyle={{
-                    fontWeight: "bold",
-                    marginBottom: "0.25rem"
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{
-                    fontSize: isMobile ? "8px" : "12px",
-                    paddingTop: 5
-                  }}
-                  formatter={(value) => {
-                    if (value === 'expenses') return 'Gastos';
-                    if (value === 'income') return 'Ingresos';
-                    if (value === 'expensesAvg') return 'Prom. Gastos';
-                    if (value === 'incomeAvg') return 'Prom. Ingresos';
+                  tick={{ fontSize: 10 }}
+                  tickLine={false} 
+                  axisLine={false}
+                  tickFormatter={(value) => {
+                    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+                    if (value >= 1000) return `${(value / 1000).toFixed(0)}k`;
                     return value;
                   }}
                 />
-                
-                {/* Línea de gastos - opacidad basada en la pestaña activa */}
-                <Line
-                  type="monotone"
-                  dataKey="expenses"
-                  stroke={COLORS.expenses}
+                <Tooltip content={<CustomTooltip />} />
+                <Legend wrapperStyle={{ fontSize: '10px' }} />
+                <Line 
+                  type="monotone" 
+                  dataKey="expenses" 
+                  stroke="#ef4444" 
                   strokeWidth={2}
-                  strokeOpacity={activeTab === "expenses" ? 1 : 0.4}
-                  dot={{ 
-                    r: 3, 
-                    stroke: COLORS.expenses, 
-                    fill: "white", 
-                    strokeOpacity: activeTab === "expenses" ? 1 : 0.4 
-                  }}
-                  activeDot={{ 
-                    r: 5, 
-                    stroke: COLORS.expenses, 
-                    fill: COLORS.expenses, 
-                    strokeOpacity: activeTab === "expenses" ? 1 : 0.6 
-                  }}
-                  name="expenses"
+                  dot={false}
+                  name="Gastos"
                 />
-                
-                {/* Línea de ingresos - opacidad basada en la pestaña activa */}
-                <Line
-                  type="monotone"
-                  dataKey="income"
-                  stroke={COLORS.income}
+                <Line 
+                  type="monotone" 
+                  dataKey="income" 
+                  stroke="#22c55e" 
                   strokeWidth={2}
-                  strokeOpacity={activeTab === "income" ? 1 : 0.4}
-                  dot={{ 
-                    r: 3, 
-                    stroke: COLORS.income, 
-                    fill: "white", 
-                    strokeOpacity: activeTab === "income" ? 1 : 0.4 
-                  }}
-                  activeDot={{ 
-                    r: 5, 
-                    stroke: COLORS.income, 
-                    fill: COLORS.income,
-                    strokeOpacity: activeTab === "income" ? 1 : 0.6
-                  }}
-                  name="income"
+                  dot={false}
+                  name="Ingresos"
                 />
-                
-                {timeData.some(d => d.expensesAvg) && (
-                  <Line
-                    type="monotone"
-                    dataKey="expensesAvg"
-                    stroke={COLORS.expensesAvg}
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    strokeOpacity={activeTab === "expenses" ? 1 : 0.3}
-                    dot={false}
-                    name="expensesAvg"
-                  />
-                )}
-                
-                {timeData.some(d => d.incomeAvg) && (
-                  <Line
-                    type="monotone"
-                    dataKey="incomeAvg"
-                    stroke={COLORS.incomeAvg}
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    strokeOpacity={activeTab === "income" ? 1 : 0.3}
-                    dot={false}
-                    name="incomeAvg"
-                  />
+                {showMovingAverage && (
+                  <>
+                    <Line 
+                      type="monotone" 
+                      dataKey="expensesAvg" 
+                      stroke="#ef4444" 
+                      strokeDasharray="5 5"
+                      strokeWidth={1}
+                      dot={false}
+                      name="Gastos (Prom.)"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="incomeAvg" 
+                      stroke="#22c55e" 
+                      strokeDasharray="5 5"
+                      strokeWidth={1}
+                      dot={false}
+                      name="Ingresos (Prom.)"
+                    />
+                  </>
                 )}
               </LineChart>
             </ResponsiveContainer>
-          )}
+          </div>
         </div>
       </CardContent>
     </Card>
