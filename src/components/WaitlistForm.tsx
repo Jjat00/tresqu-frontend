@@ -132,7 +132,6 @@ const WaitlistForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [verificationStep, setVerificationStep] = useState(false);
   const [fullPhoneNumber, setFullPhoneNumber] = useState("");
-  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -175,8 +174,8 @@ const WaitlistForm = () => {
     setVerificationStep(false);
     setIsSubmitting(false);
   };
-  return <section id="login" className="section-padding bg-card rounded-none mx-auto my-[30px] px-4 py-[36px] text-center">
-      <div className="container mx-auto max-w-6xl py-0 px-0 my-[10px] rounded-full">
+  return <section id="login" className="section-padding bg-card rounded-none my-[30px] py-[36px] text-center px-[2px] mx-[2px]">
+      <div className="container mx-auto max-w-6xl py-0 my-[10px] rounded-full px-px">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Inicia sesión</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -186,8 +185,8 @@ const WaitlistForm = () => {
         </div>
 
         <div className="max-w-md mx-auto">
-          <Card>
-            <CardContent className="pt-6 px-0 mx-[6px]">
+          <Card className="px-0">
+            <CardContent className="pt-6 mx-[2px] px-[3px]">
               {verificationStep ? <VerificationCodeForm phoneNumber={fullPhoneNumber} onVerificationSuccess={handleVerificationSuccess} onCancel={handleCancelVerification} /> : <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className="grid grid-cols-2 mb-8">
                     <TabsTrigger value="whatsapp" className="flex gap-2 items-center">
