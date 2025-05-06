@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -15,11 +14,13 @@ import { Search, Download, Share2, AlertCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
+import { DateRange } from "../DateRangePicker";
 
 interface ExpensesTableProps {
   categoryFilter: string;
   onCategoryClick: (category: string) => void;
   onShare: () => void;
+  dateRange?: DateRange;
 }
 
 interface Expense {
@@ -48,6 +49,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   categoryFilter,
   onCategoryClick,
   onShare,
+  dateRange
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -57,6 +59,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       throw new Error("No auth token available");
     }
     
+    // You could modify the URL to include date range filters
     const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/summary/?months=1", {
       headers: {
         Authorization: `Bearer ${token}`

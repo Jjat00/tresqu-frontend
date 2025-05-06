@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
+import { DateRange } from "../DateRangePicker";
 
 interface WeeklyCategoryData {
   week: string;
@@ -15,6 +15,7 @@ interface WeeklyCategoryData {
 interface ExpensesBarChartProps {
   viewMode: "month" | "year";
   selectedMonth: string;
+  dateRange?: DateRange;
 }
 
 // Mapeo de nombres de meses a números
@@ -77,7 +78,8 @@ const categoryColors: Record<string, { fill: string, stroke: string }> = {
 
 const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
   viewMode,
-  selectedMonth
+  selectedMonth,
+  dateRange
 }) => {
   const isMobile = useIsMobile();
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);

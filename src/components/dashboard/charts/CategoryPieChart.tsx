@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
@@ -6,14 +5,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { getAccessToken } from "@/services/authService";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { DateRange } from "../DateRangePicker";
 
 interface CategoryPieChartProps {
   onCategoryClick: (category: string) => void;
-}
-
-interface CategoryData {
-  categories: string[];
-  totals: number[];
+  dateRange?: DateRange;
 }
 
 // Colores más sólidos para las categorías
@@ -59,16 +55,19 @@ const CATEGORY_COLOR_MAP: Record<string, number> = {
 };
 
 const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
-  onCategoryClick
+  onCategoryClick,
+  dateRange
 }) => {
   const isMobile = useIsMobile();
   
   const fetchCategoryData = async (): Promise<CategoryData> => {
+    // Here you could use dateRange in your API call to filter data by date
     const token = getAccessToken();
     if (!token) {
       throw new Error("No auth token available");
     }
     
+    // You could modify the URL to include date range filters
     const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/by_category/", {
       headers: {
         Authorization: `Bearer ${token}`

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,10 +10,13 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Toolti
 import { Plus, Filter, Download, Share2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
+import { DateRange } from "./DateRangePicker";
 
 interface IncomeTabProps {
   selectedMonth?: string;
   activeTab?: string;
+  dateRange?: DateRange;
+  viewMode?: "day" | "week" | "month" | "year";
 }
 
 // Define income data for different time periods
@@ -171,7 +173,9 @@ const incomeCategoryData = incomeByCategory.map(item => ({
 
 const IncomeTab = ({ 
   selectedMonth = "Abril",
-  activeTab = "income" 
+  activeTab = "income",
+  dateRange,
+  viewMode = "month"
 }: IncomeTabProps) => {
   const isMobile = useIsMobile();
   const [timeFilter, setTimeFilter] = useState("month");
@@ -181,7 +185,7 @@ const IncomeTab = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [newIncomeOpen, setNewIncomeOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"month" | "year">("month");
+  const [viewModeLocal, setViewModeLocal] = useState<"month" | "year">("month");
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
   const [newIncome, setNewIncome] = useState({
     description: "",
@@ -197,9 +201,9 @@ const IncomeTab = ({
     setLocalSelectedMonth(selectedMonth);
     // If year is selected, update view mode
     if (selectedMonth === "year") {
-      setViewMode("year");
+      setViewModeLocal("year");
     } else {
-      setViewMode("month");
+      setViewModeLocal("month");
     }
   }, [selectedMonth]);
 
@@ -473,7 +477,7 @@ const IncomeTab = ({
       {/* Gráfico comparativo */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
         <ComparativeLineChart 
-          viewMode={viewMode} 
+          viewMode={viewModeLocal} 
           selectedMonth={localSelectedMonth} 
           activeTab={activeTab || "income"}
         />

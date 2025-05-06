@@ -1,20 +1,22 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { allExpensesData } from "../data/expenseData";
+import { DateRange } from "../DateRangePicker";
 
 interface ComparativeLineChartProps {
-  viewMode?: "month" | "year";
-  selectedMonth?: string;
-  activeTab?: string;
+  viewMode: "month" | "year";
+  selectedMonth: string;
+  activeTab: string;
+  dateRange?: DateRange;
 }
 
-const ComparativeLineChart = ({ 
-  viewMode = "month", 
-  selectedMonth = "Abril",
-  activeTab = "expenses"
-}: ComparativeLineChartProps) => {
+const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
+  viewMode,
+  selectedMonth,
+  activeTab,
+  dateRange
+}) => {
   const [chartData, setChartData] = useState<any[]>([]);
   const [chartTitle, setChartTitle] = useState("Comparativa Gastos vs. Ingresos");
   const [showMovingAverage, setShowMovingAverage] = useState(true);

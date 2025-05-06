@@ -171,7 +171,14 @@ export function DateRangePicker({
                 defaultMonth={date.from}
                 selected={{ from: date.from, to: date.to }}
                 onSelect={(selectedRange) => {
-                  onDateChange(selectedRange || { from: undefined, to: undefined });
+                  if (selectedRange) {
+                    onDateChange({
+                      from: selectedRange.from,
+                      to: selectedRange.to || selectedRange.from
+                    });
+                  } else {
+                    onDateChange({ from: undefined, to: undefined });
+                  }
                 }}
                 numberOfMonths={2}
                 className="pointer-events-auto"
