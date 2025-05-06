@@ -70,13 +70,17 @@ const ExpensesTab = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 h-[320px] xs:h-[380px] sm:h-[420px] py-0 my-0 px-0 mx-0">
-        <CategoryPieChart onCategoryClick={setSelectedCategory} />
-        <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+          <CategoryPieChart onCategoryClick={setSelectedCategory} />
+        </div>
+        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+          <ExpensesBarChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
+        </div>
       </div>
       
-      {/* Nuevo gráfico lineal */}
-      <div className="h-[280px] xs:h-[320px] sm:h-[350px] py-0 my-0 px-0 mx-0">
+      {/* Gráfico lineal */}
+      <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
         <ExpensesLineChart viewMode={viewMode} selectedMonth={localSelectedMonth} />
       </div>
 
