@@ -99,7 +99,13 @@ const Hero = () => {
                 <div className="bg-[#DCF8C6] rounded-lg p-3 mb-2 max-w-[80%] shadow-md text-left">
                   <p className="text-sm text-gray-800">✅ Gasto registrado:</p>
                   <p className="text-sm font-semibold text-gray-800">
-                    $20.000 - Transporte
+                    ¡Gasto registrado exitosamente!
+
+Categoría: Transporte  
+Monto: 20,000 COP  
+Fecha: 2025-05-06  
+Nota: Gasto en transporte
+
                   </p>
                   <p className="text-[10px] text-gray-600 text-right">
                     10:42 AM
