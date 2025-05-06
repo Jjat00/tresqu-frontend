@@ -30,7 +30,7 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
       throw new Error("No auth token available");
     }
     
-    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/categories/", {
+    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/by_category/, {
       headers: {
         Authorization: `Bearer ${token}`
       }
