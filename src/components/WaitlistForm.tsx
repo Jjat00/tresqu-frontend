@@ -184,9 +184,9 @@ const WaitlistForm = () => {
           </p>
         </div>
 
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md px-0 mx-0 py-0">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 py-[33px] px-0 mx-[6px]">
               {verificationStep ? <VerificationCodeForm phoneNumber={fullPhoneNumber} onVerificationSuccess={handleVerificationSuccess} onCancel={handleCancelVerification} /> : <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className="grid grid-cols-2 mb-8">
                     <TabsTrigger value="whatsapp" className="flex gap-2 items-center">
@@ -250,7 +250,7 @@ const WaitlistForm = () => {
                         <Label htmlFor="telegram-phone">
                           Número de teléfono
                         </Label>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 px-[2px]">
                           <div className="w-1/3">
                             <Select value={telegramCountryCode} onValueChange={setTelegramCountryCode}>
                               <SelectTrigger>
