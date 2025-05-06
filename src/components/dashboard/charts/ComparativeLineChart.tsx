@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -115,7 +114,7 @@ const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
           );
           
           // Usar el ingreso simulado
-          const totalIncome = incomeData[index].incomeTotal;
+          const totalIncome = incomeData[index]?.incomeTotal || 0;
           
           return {
             name: weekData.week,
@@ -129,16 +128,16 @@ const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
           for (let i = 2; i < processedData.length; i++) {
             // Promedio móvil de gastos
             const expensesAvg = (
-              processedData[i].expenses + 
-              processedData[i-1].expenses + 
-              processedData[i-2].expenses
+              Number(processedData[i].expenses || 0) + 
+              Number(processedData[i-1].expenses || 0) + 
+              Number(processedData[i-2].expenses || 0)
             ) / 3;
             
             // Promedio móvil de ingresos
             const incomeAvg = (
-              processedData[i].income + 
-              processedData[i-1].income + 
-              processedData[i-2].income
+              Number(processedData[i].income || 0) + 
+              Number(processedData[i-1].income || 0) + 
+              Number(processedData[i-2].income || 0)
             ) / 3;
             
             processedData[i].expensesAvg = Math.round(expensesAvg);
