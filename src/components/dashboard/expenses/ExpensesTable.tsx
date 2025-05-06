@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -10,13 +11,37 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Download, Share2 } from "lucide-react";
-import { allExpensesData } from "../data/expenseData";
+import { Search, Download, Share2, AlertCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getAccessToken } from "@/services/authService";
+import { toast } from "sonner";
 
 interface ExpensesTableProps {
   categoryFilter: string;
   onCategoryClick: (category: string) => void;
   onShare: () => void;
+}
+
+interface Expense {
+  id: number;
+  user: number;
+  amount: string;
+  currency: string;
+  description: string;
+  timestamp: string;
+  raw_message: string;
+  created_at: string;
+  updated_at: string;
+  category: number | null;
+  category_str: string;
+  spent_at: string;
+  note: string;
+}
+
+interface ExpensesData {
+  by_category: Record<string, number>;
+  total: number;
+  recent_expenses: Expense[];
 }
 
 const ExpensesTable: React.FC<ExpensesTableProps> = ({
@@ -25,51 +50,95 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   onShare,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredExpenses, setFilteredExpenses] = useState(allExpensesData);
 
-  // Apply filters in real-time
-  useEffect(() => {
-    let filtered = [...allExpensesData];
+  const fetchExpenses = async (): Promise<ExpensesData> => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("No auth token available");
+    }
+    
+    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/summary/?months=1", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Error fetching expenses: ${response.status}`);
+    }
+    
+    return await response.json();
+  };
 
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['expensesData'],
+    queryFn: fetchExpenses,
+    retry: 1,
+  });
+
+  // Show error toast if the fetch fails
+  React.useEffect(() => {
+    if (error) {
+      toast.error("No se pudieron cargar los gastos recientes");
+      console.error("Error loading expenses:", error);
+    }
+  }, [error]);
+
+  // Filter expenses based on search query and category filter
+  const filteredExpenses = React.useMemo(() => {
+    if (!data?.recent_expenses) return [];
+    
+    let filtered = [...data.recent_expenses];
+    
     // Apply category filter
     if (categoryFilter !== "all") {
       filtered = filtered.filter(
         (expense) =>
-          expense.category.toLowerCase() ===
-          categoryFilter
-            .replace("food", "alimentación")
-            .replace("transport", "transporte")
-            .replace("entertainment", "entretenimiento")
-            .replace("services", "servicios")
+          expense.category_str.toLowerCase() ===
+          categoryFilter.toLowerCase()
       );
     }
-
+    
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (expense) =>
-          expense.description.toLowerCase().includes(query) ||
-          expense.category.toLowerCase().includes(query)
+          expense.note.toLowerCase().includes(query) ||
+          expense.category_str.toLowerCase().includes(query)
       );
     }
+    
+    return filtered;
+  }, [data, categoryFilter, searchQuery]);
 
-    // Sort by date (most recent first)
-    filtered.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-
-    setFilteredExpenses(filtered);
-  }, [categoryFilter, searchQuery]);
+  const totalAmount = React.useMemo(() => {
+    if (!filteredExpenses?.length) return 0;
+    
+    return filteredExpenses.reduce((total, expense) => {
+      // Convert to number and handle multiple currencies
+      const amount = parseFloat(expense.amount);
+      // Simple conversion - in a real app you'd use proper currency conversion
+      const multiplier = expense.currency === "USD" ? 4000 : 1; // Rough conversion USD to COP
+      return total + (amount * multiplier);
+    }, 0);
+  }, [filteredExpenses]);
 
   const handleExportPDF = () => {
+    toast.info("Exportando a PDF...");
     console.log("Exporting expenses to PDF");
     // Implementation would go here
   };
 
   const handleExportExcel = () => {
+    toast.info("Exportando a Excel...");
     console.log("Exporting expenses to Excel");
     // Implementation would go here
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-CO');
   };
 
   return (
@@ -130,26 +199,52 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredExpenses.map((expense) => (
-                <TableRow
-                  key={expense.id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => onCategoryClick(expense.category)}
-                >
-                  <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
-                    {expense.description}
-                  </TableCell>
-                  <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
-                    {expense.category}
-                  </TableCell>
-                  <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
-                    ${expense.amount.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs whitespace-nowrap">
-                    {new Date(expense.date).toLocaleDateString()}
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
+                      <p className="text-sm text-muted-foreground">Cargando gastos...</p>
+                    </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : error ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+                      <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : filteredExpenses.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    <p className="text-sm text-muted-foreground">No hay gastos que mostrar</p>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredExpenses.map((expense) => (
+                  <TableRow
+                    key={expense.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => onCategoryClick(expense.category_str)}
+                  >
+                    <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
+                      {expense.note || "Sin descripción"}
+                    </TableCell>
+                    <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
+                      {expense.category_str || "Sin categoría"}
+                    </TableCell>
+                    <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
+                      {parseFloat(expense.amount).toLocaleString('es-CO')} {expense.currency}
+                    </TableCell>
+                    <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs whitespace-nowrap">
+                      {formatDate(expense.spent_at)}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
@@ -159,10 +254,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             <p className="text-[10px] xs:text-xs text-muted-foreground">
               Total:{" "}
               <span className="font-semibold">
-                $
-                {filteredExpenses
-                  .reduce((sum, expense) => sum + expense.amount, 0)
-                  .toLocaleString()}
+                ${totalAmount.toLocaleString('es-CO')} COP
               </span>
             </p>
           </div>
