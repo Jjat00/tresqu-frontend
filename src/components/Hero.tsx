@@ -97,9 +97,9 @@ const Hero = () => {
                   </p>
                 </div>
                 <div className="bg-[#DCF8C6] rounded-lg p-3 mb-2 max-w-[80%] shadow-md text-left">
-                  <p className="text-sm text-gray-800">✅ Gasto registrado:</p>
+                  <p className="text-sm text-gray-800">✅ ¡Gasto registrado exitosamente!</p>
                   <p className="text-sm font-semibold text-gray-800">
-                    ¡Gasto registrado exitosamente!
+                    
 
 Categoría: Transporte  
 Monto: 20,000 COP  
