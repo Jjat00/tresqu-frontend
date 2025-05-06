@@ -1,4 +1,3 @@
-
 // Interfaz para la respuesta de solicitud de código
 interface RequestCodeResponse {
   message: string;
@@ -8,7 +7,7 @@ interface RequestCodeResponse {
 }
 
 // Interfaz para la respuesta de verificación de código
-interface VerifyCodeResponse {
+export interface VerifyCodeResponse {
   refresh: string;
   access: string;
   user: User;
@@ -67,20 +66,22 @@ const REQUEST_CODE_URL = `${API_BASE_URL}/auth/telegram/request-code/`;
 const VERIFY_CODE_URL = `${API_BASE_URL}/auth/telegram/verify-code/`;
 
 // Función para solicitar código de verificación
-export const requestTelegramCode = async (phoneNumber: string): Promise<RequestCodeResponse> => {
+export const requestTelegramCode = async (
+  phoneNumber: string
+): Promise<RequestCodeResponse> => {
   try {
     console.log("Solicitando código para:", phoneNumber);
-    
+
     // Verificar que el número tenga el formato correcto (con el código de país)
     if (!phoneNumber.startsWith("+")) {
       phoneNumber = "+" + phoneNumber;
     }
-    
+
     // Quitar el signo + para el envío, ya que el API espera el número sin el +
     const formattedPhoneNumber = phoneNumber.replace("+", "");
-    
+
     console.log("Número formateado:", formattedPhoneNumber);
-    
+
     const response = await fetch(REQUEST_CODE_URL, {
       method: "POST",
       headers: {
@@ -90,11 +91,13 @@ export const requestTelegramCode = async (phoneNumber: string): Promise<RequestC
     });
 
     console.log("Status de la respuesta:", response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error de API:", errorText);
-      throw new Error(`Error ${response.status}: ${errorText || response.statusText}`);
+      throw new Error(
+        `Error ${response.status}: ${errorText || response.statusText}`
+      );
     }
 
     return await response.json();
@@ -114,12 +117,12 @@ export const verifyTelegramCode = async (
     if (!phoneNumber.startsWith("+")) {
       phoneNumber = "+" + phoneNumber;
     }
-    
+
     // Quitar el signo + para el envío, ya que el API espera el número sin el +
     const formattedPhoneNumber = phoneNumber.replace("+", "");
-    
+
     console.log("Verificando código para:", formattedPhoneNumber);
-    
+
     const response = await fetch(VERIFY_CODE_URL, {
       method: "POST",
       headers: {
@@ -129,11 +132,13 @@ export const verifyTelegramCode = async (
     });
 
     console.log("Status de la verificación:", response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error al verificar código:", errorText);
-      throw new Error(`Error ${response.status}: ${errorText || response.statusText}`);
+      throw new Error(
+        `Error ${response.status}: ${errorText || response.statusText}`
+      );
     }
 
     return await response.json();
@@ -144,7 +149,11 @@ export const verifyTelegramCode = async (
 };
 
 // Funciones para manejar el token en localStorage
-export const saveAuthTokens = (tokens: { access: string; refresh: string; user: User }) => {
+export const saveAuthTokens = (tokens: {
+  access: string;
+  refresh: string;
+  user: User;
+}) => {
   localStorage.setItem("access_token", tokens.access);
   localStorage.setItem("refresh_token", tokens.refresh);
   localStorage.setItem("user", JSON.stringify(tokens.user));
