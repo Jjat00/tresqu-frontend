@@ -19,7 +19,7 @@ const Hero = () => {
                 animationDelay: "100ms",
               }}
             >
-              CashBot utiliza Inteligencia Artificial  para hacer analisis financieros claros y automáticos, cercano y sin complicaciones.
+              CashBot utiliza Inteligencia Artificial  para hacer analisis financieros claros y automáticos, cercano y sin complicaciones
             </p>
           </div>
 
