@@ -15,30 +15,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// Array of common country codes
+// Array of common country codes with flag emojis
 const countryCodes = [
-  { code: "+1", country: "Estados Unidos/Canadá" },
-  { code: "+52", country: "México" },
-  { code: "+54", country: "Argentina" },
-  { code: "+55", country: "Brasil" },
-  { code: "+56", country: "Chile" },
-  { code: "+57", country: "Colombia" },
-  { code: "+58", country: "Venezuela" },
-  { code: "+34", country: "España" },
-  { code: "+502", country: "Guatemala" },
-  { code: "+503", country: "El Salvador" },
-  { code: "+504", country: "Honduras" },
-  { code: "+505", country: "Nicaragua" },
-  { code: "+506", country: "Costa Rica" },
-  { code: "+507", country: "Panamá" },
-  { code: "+51", country: "Perú" },
-  { code: "+591", country: "Bolivia" },
-  { code: "+593", country: "Ecuador" },
-  { code: "+595", country: "Paraguay" },
-  { code: "+598", country: "Uruguay" },
-  { code: "+1787", country: "Puerto Rico" },
-  { code: "+53", country: "Cuba" },
-  { code: "+809", country: "República Dominicana" },
+  { code: "+1", country: "🇺🇸" },    // Estados Unidos/Canadá
+  { code: "+52", country: "🇲🇽" },   // México
+  { code: "+54", country: "🇦🇷" },   // Argentina
+  { code: "+55", country: "🇧🇷" },   // Brasil
+  { code: "+56", country: "🇨🇱" },   // Chile
+  { code: "+57", country: "🇨🇴" },   // Colombia
+  { code: "+58", country: "🇻🇪" },   // Venezuela
+  { code: "+34", country: "🇪🇸" },   // España
+  { code: "+502", country: "🇬🇹" },  // Guatemala
+  { code: "+503", country: "🇸🇻" },  // El Salvador
+  { code: "+504", country: "🇭🇳" },  // Honduras
+  { code: "+505", country: "🇳🇮" },  // Nicaragua
+  { code: "+506", country: "🇨🇷" },  // Costa Rica
+  { code: "+507", country: "🇵🇦" },  // Panamá
+  { code: "+51", country: "🇵🇪" },   // Perú
+  { code: "+591", country: "🇧🇴" },  // Bolivia
+  { code: "+593", country: "🇪🇨" },  // Ecuador
+  { code: "+595", country: "🇵🇾" },  // Paraguay
+  { code: "+598", country: "🇺🇾" },  // Uruguay
+  { code: "+1787", country: "🇵🇷" }, // Puerto Rico
+  { code: "+53", country: "🇨🇺" },   // Cuba
+  { code: "+809", country: "🇩🇴" },  // República Dominicana
 ];
 
 const WaitlistForm = () => {
@@ -101,7 +101,10 @@ const WaitlistForm = () => {
                             <SelectContent>
                               {countryCodes.map((country) => (
                                 <SelectItem key={country.code} value={country.code}>
-                                  {country.code} {country.country}
+                                  <span className="flex items-center gap-2">
+                                    <span className="text-lg">{country.country}</span> 
+                                    <span>{country.code}</span>
+                                  </span>
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -153,7 +156,10 @@ const WaitlistForm = () => {
                             <SelectContent>
                               {countryCodes.map((country) => (
                                 <SelectItem key={country.code} value={country.code}>
-                                  {country.code} {country.country}
+                                  <span className="flex items-center gap-2">
+                                    <span className="text-lg">{country.country}</span> 
+                                    <span>{country.code}</span>
+                                  </span>
                                 </SelectItem>
                               ))}
                             </SelectContent>
