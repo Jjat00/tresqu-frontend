@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
 import { logout, isAuthenticated, getUser } from "@/services/authService";
 import { toast } from "sonner";
-import Logo from "@/components/Logo";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -40,7 +39,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       {/* Dashboard header */}
       <header className="border-b sticky top-0 z-30 bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
-          <Logo />
+          <div className="flex items-center gap-2">
+            <a href="/" className="text-xl font-bold">
+              <span className="text-success">Cash<span className="text-foreground">Bot</span></span>
+            </a>
+          </div>
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">

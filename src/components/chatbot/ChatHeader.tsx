@@ -12,14 +12,10 @@ const ChatHeader = ({ onMinimize, onClose }: ChatHeaderProps) => {
   return (
     <div className="flex justify-between items-center border-b pb-2 mb-2">
       <div className="flex items-center">
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-highlight/20 flex items-center justify-center">
-          <img 
-            src="/lovable-uploads/b6f2898a-6513-45fd-a734-c4e9df849741.png" 
-            alt="Tresqu Logo" 
-            className="h-5 w-auto filter brightness-0 invert sepia hue-rotate-165 saturate-200" 
-          />
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-success/20 flex items-center justify-center">
+          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-success" />
         </div>
-        <span className="font-medium text-xs sm:text-sm ml-2">Tresqu</span>
+        <span className="font-medium text-xs sm:text-sm ml-2">CashBot</span>
       </div>
       <div className="flex items-center">
         <TooltipProvider>
