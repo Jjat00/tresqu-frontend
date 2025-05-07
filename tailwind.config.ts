@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -73,19 +72,6 @@ export default {
         highlight: {
           DEFAULT: "#60a5fa", // Azul acento
           foreground: "#ffffff",
-        },
-        // Nuevos colores tecnológicos
-        tech: {
-          purple: {
-            DEFAULT: "#9b87f5", // Morado principal
-            light: "#e5deff", // Morado claro
-            dark: "#6e59a5", // Morado oscuro
-          },
-          pink: {
-            DEFAULT: "#d946ef", // Rosa principal
-            light: "#ffdee2", // Rosa claro
-            dark: "#be185d", // Rosa oscuro
-          }
         },
       },
       borderRadius: {
