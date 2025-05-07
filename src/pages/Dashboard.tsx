@@ -46,27 +46,16 @@ const Dashboard = () => {
   }, []);
   
   const handleShareApp = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'CashBot - Tu asistente financiero inteligente',
-        text: '¡Controla tus finanzas de forma inteligente con CashBot! Registra gastos por voz o texto y obtén análisis personalizados.',
-        url: window.location.origin
-      }).then(() => console.log('Shared successfully')).catch(error => console.log('Share failed:', error));
-    } else {
-      // Fallback for browsers that don't support navigator.share
-      navigator.clipboard.writeText(window.location.origin).then(() => {
-        toast({
-          title: "Enlace copiado",
-          description: "La URL de CashBot ha sido copiada al portapapeles para compartir."
-        });
-      }).catch(() => {
-        toast({
-          title: "Error",
-          description: "No se pudo copiar el enlace. Intenta manualmente.",
-          variant: "destructive"
-        });
-      });
-    }
+    // Crea el mensaje para compartir
+    const shareTitle = 'CashBot - Tu asistente financiero inteligente';
+    const shareText = '¡Controla tus finanzas de forma inteligente con CashBot! Registra gastos por voz o texto y obtén análisis personalizados.';
+    const shareUrl = window.location.origin;
+    
+    // URL para compartir en Telegram
+    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`${shareTitle}\n\n${shareText}`)}`;
+    
+    // Abre la ventana de compartir de Telegram
+    window.open(telegramShareUrl, '_blank');
   };
 
   // Manejar cambio de rango de fechas
@@ -116,7 +105,6 @@ const Dashboard = () => {
             date={dateRange}
             onDateChange={handleDateRangeChange}
             viewMode={viewMode}
-            onViewModeChange={setViewMode}
           />
         </div>
         
@@ -173,3 +161,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
