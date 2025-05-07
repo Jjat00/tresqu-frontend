@@ -79,7 +79,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Agregamos la simulación de chat de WhatsApp con una pequeña mejora visual */}
+          {/* Simulación de chat de WhatsApp */}
           <div
             className="w-full max-w-sm mx-auto mt-4 md:mt-8 animate-fade-in"
             style={{

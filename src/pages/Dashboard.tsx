@@ -47,8 +47,8 @@ const Dashboard = () => {
   
   const handleShareApp = () => {
     // Crea el mensaje para compartir
-    const shareTitle = 'CashBot - Tu asistente financiero inteligente';
-    const shareText = '¡Controla tus finanzas de forma inteligente con CashBot! Registra gastos por voz o texto y obtén análisis personalizados.';
+    const shareTitle = 'Tresqu - Tu asistente financiero inteligente';
+    const shareText = '¡Controla tus finanzas de forma inteligente con Tresqu! Registra gastos por voz o texto y obtén análisis personalizados.';
     const shareUrl = window.location.origin;
     
     // URL para compartir en Telegram
@@ -96,7 +96,7 @@ const Dashboard = () => {
           
           <Button variant="outline" className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0" onClick={handleShareApp} size={isMobile ? "sm" : "default"}>
             <Share2 className="h-4 w-4" />
-            <span className="text-sm">Compartir CashBot</span>
+            <span className="text-sm">Compartir Tresqu</span>
           </Button>
         </div>
         

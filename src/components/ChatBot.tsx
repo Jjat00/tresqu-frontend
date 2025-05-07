@@ -57,7 +57,7 @@ const ChatBot = () => {
         onClick={() => setShowChat(prev => !prev)}
       >
         <MessageSquare className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'}`} />
-        <span className="sr-only">Chat con CashBot</span>
+        <span className="sr-only">Chat con Tresqu</span>
       </Button>
     </div>
   );
