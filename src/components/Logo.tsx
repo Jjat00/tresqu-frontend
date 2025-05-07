@@ -1,33 +1,29 @@
 
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
 interface LogoProps {
   className?: string;
   showText?: boolean;
-  size?: 'sm' | 'md' | 'lg';
 }
 
-const Logo: React.FC<LogoProps> = ({ className = "", showText = true, size = 'md' }) => {
-  const sizeClasses = {
-    sm: 'h-6',
-    md: 'h-8',
-    lg: 'h-10'
-  };
-
+const Logo: React.FC<LogoProps> = ({ className = "", showText = true }) => {
   return (
-    <div className={`flex items-center ${className}`}>
-      <img 
-        src="/lovable-uploads/119c6094-2481-4397-9118-15791e344f1b.png" 
-        alt="Tresqu Logo" 
-        className={`${sizeClasses[size]}`}
-      />
+    <Link to="/" className={`flex items-center gap-2 ${className}`}>
+      <div className="flex items-center justify-center">
+        <img 
+          src="/lovable-uploads/b6f2898a-6513-45fd-a734-c4e9df849741.png" 
+          alt="Tresqu Logo" 
+          className="h-8 w-auto filter brightness-0 invert sepia hue-rotate-165 saturate-200" 
+        />
+      </div>
       {showText && (
-        <span className="ml-2 font-bold font-display">
-          <span className="text-success">Tres</span>
-          <span>qu</span>
+        <span className="text-xl font-bold font-display">
+          <span className="text-highlight">Tres</span>
+          <span className="text-foreground">qu</span>
         </span>
       )}
-    </div>
+    </Link>
   );
 };
 

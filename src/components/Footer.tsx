@@ -17,7 +17,7 @@ const Footer = () => {
       <div className="container">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
-            <Logo size="md" />
+            <Logo />
           </div>
           
           <div className="flex items-center space-x-4 mb-6 md:mb-0">

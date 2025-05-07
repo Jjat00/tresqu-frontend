@@ -40,11 +40,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       {/* Dashboard header */}
       <header className="border-b sticky top-0 z-30 bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
-          <div className="flex items-center gap-2">
-            <a href="/">
-              <Logo size="sm" />
-            </a>
-          </div>
+          <Logo />
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">

@@ -28,11 +28,7 @@ const Header = () => {
       scrolled ? 'py-3 bg-background/80 backdrop-blur-lg shadow-md' : 'py-5'
     }`}>
       <div className="container flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Link to="/">
-            <Logo size={scrolled ? "sm" : "md"} />
-          </Link>
-        </div>
+        <Logo />
         {isHomePage ? (
           <>
             <nav className="hidden md:flex items-center space-x-8">
