@@ -72,7 +72,7 @@ export const useLineChartData = (dateRange: DateRange, viewMode: "day" | "week" 
               url += "&group_by=month";
             } else if (viewMode === "month") {
               url += "&group_by=week";
-            } else if (viewMode === "week") {
+            } else if (viewMode === "day") {
               url += "&group_by=day";
             } else if (viewMode === "day") {
               url += "&group_by=hour";
