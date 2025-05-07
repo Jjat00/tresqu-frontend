@@ -67,6 +67,7 @@ export const useLineChartData = (dateRange: DateRange, viewMode: "day" | "week" 
             url += `date_filter=custom&start_date=${format(dateRange.from, "yyyy-MM-dd")}&end_date=${format(dateRange.to, "yyyy-MM-dd")}`;
             
             // Add appropriate grouping based on the date range span and viewMode
+            // Always group by day when in week view mode
             if (viewMode === "year") {
               url += "&group_by=month";
             } else if (viewMode === "month") {
@@ -84,7 +85,7 @@ export const useLineChartData = (dateRange: DateRange, viewMode: "day" | "week" 
               url += "date_filter=today";
               break;
             case "week":
-              url += "date_filter=current_week";
+              url += "date_filter=current_week&group_by=day"; // Explicitly group by day for week view
               break;
             case "month":
               url += "date_filter=current_month";
@@ -93,7 +94,7 @@ export const useLineChartData = (dateRange: DateRange, viewMode: "day" | "week" 
               url += "date_filter=current_year";
               break;
             default:
-              url += "date_filter=current_week";
+              url += "date_filter=current_week&group_by=day";
           }
         }
 
