@@ -6,6 +6,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { getAccessToken } from "@/services/authService";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { DateRange } from "../DateRangePicker";
 
 interface CategoryPieChartProps {
@@ -13,10 +15,33 @@ interface CategoryPieChartProps {
   dateRange?: DateRange;
 }
 
-// Define the missing CategoryData interface
-interface CategoryData {
-  categories: string[];
-  totals: number[];
+// Define interfaces for the donut chart data
+interface DonutChartData {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    hoverBackgroundColor: string[];
+  }[];
+  filter_summary: string;
+  total_amount: number;
+  recent_expenses: Expense[];
+}
+
+interface Expense {
+  id: number;
+  user: number;
+  amount: string;
+  currency: string;
+  description: string;
+  timestamp: string;
+  raw_message: string;
+  created_at: string;
+  updated_at: string;
+  category: number;
+  category_str: string;
+  spent_at: string;
+  note: string;
 }
 
 // Colores más sólidos para las categorías
@@ -66,39 +91,103 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   dateRange
 }) => {
   const isMobile = useIsMobile();
+  const [filterSummary, setFilterSummary] = useState("");
   
-  const fetchCategoryData = async (): Promise<CategoryData> => {
-    // Here you could use dateRange in your API call to filter data by date
+  // Determinar el tipo de filtro basado en el dateRange
+  const getDateFilter = (): string => {
+    if (!dateRange || !dateRange.from || !dateRange.to) {
+      return "all";
+    }
+    
+    // Formato para las fechas personalizadas
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Comprobar si es hoy
+    if (
+      dateRange.from.getDate() === today.getDate() && 
+      dateRange.from.getMonth() === today.getMonth() && 
+      dateRange.from.getFullYear() === today.getFullYear() &&
+      dateRange.to.getDate() === today.getDate() && 
+      dateRange.to.getMonth() === today.getMonth() && 
+      dateRange.to.getFullYear() === today.getFullYear()
+    ) {
+      return "today";
+    }
+    
+    // Comprobar si es ayer
+    if (
+      dateRange.from.getDate() === yesterday.getDate() && 
+      dateRange.from.getMonth() === yesterday.getMonth() && 
+      dateRange.from.getFullYear() === yesterday.getFullYear() &&
+      dateRange.to.getDate() === yesterday.getDate() && 
+      dateRange.to.getMonth() === yesterday.getMonth() && 
+      dateRange.to.getFullYear() === yesterday.getFullYear()
+    ) {
+      return "yesterday";
+    }
+    
+    // Para otros rangos, usamos custom
+    return "custom";
+  };
+  
+  // Construir los parámetros de URL
+  const buildQueryParams = (): string => {
+    const dateFilter = getDateFilter();
+    
+    if (dateFilter === "custom" && dateRange?.from && dateRange?.to) {
+      const startDate = format(dateRange.from, "yyyy-MM-dd");
+      const endDate = format(dateRange.to, "yyyy-MM-dd");
+      return `?date_filter=${dateFilter}&start_date=${startDate}&end_date=${endDate}`;
+    }
+    
+    return `?date_filter=${dateFilter}`;
+  };
+
+  const fetchDonutChartData = async (): Promise<DonutChartData> => {
     const token = getAccessToken();
     if (!token) {
       throw new Error("No auth token available");
     }
     
-    // You could modify the URL to include date range filters
-    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/by_category/", {
+    const queryParams = buildQueryParams();
+    const url = `https://web-production-11f27.up.railway.app/api/expenses/donut_chart_data/${queryParams}`;
+    
+    console.log("Fetching donut chart data from:", url);
+    
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
     
     if (!response.ok) {
-      throw new Error(`Error fetching category data: ${response.status}`);
+      throw new Error(`Error fetching donut chart data: ${response.status}`);
     }
     
-    return await response.json();
+    const data = await response.json();
+    return data;
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['categoryData'],
-    queryFn: fetchCategoryData,
+    queryKey: ['donutChartData', dateRange?.from?.toISOString(), dateRange?.to?.toISOString()],
+    queryFn: fetchDonutChartData,
     retry: 1,
   });
+
+  // Actualizar el resumen del filtro cuando cambian los datos
+  useEffect(() => {
+    if (data?.filter_summary) {
+      setFilterSummary(data.filter_summary);
+    }
+  }, [data]);
 
   // Process the API data into the format needed for the pie chart
   const processedData = React.useMemo(() => {
     if (!data) return [];
     
-    return data.categories.map((category, index) => {
+    return data.labels.map((category, index) => {
       // Obtener el índice de color basado en la categoría, o usar el índice como fallback
       const colorIndex = category in CATEGORY_COLOR_MAP 
         ? CATEGORY_COLOR_MAP[category] 
@@ -106,8 +195,8 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
         
       return {
         name: category,
-        value: data.totals[index],
-        color: COLORS[colorIndex],
+        value: data.datasets[0].data[index],
+        color: data.datasets[0].backgroundColor[index] || COLORS[colorIndex],
         textColor: TEXT_COLORS[colorIndex]
       };
     });
@@ -124,9 +213,14 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   return (
     <Card className="overflow-hidden h-full flex flex-col">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
-        <h3 className="xs:text-base sm:text-lg mb-1 xs:mb-2 text-sm font-semibold text-center">
-          Gastos por Categoría
-        </h3>
+        <div className="flex justify-between items-center mb-1 xs:mb-2">
+          <h3 className="xs:text-base sm:text-lg font-semibold text-center">
+            Gastos por Categoría
+          </h3>
+          {filterSummary && (
+            <p className="text-xs text-muted-foreground">{filterSummary}</p>
+          )}
+        </div>
         <div className="flex-1 min-h-[250px] sm:min-h-[300px] flex items-center justify-center">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center text-muted-foreground">
