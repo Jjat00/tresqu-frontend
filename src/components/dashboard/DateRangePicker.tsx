@@ -9,13 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import DateRangePickerCalendar from "./dateRangePicker/DateRangePickerCalendar";
 import { usePredefinedDateRanges, ViewMode } from "./dateRangePicker/predefinedDateRanges";
@@ -29,7 +22,7 @@ export type DateRangePickerProps = {
   date: DateRange;
   onDateChange: (date: DateRange) => void;
   viewMode: ViewMode;
-  onViewModeChange: (viewMode: ViewMode) => void;
+  onViewModeChange?: (viewMode: ViewMode) => void; // Made optional
 };
 
 export function DateRangePicker({
@@ -56,7 +49,7 @@ export function DateRangePicker({
   // Get predefined date ranges
   const predefinedRanges = usePredefinedDateRanges(
     onDateChange,
-    onViewModeChange,
+    onViewModeChange || (() => {}), // Provide a default empty function if not provided
     () => setIsCalendarOpen(false)
   );
 
@@ -88,8 +81,6 @@ export function DateRangePicker({
             />
           </PopoverContent>
         </Popover>
-
-        {/* Removing the ViewMode Select dropdown as requested */}
       </div>
     </div>
   );

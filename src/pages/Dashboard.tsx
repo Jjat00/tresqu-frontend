@@ -105,6 +105,7 @@ const Dashboard = () => {
             date={dateRange}
             onDateChange={handleDateRangeChange}
             viewMode={viewMode}
+            onViewModeChange={setViewMode}
           />
         </div>
         
@@ -161,4 +162,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
