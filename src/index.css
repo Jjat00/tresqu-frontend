@@ -35,6 +35,10 @@
     --input: 216 34% 17%;
     --ring: 224 76% 48%;
 
+    /* Nuevos acentos tecnológicos */
+    --accent-purple: 255 80% 75%;
+    --accent-pink: 319 90% 60%;
+
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
@@ -63,7 +67,7 @@
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-success to-highlight;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-success via-tech-purple to-highlight;
   }
 
   .glass {
@@ -72,6 +76,14 @@
 
   .section-padding {
     @apply py-16 md:py-20 lg:py-24;
+  }
+
+  .tech-accent {
+    @apply bg-gradient-to-r from-tech-purple to-tech-pink-light;
+  }
+  
+  .tech-shadow {
+    @apply shadow-lg shadow-tech-purple/20;
   }
 }
 
