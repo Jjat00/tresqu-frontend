@@ -41,7 +41,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="container flex h-16 items-center justify-between py-4">
           <div className="flex items-center gap-2">
             <a href="/" className="text-xl font-bold">
-              <span className="text-success">Cash<span className="text-foreground">Bot</span></span>
+              <span className="text-success">Tres<span className="text-foreground">qu</span></span>
             </a>
           </div>
           
