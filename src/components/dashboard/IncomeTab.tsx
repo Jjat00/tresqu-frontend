@@ -11,7 +11,6 @@ import { Plus, Filter, Download, Share2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
 import { DateRange } from "./DateRangePicker";
-
 interface IncomeTabProps {
   selectedMonth?: string;
   activeTab?: string;
@@ -170,8 +169,7 @@ const incomeCategoryData = incomeByCategory.map(item => ({
   value: item.amount,
   color: item.color
 }));
-
-const IncomeTab = ({ 
+const IncomeTab = ({
   selectedMonth = "Abril",
   activeTab = "income",
   dateRange,
@@ -231,7 +229,6 @@ const IncomeTab = ({
   useEffect(() => {
     setChartData(incomeDataByPeriod[timeFilter as keyof typeof incomeDataByPeriod]);
   }, [timeFilter]);
-
   const handleAddIncome = () => {
     console.log("Adding new income:", newIncome);
     // Here you would add logic to add the income
@@ -245,22 +242,18 @@ const IncomeTab = ({
       recurring: false
     });
   };
-
   const handleExportPDF = () => {
     console.log("Exporting income data to PDF");
     // Implementation would go here
   };
-
   const handleExportExcel = () => {
     console.log("Exporting income data to Excel");
     // Implementation would go here
   };
-
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
-
   return <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="flex flex-wrap gap-2 w-full xs:w-auto">
@@ -288,10 +281,7 @@ const IncomeTab = ({
             </SelectContent>
           </Select>
           
-          <Button variant="outline" size="icon" className="h-9 w-9">
-            <Filter className="h-4 w-4" />
-            <span className="sr-only">Filtrar</span>
-          </Button>
+          
         </div>
         
         <Dialog open={newIncomeOpen} onOpenChange={setNewIncomeOpen}>
@@ -476,11 +466,7 @@ const IncomeTab = ({
       
       {/* Gráfico comparativo */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-        <ComparativeLineChart 
-          viewMode={viewModeLocal} 
-          selectedMonth={localSelectedMonth} 
-          activeTab={activeTab || "income"}
-        />
+        <ComparativeLineChart viewMode={viewModeLocal} selectedMonth={localSelectedMonth} activeTab={activeTab || "income"} />
       </div>
       
       <Card>
@@ -581,5 +567,4 @@ const IncomeTab = ({
       </Card>
     </div>;
 };
-
 export default IncomeTab;
