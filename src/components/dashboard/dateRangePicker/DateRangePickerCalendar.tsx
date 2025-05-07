@@ -20,7 +20,7 @@ const DateRangePickerCalendar: React.FC<DateRangePickerCalendarProps> = ({
 }) => {
   return (
     <>
-      <div className="border-b sm:border-b-0 sm:border-r p-2 space-y-2 overflow-y-auto max-h-[250px] sm:max-h-[350px] w-full sm:w-auto">
+      <div className="border-b sm:border-b-0 sm:border-r p-2 space-y-2 overflow-y-auto max-h-[200px] sm:max-h-[300px] w-full sm:w-[180px] flex-shrink-0">
         {predefinedRanges.map((range, index) => (
           <Button
             key={index}
