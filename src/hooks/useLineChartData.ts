@@ -66,17 +66,8 @@ export const useLineChartData = (dateRange: DateRange, viewMode: "day" | "week" 
             // Custom date range
             url += `date_filter=custom&start_date=${format(dateRange.from, "yyyy-MM-dd")}&end_date=${format(dateRange.to, "yyyy-MM-dd")}`;
             
-            // Add appropriate grouping based on the date range span and viewMode
-            // Always group by day when in week view mode
-            if (viewMode === "year") {
-              url += "&group_by=month";
-            } else if (viewMode === "month") {
-              url += "&group_by=week";
-            } else if (viewMode === "day") {
-              url += "&group_by=day";
-            } else if (viewMode === "day") {
-              url += "&group_by=hour";
-            }
+            // For custom date ranges, always group by day regardless of view mode
+            url += "&group_by=day";
           }
         } else {
           // Use predefined filters if date range is not complete

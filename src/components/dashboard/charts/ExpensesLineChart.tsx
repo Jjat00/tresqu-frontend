@@ -37,6 +37,10 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
   const isYesterday = dateRange.from && dateRange.to && 
                      isSameDay(dateRange.from, startOfYesterday()) && 
                      isSameDay(dateRange.to, startOfYesterday());
+                     
+  // Check if dateRange is custom (not today or yesterday)
+  const isCustomDateRange = dateRange.from && dateRange.to && 
+                           !isToday && !isYesterday;
 
   // Format data for Recharts
   const chartData = React.useMemo(() => {
@@ -85,6 +89,8 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
       return "Gastos de hoy";
     } else if (isYesterday) {
       return "Gastos de ayer";
+    } else if (isCustomDateRange) {
+      return "Gastos por día";
     } else if (viewMode === "week") {
       return "Gastos por día de la semana";
     } else {
@@ -141,8 +147,8 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
                     if (viewMode === "year") {
                       // For year view, just return the month abbreviation
                       return value.split(" ")[0];
-                    } else if (viewMode === "week") {
-                      // For week view, format day names more concisely
+                    } else if (viewMode === "week" || isCustomDateRange) {
+                      // For week view or custom date range, format day names more concisely
                       // If the value contains a day name (like "Lunes 12" or "Monday, June 12"), extract just the day name
                       const dayParts = value.split(" ");
                       return dayParts.length > 0 ? dayParts[0] : value;
