@@ -89,17 +89,7 @@ export function DateRangePicker({
           </PopoverContent>
         </Popover>
 
-        <Select value={viewMode} onValueChange={(value: ViewMode) => onViewModeChange(value)}>
-          <SelectTrigger className="w-full sm:w-[140px]">
-            <SelectValue placeholder="Vista" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="day">Día</SelectItem>
-            <SelectItem value="week">Semana</SelectItem>
-            <SelectItem value="month">Mes</SelectItem>
-            <SelectItem value="year">Año</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Removing the ViewMode Select dropdown as requested */}
       </div>
     </div>
   );

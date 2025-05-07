@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -72,23 +73,24 @@ const Dashboard = () => {
   const handleDateRangeChange = (newRange: DateRange) => {
     setDateRange(newRange);
     
+    // Update view mode based on date range span
+    if (newRange.from && newRange.to) {
+      const daysDiff = Math.abs(Math.ceil((newRange.to.getTime() - newRange.from.getTime()) / (1000 * 60 * 60 * 24)));
+      
+      if (daysDiff === 0) {
+        setViewMode("day");
+      } else if (daysDiff <= 7) {
+        setViewMode("week");
+      } else if (daysDiff <= 31) {
+        setViewMode("month");
+      } else {
+        setViewMode("year");
+      }
+    }
+    
     // Actualizar el mes seleccionado si estamos en modo mes
     if (viewMode === "month" && newRange.from) {
       const monthIndex = newRange.from.getMonth();
-      setCurrentMonth(months[monthIndex]);
-    }
-  };
-  
-  // Manejar cambio de modo de vista
-  const handleViewModeChange = (mode: "day" | "week" | "month" | "year") => {
-    setViewMode(mode);
-    
-    // Si cambiamos a modo año, actualizar el selector de mes
-    if (mode === "year") {
-      setCurrentMonth("year");
-    } else if (mode === "month" && dateRange.from) {
-      // Si cambiamos a modo mes, actualizar al mes de la fecha seleccionada
-      const monthIndex = dateRange.from.getMonth();
       setCurrentMonth(months[monthIndex]);
     }
   };
@@ -114,7 +116,7 @@ const Dashboard = () => {
             date={dateRange}
             onDateChange={handleDateRangeChange}
             viewMode={viewMode}
-            onViewModeChange={handleViewModeChange}
+            onViewModeChange={setViewMode}
           />
         </div>
         
