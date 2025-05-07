@@ -43,11 +43,21 @@ const Footer = () => {
             </p>
             
             <div className="flex space-x-6">
-              <a href="#" className="text-xs text-muted-foreground hover:text-foreground">
-                Términos y condiciones
-              </a>
-              <a href="#" className="text-xs text-muted-foreground hover:text-foreground">
+              <a 
+                href="https://tresqu.com/politica-privacidad" 
+                className="text-xs text-muted-foreground hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Política de privacidad
+              </a>
+              <a 
+                href="https://tresqu.com/aviso-legal" 
+                className="text-xs text-muted-foreground hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Aviso legal
               </a>
             </div>
           </div>
