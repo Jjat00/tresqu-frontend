@@ -14,6 +14,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -68,6 +69,47 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <main className="container py-6 md:py-8">
         {children}
       </main>
+      
+      {/* Fixed footer */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-3 z-40">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center text-sm">
+            <div className="mb-2 md:mb-0 text-muted-foreground">
+              © {currentYear} Tresqu. Todos los derechos reservados
+            </div>
+            
+            <div className="flex space-x-4 md:space-x-6">
+              <a 
+                href="https://tresqu.com/politica-cookies" 
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Política de cookies
+              </a>
+              <a 
+                href="https://tresqu.com/aviso-legal" 
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Aviso legal
+              </a>
+              <a 
+                href="https://tresqu.com/politica-privacidad" 
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Política de privacidad
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+      
+      {/* Add padding to prevent content from being hidden behind the fixed footer */}
+      <div className="pb-16"></div>
     </div>
   );
 };
