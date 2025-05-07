@@ -29,7 +29,7 @@ const Header = () => {
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="text-xl font-bold font-display">
-            <span className="text-success">Cash<span className="text-foreground">Bot</span></span>
+            <span className="text-success">Tres<span className="text-foreground">qu</span></span>
           </Link>
         </div>
         {isHomePage ? (
