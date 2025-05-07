@@ -96,7 +96,7 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   // Determinar el tipo de filtro basado en el dateRange
   const getDateFilter = (): string => {
     if (!dateRange || !dateRange.from || !dateRange.to) {
-      return "all";
+      return "current_week";  // Default to current_week if no date range
     }
     
     // Formato para las fechas personalizadas

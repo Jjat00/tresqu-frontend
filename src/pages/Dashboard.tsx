@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -14,16 +13,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isAuthenticated } from "@/services/authService";
 import DateRangePicker, { DateRange } from "@/components/dashboard/DateRangePicker";
+import { getCurrentWeekRange } from "@/components/dashboard/dateRangePicker/dateRangeUtils";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
   const isMobile = useIsMobile();
   const [currentMonth, setCurrentMonth] = useState("");
-  const [dateRange, setDateRange] = useState<DateRange>({ 
-    from: new Date(), 
-    to: new Date() 
-  });
-  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">("month");
+  const [dateRange, setDateRange] = useState<DateRange>(getCurrentWeekRange());
+  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">("week");
   
   const {
     toast
