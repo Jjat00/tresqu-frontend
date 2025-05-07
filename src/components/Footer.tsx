@@ -1,6 +1,5 @@
 
 import { Instagram, Twitter, Facebook, Mail } from "lucide-react";
-import Logo from "./Logo";
 
 const socialLinks = [
   { icon: <Twitter className="h-5 w-5" />, href: "#", label: "Twitter" },
@@ -17,7 +16,9 @@ const Footer = () => {
       <div className="container">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
-            <Logo />
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold font-display text-success">Tres<span className="text-white">qu</span></span>
+            </div>
           </div>
           
           <div className="flex items-center space-x-4 mb-6 md:mb-0">
