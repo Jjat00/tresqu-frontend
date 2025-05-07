@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { DateRange } from "../DateRangePicker";
+import { format, isSameDay, startOfToday, startOfYesterday } from "date-fns";
 
 interface ExpensesLineChartProps {
   viewMode: "day" | "week" | "month" | "year";
@@ -27,6 +28,15 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
   dateRange = { from: new Date(), to: new Date() },
 }) => {
   const { data, isLoading, error } = useLineChartData(dateRange, viewMode);
+
+  // Check if dateRange is today or yesterday
+  const isToday = dateRange.from && dateRange.to && 
+                 isSameDay(dateRange.from, startOfToday()) && 
+                 isSameDay(dateRange.to, startOfToday());
+                 
+  const isYesterday = dateRange.from && dateRange.to && 
+                     isSameDay(dateRange.from, startOfYesterday()) && 
+                     isSameDay(dateRange.to, startOfYesterday());
 
   // Format data for Recharts
   const chartData = React.useMemo(() => {
@@ -65,11 +75,26 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
     return null;
   };
 
+  // Calculate chart title based on date range or view mode
+  const getChartTitle = () => {
+    if (data?.filter_summary) {
+      return data.filter_summary;
+    }
+    
+    if (isToday) {
+      return "Gastos de hoy";
+    } else if (isYesterday) {
+      return "Gastos de ayer";
+    } else {
+      return "Gastos por período";
+    }
+  };
+
   return (
     <Card className="h-full">
       <CardHeader className="px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4">
         <CardTitle className="text-sm xs:text-base">
-          Gastos {data?.filter_summary ? `- ${data.filter_summary}` : "por período"}
+          Gastos {getChartTitle() !== "Gastos por período" ? `- ${getChartTitle()}` : "por período"}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-0 xs:px-0 sm:px-2 py-0 sm:py-1 h-[calc(100%-60px)]">

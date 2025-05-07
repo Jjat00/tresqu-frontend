@@ -42,18 +42,40 @@ export const useLineChartData = (dateRange: DateRange, viewMode: "day" | "week" 
         let url = "https://web-production-11f27.up.railway.app/api/expenses/line_chart_data/?";
         
         if (dateRange.from && dateRange.to) {
-          // Custom date range
-          url += `date_filter=custom&start_date=${format(dateRange.from, "yyyy-MM-dd")}&end_date=${format(dateRange.to, "yyyy-MM-dd")}`;
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
           
-          // Add appropriate grouping based on the date range span and viewMode
-          if (viewMode === "year") {
-            url += "&group_by=month";
-          } else if (viewMode === "month") {
-            url += "&group_by=week";
-          } else if (viewMode === "week") {
-            url += "&group_by=day";
-          } else if (viewMode === "day") {
-            url += "&group_by=hour";
+          const yesterday = new Date(today);
+          yesterday.setDate(yesterday.getDate() - 1);
+          
+          // Check if dateRange is for today
+          const isToday = dateRange.from.getTime() === today.getTime() && 
+                          dateRange.to.getTime() === today.getTime();
+                          
+          // Check if dateRange is for yesterday
+          const isYesterday = dateRange.from.getTime() === yesterday.getTime() && 
+                             dateRange.to.getTime() === yesterday.getTime();
+          
+          if (isToday) {
+            // Use 'today' filter for today's data
+            url += "date_filter=today";
+          } else if (isYesterday) {
+            // Use 'yesterday' filter for yesterday's data
+            url += "date_filter=yesterday";
+          } else {
+            // Custom date range
+            url += `date_filter=custom&start_date=${format(dateRange.from, "yyyy-MM-dd")}&end_date=${format(dateRange.to, "yyyy-MM-dd")}`;
+            
+            // Add appropriate grouping based on the date range span and viewMode
+            if (viewMode === "year") {
+              url += "&group_by=month";
+            } else if (viewMode === "month") {
+              url += "&group_by=week";
+            } else if (viewMode === "week") {
+              url += "&group_by=day";
+            } else if (viewMode === "day") {
+              url += "&group_by=hour";
+            }
           }
         } else {
           // Use predefined filters if date range is not complete
