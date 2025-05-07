@@ -1,250 +1,156 @@
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { getAccessToken } from "@/services/authService";
-import { toast } from "sonner";
-import { ChartLine } from "lucide-react";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLineChartData } from "@/hooks/useLineChartData";
+import {
+  Area,
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { DateRange } from "../DateRangePicker";
 
 interface ExpensesLineChartProps {
-  viewMode: "month" | "year";
-  selectedMonth: string;
+  viewMode: "day" | "week" | "month" | "year";
+  selectedMonth?: string;
+  activeTab?: string;
+  dateRange?: DateRange;
 }
-
-// Mapeo de nombres de meses a números
-const monthToNumber: Record<string, number> = {
-  "Enero": 1,
-  "Febrero": 2,
-  "Marzo": 3,
-  "Abril": 4,
-  "Mayo": 5,
-  "Junio": 6,
-  "Julio": 7,
-  "Agosto": 8,
-  "Septiembre": 9,
-  "Octubre": 10,
-  "Noviembre": 11,
-  "Diciembre": 12
-};
-
-// Colores para las líneas - usando colores sólidos que combinen con la app
-const COLORS = {
-  total: "#8b5cf6", // Morado principal
-  promedio: "#60a5fa", // Azul
-  tendencia: "#f97316" // Naranja
-};
 
 const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
   viewMode,
-  selectedMonth
+  dateRange = { from: new Date(), to: new Date() },
 }) => {
-  const isMobile = useIsMobile();
-  const [timeData, setTimeData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error } = useLineChartData(dateRange, viewMode);
 
-  // Función para obtener el actual año y mes
-  const getCurrentYearMonth = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // getMonth() es 0-indexado
-    
-    if (selectedMonth !== "year") {
-      // Si se ha seleccionado un mes específico, usamos ese
-      const monthNumber = monthToNumber[selectedMonth] || month;
-      return { year, month: monthNumber };
+  // Format data for Recharts
+  const chartData = React.useMemo(() => {
+    if (!data || !data.labels || !data.datasets || data.datasets.length === 0) {
+      return [];
     }
-    
-    return { year, month };
+
+    return data.labels.map((label, index) => ({
+      name: label,
+      amount: data.datasets[0].data[index] || 0,
+    }));
+  }, [data]);
+
+  // Function to format currency values
+  const formatCurrency = (amount: number) => {
+    return amount.toLocaleString('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
   };
 
-  // Cargar datos cuando cambia el mes seleccionado o el modo de vista
-  useEffect(() => {
-    const fetchTimeData = async () => {
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const token = getAccessToken();
-        if (!token) {
-          throw new Error("No hay token de autenticación disponible");
-        }
-        
-        const { year, month } = getCurrentYearMonth();
-        
-        // Usamos el mismo endpoint que para los datos semanales, pero procesamos diferente
-        const response = await fetch(
-          `https://web-production-11f27.up.railway.app/api/expenses/weekly_by_category/?month=${month}&year=${year}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        
-        if (!response.ok) {
-          throw new Error(`Error al obtener los datos: ${response.status}`);
-        }
-        
-        const weeklyData = await response.json();
-        
-        // Transformamos los datos para el gráfico lineal
-        const processedData = weeklyData.map((weekData: any) => {
-          // Calcular el total sumando todas las categorías
-          const totalAmount = Object.values(weekData.totals).reduce((sum: number, value: any) => sum + (value || 0), 0);
-          
-          return {
-            name: weekData.week,
-            total: totalAmount,
-            // Podríamos calcular promedios o tendencias aquí si es necesario
-          };
-        });
-        
-        // Agregar un promedio móvil simple (3 períodos)
-        if (processedData.length > 2) {
-          for (let i = 2; i < processedData.length; i++) {
-            const avg = (processedData[i].total + processedData[i-1].total + processedData[i-2].total) / 3;
-            processedData[i].promedio = Math.round(avg);
-          }
-        }
-        
-        setTimeData(processedData);
-      } catch (err) {
-        console.error("Error al cargar los datos temporales:", err);
-        setError(err instanceof Error ? err.message : "Error desconocido");
-        toast.error("No se pudieron cargar los datos temporales");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchTimeData();
-  }, [selectedMonth, viewMode]);
-
-  // Determinar el título del gráfico según el modo de vista
-  const chartTitle = React.useMemo(() => {
-    if (viewMode === "month") {
-      return `Tendencia de Gastos - ${selectedMonth}`;
-    } else {
-      return "Tendencia de Gastos Anuales";
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-card border border-border p-2 rounded-md shadow-md">
+          <p className="text-xs font-semibold">{`${label}`}</p>
+          <p className="text-xs text-primary">
+            {formatCurrency(payload[0].value)}
+          </p>
+        </div>
+      );
     }
-  }, [viewMode, selectedMonth]);
-
-  // Formatear valores para el Tooltip
-  const formatTooltipValue = (value: number) => {
-    return value ? `$${value.toLocaleString('es-CO')}` : "$0";
+    return null;
   };
 
   return (
-    <Card className="overflow-hidden h-full">
-      <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col">
-        <div className="flex items-center justify-between mb-1 xs:mb-2">
-          <h3 className="text-sm xs:text-base sm:text-lg font-semibold">
-            {chartTitle}
-          </h3>
-          <ChartLine className="h-4 w-4 text-muted-foreground" />
-        </div>
-        
-        <div className="flex-1 min-h-[200px] flex items-center justify-center">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
-              <p className="text-sm text-muted-foreground">Cargando datos...</p>
+    <Card className="h-full">
+      <CardHeader className="px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4">
+        <CardTitle className="text-sm xs:text-base">
+          Gastos {data?.filter_summary ? `- ${data.filter_summary}` : "por período"}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="px-0 xs:px-0 sm:px-2 py-0 sm:py-1 h-[calc(100%-60px)]">
+        {isLoading ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            <span className="ml-2 text-sm text-muted-foreground">Cargando datos...</span>
+          </div>
+        ) : error ? (
+          <div className="w-full h-full flex flex-col items-center justify-center">
+            <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+            <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+          </div>
+        ) : chartData.length === 0 ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
+          </div>
+        ) : (
+          <div className="w-full h-full pt-2">
+            <div className="text-xs mb-1 px-4 text-right">
+              <span className="font-semibold">Total: </span>
+              <span>
+                {formatCurrency(data?.total_amount || 0)}
+              </span>
             </div>
-          ) : error ? (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-destructive mb-1">Error al cargar los datos</p>
-              <p className="text-xs text-muted-foreground">{error}</p>
-            </div>
-          ) : timeData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-muted-foreground">No hay datos disponibles para este periodo</p>
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={timeData}
-                margin={isMobile ? {
-                  top: 5,
-                  right: 5,
-                  left: -15,
-                  bottom: 15
-                } : {
-                  top: 20,
-                  right: 20,
-                  left: 0,
-                  bottom: 15
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: isMobile ? 8 : 12 }}
-                  interval={isMobile ? 1 : 0}
-                  angle={isMobile ? -45 : 0}
-                  textAnchor={isMobile ? "end" : "middle"}
-                  height={isMobile ? 50 : 30}
-                />
-                <YAxis 
-                  tick={{ fontSize: isMobile ? 8 : 12 }}
-                  width={isMobile ? 30 : 50}
-                  tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value.toString()}
-                />
-                <Tooltip
-                  formatter={(value, name) => {
-                    const formattedValue = formatTooltipValue(value as number);
-                    const label = name === 'total' ? 'Total'
-                              : name === 'promedio' ? 'Promedio (3 sem)'
-                              : name;
-                    return [formattedValue, label];
-                  }}
-                  contentStyle={{
-                    fontSize: isMobile ? "10px" : "12px",
-                    backgroundColor: "hsl(var(--card))",
-                    borderColor: "hsl(var(--border))",
-                    borderRadius: "0.5rem"
-                  }}
-                  labelStyle={{
-                    fontWeight: "bold",
-                    marginBottom: "0.25rem"
+            <ResponsiveContainer width="100%" height="90%">
+              <ComposedChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="rgba(75, 192, 192, 0.8)" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="rgba(75, 192, 192, 0.1)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 10 }}
+                  tickLine={{ stroke: "rgb(var(--muted-foreground))" }}
+                  axisLine={{ stroke: "rgb(var(--muted))" }}
+                  tickFormatter={(value) => {
+                    // Handle long x-axis labels for better display
+                    if (viewMode === "year") {
+                      // For year view, just return the month abbreviation
+                      return value.split(" ")[0];
+                    }
+                    return value;
                   }}
                 />
-                <Legend
-                  wrapperStyle={{
-                    fontSize: isMobile ? "8px" : "12px",
-                    paddingTop: 5
+                <YAxis
+                  tick={{ fontSize: 10 }}
+                  tickLine={{ stroke: "rgb(var(--muted-foreground))" }}
+                  axisLine={{ stroke: "rgb(var(--muted))" }}
+                  tickFormatter={(value) => {
+                    if (value >= 1000000) {
+                      return `${(value / 1000000).toFixed(1)}M`;
+                    } else if (value >= 1000) {
+                      return `${(value / 1000).toFixed(0)}K`;
+                    }
+                    return value.toString();
                   }}
-                  formatter={(value) => {
-                    return value === 'total' ? 'Total'
-                         : value === 'promedio' ? 'Promedio (3 sem)'
-                         : value;
-                  }}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="rgba(75, 192, 192, 1)"
+                  fillOpacity={1}
+                  fill="url(#colorAmount)"
                 />
                 <Line
                   type="monotone"
-                  dataKey="total"
-                  stroke={COLORS.total}
+                  dataKey="amount"
+                  stroke="rgba(75, 192, 192, 1)"
                   strokeWidth={2}
-                  dot={{ r: 3, stroke: COLORS.total, fill: "white" }}
-                  activeDot={{ r: 5, stroke: COLORS.total, fill: COLORS.total }}
-                  name="total"
+                  dot={{ stroke: "rgba(75, 192, 192, 1)", strokeWidth: 2, r: 2 }}
+                  activeDot={{ stroke: "rgba(75, 192, 192, 1)", strokeWidth: 2, r: 4 }}
                 />
-                {timeData.some(d => d.promedio) && (
-                  <Line
-                    type="monotone"
-                    dataKey="promedio"
-                    stroke={COLORS.promedio}
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    dot={false}
-                    name="promedio"
-                  />
-                )}
-              </LineChart>
+              </ComposedChart>
             </ResponsiveContainer>
-          )}
-        </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
