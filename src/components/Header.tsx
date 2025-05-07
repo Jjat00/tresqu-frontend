@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { isAuthenticated } from "@/services/authService";
+import Logo from "./Logo";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -28,8 +29,8 @@ const Header = () => {
     }`}>
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link to="/" className="text-xl font-bold font-display">
-            <span className="text-success">Tres<span className="text-foreground">qu</span></span>
+          <Link to="/">
+            <Logo size={scrolled ? "sm" : "md"} />
           </Link>
         </div>
         {isHomePage ? (

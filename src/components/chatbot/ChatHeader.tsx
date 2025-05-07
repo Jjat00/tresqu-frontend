@@ -1,7 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MessageSquare, ChevronDown, Volume2, X } from "lucide-react";
+import { ChevronDown, Volume2, X } from "lucide-react";
+import Logo from "../Logo";
 
 interface ChatHeaderProps {
   onMinimize: () => void;
@@ -12,10 +13,8 @@ const ChatHeader = ({ onMinimize, onClose }: ChatHeaderProps) => {
   return (
     <div className="flex justify-between items-center border-b pb-2 mb-2">
       <div className="flex items-center">
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-success/20 flex items-center justify-center">
-          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-success" />
-        </div>
-        <span className="font-medium text-xs sm:text-sm ml-2">CashBot</span>
+        <Logo size="sm" showText={false} />
+        <span className="font-medium text-xs sm:text-sm ml-2">Tresqu</span>
       </div>
       <div className="flex items-center">
         <TooltipProvider>
