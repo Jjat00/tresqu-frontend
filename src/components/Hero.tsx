@@ -19,7 +19,7 @@ const Hero = () => {
                 animationDelay: "100ms",
               }}
             >
-              CashBot utiliza inteligencia artificial para ofrecer análisis financieros claros, automáticos y sin complicaciones, a través de las aplicaciones que ya usas: WhatsApp y Telegram. 
+              Tresqu utiliza inteligencia artificial para ofrecer análisis financieros claros, automáticos y sin complicaciones, a través de las aplicaciones que ya usas: WhatsApp y Telegram. 
             </p>
           </div>
 
