@@ -31,7 +31,7 @@ export const useIncomeBarData = (
       setError(null);
 
       try {
-        let url = "https://web-production-11f27.up.railway.app/api/income/bar_chart_data/";
+        let url = "https://web-production-11f27.up.railway.app/api/incomes/bar_chart_data/";
         
         // Add parameters
         const params = new URLSearchParams({ period: timeFilter });

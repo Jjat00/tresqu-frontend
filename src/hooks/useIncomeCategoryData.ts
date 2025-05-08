@@ -34,7 +34,7 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
       setError(null);
 
       try {
-        let url = "https://web-production-11f27.up.railway.app/api/income/donut_chart_data/";
+        let url = "https://web-production-11f27.up.railway.app/api/incomes/donut_chart_data/";
 
         // Add date range parameters if provided
         if (dateRange && dateRange.from && dateRange.to) {
