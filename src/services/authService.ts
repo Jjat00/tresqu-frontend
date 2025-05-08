@@ -1,70 +1,11 @@
-// Interfaz para la respuesta de solicitud de código
-interface RequestCodeResponse {
-  message: string;
-  success: boolean;
-  has_telegram: boolean;
-  numero_registrado: boolean;
-}
+import { AuthResponse, User, RequestCodeResponse } from "@/types/auth";
+import { apiClient } from "./api";
+import { AxiosRequestConfig } from "axios";
+import { useAuthStore } from "@/store/authStore";
 
-// Interfaz para la respuesta de verificación de código
-export interface VerifyCodeResponse {
-  refresh: string;
-  access: string;
-  user: User;
-  user_action: string;
-  message: string;
-}
-
-// Interfaz para la información del usuario
-export interface User {
-  id: number;
-  subscription_plan_details: SubscriptionPlanDetails;
-  external_id: string;
-  platform: string;
-  first_name: string;
-  username: string;
-  phone_number: string;
-  default_currency: string;
-  embedding: null;
-  subscription_active: boolean;
-  subscription_start_date: string;
-  subscription_end_date: string;
-  is_yearly_billing: boolean;
-  created_at: string;
-  updated_at: string;
-  subscription_plan: number;
-}
-
-// Interfaz para los detalles del plan de suscripción
-interface SubscriptionPlanDetails {
-  id: number;
-  name: string;
-  description: string;
-  price_monthly: string;
-  price_yearly: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  allows_income_expense_tracking: boolean;
-  allows_basic_statistics: boolean;
-  allows_debt_savings_tracking: boolean;
-  allows_detailed_statistics: boolean;
-  allows_reports: boolean;
-  unlimited_records: boolean;
-  allows_debt_planning: boolean;
-  allows_savings_goals: boolean;
-  allows_export: boolean;
-  allows_voice_interaction: boolean;
-  priority_support: boolean;
-  allows_multi_user: boolean;
-  allows_custom_reports: boolean;
-}
-
-import { env } from "@/config";
-// URLs de la API
-const API_BASE_URL = env.apiUrl;
-const REQUEST_CODE_URL = `${API_BASE_URL}/api/auth/telegram/request-code/`;
-const VERIFY_CODE_URL = `${API_BASE_URL}/api/auth/telegram/verify-code/`;
+const REQUEST_CODE_PATH = "/api/auth/telegram/request-code/";
+const VERIFY_CODE_PATH = "/api/auth/telegram/verify-code/";
+const REFRESH_TOKEN_PATH = "/api/auth/token/refresh/";
 
 // Función para solicitar código de verificación
 export const requestTelegramCode = async (
@@ -83,25 +24,12 @@ export const requestTelegramCode = async (
 
     console.log("Número formateado:", formattedPhoneNumber);
 
-    const response = await fetch(REQUEST_CODE_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phone_number: formattedPhoneNumber }),
+    const response = await apiClient.post(REQUEST_CODE_PATH, {
+      phone_number: formattedPhoneNumber,
     });
 
     console.log("Status de la respuesta:", response.status);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Error de API:", errorText);
-      throw new Error(
-        `Error ${response.status}: ${errorText || response.statusText}`
-      );
-    }
-
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error("Error al solicitar código de Telegram:", error);
     throw error;
@@ -112,7 +40,7 @@ export const requestTelegramCode = async (
 export const verifyTelegramCode = async (
   phoneNumber: string,
   code: string
-): Promise<VerifyCodeResponse> => {
+): Promise<AuthResponse> => {
   try {
     // Verificar que el número tenga el formato correcto (con el código de país)
     if (!phoneNumber.startsWith("+")) {
@@ -124,57 +52,93 @@ export const verifyTelegramCode = async (
 
     console.log("Verificando código para:", formattedPhoneNumber);
 
-    const response = await fetch(VERIFY_CODE_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phone_number: formattedPhoneNumber, code }),
+    const response = await apiClient.post(VERIFY_CODE_PATH, {
+      phone_number: formattedPhoneNumber,
+      code,
     });
 
     console.log("Status de la verificación:", response.status);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Error al verificar código:", errorText);
-      throw new Error(
-        `Error ${response.status}: ${errorText || response.statusText}`
-      );
-    }
+    // Guardar los datos de autenticación en el store
+    const authData = response.data;
+    saveAuthTokens({
+      access: authData.access,
+      refresh: authData.refresh,
+      user: authData.user,
+    });
 
-    return await response.json();
+    return authData;
   } catch (error) {
     console.error("Error al verificar código de Telegram:", error);
     throw error;
   }
 };
 
-// Funciones para manejar el token en localStorage
+// Función para refrescar el token de acceso
+export const refreshTokenService = async (): Promise<string | null> => {
+  try {
+    const refreshToken = getRefreshToken();
+
+    if (!refreshToken) {
+      console.error("No hay refresh token disponible");
+      return null;
+    }
+
+    // Configuración para evitar bucle infinito en el interceptor
+    const config: AxiosRequestConfig = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    // @ts-expect-error - skipAuthRefresh es una propiedad personalizada definida en api.ts
+    config.skipAuthRefresh = true;
+
+    const response = await apiClient.post(
+      REFRESH_TOKEN_PATH,
+      { refresh: refreshToken },
+      config
+    );
+
+    // Guardar el nuevo token de acceso en el store
+    const newAccessToken = response.data.access;
+    useAuthStore.getState().setTokens(newAccessToken, refreshToken);
+
+    return newAccessToken;
+  } catch (error) {
+    console.error("Error durante el refresh del token:", error);
+    return null;
+  }
+};
+
+// Funciones para manejar la autenticación con el store
 export const saveAuthTokens = (tokens: {
   access: string;
   refresh: string;
   user: User;
 }) => {
-  localStorage.setItem("access_token", tokens.access);
-  localStorage.setItem("refresh_token", tokens.refresh);
-  localStorage.setItem("user", JSON.stringify(tokens.user));
+  useAuthStore.getState().setAuthData(tokens.user, {
+    access: tokens.access,
+    refresh: tokens.refresh,
+  });
 };
 
 export const getAccessToken = (): string | null => {
-  return localStorage.getItem("access_token");
+  return useAuthStore.getState().accessToken;
+};
+
+export const getRefreshToken = (): string | null => {
+  return useAuthStore.getState().refreshToken;
 };
 
 export const getUser = (): User | null => {
-  const userJson = localStorage.getItem("user");
-  return userJson ? JSON.parse(userJson) : null;
+  return useAuthStore.getState().user;
 };
 
 export const isAuthenticated = (): boolean => {
-  return !!getAccessToken();
+  return useAuthStore.getState().isAuthenticated();
 };
 
 export const logout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("user");
+  useAuthStore.getState().clearAuth();
 };

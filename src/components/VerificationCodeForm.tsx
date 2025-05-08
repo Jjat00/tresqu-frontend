@@ -5,13 +5,14 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { verifyTelegramCode, VerifyCodeResponse } from "@/services/authService";
+import { verifyTelegramCode } from "@/services/authService";
+import { AuthResponse } from "@/types/auth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 interface VerificationCodeFormProps {
   phoneNumber: string;
-  onVerificationSuccess: (response: VerifyCodeResponse) => void;
+  onVerificationSuccess: (response: AuthResponse) => void;
   onCancel: () => void;
 }
 
@@ -22,7 +23,6 @@ const VerificationCodeForm = ({
 }: VerificationCodeFormProps) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
 
   const handleVerifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
