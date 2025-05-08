@@ -89,7 +89,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 to="/legal-notice" 
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                Aviso legal
+                Términos y condiciones
               </Link>
               <Link 
                 to="/privacy-policy" 

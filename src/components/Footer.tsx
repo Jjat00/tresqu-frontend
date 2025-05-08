@@ -1,3 +1,4 @@
+
 import { Instagram, Twitter, Facebook, Mail } from "lucide-react";
 import Logo from "./Logo";
 import { Link } from "react-router-dom";
@@ -46,7 +47,7 @@ const Footer = () => {
                 Política de privacidad
               </Link>
               <Link to="/legal-notice" className="text-xs text-muted-foreground hover:text-foreground">
-                Aviso legal
+                Términos y condiciones
               </Link>
               
             </div>
