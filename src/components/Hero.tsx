@@ -56,7 +56,7 @@ const Hero = () => {
                   borderColor: "#0088cc",
                 }}
                 onClick={() => {
-                  window.open("https://t.me/my_money_cash_bot", "_blank");
+                  window.open("https://t.me/tresqu_bot", "_blank");
                 }}
               >
                 <svg
