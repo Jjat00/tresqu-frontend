@@ -7,10 +7,15 @@ import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
-import { Plus, Filter, Download, Share2 } from "lucide-react";
+import { Plus, Filter, Download, Share2, AlertCircle, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
+import IncomeLineChart from "./charts/IncomeLineChart";
 import { DateRange } from "./DateRangePicker";
+import { useIncomeCategoryData } from "@/hooks/useIncomeCategoryData";
+import { useIncomeBarData } from "@/hooks/useIncomeBarData";
+import { useIncomeSummary } from "@/hooks/useIncomeSummary";
+
 interface IncomeTabProps {
   selectedMonth?: string;
   activeTab?: string;
@@ -18,56 +23,7 @@ interface IncomeTabProps {
   viewMode?: "day" | "week" | "month" | "year";
 }
 
-// Define income data for different time periods
-const incomeDataByPeriod = {
-  month: [{
-    name: "Ene",
-    value: 15000
-  }, {
-    name: "Feb",
-    value: 15000
-  }, {
-    name: "Mar",
-    value: 17500
-  }, {
-    name: "Abr",
-    value: 15000
-  }, {
-    name: "May",
-    value: 18500
-  }],
-  quarter: [{
-    name: "Q1 2024",
-    value: 42000
-  }, {
-    name: "Q2 2024",
-    value: 45500
-  }, {
-    name: "Q3 2024",
-    value: 47000
-  }, {
-    name: "Q4 2024",
-    value: 48500
-  }, {
-    name: "Q1 2025",
-    value: 51000
-  }],
-  year: [{
-    name: "2022",
-    value: 165000
-  }, {
-    name: "2023",
-    value: 180000
-  }, {
-    name: "2024",
-    value: 183000
-  }, {
-    name: "2025",
-    value: 51000
-  }]
-};
-
-// Sample data for the income table
+// Sample data for the income table (mantener hasta que haya una API para esto)
 const allIncomeData = [{
   id: 1,
   description: "Salario",
@@ -119,71 +75,20 @@ const allIncomeData = [{
   date: "2025-04-05"
 }];
 
-// Income breakdown by category with subcategorías
-const incomeByCategory = [{
-  category: "Empleo",
-  amount: 17000,
-  color: "#4ade80",
-  subcategories: [{
-    name: "Salario base",
-    value: 15000
-  }, {
-    name: "Bonos",
-    value: 2000
-  }]
-}, {
-  category: "Freelance",
-  amount: 7700,
-  color: "#60a5fa",
-  subcategories: [{
-    name: "Diseño gráfico",
-    value: 3500
-  }, {
-    name: "Programación",
-    value: 4200
-  }]
-}, {
-  category: "Inversiones",
-  amount: 1170,
-  color: "#f472b6",
-  subcategories: [{
-    name: "Acciones",
-    value: 850
-  }, {
-    name: "Depósitos",
-    value: 320
-  }]
-}, {
-  category: "Otros",
-  amount: 1200,
-  color: "#a78bfa",
-  subcategories: [{
-    name: "Ventas",
-    value: 1200
-  }]
-}];
-
-// Datos para el gráfico de categorías
-const incomeCategoryData = incomeByCategory.map(item => ({
-  name: item.category,
-  value: item.amount,
-  color: item.color
-}));
 const IncomeTab = ({
   selectedMonth = "Abril",
   activeTab = "income",
   dateRange,
-  viewMode = "month"
+  viewMode = "week"
 }: IncomeTabProps) => {
   const isMobile = useIsMobile();
-  const [timeFilter, setTimeFilter] = useState("month");
+  const [timeFilter, setTimeFilter] = useState<"month" | "quarter" | "year">("month");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [chartData, setChartData] = useState(incomeDataByPeriod.month);
   const [filteredIncome, setFilteredIncome] = useState(allIncomeData);
   const [searchQuery, setSearchQuery] = useState("");
   const [newIncomeOpen, setNewIncomeOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [viewModeLocal, setViewModeLocal] = useState<"month" | "year">("month");
+  const [viewModeLocal, setViewModeLocal] = useState<"day" | "week" | "month" | "year">(viewMode);
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
   const [newIncome, setNewIncome] = useState({
     description: "",
@@ -194,30 +99,59 @@ const IncomeTab = ({
     recurring: false
   });
 
+  // Get income category data from API
+  const { 
+    data: categoryData, 
+    isLoading: categoryLoading, 
+    error: categoryError,
+    total: categoryTotal
+  } = useIncomeCategoryData(dateRange);
+  
+  // Get income bar chart data from API
+  const { 
+    data: barData, 
+    isLoading: barLoading, 
+    error: barError,
+    total: barTotal
+  } = useIncomeBarData(timeFilter, dateRange);
+
+  // Get income summary data from API
+  const { 
+    data: summaryData, 
+    isLoading: summaryLoading, 
+    error: summaryError 
+  } = useIncomeSummary();
+
   // Update localSelectedMonth when prop changes
   useEffect(() => {
     setLocalSelectedMonth(selectedMonth);
     // If year is selected, update view mode
     if (selectedMonth === "year") {
       setViewModeLocal("year");
-    } else {
-      setViewModeLocal("month");
     }
   }, [selectedMonth]);
 
-  // Apply filters in real-time
+  // Apply filters in real-time for the table data
   useEffect(() => {
     let filtered = [...allIncomeData];
 
     // Apply category filter
     if (categoryFilter !== "all") {
-      filtered = filtered.filter(income => income.category.toLowerCase() === categoryFilter.replace("salary", "empleo").replace("freelance", "freelance").replace("investments", "inversiones").replace("other", "otros"));
+      filtered = filtered.filter(income => income.category.toLowerCase() === 
+        categoryFilter.replace("salary", "empleo")
+                     .replace("freelance", "freelance")
+                     .replace("investments", "inversiones")
+                     .replace("other", "otros"));
     }
 
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(income => income.description.toLowerCase().includes(query) || income.category.toLowerCase().includes(query) || income.subcategory.toLowerCase().includes(query));
+      filtered = filtered.filter(income => 
+        income.description.toLowerCase().includes(query) || 
+        income.category.toLowerCase().includes(query) || 
+        income.subcategory.toLowerCase().includes(query)
+      );
     }
 
     // Sort by date (most recent first)
@@ -225,10 +159,6 @@ const IncomeTab = ({
     setFilteredIncome(filtered);
   }, [categoryFilter, searchQuery]);
 
-  // Update chart data when time filter changes
-  useEffect(() => {
-    setChartData(incomeDataByPeriod[timeFilter as keyof typeof incomeDataByPeriod]);
-  }, [timeFilter]);
   const handleAddIncome = () => {
     console.log("Adding new income:", newIncome);
     // Here you would add logic to add the income
@@ -242,22 +172,36 @@ const IncomeTab = ({
       recurring: false
     });
   };
+  
   const handleExportPDF = () => {
     console.log("Exporting income data to PDF");
     // Implementation would go here
   };
+  
   const handleExportExcel = () => {
     console.log("Exporting income data to Excel");
     // Implementation would go here
   };
+  
   const handleShare = () => {
     console.log("Sharing CashBot");
     // Implementation would go here
   };
+
+  // Format currency for display
+  const formatCurrency = (amount: number) => {
+    return amount.toLocaleString('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  };
+  
   return <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="flex flex-wrap gap-2 w-full xs:w-auto">
-          <Select value={timeFilter} onValueChange={setTimeFilter}>
+          <Select value={timeFilter} onValueChange={(value) => setTimeFilter(value as "month" | "quarter" | "year")}>
             <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
               <SelectValue placeholder="Período" />
             </SelectTrigger>
@@ -280,8 +224,6 @@ const IncomeTab = ({
               <SelectItem value="other">Otros</SelectItem>
             </SelectContent>
           </Select>
-          
-          
         </div>
         
         <Dialog open={newIncomeOpen} onOpenChange={setNewIncomeOpen}>
@@ -299,6 +241,7 @@ const IncomeTab = ({
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
+              
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="description" className="text-right text-sm">Descripción</label>
                 <Input id="description" value={newIncome.description} onChange={e => setNewIncome({
@@ -372,54 +315,96 @@ const IncomeTab = ({
                 Ingresos por Categoría
               </h3>
               <div className="flex-1 min-h-[250px] sm:min-h-[300px] flex items-center justify-center">
-                <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
-                ...Object.fromEntries(incomeCategoryData.map(({
-                  name,
-                  color
-                }) => [name, {
-                  color
-                }]))
-              }}>
-                  <PieChart margin={isMobile ? {
-                  top: 5,
-                  right: 5,
-                  bottom: 5,
-                  left: 5
-                } : {
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5
-                }}>
-                    <Pie data={incomeCategoryData} cx="50%" cy="50%" innerRadius={isMobile ? 30 : 60} outerRadius={isMobile ? 55 : 90} paddingAngle={2} dataKey="value" nameKey="name" label={({
-                    name,
-                    percent
-                  }) => isMobile ? `${(percent * 100).toFixed(0)}%` : `${name}: ${(percent * 100).toFixed(0)}%`} labelLine={false} onClick={data => setSelectedCategory(data.name)}>
-                      {incomeCategoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} stroke={entry.color === "#4ade80" ? "#166534" : "#1e40af"} strokeWidth={1.5} style={{
-                      cursor: 'pointer'
-                    }} />)}
-                    </Pie>
-                    <Tooltip content={({
-                    active,
-                    payload
-                  }) => {
-                    if (active && payload && payload.length) {
-                      const category = payload[0].name as string;
-                      const selectedCategoryData = incomeByCategory.find(item => item.category === category);
-                      return <div className="bg-card p-3 rounded shadow border">
-                            <p className="text-sm font-semibold">{payload[0].name}</p>
-                            <p className="text-xs mb-2">${payload[0].value.toLocaleString()}</p>
-                            
-                            {selectedCategoryData && selectedCategoryData.subcategories.map((sub, i) => <div key={i} className="flex justify-between text-xs mb-1">
-                                <span className="mr-4">{sub.name}:</span>
-                                <span>${sub.value.toLocaleString()}</span>
-                              </div>)}
-                          </div>;
-                    }
-                    return null;
-                  }} />
-                  </PieChart>
-                </ChartContainer>
+                {categoryLoading ? (
+                  <div className="flex items-center justify-center h-full w-full">
+                    <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                    <span className="ml-2 text-sm text-muted-foreground">Cargando datos...</span>
+                  </div>
+                ) : categoryError ? (
+                  <div className="flex flex-col items-center justify-center h-full w-full">
+                    <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+                    <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+                  </div>
+                ) : categoryData.length === 0 ? (
+                  <div className="flex items-center justify-center h-full w-full">
+                    <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
+                  </div>
+                ) : (
+                  <ChartContainer className={`${isMobile ? 'h-60' : 'h-80'}`} config={{
+                    ...Object.fromEntries(categoryData.map(({
+                      category,
+                      color
+                    }) => [category, {
+                      color
+                    }]))
+                  }}>
+                    <PieChart margin={isMobile ? {
+                      top: 5,
+                      right: 5,
+                      bottom: 5,
+                      left: 5
+                    } : {
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 5
+                    }}>
+                      <Pie 
+                        data={categoryData} 
+                        cx="50%" 
+                        cy="50%" 
+                        innerRadius={isMobile ? 30 : 60} 
+                        outerRadius={isMobile ? 55 : 90} 
+                        paddingAngle={2} 
+                        dataKey="amount" 
+                        nameKey="category" 
+                        label={({
+                          category,
+                          percent
+                        }) => isMobile ? `${(percent * 100).toFixed(0)}%` : `${category}: ${(percent * 100).toFixed(0)}%`} 
+                        labelLine={false} 
+                        onClick={data => setSelectedCategory(data.category)}
+                      >
+                        {categoryData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={entry.color} 
+                            stroke={entry.color === "#4ade80" ? "#166534" : "#1e40af"} 
+                            strokeWidth={1.5} 
+                            style={{
+                              cursor: 'pointer'
+                            }} 
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip content={({
+                        active,
+                        payload
+                      }) => {
+                        if (active && payload && payload.length) {
+                          const category = payload[0].name as string;
+                          const selectedCategoryData = categoryData.find(item => item.category === category);
+                          return (
+                            <div className="bg-card p-3 rounded shadow border">
+                              <p className="text-sm font-semibold">{payload[0].name}</p>
+                              <p className="text-xs mb-2">{formatCurrency(payload[0].value as number)}</p>
+                              
+                              {selectedCategoryData && selectedCategoryData.subcategories && 
+                                selectedCategoryData.subcategories.map((sub, i) => (
+                                  <div key={i} className="flex justify-between text-xs mb-1">
+                                    <span className="mr-4">{sub.name}:</span>
+                                    <span>{formatCurrency(sub.value)}</span>
+                                  </div>
+                                ))
+                              }
+                            </div>
+                          );
+                        }
+                        return null;
+                      }} />
+                    </PieChart>
+                  </ChartContainer>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -429,44 +414,76 @@ const IncomeTab = ({
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
           <Card>
             <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 overflow-hidden">
-              <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">Ingresos Mensuales</h3>
-              <ChartContainer className={`h-[calc(100%-30px)]`} config={{
-              value: {
-                color: "#4ade80"
-              }
-            }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={isMobile ? {
-                  top: 10,
-                  right: 0,
-                  left: -20,
-                  bottom: 0
-                } : {
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5
-                }} barSize={isMobile ? 12 : 20}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="name" tick={{
-                    fontSize: isMobile ? 10 : 12
-                  }} interval={isMobile ? 1 : 0} />
-                    <YAxis tick={{
-                    fontSize: isMobile ? 10 : 12
-                  }} width={isMobile ? 35 : 50} tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value} />
-                    <Tooltip formatter={value => [`$${value.toLocaleString()}`, 'Monto']} labelFormatter={label => `Período: ${label}`} />
-                    <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
+              <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">Ingresos {timeFilter === "month" ? "Mensuales" : timeFilter === "quarter" ? "Trimestrales" : "Anuales"}</h3>
+              
+              {barLoading ? (
+                <div className="flex items-center justify-center h-[calc(100%-30px)]">
+                  <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                  <span className="ml-2 text-sm text-muted-foreground">Cargando datos...</span>
+                </div>
+              ) : barError ? (
+                <div className="flex flex-col items-center justify-center h-[calc(100%-30px)]">
+                  <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+                  <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+                </div>
+              ) : barData.length === 0 ? (
+                <div className="flex items-center justify-center h-[calc(100%-30px)]">
+                  <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
+                </div>
+              ) : (
+                <ChartContainer className={`h-[calc(100%-30px)]`} config={{
+                  value: {
+                    color: "#4ade80"
+                  }
+                }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart 
+                      data={barData} 
+                      margin={isMobile ? {
+                        top: 10,
+                        right: 0,
+                        left: -20,
+                        bottom: 0
+                      } : {
+                        top: 20,
+                        right: 30,
+                        left: 20,
+                        bottom: 5
+                      }} 
+                      barSize={isMobile ? 12 : 20}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis 
+                        dataKey="name" 
+                        tick={{
+                          fontSize: isMobile ? 10 : 12
+                        }} 
+                        interval={isMobile ? 1 : 0} 
+                      />
+                      <YAxis 
+                        tick={{
+                          fontSize: isMobile ? 10 : 12
+                        }} 
+                        width={isMobile ? 35 : 50} 
+                        tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value} 
+                      />
+                      <Tooltip 
+                        formatter={value => [formatCurrency(value as number), 'Monto']} 
+                        labelFormatter={label => `Período: ${label}`} 
+                      />
+                      <Bar name="Ingresos" dataKey="value" fill="#4ade80" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
       
-      {/* Gráfico comparativo */}
+      {/* Gráfico de línea para ingresos */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-        <ComparativeLineChart viewMode={viewModeLocal} selectedMonth={localSelectedMonth} activeTab={activeTab || "income"} />
+        <IncomeLineChart viewMode={viewModeLocal} selectedMonth={localSelectedMonth} activeTab={activeTab || "income"} dateRange={dateRange} />
       </div>
       
       <Card>
@@ -474,23 +491,47 @@ const IncomeTab = ({
           <div className="space-y-4">
             <h3 className="text-base sm:text-lg font-semibold mb-2">Estadísticas</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingreso mensual promedio</p>
-                <p className="text-xl sm:text-2xl font-bold">$17,500</p>
-              </div>
-              
-              <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingresos vs. mes anterior</p>
-                <div className="flex items-end gap-2">
-                  <p className="text-xl sm:text-2xl font-bold text-success">+$3,500</p>
-                  <p className="text-xs sm:text-sm text-success">+23.3%</p>
+              {summaryLoading ? (
+                <div className="col-span-3 flex items-center justify-center h-20">
+                  <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                  <span className="ml-2 text-sm text-muted-foreground">Cargando estadísticas...</span>
                 </div>
-              </div>
-              
-              <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Proyección próximo mes</p>
-                <p className="text-lg sm:text-xl font-semibold">$19,200</p>
-              </div>
+              ) : summaryError ? (
+                <div className="col-span-3 flex items-center justify-center h-20 text-destructive">
+                  <AlertCircle className="h-6 w-6 mr-2" />
+                  <span>Error al cargar estadísticas</span>
+                </div>
+              ) : summaryData ? (
+                <>
+                  <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingreso mensual promedio</p>
+                    <p className="text-xl sm:text-2xl font-bold">{formatCurrency(summaryData.average_monthly)}</p>
+                  </div>
+                  
+                  <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingresos vs. mes anterior</p>
+                    <div className="flex items-end gap-2">
+                      <p className={`text-xl sm:text-2xl font-bold ${summaryData.comparison_previous.amount >= 0 ? "text-success" : "text-destructive"}`}>
+                        {summaryData.comparison_previous.amount >= 0 ? "+" : ""}
+                        {formatCurrency(summaryData.comparison_previous.amount)}
+                      </p>
+                      <p className={`text-xs sm:text-sm ${summaryData.comparison_previous.amount >= 0 ? "text-success" : "text-destructive"}`}>
+                        {summaryData.comparison_previous.amount >= 0 ? "+" : ""}
+                        {summaryData.comparison_previous.percentage.toFixed(1)}%
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">Proyección próximo mes</p>
+                    <p className="text-lg sm:text-xl font-semibold">{formatCurrency(summaryData.projection_next_month)}</p>
+                  </div>
+                </>
+              ) : (
+                <div className="col-span-3 flex items-center justify-center h-20">
+                  <p className="text-sm text-muted-foreground">No hay datos estadísticos disponibles</p>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -529,13 +570,23 @@ const IncomeTab = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredIncome.map(income => <TableRow key={income.id} className="text-xs sm:text-sm">
-                    <TableCell className="py-2">{income.description}</TableCell>
-                    <TableCell className="py-2">{income.category}</TableCell>
-                    <TableCell className="py-2">{income.subcategory}</TableCell>
-                    <TableCell className="py-2">${income.amount.toLocaleString()}</TableCell>
-                    <TableCell className="py-2">{new Date(income.date).toLocaleDateString()}</TableCell>
-                  </TableRow>)}
+                {filteredIncome.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-4 text-muted-foreground">
+                      No se encontraron ingresos con los filtros actuales
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredIncome.map(income => (
+                    <TableRow key={income.id} className="text-xs sm:text-sm">
+                      <TableCell className="py-2">{income.description}</TableCell>
+                      <TableCell className="py-2">{income.category}</TableCell>
+                      <TableCell className="py-2">{income.subcategory}</TableCell>
+                      <TableCell className="py-2">{formatCurrency(income.amount)}</TableCell>
+                      <TableCell className="py-2">{new Date(income.date).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -543,7 +594,7 @@ const IncomeTab = ({
           <div className="flex flex-wrap justify-between items-center gap-2 mt-3 sm:mt-4">
             <div>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Total: <span className="font-semibold">${filteredIncome.reduce((sum, income) => sum + income.amount, 0).toLocaleString()}</span>
+                Total: <span className="font-semibold">{formatCurrency(filteredIncome.reduce((sum, income) => sum + income.amount, 0))}</span>
               </p>
             </div>
             
