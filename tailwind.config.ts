@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -80,8 +81,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Outfit", "sans-serif"],
+        sans: ["'Titillium Web'", "sans-serif"],
+        display: ["'Titillium Web'", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
