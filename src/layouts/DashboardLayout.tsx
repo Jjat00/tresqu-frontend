@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
 import { logout, isAuthenticated, getUser } from "@/services/authService";
@@ -79,30 +79,24 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </div>
             
             <div className="flex space-x-4 md:space-x-6">
-              <a 
-                href="https://tresqu.com/politica-cookies" 
+              <Link 
+                to="/cookie-policy" 
                 className="text-muted-foreground hover:text-foreground transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 Política de cookies
-              </a>
-              <a 
-                href="https://tresqu.com/aviso-legal" 
+              </Link>
+              <Link 
+                to="/legal-notice" 
                 className="text-muted-foreground hover:text-foreground transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 Aviso legal
-              </a>
-              <a 
-                href="https://tresqu.com/politica-privacidad" 
+              </Link>
+              <Link 
+                to="/privacy-policy" 
                 className="text-muted-foreground hover:text-foreground transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 Política de privacidad
-              </a>
+              </Link>
             </div>
           </div>
         </div>

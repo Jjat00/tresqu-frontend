@@ -1,23 +1,31 @@
+
 import { Instagram, Twitter, Facebook, Mail } from "lucide-react";
 import Logo from "./Logo";
 import { Link } from "react-router-dom";
-const socialLinks = [{
-  icon: <Twitter className="h-5 w-5" />,
-  href: "#",
-  label: "Twitter"
-}, {
-  icon: <Instagram className="h-5 w-5" />,
-  href: "#",
-  label: "Instagram"
-}, {
-  icon: <Facebook className="h-5 w-5" />,
-  href: "#",
-  label: "Facebook"
-}, {
-  icon: <Mail className="h-5 w-5" />,
-  href: "mailto:contacto@tresqu.com",
-  label: "Email"
-}];
+
+const socialLinks = [
+  {
+    icon: <Twitter className="h-5 w-5" />,
+    href: "#",
+    label: "Twitter"
+  }, 
+  {
+    icon: <Instagram className="h-5 w-5" />,
+    href: "#",
+    label: "Instagram"
+  }, 
+  {
+    icon: <Facebook className="h-5 w-5" />,
+    href: "#",
+    label: "Facebook"
+  }, 
+  {
+    icon: <Mail className="h-5 w-5" />,
+    href: "mailto:contacto@tresqu.com",
+    label: "Email"
+  }
+];
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return <>
@@ -42,12 +50,15 @@ const Footer = () => {
             </p>
             
             <div className="flex space-x-6">
-              <a href="https://tresqu.com/politica-privacidad" className="text-xs text-muted-foreground hover:text-foreground" target="_blank" rel="noopener noreferrer">
+              <Link to="/privacy-policy" className="text-xs text-muted-foreground hover:text-foreground">
                 Política de privacidad
-              </a>
-              <a href="https://tresqu.com/aviso-legal" className="text-xs text-muted-foreground hover:text-foreground" target="_blank" rel="noopener noreferrer">
+              </Link>
+              <Link to="/legal-notice" className="text-xs text-muted-foreground hover:text-foreground">
                 Aviso legal
-              </a>
+              </Link>
+              <Link to="/cookie-policy" className="text-xs text-muted-foreground hover:text-foreground">
+                Política de cookies
+              </Link>
             </div>
           </div>
         </div>
