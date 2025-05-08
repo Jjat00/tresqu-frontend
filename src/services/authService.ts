@@ -60,8 +60,9 @@ interface SubscriptionPlanDetails {
   allows_custom_reports: boolean;
 }
 
+import { env } from "@/config";
 // URLs de la API
-const API_BASE_URL = "https://web-production-11f27.up.railway.app/api";
+const API_BASE_URL = env.apiUrl;
 const REQUEST_CODE_URL = `${API_BASE_URL}/auth/telegram/request-code/`;
 const VERIFY_CODE_URL = `${API_BASE_URL}/auth/telegram/verify-code/`;
 

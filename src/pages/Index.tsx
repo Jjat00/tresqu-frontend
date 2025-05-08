@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
@@ -10,7 +9,7 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   // No hay ninguna verificación de autenticación aquí ni redirección
-  
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Header />

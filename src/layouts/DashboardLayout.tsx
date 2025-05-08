@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -46,16 +45,18 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <Logo />
             </a>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <User className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm font-medium hidden sm:inline-block">{userName}</span>
+              <span className="text-sm font-medium hidden sm:inline-block">
+                {userName}
+              </span>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex items-center gap-1" 
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4" />
@@ -66,10 +67,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </header>
 
       {/* Dashboard content */}
-      <main className="container py-6 md:py-8">
-        {children}
-      </main>
-      
+      <main className="container py-6 md:py-8">{children}</main>
+
       {/* Fixed footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-3 z-40">
         <div className="container mx-auto px-4">
@@ -77,22 +76,22 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <div className="mb-2 md:mb-0 text-muted-foreground">
               © {currentYear} Tresqu. Todos los derechos reservados
             </div>
-            
+
             <div className="flex space-x-4 md:space-x-6">
-              <Link 
-                to="/cookie-policy" 
+              <Link
+                to="/cookie-policy"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Política de cookies
               </Link>
-              <Link 
-                to="/legal-notice" 
+              <Link
+                to="/legal-notice"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Términos y condiciones
               </Link>
-              <Link 
-                to="/privacy-policy" 
+              <Link
+                to="/privacy-policy"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Política de privacidad
@@ -101,7 +100,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </div>
       </footer>
-      
+
       {/* Add padding to prevent content from being hidden behind the fixed footer */}
       <div className="pb-16"></div>
     </div>
