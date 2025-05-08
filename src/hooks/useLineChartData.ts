@@ -1,126 +1,96 @@
-import { useState, useEffect } from "react";
-import { getAccessToken } from "@/services/authService";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
-import { format } from "date-fns";
-import { env } from "@/config";
-export interface LineChartDataset {
-  label: string;
-  data: number[];
-  backgroundColor: string;
-  borderColor: string;
-  borderWidth: number;
-  fill: boolean;
-  tension: number;
-}
+import {
+  getExpensesLineChartData,
+  LineChartParams,
+} from "@/services/expenses/lineChart";
 
-export interface LineChartData {
-  labels: string[];
-  datasets: LineChartDataset[];
-  filter_summary: string;
-  total_amount: number;
-}
+export type { LineChartData } from "@/services/expenses/lineChart";
 
 export const useLineChartData = (
   dateRange: DateRange,
   viewMode: "day" | "week" | "month" | "year"
 ) => {
-  const [data, setData] = useState<LineChartData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  // Convertir dateRange y viewMode a parámetros de LineChart
+  const getQueryParams = (): LineChartParams => {
+    const params: LineChartParams = {};
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
+    if (dateRange.from && dateRange.to) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      try {
-        const token = getAccessToken();
-        if (!token) {
-          throw new Error("No auth token available");
-        }
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
 
-        // Determine the correct date_filter parameter based on viewMode and dateRange
-        let url = `${env.apiUrl}/api/expenses/line_chart_data/`;
+      // Verificar si dateRange es para hoy
+      const isToday =
+        dateRange.from.getTime() === today.getTime() &&
+        dateRange.to.getTime() === today.getTime();
 
-        if (dateRange.from && dateRange.to) {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
+      // Verificar si dateRange es para ayer
+      const isYesterday =
+        dateRange.from.getTime() === yesterday.getTime() &&
+        dateRange.to.getTime() === yesterday.getTime();
 
-          const yesterday = new Date(today);
-          yesterday.setDate(yesterday.getDate() - 1);
+      if (isToday) {
+        params.date_filter = "today";
+      } else if (isYesterday) {
+        params.date_filter = "yesterday";
+      } else {
+        // Rango de fechas personalizado
+        params.date_filter = "custom";
+        params.start_date = format(dateRange.from, "yyyy-MM-dd");
+        params.end_date = format(dateRange.to, "yyyy-MM-dd");
 
-          // Check if dateRange is for today
-          const isToday =
-            dateRange.from.getTime() === today.getTime() &&
-            dateRange.to.getTime() === today.getTime();
-
-          // Check if dateRange is for yesterday
-          const isYesterday =
-            dateRange.from.getTime() === yesterday.getTime() &&
-            dateRange.to.getTime() === yesterday.getTime();
-
-          if (isToday) {
-            // Use 'today' filter for today's data
-            url += "date_filter=today";
-          } else if (isYesterday) {
-            // Use 'yesterday' filter for yesterday's data
-            url += "date_filter=yesterday";
-          } else {
-            // Custom date range
-            url += `date_filter=custom&start_date=${format(
-              dateRange.from,
-              "yyyy-MM-dd"
-            )}&end_date=${format(dateRange.to, "yyyy-MM-dd")}`;
-
-            // For custom date ranges, always group by day regardless of view mode
-            url += "&group_by=day";
-          }
-        } else {
-          // Use predefined filters if date range is not complete
-          switch (viewMode) {
-            case "day":
-              url += "date_filter=today";
-              break;
-            case "week":
-              url += "date_filter=current_week&group_by=day"; // Explicitly group by day for week view
-              break;
-            case "month":
-              url += "date_filter=current_month";
-              break;
-            case "year":
-              url += "date_filter=current_year";
-              break;
-            default:
-              url += "date_filter=current_week&group_by=day";
-          }
-        }
-
-        console.log("Fetching line chart data from:", url);
-
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching line chart data: ${response.status}`);
-        }
-
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        console.error("Error in useLineChartData:", err);
-        setError(err instanceof Error ? err : new Error(String(err)));
-        toast.error("No se pudieron cargar los datos del gráfico");
-      } finally {
-        setIsLoading(false);
+        // Para rangos de fecha personalizados, siempre agrupar por día independientemente del modo de vista
+        params.group_by = "day";
       }
-    };
+    } else {
+      // Usar filtros predefinidos si el rango de fechas no está completo
+      switch (viewMode) {
+        case "day":
+          params.date_filter = "today";
+          break;
+        case "week":
+          params.date_filter = "current_week";
+          params.group_by = "day"; // Agrupar explícitamente por día para vista semanal
+          break;
+        case "month":
+          params.date_filter = "current_month";
+          break;
+        case "year":
+          params.date_filter = "current_year";
+          break;
+        default:
+          params.date_filter = "current_week";
+          params.group_by = "day";
+      }
+    }
 
-    fetchData();
-  }, [dateRange, viewMode]);
+    return params;
+  };
 
-  return { data, isLoading, error };
+  const queryParams = getQueryParams();
+
+  // Usar React Query para manejar la obtención y el estado de los datos
+  const query = useQuery({
+    queryKey: ["expensesLineChart", queryParams],
+    queryFn: async () => {
+      try {
+        return await getExpensesLineChartData(queryParams);
+      } catch (error) {
+        toast.error("No se pudieron cargar los datos del gráfico");
+        throw error;
+      }
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  });
+
+  return {
+    data: query.data || null,
+    isLoading: query.isLoading,
+    error: query.error as Error | null,
+  };
 };
