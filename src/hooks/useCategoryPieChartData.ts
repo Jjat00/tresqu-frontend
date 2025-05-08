@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { getAccessToken } from "@/services/authService";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
+import { env } from "@/config";
 
 export interface DonutChartDataItem {
   name: string;
@@ -50,7 +50,7 @@ const COLORS = [
   "#8b5cf6", // Purple - Entretenimiento
   "#f97316", // Orange - Ropa
   "#fb923c", // Peach - Salud
-  "#6b7280"  // Gray - Otros
+  "#6b7280", // Gray - Otros
 ];
 
 // Colores de texto/borde para contrastar
@@ -62,79 +62,79 @@ const TEXT_COLORS = [
   "#5b21b6", // Dark Purple
   "#c2410c", // Dark Orange
   "#c2410c", // Dark Peach
-  "#374151"  // Dark Gray
+  "#374151", // Dark Gray
 ];
 
 // Mapeo de categoría a índice de color
 const CATEGORY_COLOR_MAP: Record<string, number> = {
-  "Alimentación": 0,
-  "Tecnología": 1,
-  "Vivienda": 2,
-  "Transporte": 3,
-  "Entretenimiento": 4,
-  "Ropa": 5,
-  "Salud": 6,
-  "Educación": 7,
-  "Servicios": 0,
-  "Mascota": 1,
-  "Compras": 2,
-  "Libros": 3,
-  "Mobiliario": 4,
-  "Otros": 7
+  Alimentación: 0,
+  Tecnología: 1,
+  Vivienda: 2,
+  Transporte: 3,
+  Entretenimiento: 4,
+  Ropa: 5,
+  Salud: 6,
+  Educación: 7,
+  Servicios: 0,
+  Mascota: 1,
+  Compras: 2,
+  Libros: 3,
+  Mobiliario: 4,
+  Otros: 7,
 };
 
 export const useCategoryPieChartData = (dateRange?: DateRange) => {
   const [filterSummary, setFilterSummary] = useState("");
-  
+
   // Determinar el tipo de filtro basado en el dateRange
   const getDateFilter = (): string => {
     if (!dateRange || !dateRange.from || !dateRange.to) {
-      return "current_week";  // Default to current_week if no date range
+      return "current_week"; // Default to current_week if no date range
     }
-    
+
     // Formato para las fechas personalizadas
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
     // Comprobar si es hoy
     if (
-      dateRange.from.getDate() === today.getDate() && 
-      dateRange.from.getMonth() === today.getMonth() && 
+      dateRange.from.getDate() === today.getDate() &&
+      dateRange.from.getMonth() === today.getMonth() &&
       dateRange.from.getFullYear() === today.getFullYear() &&
-      dateRange.to.getDate() === today.getDate() && 
-      dateRange.to.getMonth() === today.getMonth() && 
+      dateRange.to.getDate() === today.getDate() &&
+      dateRange.to.getMonth() === today.getMonth() &&
       dateRange.to.getFullYear() === today.getFullYear()
     ) {
       return "today";
     }
-    
+
     // Comprobar si es ayer
     if (
-      dateRange.from.getDate() === yesterday.getDate() && 
-      dateRange.from.getMonth() === yesterday.getMonth() && 
+      dateRange.from.getDate() === yesterday.getDate() &&
+      dateRange.from.getMonth() === yesterday.getMonth() &&
       dateRange.from.getFullYear() === yesterday.getFullYear() &&
-      dateRange.to.getDate() === yesterday.getDate() && 
-      dateRange.to.getMonth() === yesterday.getMonth() && 
+      dateRange.to.getDate() === yesterday.getDate() &&
+      dateRange.to.getMonth() === yesterday.getMonth() &&
       dateRange.to.getFullYear() === yesterday.getFullYear()
     ) {
       return "yesterday";
     }
-    
+
     // Para otros rangos, usamos custom
     return "custom";
   };
-  
+
   // Construir los parámetros de URL
   const buildQueryParams = (): string => {
     const dateFilter = getDateFilter();
-    
+
     if (dateFilter === "custom" && dateRange?.from && dateRange?.to) {
       const startDate = format(dateRange.from, "yyyy-MM-dd");
       const endDate = format(dateRange.to, "yyyy-MM-dd");
       return `?date_filter=${dateFilter}&start_date=${startDate}&end_date=${endDate}`;
     }
-    
+
     return `?date_filter=${dateFilter}`;
   };
 
@@ -143,46 +143,53 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
     if (!token) {
       throw new Error("No auth token available");
     }
-    
+
     const queryParams = buildQueryParams();
-    const url = `https://web-production-11f27.up.railway.app/api/expenses/donut_chart_data/${queryParams}`;
-    
+    const url = `${env.apiUrl}/api/expenses/donut_chart_data/${queryParams}`;
+
     console.log("Fetching donut chart data from:", url);
-    
+
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Error fetching donut chart data: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['donutChartData', dateRange?.from?.toISOString(), dateRange?.to?.toISOString()],
+    queryKey: [
+      "donutChartData",
+      dateRange?.from?.toISOString(),
+      dateRange?.to?.toISOString(),
+    ],
     queryFn: fetchDonutChartData,
     retry: 1,
   });
 
   // Process the API data into the format needed for the pie chart
-  const processedData = data ? data.labels.map((category: string, index: number) => {
-    // Obtener el índice de color basado en la categoría, o usar el índice como fallback
-    const colorIndex = category in CATEGORY_COLOR_MAP 
-      ? CATEGORY_COLOR_MAP[category] 
-      : index % COLORS.length;
-      
-    return {
-      name: category,
-      value: data.datasets[0].data[index],
-      color: data.datasets[0].backgroundColor[index] || COLORS[colorIndex],
-      textColor: TEXT_COLORS[colorIndex]
-    };
-  }) : [];
+  const processedData = data
+    ? data.labels.map((category: string, index: number) => {
+        // Obtener el índice de color basado en la categoría, o usar el índice como fallback
+        const colorIndex =
+          category in CATEGORY_COLOR_MAP
+            ? CATEGORY_COLOR_MAP[category]
+            : index % COLORS.length;
+
+        return {
+          name: category,
+          value: data.datasets[0].data[index],
+          color: data.datasets[0].backgroundColor[index] || COLORS[colorIndex],
+          textColor: TEXT_COLORS[colorIndex],
+        };
+      })
+    : [];
 
   // Actualizar el resumen del filtro cuando cambian los datos
   useEffect(() => {
@@ -203,6 +210,6 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
     chartData: processedData,
     isLoading,
     error,
-    filterSummary
+    filterSummary,
   };
 };

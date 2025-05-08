@@ -1,4 +1,3 @@
-
 import { ArrowRight, DollarSign, FileText, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,14 +24,12 @@ const futureFeatures = [
 ];
 
 const FutureVision = () => {
-  const isMobile = useIsMobile();
-  
   return (
     <section
       id="futuro"
       className="section-padding bg-gradient-to-b from-background to-secondary px-4 sm:px-6"
     >
-      <div className="container max-w-6xl mx-auto">
+      <div className="container max-w-7xl mx-auto px-4 md:px-6">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
             ¿Qué sigue?

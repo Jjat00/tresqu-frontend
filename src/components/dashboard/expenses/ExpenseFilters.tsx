@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Filter, Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
+import { env } from "@/config";
 interface ExpenseFiltersProps {
   categoryFilter: string;
   onCategoryFilterChange: (value: string) => void;
 }
 const ExpenseFilters: React.FC<ExpenseFiltersProps> = ({
   categoryFilter,
-  onCategoryFilterChange
+  onCategoryFilterChange,
 }) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,11 +28,14 @@ const ExpenseFilters: React.FC<ExpenseFiltersProps> = ({
         if (!token) {
           throw new Error("No auth token available");
         }
-        const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/by_category/", {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await fetch(
+          `${env.apiUrl}/api/expenses/by_category/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         if (!response.ok) {
           throw new Error(`Error fetching categories: ${response.status}`);
         }
@@ -43,23 +52,29 @@ const ExpenseFilters: React.FC<ExpenseFiltersProps> = ({
     };
     fetchCategories();
   }, []);
-  return <div className="flex flex-wrap gap-2 w-full xs:w-auto">
+  return (
+    <div className="flex flex-wrap gap-2 w-full xs:w-auto">
       <Select value={categoryFilter} onValueChange={onCategoryFilterChange}>
         <SelectTrigger className="w-full xs:w-[120px] sm:w-[150px] text-xs sm:text-sm h-8 xs:h-9">
-          {isLoading ? <div className="flex items-center gap-2">
+          {isLoading ? (
+            <div className="flex items-center gap-2">
               <Loader2 className="h-3 w-3 animate-spin" />
               <span>Cargando...</span>
-            </div> : <SelectValue placeholder="Categoría" />}
+            </div>
+          ) : (
+            <SelectValue placeholder="Categoría" />
+          )}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Todas</SelectItem>
-          {categories.map(category => <SelectItem key={category} value={category.toLowerCase()}>
+          {categories.map((category) => (
+            <SelectItem key={category} value={category.toLowerCase()}>
               {category}
-            </SelectItem>)}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
-
-      
-    </div>;
+    </div>
+  );
 };
 export default ExpenseFilters;

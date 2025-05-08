@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import CategoryPieChart from "./charts/CategoryPieChart";
 import ExpensesBarChart from "./charts/ExpensesBarChart";
@@ -20,9 +19,11 @@ const ExpensesTab = ({
   selectedMonth = "Abril",
   activeTab = "expenses",
   dateRange = { from: new Date(), to: new Date() },
-  viewMode = "month"
+  viewMode = "month",
 }: ExpensesTabProps) => {
-  const [localViewMode, setLocalViewMode] = useState<"month" | "year">(viewMode === "year" ? "year" : "month");
+  const [localViewMode, setLocalViewMode] = useState<"month" | "year">(
+    viewMode === "year" ? "year" : "month"
+  );
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
@@ -64,16 +65,21 @@ const ExpensesTab = ({
 
   // If a category is selected, show the subcategory view
   if (selectedCategory) {
-    return <SubcategoryView category={selectedCategory} onBack={() => setSelectedCategory(null)} />;
+    return (
+      <SubcategoryView
+        category={selectedCategory}
+        onBack={() => setSelectedCategory(null)}
+      />
+    );
   }
 
   return (
     <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="w-full xs:w-auto">
-          <ExpenseFilters 
-            categoryFilter={categoryFilter} 
-            onCategoryFilterChange={handleCategoryFilterChange} 
+          <ExpenseFilters
+            categoryFilter={categoryFilter}
+            onCategoryFilterChange={handleCategoryFilterChange}
           />
         </div>
 
@@ -84,33 +90,33 @@ const ExpensesTab = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <CategoryPieChart 
+          <CategoryPieChart
             onCategoryClick={setSelectedCategory}
             dateRange={dateRange}
           />
         </div>
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <ExpensesBarChart 
-            viewMode={localViewMode} 
-            selectedMonth={localSelectedMonth} 
+          <ExpensesBarChart
+            viewMode={localViewMode}
+            selectedMonth={localSelectedMonth}
             dateRange={dateRange}
           />
         </div>
       </div>
-      
+
       {/* Gráfico comparativo */}
       <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-        <ComparativeLineChart 
-          viewMode={localViewMode} 
-          selectedMonth={localSelectedMonth} 
+        <ComparativeLineChart
+          viewMode={localViewMode}
+          selectedMonth={localSelectedMonth}
           activeTab={activeTab || "expenses"}
           dateRange={dateRange}
         />
       </div>
 
-      <ExpensesTable 
-        categoryFilter={categoryFilter} 
-        onCategoryClick={setSelectedCategory} 
+      <ExpensesTable
+        categoryFilter={categoryFilter}
+        onCategoryClick={setSelectedCategory}
         onShare={handleShare}
         dateRange={dateRange}
       />

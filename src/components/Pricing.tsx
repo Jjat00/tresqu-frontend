@@ -1,11 +1,23 @@
-
 import React from "react";
 import { Check, X } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const PricingFeature = ({ included, text }: { included: boolean; text: string }) => {
+const PricingFeature = ({
+  included,
+  text,
+}: {
+  included: boolean;
+  text: string;
+}) => {
   return (
     <div className="flex items-center gap-2 text-sm">
       {included ? (
@@ -22,8 +34,11 @@ const PricingFeature = ({ included, text }: { included: boolean; text: string })
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="relative overflow-hidden py-16 md:py-24 lg:py-28">
-      <div className="container mx-auto px-4 md:px-6">
+    <section
+      id="pricing"
+      className="relative overflow-hidden py-16 md:py-24 lg:py-28"
+    >
+      <div className="container max-w-7xl mx-auto px-4 md:px-6">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-3 font-display">
             Planes para todo tipo de usuario
@@ -46,9 +61,15 @@ const Pricing = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="space-y-3">
-                <PricingFeature included={true} text="Registro de ingresos y gastos " />
-                <PricingFeature included={true} text="Estadísticas básicas" />                                                              
-                <PricingFeature included={true} text="Interacción por texto en WhatsApp/Telegram" />
+                <PricingFeature
+                  included={true}
+                  text="Registro de ingresos y gastos "
+                />
+                <PricingFeature included={true} text="Estadísticas básicas" />
+                <PricingFeature
+                  included={true}
+                  text="Interacción por texto en WhatsApp/Telegram"
+                />
                 <PricingFeature included={false} text="Exportación de datos" />
                 <PricingFeature included={false} text="Interacción por voz" />
                 <PricingFeature included={false} text="Soporte prioritario" />
@@ -64,10 +85,14 @@ const Pricing = () => {
           {/* Plan Premium */}
           <Card className="border-success/20 bg-gradient-to-b from-background/90 to-background/80 backdrop-blur-sm shadow-lg shadow-success/5 relative flex flex-col">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-success text-white hover:bg-success/90">Recomendado</Badge>
+              <Badge className="bg-success text-white hover:bg-success/90">
+                Recomendado
+              </Badge>
             </div>
             <CardHeader>
-              <CardTitle className="text-xl md:text-2xl">Plan Premium</CardTitle>
+              <CardTitle className="text-xl md:text-2xl">
+                Plan Premium
+              </CardTitle>
               <CardDescription>Para usuarios avanzados</CardDescription>
               <div className="mt-4 space-y-1">
                 <div>
@@ -81,20 +106,53 @@ const Pricing = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="space-y-3">
-                <PricingFeature included={true} text="analisis financiero con IA " />
-                <PricingFeature included={true} text="Registro de ingresos, gastos , deudas y ahorros " />
-                <PricingFeature included={true} text="Estadísticas detalladas y avanzadas" />
-                <PricingFeature included={true} text="Reportes semanales, mensuales y anuales" />
-                <PricingFeature included={true} text="Sin límite de registros" />
-                <PricingFeature included={true} text="Planificación de deudas con alertas" />
-                <PricingFeature included={true} text="Seguimiento de metas de ahorro" />
-                <PricingFeature included={true} text="Exportación a PDF y Excel" />
-                <PricingFeature included={true} text="Interacción por voz con el bot" />
-                <PricingFeature included={true} text="Soporte técnico prioritario" />
+                <PricingFeature
+                  included={true}
+                  text="analisis financiero con IA "
+                />
+                <PricingFeature
+                  included={true}
+                  text="Registro de ingresos, gastos , deudas y ahorros "
+                />
+                <PricingFeature
+                  included={true}
+                  text="Estadísticas detalladas y avanzadas"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Reportes semanales, mensuales y anuales"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Sin límite de registros"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Planificación de deudas con alertas"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Seguimiento de metas de ahorro"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Exportación a PDF y Excel"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Interacción por voz con el bot"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Soporte técnico prioritario"
+                />
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full bg-success hover:bg-success/90" size="lg">
+              <Button
+                className="w-full bg-success hover:bg-success/90"
+                size="lg"
+              >
                 Suscribirse
               </Button>
             </CardFooter>
@@ -103,7 +161,9 @@ const Pricing = () => {
           {/* Plan Empresas */}
           <Card className="border-border bg-card/50 backdrop-blur-sm relative flex flex-col">
             <CardHeader>
-              <CardTitle className="text-xl md:text-2xl">Plan Empresas</CardTitle>
+              <CardTitle className="text-xl md:text-2xl">
+                Plan Empresas
+              </CardTitle>
               <CardDescription>Para equipos y empresas</CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold">$200</span>
@@ -115,12 +175,27 @@ const Pricing = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="space-y-3">
-                <PricingFeature included={true} text="Todo lo del Plan Premium" />
+                <PricingFeature
+                  included={true}
+                  text="Todo lo del Plan Premium"
+                />
                 <PricingFeature included={true} text="Acceso multiusuario" />
-                <PricingFeature included={true} text="Informes financieros personalizados" />
-                <PricingFeature included={true} text="Control centralizado de gastos" />
-                <PricingFeature included={true} text="Licencia anual con renovación automática" />
-                <PricingFeature included={true} text="Prioridad en nuevas funcionalidades" />
+                <PricingFeature
+                  included={true}
+                  text="Informes financieros personalizados"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Control centralizado de gastos"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Licencia anual con renovación automática"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Prioridad en nuevas funcionalidades"
+                />
               </div>
             </CardContent>
             <CardFooter>
@@ -133,8 +208,13 @@ const Pricing = () => {
 
         <div className="text-center mt-12">
           <p className="text-muted-foreground mb-6">
-            ¿Tienes preguntas sobre nuestros planes? 
-            <a href="#contacto" className="text-success hover:text-success/90 ml-1">Contáctanos</a>
+            ¿Tienes preguntas sobre nuestros planes?
+            <a
+              href="#contacto"
+              className="text-success hover:text-success/90 ml-1"
+            >
+              Contáctanos
+            </a>
           </p>
         </div>
       </div>

@@ -39,7 +39,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <div className="min-h-screen bg-background">
       {/* Dashboard header */}
       <header className="border-b sticky top-0 z-30 bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
+        <div className="container max-w-7xl mx-auto flex h-16 items-center justify-between py-4">
           <div className="flex items-center gap-2">
             <a href="/" className="text-xl">
               <Logo />
@@ -67,7 +67,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </header>
 
       {/* Dashboard content */}
-      <main className="container py-6 md:py-8">{children}</main>
+      <main className="container max-w-7xl mx-auto py-6 md:py-8">
+        {children}
+      </main>
 
       {/* Fixed footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-3 z-40">

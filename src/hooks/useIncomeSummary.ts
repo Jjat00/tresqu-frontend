@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { getAccessToken } from "@/services/authService";
-import { toast } from "sonner";
+import { env } from "@/config";
 
 interface IncomeSummaryData {
   average_monthly: number;
@@ -24,7 +23,7 @@ export const useIncomeSummary = (months: number = 1) => {
       setError(null);
 
       try {
-        const url = `https://web-production-11f27.up.railway.app/api/incomes/summary/?months=${months}`;
+        const url = `${env.apiUrl}/api/incomes/summary/?months=${months}`;
 
         // Get token using getAccessToken
         const token = getAccessToken();
@@ -35,8 +34,8 @@ export const useIncomeSummary = (months: number = 1) => {
 
         const response = await fetch(url, {
           headers: {
-            "Authorization": `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -44,7 +43,7 @@ export const useIncomeSummary = (months: number = 1) => {
         }
 
         const responseData = await response.json();
-        
+
         // Check if we have the expected data structure or create one from the response
         if (responseData && responseData.total !== undefined) {
           // If we have a different format, adapt it to our expected format
@@ -52,10 +51,10 @@ export const useIncomeSummary = (months: number = 1) => {
             average_monthly: responseData.total || 0,
             comparison_previous: {
               amount: 3500,
-              percentage: 23.3
+              percentage: 23.3,
             },
             projection_next_month: (responseData.total || 0) * 1.05, // 5% increase as projection
-            total_current_month: responseData.total || 0
+            total_current_month: responseData.total || 0,
           };
           setData(formattedData);
         } else {
@@ -65,16 +64,16 @@ export const useIncomeSummary = (months: number = 1) => {
       } catch (err: any) {
         console.error("Error fetching income summary:", err);
         setError(err.message || "Error fetching income summary data");
-        
+
         // Set fallback data if API fails
         setData({
           average_monthly: 17500,
           comparison_previous: {
             amount: 3500,
-            percentage: 23.3
+            percentage: 23.3,
           },
           projection_next_month: 19200,
-          total_current_month: 18500
+          total_current_month: 18500,
         });
       } finally {
         setIsLoading(false);

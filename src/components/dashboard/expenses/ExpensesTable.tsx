@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
-
+import { env } from "@/config";
 interface ExpensesTableProps {
   categoryFilter: string;
   onCategoryClick: (category: string) => void;
@@ -49,7 +49,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   categoryFilter,
   onCategoryClick,
   onShare,
-  dateRange
+  dateRange,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -58,23 +58,26 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     if (!token) {
       throw new Error("No auth token available");
     }
-    
+
     // You could modify the URL to include date range filters
-    const response = await fetch("https://web-production-11f27.up.railway.app/api/expenses/summary/?months=1", {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const response = await fetch(
+      `${env.apiUrl}/api/expenses/summary/?months=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
-    
+    );
+
     if (!response.ok) {
       throw new Error(`Error fetching expenses: ${response.status}`);
     }
-    
+
     return await response.json();
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['expensesData'],
+    queryKey: ["expensesData"],
     queryFn: fetchExpenses,
     retry: 1,
   });
@@ -90,18 +93,17 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   // Filter expenses based on search query and category filter
   const filteredExpenses = React.useMemo(() => {
     if (!data?.recent_expenses) return [];
-    
+
     let filtered = [...data.recent_expenses];
-    
+
     // Apply category filter
     if (categoryFilter !== "all") {
       filtered = filtered.filter(
         (expense) =>
-          expense.category_str.toLowerCase() ===
-          categoryFilter.toLowerCase()
+          expense.category_str.toLowerCase() === categoryFilter.toLowerCase()
       );
     }
-    
+
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -111,19 +113,19 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
           expense.category_str.toLowerCase().includes(query)
       );
     }
-    
+
     return filtered;
   }, [data, categoryFilter, searchQuery]);
 
   const totalAmount = React.useMemo(() => {
     if (!filteredExpenses?.length) return 0;
-    
+
     return filteredExpenses.reduce((total, expense) => {
       // Convert to number and handle multiple currencies
       const amount = parseFloat(expense.amount);
       // Simple conversion - in a real app you'd use proper currency conversion
       const multiplier = expense.currency === "USD" ? 4000 : 1; // Rough conversion USD to COP
-      return total + (amount * multiplier);
+      return total + amount * multiplier;
     }, 0);
   }, [filteredExpenses]);
 
@@ -141,7 +143,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-CO');
+    return date.toLocaleDateString("es-CO");
   };
 
   return (
@@ -207,7 +209,9 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   <TableCell colSpan={4} className="h-24 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
-                      <p className="text-sm text-muted-foreground">Cargando gastos...</p>
+                      <p className="text-sm text-muted-foreground">
+                        Cargando gastos...
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -216,14 +220,18 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   <TableCell colSpan={4} className="h-24 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-                      <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+                      <p className="text-sm text-muted-foreground">
+                        Error al cargar los datos
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : filteredExpenses.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center">
-                    <p className="text-sm text-muted-foreground">No hay gastos que mostrar</p>
+                    <p className="text-sm text-muted-foreground">
+                      No hay gastos que mostrar
+                    </p>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -240,7 +248,8 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                       {expense.category_str || "Sin categoría"}
                     </TableCell>
                     <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs">
-                      {parseFloat(expense.amount).toLocaleString('es-CO')} {expense.currency}
+                      {parseFloat(expense.amount).toLocaleString("es-CO")}{" "}
+                      {expense.currency}
                     </TableCell>
                     <TableCell className="py-1 sm:py-2 px-1 xs:px-2 sm:px-4 text-[10px] xs:text-xs whitespace-nowrap">
                       {formatDate(expense.spent_at)}
@@ -257,7 +266,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             <p className="text-[10px] xs:text-xs text-muted-foreground">
               Total:{" "}
               <span className="font-semibold">
-                ${totalAmount.toLocaleString('es-CO')} COP
+                ${totalAmount.toLocaleString("es-CO")} COP
               </span>
             </p>
           </div>

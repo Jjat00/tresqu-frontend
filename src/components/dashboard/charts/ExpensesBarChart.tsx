@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
+import { env } from "@/config";
 
 interface WeeklyCategoryData {
   week: string;
@@ -20,18 +30,18 @@ interface ExpensesBarChartProps {
 
 // Mapeo de nombres de meses a números
 const monthToNumber: Record<string, number> = {
-  "Enero": 1,
-  "Febrero": 2,
-  "Marzo": 3,
-  "Abril": 4,
-  "Mayo": 5,
-  "Junio": 6,
-  "Julio": 7,
-  "Agosto": 8,
-  "Septiembre": 9,
-  "Octubre": 10,
-  "Noviembre": 11,
-  "Diciembre": 12
+  Enero: 1,
+  Febrero: 2,
+  Marzo: 3,
+  Abril: 4,
+  Mayo: 5,
+  Junio: 6,
+  Julio: 7,
+  Agosto: 8,
+  Septiembre: 9,
+  Octubre: 10,
+  Noviembre: 11,
+  Diciembre: 12,
 };
 
 // Colores más sólidos para las categorías - debe coincidir con CategoryPieChart
@@ -43,7 +53,7 @@ const COLORS = [
   "#8b5cf6", // Purple - Entretenimiento
   "#f97316", // Orange - Ropa
   "#fb923c", // Peach - Salud
-  "#6b7280"  // Gray - Otros
+  "#6b7280", // Gray - Otros
 ];
 
 // Colores de borde más oscuros para contrastar
@@ -55,31 +65,31 @@ const BORDER_COLORS = [
   "#5b21b6", // Dark Purple - Entretenimiento
   "#c2410c", // Dark Orange - Ropa
   "#c2410c", // Dark Peach - Salud
-  "#374151"  // Dark Gray - Otros
+  "#374151", // Dark Gray - Otros
 ];
 
 // Mapeo de categoría a índice de color
-const categoryColors: Record<string, { fill: string, stroke: string }> = {
-  "Alimentación": { fill: COLORS[0], stroke: BORDER_COLORS[0] },
-  "Tecnología": { fill: COLORS[1], stroke: BORDER_COLORS[1] },
-  "Vivienda": { fill: COLORS[2], stroke: BORDER_COLORS[2] },
-  "Transporte": { fill: COLORS[3], stroke: BORDER_COLORS[3] },
-  "Entretenimiento": { fill: COLORS[4], stroke: BORDER_COLORS[4] },
-  "Ropa": { fill: COLORS[5], stroke: BORDER_COLORS[5] },
-  "Salud": { fill: COLORS[6], stroke: BORDER_COLORS[6] },
-  "Educación": { fill: COLORS[7], stroke: BORDER_COLORS[7] },
-  "Servicios": { fill: COLORS[0], stroke: BORDER_COLORS[0] },
-  "Mascota": { fill: COLORS[1], stroke: BORDER_COLORS[1] },
-  "Compras": { fill: COLORS[2], stroke: BORDER_COLORS[2] },
-  "Libros": { fill: COLORS[3], stroke: BORDER_COLORS[3] },
-  "Mobiliario": { fill: COLORS[4], stroke: BORDER_COLORS[4] },
-  "Otros": { fill: COLORS[7], stroke: BORDER_COLORS[7] }
+const categoryColors: Record<string, { fill: string; stroke: string }> = {
+  Alimentación: { fill: COLORS[0], stroke: BORDER_COLORS[0] },
+  Tecnología: { fill: COLORS[1], stroke: BORDER_COLORS[1] },
+  Vivienda: { fill: COLORS[2], stroke: BORDER_COLORS[2] },
+  Transporte: { fill: COLORS[3], stroke: BORDER_COLORS[3] },
+  Entretenimiento: { fill: COLORS[4], stroke: BORDER_COLORS[4] },
+  Ropa: { fill: COLORS[5], stroke: BORDER_COLORS[5] },
+  Salud: { fill: COLORS[6], stroke: BORDER_COLORS[6] },
+  Educación: { fill: COLORS[7], stroke: BORDER_COLORS[7] },
+  Servicios: { fill: COLORS[0], stroke: BORDER_COLORS[0] },
+  Mascota: { fill: COLORS[1], stroke: BORDER_COLORS[1] },
+  Compras: { fill: COLORS[2], stroke: BORDER_COLORS[2] },
+  Libros: { fill: COLORS[3], stroke: BORDER_COLORS[3] },
+  Mobiliario: { fill: COLORS[4], stroke: BORDER_COLORS[4] },
+  Otros: { fill: COLORS[7], stroke: BORDER_COLORS[7] },
 };
 
 const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
   viewMode,
   selectedMonth,
-  dateRange
+  dateRange,
 }) => {
   const isMobile = useIsMobile();
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
@@ -93,13 +103,13 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1; // getMonth() es 0-indexado
-    
+
     if (selectedMonth !== "year") {
       // Si se ha seleccionado un mes específico, usamos ese
       const monthNumber = monthToNumber[selectedMonth] || month;
       return { year, month: monthNumber };
     }
-    
+
     return { year, month };
   };
 
@@ -107,58 +117,58 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
   const fetchWeeklyData = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const token = getAccessToken();
       if (!token) {
         throw new Error("No hay token de autenticación disponible");
       }
-      
+
       const { year, month } = getCurrentYearMonth();
-      
+
       const response = await fetch(
-        `https://web-production-11f27.up.railway.app/api/expenses/weekly_by_category/?month=${month}&year=${year}`,
+        `${env.apiUrl}/api/expenses/weekly_by_category/?month=${month}&year=${year}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      
+
       if (!response.ok) {
         throw new Error(`Error al obtener los datos: ${response.status}`);
       }
-      
+
       const data: WeeklyCategoryData[] = await response.json();
-      
+
       // Obtener todas las categorías únicas de los datos
       const allCategories = new Set<string>();
-      data.forEach(week => {
-        Object.keys(week.totals).forEach(category => {
+      data.forEach((week) => {
+        Object.keys(week.totals).forEach((category) => {
           allCategories.add(category);
         });
       });
-      
+
       // Guardar las categorías ordenadas
       const categoryList = Array.from(allCategories);
       setCategories(categoryList);
-      
+
       // Procesar los datos para que cada semana tenga todas las categorías
-      const processedData = data.map(week => {
+      const processedData = data.map((week) => {
         const weekData: WeeklyCategoryData = {
           week: week.week,
           totals: week.totals,
-          name: week.week // Agregar name para compatibilidad con Recharts
+          name: week.week, // Agregar name para compatibilidad con Recharts
         };
-        
+
         // Agregar cada categoría como propiedad directa para el gráfico
-        categoryList.forEach(category => {
+        categoryList.forEach((category) => {
           weekData[category] = week.totals[category] || 0;
         });
-        
+
         return weekData;
       });
-      
+
       setWeeklyData(processedData);
     } catch (err) {
       console.error("Error al cargar los datos semanales:", err);
@@ -189,15 +199,17 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
 
   // Formatear valores para el Tooltip
   const formatTooltipValue = (value: number) => {
-    return value ? `$${value.toLocaleString('es-CO')}` : "$0";
+    return value ? `$${value.toLocaleString("es-CO")}` : "$0";
   };
 
   // Función para obtener colores de una categoría
   const getCategoryColors = (category: string) => {
-    return categoryColors[category] || { 
-      fill: COLORS[7], 
-      stroke: BORDER_COLORS[7] 
-    }; // Default a Otros (gris)
+    return (
+      categoryColors[category] || {
+        fill: COLORS[7],
+        stroke: BORDER_COLORS[7],
+      }
+    ); // Default a Otros (gris)
   };
 
   return (
@@ -214,75 +226,90 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-destructive mb-1">Error al cargar los datos</p>
+              <p className="text-sm text-destructive mb-1">
+                Error al cargar los datos
+              </p>
               <p className="text-xs text-muted-foreground">{error}</p>
             </div>
           ) : weeklyData.length === 0 ? (
             <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-muted-foreground">No hay datos disponibles para este periodo</p>
+              <p className="text-sm text-muted-foreground">
+                No hay datos disponibles para este periodo
+              </p>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={isMobile ? "90%" : "95%"}>
-              <BarChart 
-                data={weeklyData} 
-                margin={isMobile ? {
-                  top: 5,
-                  right: 5,
-                  left: -25,
-                  bottom: 15
-                } : {
-                  top: 20,
-                  right: 20,
-                  left: 0,
-                  bottom: 15
-                }} 
+              <BarChart
+                data={weeklyData}
+                margin={
+                  isMobile
+                    ? {
+                        top: 5,
+                        right: 5,
+                        left: -25,
+                        bottom: 15,
+                      }
+                    : {
+                        top: 20,
+                        right: 20,
+                        left: 0,
+                        bottom: 15,
+                      }
+                }
                 barSize={isMobile ? 8 : 20}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis 
-                  dataKey="week" 
+                <XAxis
+                  dataKey="week"
                   tick={{
-                    fontSize: isMobile ? 7 : 12
-                  }} 
-                  interval={isMobile ? 1 : 0} 
-                  angle={isMobile ? -45 : 0} 
-                  textAnchor={isMobile ? "end" : "middle"} 
-                  height={isMobile ? 50 : 30} 
+                    fontSize: isMobile ? 7 : 12,
+                  }}
+                  interval={isMobile ? 1 : 0}
+                  angle={isMobile ? -45 : 0}
+                  textAnchor={isMobile ? "end" : "middle"}
+                  height={isMobile ? 50 : 30}
                 />
-                <YAxis 
+                <YAxis
                   tick={{
-                    fontSize: isMobile ? 8 : 12
-                  }} 
-                  width={isMobile ? 30 : 50} 
-                  tickFormatter={value => value >= 1000 ? `${Math.floor(value / 1000)}k` : value.toString()} 
+                    fontSize: isMobile ? 8 : 12,
+                  }}
+                  width={isMobile ? 30 : 50}
+                  tickFormatter={(value) =>
+                    value >= 1000
+                      ? `${Math.floor(value / 1000)}k`
+                      : value.toString()
+                  }
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name) => {
-                    return [formatTooltipValue(value as number), name.toString()];
+                    return [
+                      formatTooltipValue(value as number),
+                      name.toString(),
+                    ];
                   }}
                   contentStyle={{
-                    fontSize: isMobile ? "10px" : "12px"
-                  }} 
+                    fontSize: isMobile ? "10px" : "12px",
+                  }}
                 />
-                <Legend 
+                <Legend
                   wrapperStyle={{
                     fontSize: isMobile ? "8px" : "12px",
                     bottom: 0,
-                    paddingTop: 5
-                  }} 
+                    paddingTop: 5,
+                  }}
                 />
                 {categories.map((category, index) => {
                   const colors = getCategoryColors(category);
                   return (
-                    <Bar 
+                    <Bar
                       key={category}
-                      dataKey={category} 
-                      stackId="a" 
+                      dataKey={category}
+                      stackId="a"
                       fill={colors.fill}
                       stroke={colors.stroke}
                       strokeWidth={1}
-                      radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]} 
-                      cursor="pointer" 
+                      radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
+                      cursor="pointer"
                     />
                   );
                 })}
@@ -293,8 +320,8 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
 
         {selectedWeek && (
           <div className="mt-2 text-center">
-            <button 
-              onClick={() => setSelectedWeek(null)} 
+            <button
+              onClick={() => setSelectedWeek(null)}
               className="text-xs sm:text-sm text-blue-600 hover:text-blue-800"
             >
               ← Volver a vista semanal

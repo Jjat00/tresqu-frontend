@@ -28,7 +28,7 @@ const Header = () => {
         scrolled ? "py-3 bg-background/80 backdrop-blur-lg shadow-md" : "py-5"
       }`}
     >
-      <div className="container flex items-center justify-between">
+      <div className="container flex items-center justify-between max-w-7xl mx-auto px-4 md:px-6">
         <Link to="/">
           <Logo />
         </Link>

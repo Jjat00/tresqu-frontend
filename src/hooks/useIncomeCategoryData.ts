@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
 import { format } from "date-fns";
 import { getAccessToken } from "@/services/authService";
-import { toast } from "sonner";
+import { env } from "@/config";
 
 interface IncomeCategoryDataItem {
   category: string;
@@ -11,17 +10,6 @@ interface IncomeCategoryDataItem {
   color: string;
   percent: number;
   subcategories?: { name: string; value: number }[];
-}
-
-interface IncomeCategoryResponse {
-  categories: {
-    name: string;
-    amount: number;
-    color: string;
-    percent: number;
-    subcategories: { name: string; value: number }[];
-  }[];
-  total: number;
 }
 
 export const useIncomeCategoryData = (dateRange?: DateRange) => {
@@ -36,14 +24,14 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
       setError(null);
 
       try {
-        let url = "https://web-production-11f27.up.railway.app/api/incomes/donut_chart_data/";
+        let url = `${env.apiUrl}/api/incomes/donut_chart_data/`;
 
         // Add date range parameters if provided
         if (dateRange && dateRange.from && dateRange.to) {
           const params = new URLSearchParams({
             date_filter: "custom",
             start_date: format(dateRange.from, "yyyy-MM-dd"),
-            end_date: format(dateRange.to, "yyyy-MM-dd")
+            end_date: format(dateRange.to, "yyyy-MM-dd"),
           });
           url += `?${params.toString()}`;
         }
@@ -57,8 +45,8 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
 
         const response = await fetch(url, {
           headers: {
-            "Authorization": `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -66,16 +54,16 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
         }
 
         const responseData = await response.json();
-        
+
         // Check if responseData has the expected structure
         if (responseData.categories && Array.isArray(responseData.categories)) {
           // Transform data for the chart
-          const transformedData = responseData.categories.map(item => ({
+          const transformedData = responseData.categories.map((item) => ({
             category: item.name,
             amount: item.amount,
             color: item.color || getRandomColor(item.name),
             percent: item.percent,
-            subcategories: item.subcategories
+            subcategories: item.subcategories,
           }));
 
           setData(transformedData);
@@ -90,7 +78,7 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
       } catch (err: any) {
         console.error("Error fetching income category data:", err);
         setError(err.message || "Error fetching income data");
-        
+
         // Fallback to demo data if API fails
         const demoData = getFallbackData();
         setData(demoData);
@@ -109,16 +97,22 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
 // Helper function to get a random color based on string
 const getRandomColor = (str: string) => {
   const colors = [
-    "#4ade80", "#60a5fa", "#f472b6", "#a78bfa", 
-    "#fb923c", "#38bdf8", "#a3e635", "#e879f9"
+    "#4ade80",
+    "#60a5fa",
+    "#f472b6",
+    "#a78bfa",
+    "#fb923c",
+    "#38bdf8",
+    "#a3e635",
+    "#e879f9",
   ];
-  
+
   // Generate a simple hash from the string
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   // Use the hash to pick a color
   return colors[Math.abs(hash) % colors.length];
 };
@@ -133,8 +127,8 @@ const getFallbackData = (): IncomeCategoryDataItem[] => {
       percent: 63,
       subcategories: [
         { name: "Salario base", value: 15000 },
-        { name: "Bonos", value: 2000 }
-      ]
+        { name: "Bonos", value: 2000 },
+      ],
     },
     {
       category: "Freelance",
@@ -143,8 +137,8 @@ const getFallbackData = (): IncomeCategoryDataItem[] => {
       percent: 28,
       subcategories: [
         { name: "Diseño gráfico", value: 3500 },
-        { name: "Programación", value: 4200 }
-      ]
+        { name: "Programación", value: 4200 },
+      ],
     },
     {
       category: "Inversiones",
@@ -153,17 +147,15 @@ const getFallbackData = (): IncomeCategoryDataItem[] => {
       percent: 4,
       subcategories: [
         { name: "Acciones", value: 850 },
-        { name: "Depósitos", value: 320 }
-      ]
+        { name: "Depósitos", value: 320 },
+      ],
     },
     {
       category: "Otros",
       amount: 1200,
       color: "#a78bfa",
       percent: 4,
-      subcategories: [
-        { name: "Ventas", value: 1200 }
-      ]
-    }
+      subcategories: [{ name: "Ventas", value: 1200 }],
+    },
   ];
 };

@@ -63,8 +63,8 @@ interface SubscriptionPlanDetails {
 import { env } from "@/config";
 // URLs de la API
 const API_BASE_URL = env.apiUrl;
-const REQUEST_CODE_URL = `${API_BASE_URL}/auth/telegram/request-code/`;
-const VERIFY_CODE_URL = `${API_BASE_URL}/auth/telegram/verify-code/`;
+const REQUEST_CODE_URL = `${API_BASE_URL}/api/auth/telegram/request-code/`;
+const VERIFY_CODE_URL = `${API_BASE_URL}/api/auth/telegram/verify-code/`;
 
 // Función para solicitar código de verificación
 export const requestTelegramCode = async (
