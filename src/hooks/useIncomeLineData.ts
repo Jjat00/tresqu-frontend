@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
 import { format } from "date-fns";
+import { getAccessToken } from "@/services/authService";
+import { toast } from "sonner";
 
 interface IncomeLineDataItem {
   name: string;
@@ -46,12 +48,14 @@ export const useIncomeLineData = (
         
         url += `?${params.toString()}`;
 
-        // Get token from localStorage
-        const token = localStorage.getItem("token");
+        // Get token using getAccessToken
+        const token = getAccessToken();
 
         if (!token) {
           throw new Error("No authentication token found");
         }
+
+        console.log("Fetching income line chart data from:", url);
 
         const response = await fetch(url, {
           headers: {

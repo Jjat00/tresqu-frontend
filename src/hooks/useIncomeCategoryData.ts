@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
 import { format } from "date-fns";
+import { getAccessToken } from "@/services/authService";
+import { toast } from "sonner";
 
 interface IncomeCategoryDataItem {
   category: string;
@@ -46,8 +48,8 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
           url += `?${params.toString()}`;
         }
 
-        // Get token from localStorage
-        const token = localStorage.getItem("token");
+        // Get token using getAccessToken
+        const token = getAccessToken();
 
         if (!token) {
           throw new Error("No authentication token found");

@@ -1,5 +1,7 @@
 
 import { useState, useEffect } from "react";
+import { getAccessToken } from "@/services/authService";
+import { toast } from "sonner";
 
 interface IncomeSummaryData {
   average_monthly: number;
@@ -24,8 +26,8 @@ export const useIncomeSummary = (months: number = 1) => {
       try {
         const url = `https://web-production-11f27.up.railway.app/api/incomes/summary/?months=${months}`;
 
-        // Get token from localStorage
-        const token = localStorage.getItem("token");
+        // Get token using getAccessToken
+        const token = getAccessToken();
 
         if (!token) {
           throw new Error("No authentication token found");
