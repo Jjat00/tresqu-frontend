@@ -1,0 +1,84 @@
+/* Estilos de emergencia para el selector de fechas */
+.react-datepicker__day.react-datepicker__day--in-selecting-range {
+  background-color: #75ff85;
+  color: rgb(0, 0, 0);
+}
+
+.react-datepicker__day.react-datepicker__day--in-range {
+  background-color: #acff7b;
+  color: rgb(0, 0, 0);
+}
+
+.react-datepicker__day.react-datepicker__day--range-start {
+  background-color: #75ff85;
+  color: rgb(0, 0, 0);
+}
+
+.react-datepicker__day.react-datepicker__day--range-end {
+  background-color: #75ff85;
+  color: rgb(0, 0, 0);
+}
+
+/* Estilos adicionales para modo claro y oscuro */
+.dark .react-datepicker__day--in-range,
+.react-datepicker__day--in-range {
+  background-color: #3b82f6;
+  color: rgb(0, 0, 0);
+}
+
+/* Verificar si hay sobrescrituras de Tailwind */
+*[class*="react-datepicker__day--in-range"] {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Fondo oscuro para el calendario */
+.react-datepicker {
+  background-color: #1e293b;
+  border-color: #334155;
+  font-size: 0.85rem;
+  width: auto;
+}
+
+/* Encabezado oscuro */
+.react-datepicker__header {
+  background-color: #0f172a;
+  border-bottom: 1px solid #334155;
+  padding-top: 0.5rem;
+}
+
+/* Días del calendario más pequeños */
+.react-datepicker__day-name,
+.react-datepicker__day {
+  width: 1.7rem;
+  line-height: 1.7rem;
+  margin: 0.1rem;
+  color: #f8fafc;
+}
+
+/* Nombres de días */
+.react-datepicker__day-name {
+  color: #94a3b8;
+}
+
+/* Mes actual */
+.react-datepicker__current-month {
+  color: #f8fafc;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Días fuera del mes */
+.react-datepicker__day--outside-month {
+  color: #475569;
+}
+
+/* Navegación (flechas) */
+.react-datepicker__navigation-icon::before {
+  border-color: #94a3b8;
+}
+
+.react-datepicker__month-container {
+  float: left;
+  width: 100%;
+}
