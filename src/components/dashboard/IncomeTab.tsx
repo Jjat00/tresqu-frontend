@@ -66,7 +66,10 @@ const IncomeTab = ({
   };
 
   // Format currency for display
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | undefined | null) => {
+    if (amount === undefined || amount === null) {
+      return "$ 0";
+    }
     return amount.toLocaleString('es-CO', {
       style: 'currency',
       currency: 'COP',

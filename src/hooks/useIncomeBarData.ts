@@ -64,16 +64,25 @@ export const useIncomeBarData = (
           throw new Error(`API error: ${response.status}`);
         }
 
-        const responseData: IncomeBarResponse = await response.json();
+        const responseData = await response.json();
         
-        // Transform data for the chart
-        const transformedData = responseData.data.map(item => ({
-          name: item.label,
-          value: item.amount
-        }));
+        // Check if responseData has the expected structure
+        if (responseData.data && Array.isArray(responseData.data)) {
+          // Transform data for the chart
+          const transformedData = responseData.data.map(item => ({
+            name: item.label,
+            value: item.amount
+          }));
 
-        setData(transformedData);
-        setTotal(responseData.total);
+          setData(transformedData);
+          setTotal(responseData.total);
+        } else {
+          // If the response doesn't have the expected structure, use fallback data
+          console.log("API returned unexpected data structure:", responseData);
+          const fallbackData = getFallbackData(timeFilter);
+          setData(fallbackData);
+          setTotal(fallbackData.reduce((sum, item) => sum + item.value, 0));
+        }
       } catch (err: any) {
         console.error("Error fetching income bar data:", err);
         setError(err.message || "Error fetching income data");

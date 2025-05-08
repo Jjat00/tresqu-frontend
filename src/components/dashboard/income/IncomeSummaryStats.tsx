@@ -40,30 +40,36 @@ const IncomeSummaryStats: React.FC<IncomeSummaryStatsProps> = ({ formatCurrency 
     );
   }
 
+  // Asegurémonos que todos los valores sean números antes de formatearlos
+  const average = typeof summaryData.average_monthly === 'number' ? summaryData.average_monthly : 0;
+  const comparisonAmount = typeof summaryData.comparison_previous?.amount === 'number' ? summaryData.comparison_previous.amount : 0;
+  const comparisonPercentage = typeof summaryData.comparison_previous?.percentage === 'number' ? summaryData.comparison_previous.percentage : 0;
+  const projection = typeof summaryData.projection_next_month === 'number' ? summaryData.projection_next_month : 0;
+
   return (
     <>
       <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
         <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingreso mensual promedio</p>
-        <p className="text-xl sm:text-2xl font-bold">{formatCurrency(summaryData.average_monthly)}</p>
+        <p className="text-xl sm:text-2xl font-bold">{formatCurrency(average)}</p>
       </div>
       
       <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
         <p className="text-xs sm:text-sm text-muted-foreground mb-1">Ingresos vs. mes anterior</p>
         <div className="flex items-end gap-2">
-          <p className={`text-xl sm:text-2xl font-bold ${summaryData.comparison_previous.amount >= 0 ? "text-success" : "text-destructive"}`}>
-            {summaryData.comparison_previous.amount >= 0 ? "+" : ""}
-            {formatCurrency(summaryData.comparison_previous.amount)}
+          <p className={`text-xl sm:text-2xl font-bold ${comparisonAmount >= 0 ? "text-success" : "text-destructive"}`}>
+            {comparisonAmount >= 0 ? "+" : ""}
+            {formatCurrency(comparisonAmount)}
           </p>
-          <p className={`text-xs sm:text-sm ${summaryData.comparison_previous.amount >= 0 ? "text-success" : "text-destructive"}`}>
-            {summaryData.comparison_previous.amount >= 0 ? "+" : ""}
-            {summaryData.comparison_previous.percentage.toFixed(1)}%
+          <p className={`text-xs sm:text-sm ${comparisonAmount >= 0 ? "text-success" : "text-destructive"}`}>
+            {comparisonAmount >= 0 ? "+" : ""}
+            {comparisonPercentage.toFixed(1)}%
           </p>
         </div>
       </div>
       
       <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
         <p className="text-xs sm:text-sm text-muted-foreground mb-1">Proyección próximo mes</p>
-        <p className="text-lg sm:text-xl font-semibold">{formatCurrency(summaryData.projection_next_month)}</p>
+        <p className="text-lg sm:text-xl font-semibold">{formatCurrency(projection)}</p>
       </div>
     </>
   );

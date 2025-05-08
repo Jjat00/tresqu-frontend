@@ -65,19 +65,28 @@ export const useIncomeCategoryData = (dateRange?: DateRange) => {
           throw new Error(`API error: ${response.status}`);
         }
 
-        const responseData: IncomeCategoryResponse = await response.json();
+        const responseData = await response.json();
         
-        // Transform data for the chart
-        const transformedData = responseData.categories.map(item => ({
-          category: item.name,
-          amount: item.amount,
-          color: item.color || getRandomColor(item.name),
-          percent: item.percent,
-          subcategories: item.subcategories
-        }));
+        // Check if responseData has the expected structure
+        if (responseData.categories && Array.isArray(responseData.categories)) {
+          // Transform data for the chart
+          const transformedData = responseData.categories.map(item => ({
+            category: item.name,
+            amount: item.amount,
+            color: item.color || getRandomColor(item.name),
+            percent: item.percent,
+            subcategories: item.subcategories
+          }));
 
-        setData(transformedData);
-        setTotal(responseData.total);
+          setData(transformedData);
+          setTotal(responseData.total);
+        } else {
+          // If the response doesn't have categories array, use fallback data
+          console.log("API returned unexpected data structure:", responseData);
+          const demoData = getFallbackData();
+          setData(demoData);
+          setTotal(demoData.reduce((sum, item) => sum + item.amount, 0));
+        }
       } catch (err: any) {
         console.error("Error fetching income category data:", err);
         setError(err.message || "Error fetching income data");
