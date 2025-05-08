@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { DateRange } from "../DateRangePicker";
@@ -12,9 +11,10 @@ interface CategoryPieChartProps {
 
 const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
   onCategoryClick,
-  dateRange
+  dateRange,
 }) => {
-  const { chartData, isLoading, error, filterSummary } = useCategoryPieChartData(dateRange);
+  const { chartData, isLoading, error, filterSummary } =
+    useCategoryPieChartData(dateRange);
 
   return (
     <Card className="overflow-hidden h-full flex flex-col">
@@ -27,7 +27,7 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({
             <p className="text-xs text-muted-foreground">{filterSummary}</p>
           )}
         </div>
-        <PieChartDisplay 
+        <PieChartDisplay
           data={chartData}
           onCategoryClick={onCategoryClick}
           isLoading={isLoading}
