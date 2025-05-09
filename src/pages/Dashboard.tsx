@@ -187,9 +187,6 @@ const Dashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* ChatBot component - outside the DashboardLayout to be accessible from everywhere */}
-      <ChatBot />
     </DashboardLayout>
   );
 };
