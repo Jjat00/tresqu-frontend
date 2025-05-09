@@ -1,7 +1,6 @@
-
 import React from "react";
-import ExpensesLineChart from "./ExpensesLineChart";
 import { DateRange } from "../DateRangePicker";
+import ChartJSLineChart from "./ChartJSLineChart";
 
 interface ComparativeLineChartProps {
   viewMode: "day" | "week" | "month" | "year";
@@ -19,7 +18,7 @@ const ComparativeLineChart: React.FC<ComparativeLineChartProps> = ({
   return (
     <div className="h-full">
       {activeTab === "expenses" && (
-        <ExpensesLineChart
+        <ChartJSLineChart
           viewMode={viewMode}
           selectedMonth={selectedMonth}
           dateRange={dateRange}

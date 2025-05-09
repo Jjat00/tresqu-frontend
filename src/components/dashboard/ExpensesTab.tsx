@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import CategoryPieChart from "./charts/CategoryPieChart";
-import ExpensesBarChart from "./charts/ExpensesBarChart";
-import ComparativeLineChart from "./charts/ComparativeLineChart";
 import ExpensesTable from "./expenses/ExpensesTable";
 import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
+import ChartJSPieChart from "./charts/ChartJSPieChart";
+import ChartJSBarChart from "./charts/ChartJSBarChart";
+import ComparativeLineChart from "./charts/ComparativeLineChart";
 
 interface ExpensesTabProps {
   selectedMonth?: string;
@@ -73,10 +73,13 @@ const ExpensesTab = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <CategoryPieChart onCategoryClick={() => {}} dateRange={dateRange} />
+          <ChartJSPieChart
+            onCategoryClick={setSelectedCategory}
+            dateRange={dateRange}
+          />
         </div>
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <ExpensesBarChart
+          <ChartJSBarChart
             viewMode={localViewMode}
             selectedMonth={localSelectedMonth}
             dateRange={dateRange}

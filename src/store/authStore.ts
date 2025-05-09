@@ -98,15 +98,17 @@ export const useAuthStore = create<AuthState>()(
           accessToken: state.accessToken,
           refreshToken: state.refreshToken,
         } as unknown as AuthState),
-      storage: createJSONStorage(() =>
-        typeof window !== "undefined"
-          ? localStorage
-          : {
-              getItem: () => null,
-              setItem: () => null,
-              removeItem: () => null,
-            }
-      ),
+      storage: createJSONStorage(() => {
+        // Asegurarnos de que window esté definido antes de acceder a localStorage
+        if (typeof window !== "undefined") {
+          return localStorage;
+        }
+        return {
+          getItem: () => null,
+          setItem: () => null,
+          removeItem: () => null,
+        };
+      }),
     }
   )
 );

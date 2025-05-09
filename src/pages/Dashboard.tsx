@@ -45,7 +45,13 @@ const Dashboard = () => {
 
   // Comprobar si el usuario está autenticado
   useEffect(() => {
-    if (!isAuthenticated()) {
+    // Usando try-catch para evitar errores en producción
+    try {
+      if (!isAuthenticated()) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error al verificar autenticación:", error);
       navigate("/login");
     }
   }, [navigate]);

@@ -20,5 +20,7 @@ export default defineConfig(() => ({
         manualChunks: {},
       },
     },
+    assetsDir: "assets",
   },
+  base: "/",
 }));

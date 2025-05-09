@@ -17,15 +17,20 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
-    if (!isAuthenticated()) {
-      navigate("/login");
-      return;
-    }
+    try {
+      if (!isAuthenticated()) {
+        navigate("/login");
+        return;
+      }
 
-    // Obtener información del usuario
-    const user = getUser();
-    if (user) {
-      setUserName(user.first_name || "Usuario");
+      // Obtener información del usuario
+      const user = getUser();
+      if (user) {
+        setUserName(user.first_name || "Usuario");
+      }
+    } catch (error) {
+      console.error("Error al verificar autenticación:", error);
+      navigate("/login");
     }
   }, [navigate]);
 
