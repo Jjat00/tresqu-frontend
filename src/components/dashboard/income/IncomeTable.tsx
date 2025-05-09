@@ -1,61 +1,30 @@
-
 import React, { useState, useEffect } from "react";
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Download, Share2 } from "lucide-react";
+import { Download, Share2, Loader2, AlertCircle } from "lucide-react";
+import { useIncomeSummary } from "@/hooks/useIncomeSummary";
+import { IncomeSummaryItem, IncomeTableItem } from "@/types/incomes";
 
-// Sample data for the income table (mantener hasta que haya una API para esto)
-const allIncomeData = [{
-  id: 1,
-  description: "Salario",
-  category: "Empleo",
-  subcategory: "Salario base",
-  amount: 15000,
-  date: "2025-05-01"
-}, {
-  id: 2,
-  description: "Freelance - Diseño",
-  category: "Freelance",
-  subcategory: "Diseño gráfico",
-  amount: 3500,
-  date: "2025-04-25"
-}, {
-  id: 3,
-  description: "Dividendos",
-  category: "Inversiones",
-  subcategory: "Acciones",
-  amount: 850,
-  date: "2025-04-20"
-}, {
-  id: 4,
-  description: "Venta de artículos",
-  category: "Otros",
-  subcategory: "Ventas",
-  amount: 1200,
-  date: "2025-04-18"
-}, {
-  id: 5,
-  description: "Bonificación",
-  category: "Empleo",
-  subcategory: "Bonos",
-  amount: 2000,
-  date: "2025-04-15"
-}, {
-  id: 6,
-  description: "Freelance - Desarrollo",
-  category: "Freelance",
-  subcategory: "Programación",
-  amount: 4200,
-  date: "2025-04-10"
-}, {
-  id: 7,
-  description: "Intereses",
-  category: "Inversiones",
-  subcategory: "Depósitos",
-  amount: 320,
-  date: "2025-04-05"
-}];
+// Convertir los datos del resumen a un formato de tabla
+const transformSummaryToTableData = (
+  summary: IncomeSummaryItem[]
+): IncomeTableItem[] => {
+  return summary.map((item, index) => ({
+    id: index + 1,
+    description: `Ingreso por ${item.category__name || "Sin categoría"}`,
+    category: item.category__name || "Sin categoría",
+    subcategory: "",
+    amount: item.total,
+    date: new Date().toISOString().split("T")[0], // Usamos la fecha actual como fallback
+  }));
+};
 
 interface IncomeTableProps {
   categoryFilter: string;
@@ -64,6 +33,7 @@ interface IncomeTableProps {
   onExportPDF: () => void;
   onExportExcel: () => void;
   onShare: () => void;
+  period?: "week" | "month" | "year" | "all";
 }
 
 const IncomeTable: React.FC<IncomeTableProps> = ({
@@ -72,37 +42,95 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
   formatCurrency,
   onExportPDF,
   onExportExcel,
-  onShare
+  onShare,
+  period = "month",
 }) => {
-  const [filteredIncome, setFilteredIncome] = useState(allIncomeData);
+  // Obtener datos del resumen de ingresos
+  const { data: summaryData, isLoading, error } = useIncomeSummary({ period });
 
-  // Apply filters in real-time for the table data
+  // Estado para los datos de la tabla
+  const [tableData, setTableData] = useState<IncomeTableItem[]>([]);
+  const [filteredIncome, setFilteredIncome] = useState<IncomeTableItem[]>([]);
+
+  // Transformar los datos del resumen cuando se reciben
   useEffect(() => {
-    let filtered = [...allIncomeData];
+    if (summaryData && summaryData.summary) {
+      const transformedData = transformSummaryToTableData(summaryData.summary);
+      setTableData(transformedData);
+    }
+  }, [summaryData]);
 
-    // Apply category filter
-    if (categoryFilter !== "all") {
-      filtered = filtered.filter(income => income.category.toLowerCase() === 
-        categoryFilter.replace("salary", "empleo")
-                     .replace("freelance", "freelance")
-                     .replace("investments", "inversiones")
-                     .replace("other", "otros"));
+  // Aplicar filtros a los datos
+  useEffect(() => {
+    if (!tableData.length) {
+      setFilteredIncome([]);
+      return;
     }
 
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(income => 
-        income.description.toLowerCase().includes(query) || 
-        income.category.toLowerCase().includes(query) || 
-        income.subcategory.toLowerCase().includes(query)
+    let filtered = [...tableData];
+
+    // Aplicar filtro de categoría
+    if (categoryFilter !== "all") {
+      const normalizedCategoryFilter = categoryFilter
+        .toLowerCase()
+        .replace("salary", "empleo")
+        .replace("freelance", "freelance")
+        .replace("investments", "inversiones")
+        .replace("other", "otros");
+
+      filtered = filtered.filter(
+        (income) => income.category.toLowerCase() === normalizedCategoryFilter
       );
     }
 
-    // Sort by date (most recent first)
-    filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Aplicar filtro de búsqueda
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (income) =>
+          income.description.toLowerCase().includes(query) ||
+          income.category.toLowerCase().includes(query) ||
+          (income.subcategory &&
+            income.subcategory.toLowerCase().includes(query))
+      );
+    }
+
+    // Ordenar por monto (mayor a menor)
+    filtered.sort((a, b) => b.amount - a.amount);
     setFilteredIncome(filtered);
-  }, [categoryFilter, searchQuery]);
+  }, [tableData, categoryFilter, searchQuery]);
+
+  // Mostrar estado de carga
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        <div className="rounded-md border p-8">
+          <div className="flex flex-col items-center justify-center">
+            <Loader2 className="h-8 w-8 text-primary animate-spin mb-2" />
+            <p className="text-sm text-muted-foreground">
+              Cargando datos de ingresos...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar error
+  if (error) {
+    return (
+      <div className="space-y-3">
+        <div className="rounded-md border p-8">
+          <div className="flex flex-col items-center justify-center">
+            <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+            <p className="text-sm text-muted-foreground">
+              Error al cargar los datos de ingresos
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
@@ -114,50 +142,91 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
               <TableHead className="text-xs">Categoría</TableHead>
               <TableHead className="text-xs">Subcategoría</TableHead>
               <TableHead className="text-xs">Monto</TableHead>
-              <TableHead className="text-xs">Fecha</TableHead>
+              <TableHead className="text-xs">Período</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredIncome.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-4 text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-4 text-muted-foreground"
+                >
                   No se encontraron ingresos con los filtros actuales
                 </TableCell>
               </TableRow>
             ) : (
-              filteredIncome.map(income => (
+              filteredIncome.map((income) => (
                 <TableRow key={income.id} className="text-xs sm:text-sm">
                   <TableCell className="py-2">{income.description}</TableCell>
                   <TableCell className="py-2">{income.category}</TableCell>
-                  <TableCell className="py-2">{income.subcategory}</TableCell>
-                  <TableCell className="py-2">{formatCurrency(income.amount)}</TableCell>
-                  <TableCell className="py-2">{new Date(income.date).toLocaleDateString()}</TableCell>
+                  <TableCell className="py-2">
+                    {income.subcategory || "-"}
+                  </TableCell>
+                  <TableCell className="py-2">
+                    {formatCurrency(income.amount)}
+                  </TableCell>
+                  <TableCell className="py-2">
+                    {period === "week"
+                      ? "Esta semana"
+                      : period === "month"
+                      ? "Este mes"
+                      : period === "year"
+                      ? "Este año"
+                      : "Todo el período"}
+                  </TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </div>
-      
+
       <div className="flex flex-wrap justify-between items-center gap-2 mt-3 sm:mt-4">
         <div>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Total: <span className="font-semibold">{formatCurrency(filteredIncome.reduce((sum, income) => sum + income.amount, 0))}</span>
+            Total:{" "}
+            <span className="font-semibold">
+              {formatCurrency(
+                summaryData?.total ||
+                  filteredIncome.reduce((sum, income) => sum + income.amount, 0)
+              )}
+            </span>
           </p>
+          {summaryData && summaryData.start_date && (
+            <p className="text-xs text-muted-foreground">
+              Desde: {new Date(summaryData.start_date).toLocaleDateString()}
+            </p>
+          )}
         </div>
-        
+
         <div className="flex sm:hidden gap-2">
-          <Button variant="outline" size="sm" onClick={onExportPDF} className="h-8 text-xs">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onExportPDF}
+            className="h-8 text-xs"
+          >
             <Download className="mr-1 h-3 w-3" />
             PDF
           </Button>
-          <Button variant="outline" size="sm" onClick={onExportExcel} className="h-8 text-xs">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onExportExcel}
+            className="h-8 text-xs"
+          >
             <Download className="mr-1 h-3 w-3" />
             Excel
           </Button>
         </div>
-        
-        <Button variant="outline" size="sm" onClick={onShare} className="ml-auto h-8 sm:h-9 text-xs">
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onShare}
+          className="ml-auto h-8 sm:h-9 text-xs"
+        >
           <Share2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           Compartir CashBot
         </Button>

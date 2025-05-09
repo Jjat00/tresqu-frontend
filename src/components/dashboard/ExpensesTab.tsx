@@ -3,7 +3,6 @@ import CategoryPieChart from "./charts/CategoryPieChart";
 import ExpensesBarChart from "./charts/ExpensesBarChart";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
 import ExpensesTable from "./expenses/ExpensesTable";
-import ExpenseFilters from "./expenses/ExpenseFilters";
 import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
@@ -54,15 +53,6 @@ const ExpensesTab = ({
     // Implementation would go here
   };
 
-  const handleCategoryFilterChange = (value: string) => {
-    setCategoryFilter(value);
-    // Si se selecciona una categoría específica (que no sea "all"),
-    // y se hace clic en una categoría en el gráfico, mostrar esa subcategoría
-    if (value !== "all") {
-      setSelectedCategory(value);
-    }
-  };
-
   // If a category is selected, show the subcategory view
   if (selectedCategory) {
     return (
@@ -74,26 +64,16 @@ const ExpensesTab = ({
   }
 
   return (
-    <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
+    <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <div className="w-full xs:w-auto">
-          <ExpenseFilters
-            categoryFilter={categoryFilter}
-            onCategoryFilterChange={handleCategoryFilterChange}
-          />
-        </div>
-
-        <div className="w-full xs:w-auto mt-2 xs:mt-0">
           <NewExpenseDialog onAddExpense={handleAddExpense} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <CategoryPieChart
-            onCategoryClick={setSelectedCategory}
-            dateRange={dateRange}
-          />
+          <CategoryPieChart onCategoryClick={() => {}} dateRange={dateRange} />
         </div>
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
           <ExpensesBarChart

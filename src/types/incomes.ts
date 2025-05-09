@@ -155,3 +155,43 @@ export interface IncomeStats {
   next_month_projection: number;
   months_analyzed: number;
 }
+
+/**
+ * Interfaz para los parámetros del resumen de ingresos
+ */
+export interface IncomeSummaryParams {
+  period?: "week" | "month" | "year" | "all";
+  timezone?: string;
+}
+
+/**
+ * Interfaz para un elemento del resumen de ingresos por categoría
+ */
+export interface IncomeSummaryItem {
+  category__name: string;
+  currency: string;
+  total: number;
+}
+
+/**
+ * Interfaz para los datos del resumen de ingresos
+ */
+export interface IncomeSummaryData {
+  period: "week" | "month" | "year" | "all";
+  start_date: string | null;
+  end_date: string;
+  summary: IncomeSummaryItem[];
+  total: number;
+}
+
+/**
+ * Interfaz para un ingreso en la tabla
+ */
+export interface IncomeTableItem {
+  id: number;
+  description: string;
+  category: string;
+  subcategory?: string;
+  amount: number;
+  date: string;
+}

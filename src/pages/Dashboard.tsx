@@ -140,11 +140,11 @@ const Dashboard = () => {
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="space-y-4"
+          className="space-y-2"
         >
           {/* Ajustamos el contenedor de TabsList para evitar el scroll horizontal/vertical en pantallas pequeñas */}
           <div className="pb-2">
-            <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1 bg-muted/50">
+            <TabsList className="w-full grid grid-cols-2  gap-1 sm:gap-2 p-1 bg-muted/50">
               <TabsTrigger
                 value="expenses"
                 className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto"
@@ -156,18 +156,6 @@ const Dashboard = () => {
                 className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto"
               >
                 Ingresos
-              </TabsTrigger>
-              <TabsTrigger
-                value="debt"
-                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto"
-              >
-                Deudas
-              </TabsTrigger>
-              <TabsTrigger
-                value="savings"
-                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto"
-              >
-                Ahorros
               </TabsTrigger>
             </TabsList>
           </div>

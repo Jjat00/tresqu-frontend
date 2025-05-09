@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { Plus, Download } from "lucide-react";
 import { DateRange } from "./DateRangePicker";
@@ -88,41 +82,10 @@ const IncomeTab = ({
   };
 
   return (
-    <div className="space-y-3 md:space-y-6 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[60px]">
+    <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
-        <div className="flex flex-wrap gap-2 w-full xs:w-auto">
-          <Select
-            value={timeFilter}
-            onValueChange={(value) =>
-              setTimeFilter(value as "month" | "quarter" | "year")
-            }
-          >
-            <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
-              <SelectValue placeholder="Período" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="month">Este mes</SelectItem>
-              <SelectItem value="quarter">Trimestre</SelectItem>
-              <SelectItem value="year">Este año</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[120px] sm:w-[150px] text-xs sm:text-sm h-9">
-              <SelectValue placeholder="Categoría" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
-              <SelectItem value="salary">Empleo</SelectItem>
-              <SelectItem value="freelance">Freelance</SelectItem>
-              <SelectItem value="investments">Inversiones</SelectItem>
-              <SelectItem value="other">Otros</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
         <Button
-          className="bg-success hover:bg-success/90 h-9 whitespace-nowrap text-xs sm:text-sm w-[100] xs:w-auto mt-2 xs:mt-0"
+          className="bg-success hover:bg-success/90 h-8 xs:h-9 w-[100] xs:w-auto whitespace-nowrap text-[10px] xs:text-xs sm:text-sm"
           onClick={() => setNewIncomeOpen(true)}
         >
           <Plus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />

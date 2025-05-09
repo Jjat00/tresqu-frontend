@@ -67,7 +67,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </header>
 
       {/* Dashboard content */}
-      <main className="container max-w-7xl mx-auto py-6 md:py-8">
+      <main className="container max-w-7xl mx-auto px-3 md:px-4 py-6 md:py-8">
         {children}
       </main>
 
