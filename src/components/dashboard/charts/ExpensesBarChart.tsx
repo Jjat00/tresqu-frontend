@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   BarChart,
@@ -11,15 +11,14 @@ import {
   Legend,
 } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
-import { env } from "@/config";
+import { useBarStackedChart } from "@/hooks/userBarStackedChart";
+import { BarStackedChartParams } from "@/types/expenses";
+import { toLocalISODate } from "@/utils/dateUtils";
 
-interface WeeklyCategoryData {
-  week: string;
-  totals: Record<string, number>;
-  [key: string]: any; // Para poder agregar categorías como propiedades directas para el gráfico
+interface ChartDataItem {
+  [key: string]: string | number | Record<string, number>;
 }
 
 interface ExpensesBarChartProps {
@@ -44,194 +43,151 @@ const monthToNumber: Record<string, number> = {
   Diciembre: 12,
 };
 
-// Colores más sólidos para las categorías - debe coincidir con CategoryPieChart
-const COLORS = [
-  "#4ade80", // Green - Alimentación
-  "#60a5fa", // Blue - Tecnología
-  "#f472b6", // Pink - Vivienda
-  "#f59e0b", // Yellow - Transporte
-  "#8b5cf6", // Purple - Entretenimiento
-  "#f97316", // Orange - Ropa
-  "#fb923c", // Peach - Salud
-  "#6b7280", // Gray - Otros
-];
-
-// Colores de borde más oscuros para contrastar
-const BORDER_COLORS = [
-  "#166534", // Dark Green - Alimentación
-  "#1e40af", // Dark Blue - Tecnología
-  "#be185d", // Dark Pink - Vivienda
-  "#b45309", // Dark Yellow - Transporte
-  "#5b21b6", // Dark Purple - Entretenimiento
-  "#c2410c", // Dark Orange - Ropa
-  "#c2410c", // Dark Peach - Salud
-  "#374151", // Dark Gray - Otros
-];
-
-// Mapeo de categoría a índice de color
-const categoryColors: Record<string, { fill: string; stroke: string }> = {
-  Alimentación: { fill: COLORS[0], stroke: BORDER_COLORS[0] },
-  Tecnología: { fill: COLORS[1], stroke: BORDER_COLORS[1] },
-  Vivienda: { fill: COLORS[2], stroke: BORDER_COLORS[2] },
-  Transporte: { fill: COLORS[3], stroke: BORDER_COLORS[3] },
-  Entretenimiento: { fill: COLORS[4], stroke: BORDER_COLORS[4] },
-  Ropa: { fill: COLORS[5], stroke: BORDER_COLORS[5] },
-  Salud: { fill: COLORS[6], stroke: BORDER_COLORS[6] },
-  Educación: { fill: COLORS[7], stroke: BORDER_COLORS[7] },
-  Servicios: { fill: COLORS[0], stroke: BORDER_COLORS[0] },
-  Mascota: { fill: COLORS[1], stroke: BORDER_COLORS[1] },
-  Compras: { fill: COLORS[2], stroke: BORDER_COLORS[2] },
-  Libros: { fill: COLORS[3], stroke: BORDER_COLORS[3] },
-  Mobiliario: { fill: COLORS[4], stroke: BORDER_COLORS[4] },
-  Otros: { fill: COLORS[7], stroke: BORDER_COLORS[7] },
-};
-
 const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
   viewMode,
   selectedMonth,
   dateRange,
 }) => {
   const isMobile = useIsMobile();
-  const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
-  const [weeklyData, setWeeklyData] = useState<WeeklyCategoryData[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Función para obtener el actual año y mes
-  const getCurrentYearMonth = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // getMonth() es 0-indexado
+  // Determinar los parámetros para la API según el viewMode y selectedMonth
+  const getChartParams = (): BarStackedChartParams => {
+    const params: BarStackedChartParams = {};
 
-    if (selectedMonth !== "year") {
-      // Si se ha seleccionado un mes específico, usamos ese
-      const monthNumber = monthToNumber[selectedMonth] || month;
-      return { year, month: monthNumber };
-    }
+    if (dateRange) {
+      // Si hay un rango de fechas personalizado
+      params.date_filter = "custom";
+      params.start_date = dateRange.from
+        ? toLocalISODate(dateRange.from)
+        : undefined;
+      params.end_date = dateRange.to ? toLocalISODate(dateRange.to) : undefined;
 
-    return { year, month };
-  };
-
-  // Función para cargar los datos semanales por categoría
-  const fetchWeeklyData = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const token = getAccessToken();
-      if (!token) {
-        throw new Error("No hay token de autenticación disponible");
-      }
-
-      const { year, month } = getCurrentYearMonth();
-
-      const response = await fetch(
-        `${env.apiUrl}/api/expenses/weekly_by_category/?month=${month}&year=${year}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      // Determinar group_by basado en la duración del rango
+      if (dateRange.from && dateRange.to) {
+        const diffDays = Math.ceil(
+          (dateRange.to.getTime() - dateRange.from.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+        if (diffDays > 90) {
+          params.group_by = "month";
+        } else if (diffDays > 14) {
+          params.group_by = "week";
+        } else {
+          params.group_by = "day";
         }
-      );
+      }
+    } else if (viewMode === "year" || selectedMonth === "year") {
+      // Si estamos en vista de año, agrupar por mes
+      params.date_filter = "current_year";
+      params.group_by = "month";
+    } else if (viewMode === "month" && selectedMonth !== "year") {
+      // Si estamos en vista de mes específico
+      const currentYear = new Date().getFullYear();
+      const monthNum = monthToNumber[selectedMonth];
 
-      if (!response.ok) {
-        throw new Error(`Error al obtener los datos: ${response.status}`);
+      if (monthNum === new Date().getMonth() + 1) {
+        params.date_filter = "current_month";
+      } else {
+        params.date_filter = "custom";
+        const startDate = new Date(currentYear, monthNum - 1, 1);
+        const endDate = new Date(currentYear, monthNum, 0);
+        params.start_date = toLocalISODate(startDate);
+        params.end_date = toLocalISODate(endDate);
       }
 
-      const data: WeeklyCategoryData[] = await response.json();
-
-      // Obtener todas las categorías únicas de los datos
-      const allCategories = new Set<string>();
-      data.forEach((week) => {
-        Object.keys(week.totals).forEach((category) => {
-          allCategories.add(category);
-        });
-      });
-
-      // Guardar las categorías ordenadas
-      const categoryList = Array.from(allCategories);
-      setCategories(categoryList);
-
-      // Procesar los datos para que cada semana tenga todas las categorías
-      const processedData = data.map((week) => {
-        const weekData: WeeklyCategoryData = {
-          week: week.week,
-          totals: week.totals,
-          name: week.week, // Agregar name para compatibilidad con Recharts
-        };
-
-        // Agregar cada categoría como propiedad directa para el gráfico
-        categoryList.forEach((category) => {
-          weekData[category] = week.totals[category] || 0;
-        });
-
-        return weekData;
-      });
-
-      setWeeklyData(processedData);
-    } catch (err) {
-      console.error("Error al cargar los datos semanales:", err);
-      setError(err instanceof Error ? err.message : "Error desconocido");
-      toast.error("No se pudieron cargar los datos semanales");
-    } finally {
-      setIsLoading(false);
+      // Para vista de mes, agrupar por semana
+      params.group_by = "week";
+    } else {
+      // Caso por defecto
+      params.date_filter = "current_month";
+      params.group_by = "week";
     }
+
+    return params;
   };
 
-  // Cargar datos cuando cambia el mes seleccionado o el modo de vista
-  useEffect(() => {
-    fetchWeeklyData();
-    // Resetear la semana seleccionada cuando cambia el mes
-    setSelectedWeek(null);
-  }, [selectedMonth, viewMode]);
+  // Usar el hook para obtener los datos
+  const { data, isLoading, isError, error, refetch } = useBarStackedChart(
+    getChartParams()
+  );
+
+  // Transformar los datos para que funcionen con Recharts
+  const transformDataForRecharts = (): ChartDataItem[] => {
+    if (!data || !data.labels || !data.datasets) return [];
+
+    return data.labels.map((label, index) => {
+      const item: ChartDataItem = {
+        name: label,
+      };
+
+      // Añadir cada categoría como propiedad
+      data.datasets.forEach((dataset) => {
+        item[dataset.label] = dataset.data[index] || 0;
+      });
+
+      return item;
+    });
+  };
+
+  const chartData = transformDataForRecharts();
 
   // Determinar el título del gráfico según el modo de vista
   const chartTitle = React.useMemo(() => {
-    if (selectedWeek) {
-      return `Gastos Diarios - ${selectedWeek}`;
+    if (!data) return "Cargando...";
+
+    if (viewMode === "year" || selectedMonth === "year") {
+      return "Gastos Mensuales";
     } else if (viewMode === "month") {
       return `Gastos Semanales - ${selectedMonth}`;
     } else {
       return "Gastos Anuales";
     }
-  }, [viewMode, selectedMonth, selectedWeek]);
+  }, [viewMode, selectedMonth, data]);
 
   // Formatear valores para el Tooltip
   const formatTooltipValue = (value: number) => {
     return value ? `$${value.toLocaleString("es-CO")}` : "$0";
   };
 
-  // Función para obtener colores de una categoría
-  const getCategoryColors = (category: string) => {
-    return (
-      categoryColors[category] || {
-        fill: COLORS[7],
-        stroke: BORDER_COLORS[7],
-      }
-    ); // Default a Otros (gris)
-  };
+  // Mostrar error en toast cuando ocurre
+  React.useEffect(() => {
+    if (isError && error) {
+      toast.error("No se pudieron cargar los datos de gastos");
+    }
+  }, [isError, error]);
 
   return (
     <Card className="overflow-hidden h-full">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col px-[15px]">
-        <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 xs:mb-2">
-          {chartTitle}
-        </h3>
+        <div className="flex justify-between items-center mb-1 xs:mb-2">
+          <h3 className="text-sm xs:text-base sm:text-lg font-semibold">
+            {chartTitle}
+          </h3>
+          {data && (
+            <div className="text-xs text-muted-foreground">
+              {data.filter_summary}
+            </div>
+          )}
+        </div>
         <div className="flex-1 min-h-[200px] flex items-center justify-center">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
               <p className="text-sm text-muted-foreground">Cargando datos...</p>
             </div>
-          ) : error ? (
+          ) : isError ? (
             <div className="flex flex-col items-center justify-center">
               <p className="text-sm text-destructive mb-1">
                 Error al cargar los datos
               </p>
-              <p className="text-xs text-muted-foreground">{error}</p>
+              <button
+                onClick={() => refetch()}
+                className="text-xs text-primary hover:underline mt-2"
+              >
+                Reintentar
+              </button>
             </div>
-          ) : weeklyData.length === 0 ? (
+          ) : chartData.length === 0 ? (
             <div className="flex flex-col items-center justify-center">
               <p className="text-sm text-muted-foreground">
                 No hay datos disponibles para este periodo
@@ -240,7 +196,7 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
           ) : (
             <ResponsiveContainer width="100%" height={isMobile ? "90%" : "95%"}>
               <BarChart
-                data={weeklyData}
+                data={chartData}
                 margin={
                   isMobile
                     ? {
@@ -260,7 +216,7 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
-                  dataKey="week"
+                  dataKey="name"
                   tick={{
                     fontSize: isMobile ? 7 : 12,
                   }}
@@ -298,34 +254,27 @@ const ExpensesBarChart: React.FC<ExpensesBarChartProps> = ({
                     paddingTop: 5,
                   }}
                 />
-                {categories.map((category, index) => {
-                  const colors = getCategoryColors(category);
-                  return (
-                    <Bar
-                      key={category}
-                      dataKey={category}
-                      stackId="a"
-                      fill={colors.fill}
-                      stroke={colors.stroke}
-                      strokeWidth={1}
-                      radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
-                      cursor="pointer"
-                    />
-                  );
-                })}
+                {data?.datasets.map((dataset, index) => (
+                  <Bar
+                    key={dataset.label}
+                    dataKey={dataset.label}
+                    stackId="a"
+                    fill={dataset.backgroundColor}
+                    stroke={dataset.borderColor}
+                    strokeWidth={dataset.borderWidth}
+                    radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
+                    cursor="pointer"
+                  />
+                ))}
               </BarChart>
             </ResponsiveContainer>
           )}
         </div>
-
-        {selectedWeek && (
-          <div className="mt-2 text-center">
-            <button
-              onClick={() => setSelectedWeek(null)}
-              className="text-xs sm:text-sm text-blue-600 hover:text-blue-800"
-            >
-              ← Volver a vista semanal
-            </button>
+        {data && data.total_amount > 0 && (
+          <div className="mt-2 text-right">
+            <span className="text-xs font-medium">
+              Total: ${data.total_amount.toLocaleString("es-CO")}
+            </span>
           </div>
         )}
       </CardContent>

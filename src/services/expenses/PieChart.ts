@@ -1,5 +1,6 @@
 import { DonutChartData, DonutChartParams } from "../../types/expenses";
 import { apiClient } from "../api";
+import { getUserTimezone } from "@/utils/dateUtils";
 
 /**
  * Servicio para obtener datos de gastos formateados para gráficas de dona
@@ -32,8 +33,14 @@ export class PieChartService {
     }
 
     try {
+      // Añadir timezone a los parámetros
+      const paramsWithTimezone = {
+        ...params,
+        timezone: getUserTimezone(),
+      };
+
       const response = await apiClient.get<DonutChartData>(endpoint, {
-        params,
+        params: paramsWithTimezone,
       });
       return response.data;
     } catch (error) {

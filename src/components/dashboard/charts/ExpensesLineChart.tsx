@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLineChartData } from "@/hooks/useLineChartData";
@@ -14,7 +13,8 @@ import {
 } from "recharts";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { DateRange } from "../DateRangePicker";
-import { format, isSameDay, startOfToday, startOfYesterday } from "date-fns";
+import { format } from "date-fns";
+import { isLocalToday, isLocalYesterday } from "@/utils/dateUtils";
 
 interface ExpensesLineChartProps {
   viewMode: "day" | "week" | "month" | "year";
@@ -29,18 +29,22 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
 }) => {
   const { data, isLoading, error } = useLineChartData(dateRange, viewMode);
 
-  // Check if dateRange is today or yesterday
-  const isToday = dateRange.from && dateRange.to && 
-                 isSameDay(dateRange.from, startOfToday()) && 
-                 isSameDay(dateRange.to, startOfToday());
-                 
-  const isYesterday = dateRange.from && dateRange.to && 
-                     isSameDay(dateRange.from, startOfYesterday()) && 
-                     isSameDay(dateRange.to, startOfYesterday());
-                     
+  // Check if dateRange is today or yesterday using local timezone functions
+  const isToday =
+    dateRange.from &&
+    dateRange.to &&
+    isLocalToday(dateRange.from) &&
+    isLocalToday(dateRange.to);
+
+  const isYesterday =
+    dateRange.from &&
+    dateRange.to &&
+    isLocalYesterday(dateRange.from) &&
+    isLocalYesterday(dateRange.to);
+
   // Check if dateRange is custom (not today or yesterday)
-  const isCustomDateRange = dateRange.from && dateRange.to && 
-                           !isToday && !isYesterday;
+  const isCustomDateRange =
+    dateRange.from && dateRange.to && !isToday && !isYesterday;
 
   // Format data for Recharts
   const chartData = React.useMemo(() => {
@@ -56,16 +60,24 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
 
   // Function to format currency values
   const formatCurrency = (amount: number) => {
-    return amount.toLocaleString('es-CO', {
-      style: 'currency',
-      currency: 'COP',
+    return amount.toLocaleString("es-CO", {
+      style: "currency",
+      currency: "COP",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
   };
 
   // Custom tooltip component
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active?: boolean;
+    payload?: Array<{ value: number; name: string }>;
+    label?: string;
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-card border border-border p-2 rounded-md shadow-md">
@@ -84,7 +96,7 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
     if (data?.filter_summary) {
       return data.filter_summary;
     }
-    
+
     if (isToday) {
       return "Gastos de hoy";
     } else if (isYesterday) {
@@ -102,41 +114,63 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
     <Card className="h-full">
       <CardHeader className="px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4">
         <CardTitle className="text-sm xs:text-base">
-          Gastos {getChartTitle() !== "Gastos por período" ? `- ${getChartTitle()}` : "por período"}
+          Gastos{" "}
+          {getChartTitle() !== "Gastos por período"
+            ? `- ${getChartTitle()}`
+            : "por período"}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-0 xs:px-0 sm:px-2 py-0 sm:py-1 h-[calc(100%-60px)]">
         {isLoading ? (
           <div className="w-full h-full flex items-center justify-center">
             <Loader2 className="h-8 w-8 text-primary animate-spin" />
-            <span className="ml-2 text-sm text-muted-foreground">Cargando datos...</span>
+            <span className="ml-2 text-sm text-muted-foreground">
+              Cargando datos...
+            </span>
           </div>
         ) : error ? (
           <div className="w-full h-full flex flex-col items-center justify-center">
             <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-            <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+            <p className="text-sm text-muted-foreground">
+              Error al cargar los datos
+            </p>
           </div>
         ) : chartData.length === 0 ? (
           <div className="w-full h-full flex items-center justify-center">
-            <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
+            <p className="text-sm text-muted-foreground">
+              No hay datos disponibles
+            </p>
           </div>
         ) : (
           <div className="w-full h-full pt-2">
             <div className="text-xs mb-1 px-4 text-right">
               <span className="font-semibold">Total: </span>
-              <span>
-                {formatCurrency(data?.total_amount || 0)}
-              </span>
+              <span>{formatCurrency(data?.total_amount || 0)}</span>
             </div>
             <ResponsiveContainer width="100%" height="90%">
-              <ComposedChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+              <ComposedChart
+                data={chartData}
+                margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+              >
                 <defs>
                   <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="rgba(75, 192, 192, 0.8)" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="rgba(75, 192, 192, 0.1)" stopOpacity={0} />
+                    <stop
+                      offset="5%"
+                      stopColor="rgba(75, 192, 192, 0.8)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="rgba(75, 192, 192, 0.1)"
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stroke-muted"
+                  opacity={0.3}
+                />
                 <XAxis
                   dataKey="name"
                   tick={{ fontSize: 10 }}
@@ -182,8 +216,16 @@ const ExpensesLineChart: React.FC<ExpensesLineChartProps> = ({
                   dataKey="amount"
                   stroke="rgba(75, 192, 192, 1)"
                   strokeWidth={2}
-                  dot={{ stroke: "rgba(75, 192, 192, 1)", strokeWidth: 2, r: 2 }}
-                  activeDot={{ stroke: "rgba(75, 192, 192, 1)", strokeWidth: 2, r: 4 }}
+                  dot={{
+                    stroke: "rgba(75, 192, 192, 1)",
+                    strokeWidth: 2,
+                    r: 2,
+                  }}
+                  activeDot={{
+                    stroke: "rgba(75, 192, 192, 1)",
+                    strokeWidth: 2,
+                    r: 4,
+                  }}
                 />
               </ComposedChart>
             </ResponsiveContainer>

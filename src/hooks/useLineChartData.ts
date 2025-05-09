@@ -6,6 +6,11 @@ import {
   getExpensesLineChartData,
   LineChartParams,
 } from "@/services/expenses/lineChart";
+import {
+  isLocalToday,
+  isLocalYesterday,
+  toLocalISODate,
+} from "@/utils/dateUtils";
 
 export type { LineChartData } from "@/services/expenses/lineChart";
 
@@ -18,21 +23,13 @@ export const useLineChartData = (
     const params: LineChartParams = {};
 
     if (dateRange.from && dateRange.to) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      // Verificar si dateRange es para hoy
+      // Usar nuestras utilidades de zona horaria para verificar si dateRange es para hoy
       const isToday =
-        dateRange.from.getTime() === today.getTime() &&
-        dateRange.to.getTime() === today.getTime();
+        isLocalToday(dateRange.from) && isLocalToday(dateRange.to);
 
-      // Verificar si dateRange es para ayer
+      // Usar nuestras utilidades de zona horaria para verificar si dateRange es para ayer
       const isYesterday =
-        dateRange.from.getTime() === yesterday.getTime() &&
-        dateRange.to.getTime() === yesterday.getTime();
+        isLocalYesterday(dateRange.from) && isLocalYesterday(dateRange.to);
 
       if (isToday) {
         params.date_filter = "today";
@@ -41,8 +38,8 @@ export const useLineChartData = (
       } else {
         // Rango de fechas personalizado
         params.date_filter = "custom";
-        params.start_date = format(dateRange.from, "yyyy-MM-dd");
-        params.end_date = format(dateRange.to, "yyyy-MM-dd");
+        params.start_date = toLocalISODate(dateRange.from);
+        params.end_date = toLocalISODate(dateRange.to);
 
         // Para rangos de fecha personalizados, siempre agrupar por día independientemente del modo de vista
         params.group_by = "day";

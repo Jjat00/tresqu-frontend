@@ -6,6 +6,12 @@ import { DateRange } from "@/components/dashboard/DateRangePicker";
 import pieChartService from "@/services/expenses/PieChart";
 import { DonutChartData, DateFilterType } from "@/types/expenses";
 import getDarkerShade from "@/utils/getDarkerShade";
+import {
+  isLocalToday,
+  isLocalYesterday,
+  toLocalISODate,
+} from "@/utils/dateUtils";
+
 export interface DonutChartDataItem {
   name: string;
   value: number;
@@ -24,32 +30,13 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
       return "current_week"; // Default to current_week if no date range
     }
 
-    // Formato para las fechas personalizadas
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    // Comprobar si es hoy
-    if (
-      dateRange.from.getDate() === today.getDate() &&
-      dateRange.from.getMonth() === today.getMonth() &&
-      dateRange.from.getFullYear() === today.getFullYear() &&
-      dateRange.to.getDate() === today.getDate() &&
-      dateRange.to.getMonth() === today.getMonth() &&
-      dateRange.to.getFullYear() === today.getFullYear()
-    ) {
+    // Comprobar si es hoy usando nuestras utilidades de zona horaria local
+    if (isLocalToday(dateRange.from) && isLocalToday(dateRange.to)) {
       return "today";
     }
 
-    // Comprobar si es ayer
-    if (
-      dateRange.from.getDate() === yesterday.getDate() &&
-      dateRange.from.getMonth() === yesterday.getMonth() &&
-      dateRange.from.getFullYear() === yesterday.getFullYear() &&
-      dateRange.to.getDate() === yesterday.getDate() &&
-      dateRange.to.getMonth() === yesterday.getMonth() &&
-      dateRange.to.getFullYear() === yesterday.getFullYear()
-    ) {
+    // Comprobar si es ayer usando nuestras utilidades de zona horaria local
+    if (isLocalYesterday(dateRange.from) && isLocalYesterday(dateRange.to)) {
       return "yesterday";
     }
 
@@ -66,8 +53,9 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
 
     // Si es un rango personalizado, añadimos las fechas
     if (dateFilter === "custom" && dateRange?.from && dateRange?.to) {
-      const startDate = format(dateRange.from, "yyyy-MM-dd");
-      const endDate = format(dateRange.to, "yyyy-MM-dd");
+      // Usar nuestra función para generar fechas en formato ISO local
+      const startDate = toLocalISODate(dateRange.from);
+      const endDate = toLocalISODate(dateRange.to);
 
       Object.assign(params, {
         start_date: startDate,

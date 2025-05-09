@@ -1,4 +1,5 @@
 import { apiClient } from "../api";
+import { getUserTimezone } from "@/utils/dateUtils";
 
 /**
  * Interfaz para los parámetros de filtrado del gráfico de línea
@@ -19,6 +20,7 @@ export interface LineChartParams {
   start_date?: string; // Formato YYYY-MM-DD
   end_date?: string; // Formato YYYY-MM-DD
   group_by?: "day" | "week" | "month" | "hour";
+  timezone?: string; // Añadida propiedad para zona horaria
 }
 
 /**
@@ -48,8 +50,11 @@ export const getExpensesLineChartData = async (
   params?: LineChartParams
 ): Promise<LineChartData> => {
   try {
+    // Crea una copia de los parámetros para no modificar el objeto original
+    const paramsWithTimezone = { ...params, timezone: getUserTimezone() };
+
     const response = await apiClient.get("/api/expenses/line_chart_data/", {
-      params,
+      params: paramsWithTimezone,
     });
     return response.data;
   } catch (error) {
