@@ -4,7 +4,7 @@ import { MessageSquare } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden py-12 md:py-24 lg:py-32">
+    <section className="relative overflow-hidden py-12 md:py-24 lg:py-32 gradient-bg">
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-6 md:space-y-10 text-center">
           <div className="space-y-4 md:space-y-6 max-w-4xl">
@@ -13,10 +13,10 @@ const Hero = () => {
             </h1>
 
             <p
-              className="text-base md:text-xl lg:text-2xl animate-fade-in max-w-3xl mx-auto"
+              className="text-base md:text-xl lg:text-2xl animate-fade-in max-w-3xl mx-auto text-shadow-sm"
               style={{
                 animationDelay: "100ms",
-                color: "var(--color-muted-foreground)",
+                color: "var(--color-foreground)",
               }}
             >
               Tresqu utiliza inteligencia artificial para ofrecer análisis
@@ -33,23 +33,21 @@ const Hero = () => {
           >
             {/* Telegram Bot Registration Section */}
             <div
-              className="border rounded-lg p-6 backdrop-blur-sm shadow-sm"
+              className="glass-card p-6 shadow-lg hover:glow-blue transition-all duration-300"
               style={{
-                borderColor: "var(--color-border)",
-                backgroundColor:
-                  "color-mix(in srgb, var(--color-background) 50%, transparent)",
+                borderColor: "rgba(96, 165, 250, 0.3)",
               }}
             >
               <p
-                className="mb-4 text-base"
-                style={{ color: "var(--color-muted-foreground)" }}
+                className="mb-4 text-base font-medium"
+                style={{ color: "var(--color-foreground)" }}
               >
                 ¿Aún no tienes cuenta? Regístrate fácilmente usando el bot de
                 Telegram.
               </p>
               <Button
                 variant="outline"
-                className="text-base w-full px-4 md:px-8 py-5 md:py-6 text-white"
+                className="text-base w-full px-4 md:px-8 py-5 md:py-6 text-white relative overflow-hidden group font-medium"
                 size="lg"
                 style={{
                   backgroundColor: "#0088cc",
@@ -59,6 +57,7 @@ const Hero = () => {
                   window.open("https://t.me/tresqu_bot", "_blank");
                 }}
               >
+                <span className="absolute inset-0 bg-white/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -69,44 +68,43 @@ const Hero = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="mr-2"
+                  className="mr-2 relative z-10"
                 >
                   <path d="m22 2-7 20-4-9-9-4Z" />
                   <path d="M22 2 11 13" />
                 </svg>
-                Bot de Telegram
+                <span className="relative z-10">Bot de Telegram</span>
               </Button>
             </div>
 
             {/* Login Section */}
-            <div
-              className="border rounded-lg p-6 backdrop-blur-sm shadow-sm"
-              style={{
-                borderColor: "var(--color-border)",
-                backgroundColor:
-                  "color-mix(in srgb, var(--color-background) 50%, transparent)",
-              }}
-            >
-              <p
-                className="mb-4 text-base"
-                style={{ color: "var(--color-muted-foreground)" }}
-              >
-                ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
-              </p>
-              <Button
-                className="text-base w-full px-4 md:px-8 py-5 md:py-6"
-                asChild
-                size="lg"
-                style={{
-                  backgroundColor: "var(--color-success)",
-                  color: "white",
-                }}
-              >
-                <Link to="/login">
-                  <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  Iniciar ahora
-                </Link>
-              </Button>
+            <div className="gradient-border p-[1px]">
+              <div className="glass-card p-6 shadow-lg hover:glow transition-all duration-300">
+                <p
+                  className="mb-4 text-base font-medium"
+                  style={{ color: "var(--color-foreground)" }}
+                >
+                  ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
+                </p>
+                <Button
+                  className="text-base w-full px-4 md:px-8 py-5 md:py-6 relative overflow-hidden group font-medium"
+                  asChild
+                  size="lg"
+                  style={{
+                    background:
+                      "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
+                    color: "white",
+                  }}
+                >
+                  <Link to="/login">
+                    <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                    <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10" />
+                    <span className="relative z-10 text-shadow-sm">
+                      Iniciar ahora
+                    </span>
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -117,7 +115,7 @@ const Hero = () => {
               animationDelay: "300ms",
             }}
           >
-            <div className="bg-[#ECE5DD] rounded-lg p-3 max-w-[100%] shadow-md border border-gray-200">
+            <div className="bg-[#ECE5DD] rounded-lg p-3 max-w-[100%] shadow-lg backdrop-blur-sm border border-gray-200 hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col">
                 <div className="bg-white rounded-lg p-3 mb-2 ml-auto max-w-[80%] shadow-md">
                   <p className="text-sm font-medium text-gray-800 text-left">
@@ -152,19 +150,30 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* Overlay para texto con gradiente */}
+      <div className="absolute inset-0 pointer-events-none z-[-1] bg-gradient-to-b from-transparent via-transparent to-background/90 opacity-70"></div>
+
       {/* Background gradient effects */}
       <div
-        className="absolute -top-40 -left-40 w-60 md:w-80 h-60 md:h-80 rounded-full blur-3xl opacity-20"
+        className="absolute -top-40 -left-40 w-60 md:w-96 h-60 md:h-96 rounded-full blur-3xl opacity-20 animate-pulse-glow"
         style={{
-          backgroundColor:
-            "color-mix(in srgb, var(--color-success) 20%, transparent)",
+          background:
+            "radial-gradient(circle at center, var(--color-success), transparent 70%)",
         }}
       ></div>
       <div
-        className="absolute -bottom-40 -right-40 w-60 md:w-80 h-60 md:h-80 rounded-full blur-3xl opacity-20"
+        className="absolute -bottom-40 -right-40 w-60 md:w-96 h-60 md:h-96 rounded-full blur-3xl opacity-20 animate-pulse-glow"
         style={{
-          backgroundColor:
-            "color-mix(in srgb, var(--color-highlight) 20%, transparent)",
+          background:
+            "radial-gradient(circle at center, var(--color-highlight), transparent 70%)",
+          animationDelay: "1s",
+        }}
+      ></div>
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-5xl max-h-5xl rounded-full blur-3xl opacity-10"
+        style={{
+          background:
+            "radial-gradient(circle at center, var(--color-purple), transparent 70%)",
         }}
       ></div>
     </section>
