@@ -73,10 +73,7 @@ const ExpensesTab = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
-          <ChartJSPieChart
-            onCategoryClick={setSelectedCategory}
-            dateRange={dateRange}
-          />
+          <ChartJSPieChart onCategoryClick={() => {}} dateRange={dateRange} />
         </div>
         <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
           <ChartJSBarChart

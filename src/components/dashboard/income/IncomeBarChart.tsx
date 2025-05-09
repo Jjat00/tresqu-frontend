@@ -1,29 +1,36 @@
 import React, { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  Legend,
-} from "recharts";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIncomeBarData } from "@/hooks/useIncomeBarData";
 import { DateRange } from "../DateRangePicker";
 import { BarStackedChartParams } from "@/types/incomes";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+// Registrar los componentes de Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  ChartTooltip,
+  Legend
+);
 
 interface IncomeBarChartProps {
   timeFilter: "month" | "quarter" | "year";
   dateRange?: DateRange;
   formatCurrency: (amount: number) => string;
-}
-
-interface ChartDataItem {
-  [key: string]: string | number;
 }
 
 const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
@@ -67,22 +74,26 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
 
   const { data, isLoading, error, refetch } = useIncomeBarData(queryParams);
 
-  // Transformar los datos para Recharts
-  const chartData: ChartDataItem[] = useMemo(() => {
-    if (!data || !data.labels || !data.datasets) return [];
-
-    return data.labels.map((label, index) => {
-      const item: ChartDataItem = {
-        name: label,
+  // Transformar los datos para Chart.js
+  const chartData = useMemo(() => {
+    if (!data || !data.labels || !data.datasets) {
+      return {
+        labels: [],
+        datasets: [],
       };
+    }
 
-      // Añadir cada categoría como propiedad
-      data.datasets.forEach((dataset) => {
-        item[dataset.label] = dataset.data[index] || 0;
-      });
-
-      return item;
-    });
+    // Transformar los datasets al formato esperado por Chart.js
+    return {
+      labels: data.labels,
+      datasets: data.datasets.map((dataset) => ({
+        label: dataset.label,
+        data: dataset.data,
+        backgroundColor: dataset.backgroundColor,
+        borderColor: dataset.borderColor,
+        borderWidth: dataset.borderWidth,
+      })),
+    };
   }, [data]);
 
   // Título del gráfico
@@ -95,6 +106,71 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
       return "Ingresos Anuales";
     }
   }, [timeFilter]);
+
+  // Opciones para Chart.js
+  const options: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        display: !isMobile,
+        labels: {
+          boxWidth: 10,
+          padding: 10,
+          font: {
+            size: isMobile ? 8 : 12,
+          },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            let label = tooltipItem.dataset.label || "";
+            if (label) {
+              label += ": ";
+            }
+            if (tooltipItem.parsed.y !== null) {
+              label += formatCurrency(tooltipItem.parsed.y);
+            }
+            return label;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            size: isMobile ? 8 : 12,
+          },
+          maxRotation: isMobile ? 45 : 0,
+        },
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        ticks: {
+          font: {
+            size: isMobile ? 8 : 12,
+          },
+          callback: function (value) {
+            const numValue = Number(value);
+            if (numValue >= 1000000) {
+              return `${(numValue / 1000000).toFixed(1)}M`;
+            } else if (numValue >= 1000) {
+              return `${(numValue / 1000).toFixed(0)}K`;
+            }
+            return value;
+          },
+        },
+      },
+    },
+  };
 
   return (
     <Card className="overflow-hidden h-full">
@@ -131,84 +207,16 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
                 Reintentar
               </button>
             </div>
-          ) : chartData.length === 0 ? (
+          ) : chartData.labels.length === 0 ? (
             <div className="flex items-center justify-center">
               <p className="text-sm text-muted-foreground">
                 No hay datos disponibles para este periodo
               </p>
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height={isMobile ? "90%" : "95%"}>
-              <BarChart
-                data={chartData}
-                margin={
-                  isMobile
-                    ? {
-                        top: 5,
-                        right: 5,
-                        left: -25,
-                        bottom: 15,
-                      }
-                    : {
-                        top: 20,
-                        right: 20,
-                        left: 0,
-                        bottom: 15,
-                      }
-                }
-                barSize={isMobile ? 8 : 20}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="name"
-                  tick={{
-                    fontSize: isMobile ? 7 : 12,
-                  }}
-                  interval={isMobile ? 1 : 0}
-                  angle={isMobile ? -45 : 0}
-                  textAnchor={isMobile ? "end" : "middle"}
-                  height={isMobile ? 50 : 30}
-                />
-                <YAxis
-                  tick={{
-                    fontSize: isMobile ? 8 : 12,
-                  }}
-                  width={isMobile ? 30 : 50}
-                  tickFormatter={(value) =>
-                    value >= 1000
-                      ? `${Math.floor(value / 1000)}k`
-                      : value.toString()
-                  }
-                />
-                <Tooltip
-                  formatter={(value, name) => {
-                    return [formatCurrency(value as number), name.toString()];
-                  }}
-                  contentStyle={{
-                    fontSize: isMobile ? "10px" : "12px",
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{
-                    fontSize: isMobile ? "8px" : "12px",
-                    bottom: 0,
-                    paddingTop: 5,
-                  }}
-                />
-                {data?.datasets.map((dataset, index) => (
-                  <Bar
-                    key={dataset.label}
-                    dataKey={dataset.label}
-                    stackId="a"
-                    fill={dataset.backgroundColor}
-                    stroke={dataset.borderColor}
-                    strokeWidth={dataset.borderWidth}
-                    radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
-                    cursor="pointer"
-                  />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
+            <div style={{ height: "100%", width: "100%" }}>
+              <Bar data={chartData} options={options} />
+            </div>
           )}
         </div>
 

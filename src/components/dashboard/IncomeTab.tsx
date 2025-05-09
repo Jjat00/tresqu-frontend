@@ -7,7 +7,7 @@ import { Plus, Download } from "lucide-react";
 import { DateRange } from "./DateRangePicker";
 
 // Import refactored components
-import IncomeLineChart from "./charts/IncomeLineChart";
+import IncomeLineChart from "./income/IncomeLineChart";
 import IncomeCategoryChart from "./income/IncomeCategoryChart";
 import IncomeBarChart from "./income/IncomeBarChart";
 import IncomeSummaryStats from "./income/IncomeSummaryStats";
@@ -85,7 +85,7 @@ const IncomeTab = ({
     <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <Button
-          className="bg-success hover:bg-success/90 h-8 xs:h-9 w-[100] xs:w-auto whitespace-nowrap text-[10px] xs:text-xs sm:text-sm"
+          className="bg-success hover:bg-success/90 h-8 xs:h-9 w-[200] xs:w-auto whitespace-nowrap text-[10px] xs:text-xs sm:text-sm"
           onClick={() => setNewIncomeOpen(true)}
         >
           <Plus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />

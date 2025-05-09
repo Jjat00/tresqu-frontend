@@ -1,27 +1,26 @@
 import React, { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChartContainer } from "@/components/ui/chart";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIncomePieChart } from "@/hooks/useIncomePieChart";
 import { DateRange } from "../DateRangePicker";
 import { DonutChartParams } from "@/types/incomes";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip as ChartTooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+
+// Registrar los componentes de Chart.js
+ChartJS.register(ArcElement, ChartTooltip, Legend);
 
 interface IncomeCategoryChartProps {
   dateRange?: DateRange;
   formatCurrency: (amount: number) => string;
   onSelectCategory?: (category: string) => void;
-}
-
-interface CategoryData {
-  category: string;
-  amount: number;
-  color: string;
-  subcategories?: Array<{
-    name: string;
-    value: number;
-  }>;
 }
 
 const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
@@ -44,25 +43,93 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
 
   const { data: chartData, isLoading, error } = useIncomePieChart(queryParams);
 
-  // Transformar datos de la API al formato esperado por el gráfico
-  const categoryData: CategoryData[] = useMemo(() => {
-    if (!chartData) return [];
+  // Transformar datos de la API al formato esperado por Chart.js
+  const pieData = useMemo(() => {
+    if (!chartData || !chartData.labels || !chartData.datasets) {
+      return {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: [],
+            borderColor: [],
+            borderWidth: 1,
+          },
+        ],
+      };
+    }
 
-    return chartData.labels.map((label, index) => ({
-      category: label,
-      amount: chartData.datasets[0].data[index],
-      color: chartData.datasets[0].backgroundColor[index],
-      // No hay subcategorías en la respuesta API actual
-    }));
+    return {
+      labels: chartData.labels,
+      datasets: [
+        {
+          data: chartData.datasets[0].data,
+          backgroundColor: chartData.datasets[0].backgroundColor,
+          borderColor: chartData.datasets[0].backgroundColor.map(
+            (color: string) => (color === "#4ade80" ? "#166534" : "#1e40af")
+          ),
+          borderWidth: 1,
+        },
+      ],
+    };
   }, [chartData]);
+
+  // Opciones para Chart.js
+  const options: ChartOptions<"doughnut"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: isMobile ? "bottom" : "right",
+        display: true,
+        labels: {
+          boxWidth: 10,
+          padding: 10,
+          font: {
+            size: isMobile ? 9 : 12,
+          },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const label = tooltipItem.label || "";
+            const value = tooltipItem.raw as number;
+            const percent = tooltipItem.parsed;
+            return `${label}: ${formatCurrency(value)} (${(
+              percent * 100
+            ).toFixed(0)}%)`;
+          },
+        },
+      },
+    },
+    // Permitir hacer clic en segmentos del gráfico
+    onClick: (event, elements) => {
+      if (elements.length > 0 && onSelectCategory) {
+        const index = elements[0].index;
+        const category = pieData.labels?.[index]?.toString() || "";
+        if (category) {
+          onSelectCategory(category);
+        }
+      }
+    },
+    cutout: "60%", // Hacer un donut en lugar de un pie
+  };
 
   return (
     <Card className="overflow-hidden h-full flex flex-col">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
-        <h3 className="xs:text-base sm:text-lg mb-1 xs:mb-2 text-sm font-semibold text-center">
-          Ingresos por Categoría
-        </h3>
-        <div className="flex-1 min-h-[250px] sm:min-h-[300px] flex items-center justify-center">
+        <div className="flex justify-between items-center mb-1 xs:mb-2">
+          <h3 className="xs:text-base sm:text-lg text-sm font-semibold">
+            Ingresos por Categoría
+          </h3>
+          {chartData?.filter_summary && (
+            <p className="text-xs text-muted-foreground">
+              {chartData.filter_summary}
+            </p>
+          )}
+        </div>
+        <div className="flex-1 flex items-center justify-center relative">
           {isLoading ? (
             <div className="flex items-center justify-center h-full w-full">
               <Loader2 className="h-8 w-8 text-primary animate-spin" />
@@ -77,115 +144,41 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                 Error al cargar los datos
               </p>
             </div>
-          ) : !categoryData || categoryData.length === 0 ? (
+          ) : !pieData.labels || pieData.labels.length === 0 ? (
             <div className="flex items-center justify-center h-full w-full">
               <p className="text-sm text-muted-foreground">
                 No hay datos disponibles
               </p>
             </div>
           ) : (
-            <ChartContainer
-              className={`${isMobile ? "h-60" : "h-80"}`}
-              config={{
-                ...Object.fromEntries(
-                  categoryData.map(({ category, color }) => [
-                    category,
-                    {
-                      color,
-                    },
-                  ])
-                ),
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                height: isMobile ? "200px" : "250px",
               }}
             >
-              <PieChart
-                margin={
-                  isMobile
-                    ? {
-                        top: 5,
-                        right: 5,
-                        bottom: 5,
-                        left: 5,
-                      }
-                    : {
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                      }
-                }
-              >
-                <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={isMobile ? 30 : 60}
-                  outerRadius={isMobile ? 55 : 90}
-                  paddingAngle={2}
-                  dataKey="amount"
-                  nameKey="category"
-                  label={({ category, percent }) =>
-                    isMobile
-                      ? `${(percent * 100).toFixed(0)}%`
-                      : `${category}: ${(percent * 100).toFixed(0)}%`
-                  }
-                  labelLine={false}
-                  onClick={(data) =>
-                    onSelectCategory && onSelectCategory(data.category)
-                  }
-                >
-                  {categoryData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.color}
-                      stroke={entry.color === "#4ade80" ? "#166534" : "#1e40af"}
-                      strokeWidth={1.5}
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const category = payload[0].name as string;
-                      const selectedCategoryData = categoryData.find(
-                        (item) => item.category === category
-                      );
-                      return (
-                        <div className="bg-card p-3 rounded shadow border">
-                          <p className="text-sm font-semibold">
-                            {payload[0].name}
-                          </p>
-                          <p className="text-xs mb-2">
-                            {formatCurrency(payload[0].value as number)}
-                          </p>
-
-                          {selectedCategoryData &&
-                            selectedCategoryData.subcategories &&
-                            selectedCategoryData.subcategories.map((sub, i) => (
-                              <div
-                                key={i}
-                                className="flex justify-between text-xs mb-1"
-                              >
-                                <span className="mr-4">{sub.name}:</span>
-                                <span>{formatCurrency(sub.value)}</span>
-                              </div>
-                            ))}
-                        </div>
-                      );
-                    }
-                    return null;
+              <Doughnut data={pieData} options={options} />
+              {isMobile && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "5px",
+                    width: "100%",
+                    textAlign: "center",
+                    fontSize: "0.75rem",
+                    color: "var(--muted-foreground)",
                   }}
-                />
-              </PieChart>
-            </ChartContainer>
+                >
+                  Toca para ver subcategorías
+                </div>
+              )}
+            </div>
           )}
         </div>
         {chartData && (
-          <div className="text-center mt-2 text-sm text-muted-foreground">
-            <p>{chartData.filter_summary}</p>
-            <p className="font-semibold mt-1">
+          <div className="text-right mt-2 text-sm">
+            <p className="font-semibold">
               Total: {formatCurrency(chartData.total_amount)}
             </p>
           </div>
