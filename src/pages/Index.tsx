@@ -13,23 +13,23 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background text-foreground relative overflow-hidden">
       {/* Efectos de fondo globales */}
-      <div className="fixed inset-0 z-[-1] opacity-50">
+      <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
         <div
-          className="absolute top-0 left-0 w-full h-full"
+          className="absolute top-0 left-0 w-full h-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle at 25% 25%, rgba(74, 222, 128, 0.1), transparent 40%)",
           }}
         ></div>
         <div
-          className="absolute bottom-0 right-0 w-full h-full"
+          className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1), transparent 40%)",
           }}
         ></div>
         <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle at center, rgba(167, 139, 250, 0.05), transparent 50%)",
@@ -39,7 +39,7 @@ const Index = () => {
 
       {/* Patrón sutil de puntos o rejilla */}
       <div
-        className="fixed inset-0 z-[-1] opacity-5"
+        className="fixed inset-0 z-[-2] opacity-5 pointer-events-none"
         style={{
           backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
           backgroundSize: "30px 30px",

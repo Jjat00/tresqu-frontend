@@ -349,7 +349,7 @@ const WaitlistForm = () => {
 
                       <Button
                         type="submit"
-                        className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white"
+                        className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white hover:cursor-pointer"
                         disabled={isSubmitting}
                       >
                         {isSubmitting

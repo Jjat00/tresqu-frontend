@@ -75,7 +75,7 @@ const Header = () => {
                 <Button
                   variant="default"
                   size="sm"
-                  className="bg-success hover:bg-success/80"
+                  className="bg-success hover:bg-success/80 hover:cursor-pointer"
                 >
                   Comenzar ahora
                 </Button>
