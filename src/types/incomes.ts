@@ -134,3 +134,24 @@ export interface LineChartData {
   filter_summary: string;
   total_amount: number;
 }
+
+/**
+ * Interfaz para los parámetros de la solicitud de estadísticas de ingresos
+ */
+export interface IncomeStatsParams {
+  months_for_average?: number;
+  timezone?: string;
+}
+
+/**
+ * Interfaz para los datos de estadísticas de ingresos
+ */
+export interface IncomeStats {
+  average_monthly_income: number;
+  current_month_income: number;
+  previous_month_income: number;
+  difference: number;
+  percentage_change: number;
+  next_month_projection: number;
+  months_analyzed: number;
+}
