@@ -1,162 +1,127 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getIncomesLineChartData } from "@/services/incomes/lineChart";
+import { LineChartParams } from "@/types/incomes";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
-import { format } from "date-fns";
-import { getAccessToken } from "@/services/authService";
-import { env } from "@/config";
+import { isSameDay, isToday, isYesterday } from "date-fns";
 
-export interface IncomeLineChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-  }[];
-  total_amount: number;
-  filter_summary?: string;
-}
-
+/**
+ * Hook para obtener datos del gráfico de línea de ingresos
+ *
+ * @param dateRange Rango de fechas seleccionado
+ * @param viewMode Modo de visualización (day, week, month, year)
+ * @returns Estado de la consulta con los datos del gráfico
+ */
 export const useIncomeLineData = (
   dateRange?: DateRange,
-  viewMode: "day" | "week" | "month" | "year" = "week"
+  viewMode: "day" | "week" | "month" | "year" = "month"
 ) => {
-  const [data, setData] = useState<IncomeLineChartData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // Convertir los parámetros al formato esperado por el servicio
+  const getQueryParams = (): LineChartParams => {
+    const params: LineChartParams = {};
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
+    // Si hay rango de fechas personalizado
+    if (dateRange?.from && dateRange?.to) {
+      // Verificar si es hoy o ayer primero
+      const isDateToday =
+        dateRange.from &&
+        dateRange.to &&
+        isToday(dateRange.from) &&
+        isToday(dateRange.to);
 
-      try {
-        let url = `${env.apiUrl}/api/incomes/line_chart_data/`;
+      const isDateYesterday =
+        dateRange.from &&
+        dateRange.to &&
+        isYesterday(dateRange.from) &&
+        isYesterday(dateRange.to);
 
-        // Add parameters
-        const params = new URLSearchParams({ group_by: viewMode });
+      if (isDateToday) {
+        // Para hoy, forzar agrupación por hora
+        params.date_filter = "today";
+        params.group_by = "hour";
+      } else if (isDateYesterday) {
+        // Para ayer, forzar agrupación por hora
+        params.date_filter = "yesterday";
+        params.group_by = "hour";
+      } else {
+        // Para otras fechas personalizadas
+        params.date_filter = "custom";
+        params.start_date = dateRange.from.toISOString().split("T")[0];
+        params.end_date = dateRange.to.toISOString().split("T")[0];
 
-        // Add date range if provided
-        if (dateRange && dateRange.from && dateRange.to) {
-          params.append("date_filter", "custom");
-          params.append("start_date", format(dateRange.from, "yyyy-MM-dd"));
-          params.append("end_date", format(dateRange.to, "yyyy-MM-dd"));
+        // Si es el mismo día, agrupar por hora
+        if (isSameDay(dateRange.from, dateRange.to)) {
+          params.group_by = "hour";
+        } else {
+          // Si son pocos días, agrupar por día
+          const diffDays = Math.ceil(
+            (dateRange.to.getTime() - dateRange.from.getTime()) /
+              (1000 * 60 * 60 * 24)
+          );
+
+          if (diffDays <= 31) {
+            params.group_by = "day";
+          } else if (diffDays <= 90) {
+            params.group_by = "week";
+          } else {
+            params.group_by = "month";
+          }
         }
-
-        url += `?${params.toString()}`;
-
-        // Get token using getAccessToken
-        const token = getAccessToken();
-
-        if (!token) {
-          throw new Error("No authentication token found");
-        }
-
-        console.log("Fetching income line chart data from:", url);
-
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
-
-        const responseData = await response.json();
-        setData(responseData);
-      } catch (err: any) {
-        console.error("Error fetching income line data:", err);
-        setError(err.message || "Error fetching income line data");
-
-        // Set fallback data if API fails
-        setData(getFallbackData(viewMode));
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } else {
+      // Filtros basados en el modo de visualización
+      switch (viewMode) {
+        case "day":
+          params.date_filter = "today";
+          params.group_by = "hour";
+          break;
+        case "week":
+          params.date_filter = "current_week";
+          params.group_by = "day";
+          break;
+        case "month":
+          params.date_filter = "current_month";
+          params.group_by = "day";
+          break;
+        case "year":
+          params.date_filter = "current_year";
+          params.group_by = "month";
+          break;
+        default:
+          params.date_filter = "current_month";
+          params.group_by = "day";
+      }
+    }
 
-    fetchData();
-  }, [dateRange, viewMode]);
+    // Asegurarse de que siempre tenga group_by definido
+    if (!params.group_by) {
+      if (
+        params.date_filter === "today" ||
+        params.date_filter === "yesterday"
+      ) {
+        params.group_by = "hour";
+      } else if (
+        params.date_filter === "current_week" ||
+        params.date_filter === "current_month"
+      ) {
+        params.group_by = "day";
+      } else if (params.date_filter === "current_year") {
+        params.group_by = "month";
+      } else {
+        // Para 'custom' y cualquier otro valor
+        params.group_by = "day";
+      }
+    }
 
-  return { data, isLoading, error };
-};
-
-// Fallback data in case API fails
-const getFallbackData = (viewMode: string): IncomeLineChartData => {
-  // Generate different data based on the view mode
-  let labels: string[] = [];
-  let values: number[] = [];
-
-  switch (viewMode) {
-    case "day":
-      labels = ["8:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00"];
-      values = [0, 0, 2500, 0, 4500, 0, 0];
-      break;
-    case "week":
-      labels = [
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-        "Domingo",
-      ];
-      values = [3500, 0, 2500, 0, 15000, 4500, 0];
-      break;
-    case "month":
-      labels = ["Sem 1", "Sem 2", "Sem 3", "Sem 4"];
-      values = [5500, 2500, 17500, 4500];
-      break;
-    case "year":
-      labels = [
-        "Ene",
-        "Feb",
-        "Mar",
-        "Abr",
-        "May",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dic",
-      ];
-      values = [
-        15000, 15000, 17500, 15000, 18500, 16000, 15000, 16500, 17000, 16000,
-        15000, 20000,
-      ];
-      break;
-    default:
-      labels = [
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-        "Domingo",
-      ];
-      values = [3500, 0, 2500, 0, 15000, 4500, 0];
-  }
-
-  return {
-    labels,
-    datasets: [
-      {
-        label: "Ingresos",
-        data: values,
-      },
-    ],
-    total_amount: values.reduce((sum, val) => sum + val, 0),
-    filter_summary: `Ingresos por ${
-      viewMode === "day"
-        ? "día"
-        : viewMode === "week"
-        ? "semana"
-        : viewMode === "month"
-        ? "mes"
-        : "año"
-    }`,
+    console.log("LineChart params:", params);
+    return params;
   };
+
+  return useQuery({
+    queryKey: ["incomeLineData", viewMode, dateRange?.from, dateRange?.to],
+    queryFn: () => getIncomesLineChartData(getQueryParams()),
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    retry: 2,
+  });
 };
+
+export default useIncomeLineData;

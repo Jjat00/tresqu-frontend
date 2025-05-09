@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useIncomeLineData } from "@/hooks/useIncomeLineData";
 import {
@@ -14,13 +13,24 @@ import {
 } from "recharts";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { DateRange } from "../DateRangePicker";
-import { format, isSameDay, startOfToday, startOfYesterday } from "date-fns";
+import { isSameDay, startOfToday, startOfYesterday } from "date-fns";
 
 interface IncomeLineChartProps {
   viewMode: "day" | "week" | "month" | "year";
   selectedMonth?: string;
   activeTab?: string;
   dateRange?: DateRange;
+}
+
+// Definir las interfaces de forma explícita para el tooltip
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+    name: string;
+    dataKey: string;
+  }>;
+  label?: string;
 }
 
 const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
@@ -30,17 +40,25 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
   const { data, isLoading, error } = useIncomeLineData(dateRange, viewMode);
 
   // Check if dateRange is today or yesterday
-  const isToday = dateRange.from && dateRange.to && 
-                 isSameDay(dateRange.from, startOfToday()) && 
-                 isSameDay(dateRange.to, startOfToday());
-                 
-  const isYesterday = dateRange.from && dateRange.to && 
-                     isSameDay(dateRange.from, startOfYesterday()) && 
-                     isSameDay(dateRange.to, startOfYesterday());
-                     
+  const isToday =
+    dateRange.from &&
+    dateRange.to &&
+    isSameDay(dateRange.from, startOfToday()) &&
+    isSameDay(dateRange.to, startOfToday());
+
+  const isYesterday =
+    dateRange.from &&
+    dateRange.to &&
+    isSameDay(dateRange.from, startOfYesterday()) &&
+    isSameDay(dateRange.to, startOfYesterday());
+
+  // Check if the date range is for a single day
+  const isSingleDay =
+    dateRange.from && dateRange.to && isSameDay(dateRange.from, dateRange.to);
+
   // Check if dateRange is custom (not today or yesterday)
-  const isCustomDateRange = dateRange.from && dateRange.to && 
-                           !isToday && !isYesterday;
+  const isCustomDateRange =
+    dateRange.from && dateRange.to && !isToday && !isYesterday;
 
   // Format data for Recharts
   const chartData = React.useMemo(() => {
@@ -48,7 +66,7 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
       return [];
     }
 
-    return data.labels.map((label, index) => ({
+    return data.labels.map((label: string, index: number) => ({
       name: label,
       amount: data.datasets[0].data[index] || 0,
     }));
@@ -56,16 +74,16 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
 
   // Function to format currency values
   const formatCurrency = (amount: number) => {
-    return amount.toLocaleString('es-CO', {
-      style: 'currency',
-      currency: 'COP',
+    return amount.toLocaleString("es-CO", {
+      style: "currency",
+      currency: "COP",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
   };
 
   // Custom tooltip component
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-card border border-border p-2 rounded-md shadow-md">
@@ -84,11 +102,13 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
     if (data?.filter_summary) {
       return data.filter_summary;
     }
-    
+
     if (isToday) {
-      return "Ingresos de hoy";
+      return "Ingresos de hoy por hora";
     } else if (isYesterday) {
-      return "Ingresos de ayer";
+      return "Ingresos de ayer por hora";
+    } else if (isSingleDay) {
+      return "Ingresos por hora";
     } else if (isCustomDateRange) {
       return "Ingresos por día";
     } else if (viewMode === "week") {
@@ -102,41 +122,61 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
     <Card className="h-full">
       <CardHeader className="px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4">
         <CardTitle className="text-sm xs:text-base">
-          Ingresos {getChartTitle() !== "Ingresos por período" ? `- ${getChartTitle()}` : "por período"}
+          Ingresos{" "}
+          {getChartTitle() !== "Ingresos por período"
+            ? `- ${getChartTitle()}`
+            : "por período"}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-0 xs:px-0 sm:px-2 py-0 sm:py-1 h-[calc(100%-60px)]">
         {isLoading ? (
           <div className="w-full h-full flex items-center justify-center">
             <Loader2 className="h-8 w-8 text-primary animate-spin" />
-            <span className="ml-2 text-sm text-muted-foreground">Cargando datos...</span>
+            <span className="ml-2 text-sm text-muted-foreground">
+              Cargando datos...
+            </span>
           </div>
         ) : error ? (
           <div className="w-full h-full flex flex-col items-center justify-center">
             <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-            <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+            <p className="text-sm text-muted-foreground">
+              Error al cargar los datos
+            </p>
           </div>
         ) : chartData.length === 0 ? (
           <div className="w-full h-full flex items-center justify-center">
-            <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
+            <p className="text-sm text-muted-foreground">
+              No hay datos disponibles
+            </p>
           </div>
         ) : (
           <div className="w-full h-full pt-2">
             <div className="text-xs mb-1 px-4 text-right">
               <span className="font-semibold">Total: </span>
-              <span>
-                {formatCurrency(data?.total_amount || 0)}
-              </span>
+              <span>{formatCurrency(data?.total_amount || 0)}</span>
             </div>
             <ResponsiveContainer width="100%" height="90%">
-              <ComposedChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+              <ComposedChart
+                data={chartData}
+                margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+              >
                 <defs>
-                  <linearGradient id="colorIncomeAmount" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient
+                    id="colorIncomeAmount"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
                     <stop offset="5%" stopColor="#4ade80" stopOpacity={0.8} />
                     <stop offset="95%" stopColor="#4ade80" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stroke-muted"
+                  opacity={0.3}
+                />
                 <XAxis
                   dataKey="name"
                   tick={{ fontSize: 10 }}
@@ -144,7 +184,10 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
                   axisLine={{ stroke: "rgb(var(--muted))" }}
                   tickFormatter={(value) => {
                     // Handle long x-axis labels for better display
-                    if (viewMode === "year") {
+                    if (isSingleDay) {
+                      // Para visualización por hora, simplificar el formato
+                      return value.split(":")[0] + "h";
+                    } else if (viewMode === "year") {
                       // For year view, just return the month abbreviation
                       return value.split(" ")[0];
                     } else if (viewMode === "week" || isCustomDateRange) {
@@ -154,6 +197,7 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
                     }
                     return value;
                   }}
+                  interval={isSingleDay ? 2 : 0} // Mostrar menos etiquetas en el modo de horas
                 />
                 <YAxis
                   tick={{ fontSize: 10 }}

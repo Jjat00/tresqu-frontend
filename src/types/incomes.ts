@@ -48,3 +48,89 @@ export interface DonutChartData {
   total_amount: number;
   recent_incomes?: IncomeItem[]; // Datos simplificados de ingresos recientes
 }
+
+/**
+ * Interfaz para los parámetros de la gráfica de barras apiladas
+ */
+export interface BarStackedChartParams {
+  category_id?: number;
+  date_filter?:
+    | "all"
+    | "today"
+    | "yesterday"
+    | "current_month"
+    | "previous_month"
+    | "current_week"
+    | "previous_week"
+    | "current_year"
+    | "previous_year"
+    | "custom";
+  start_date?: string;
+  end_date?: string;
+  limit?: number;
+  group_by?: "day" | "week" | "month" | "hour";
+  timezone?: string;
+}
+
+/**
+ * Interfaz para dataset de la gráfica de barras apiladas
+ */
+export interface BarStackedDataset {
+  label: string;
+  data: number[];
+  backgroundColor: string;
+  borderColor: string;
+  borderWidth: number;
+}
+
+/**
+ * Interfaz para los datos de la gráfica de barras apiladas
+ */
+export interface BarStackedChartData {
+  labels: string[];
+  datasets: BarStackedDataset[];
+  filter_summary: string;
+  total_amount: number;
+  group_by: "day" | "week" | "month" | "hour";
+  recent_incomes?: IncomeItem[];
+}
+
+/**
+ * Interfaz para los parámetros de filtrado del gráfico de línea de ingresos
+ */
+export interface LineChartParams {
+  category_id?: number;
+  date_filter?:
+    | "all"
+    | "today"
+    | "yesterday"
+    | "current_month"
+    | "previous_month"
+    | "current_week"
+    | "previous_week"
+    | "current_year"
+    | "previous_year"
+    | "custom";
+  start_date?: string; // Formato YYYY-MM-DD
+  end_date?: string; // Formato YYYY-MM-DD
+  group_by?: "day" | "week" | "month" | "hour";
+  timezone?: string;
+}
+
+/**
+ * Interfaz para los datos de respuesta del gráfico de línea de ingresos
+ */
+export interface LineChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
+    fill: boolean;
+    tension: number;
+  }[];
+  filter_summary: string;
+  total_amount: number;
+}
