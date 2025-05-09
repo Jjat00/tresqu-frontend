@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -8,7 +8,6 @@ import {
 import { verifyTelegramCode } from "@/services/authService";
 import { AuthResponse } from "@/types/auth";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 interface VerificationCodeFormProps {
   phoneNumber: string;
@@ -23,6 +22,17 @@ const VerificationCodeForm = ({
 }: VerificationCodeFormProps) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const timeoutMessageRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (timeoutMessageRef.current) {
+        timeoutMessageRef.current.classList.remove("hidden");
+      }
+    }, 10000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const handleVerifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +74,14 @@ const VerificationCodeForm = ({
       <p className="text-sm text-muted-foreground">
         Hemos enviado un código de verificación a tu cuenta de Telegram asociada
         al número <span className="font-medium">{phoneNumber}</span>
+      </p>
+
+      <p
+        ref={timeoutMessageRef}
+        className="text-sm text-amber-500 font-medium hidden animate-fade-in"
+      >
+        ¿No has recibido el código? Verifica que el número {phoneNumber} sea
+        correcto o intenta solicitar un nuevo código.
       </p>
 
       <form onSubmit={handleVerifyCode} className="space-y-6">

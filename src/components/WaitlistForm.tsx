@@ -140,6 +140,7 @@ const WaitlistForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [verificationStep, setVerificationStep] = useState(false);
   const [fullPhoneNumber, setFullPhoneNumber] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -189,22 +190,44 @@ const WaitlistForm = () => {
     setIsSubmitting(false);
   };
   return (
-    <section
-      id="login"
-      className="section-padding bg-card rounded-none my-[30px] py-[36px] text-center px-[2px] mx-[2px]"
-    >
-      <div className="container mx-auto max-w-6xl py-0 my-[10px] rounded-full px-px">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Inicia sesión</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <section className="py-10 md:py-16 relative overflow-hidden min-h-screen flex items-center justify-center">
+      {/* Fondo con gradientes */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background/90 backdrop-blur-sm z-[-1]"></div>
+
+      {/* Overlay para mejorar contraste */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/50 to-background/80 pointer-events-none z-[1]"></div>
+
+      {/* Efectos de fondo */}
+      <div
+        className="absolute top-0 -left-20 w-64 h-64 rounded-full blur-3xl opacity-10 animate-pulse-glow"
+        style={{
+          background:
+            "radial-gradient(circle at center, var(--color-success), transparent 70%)",
+        }}
+      ></div>
+      <div
+        className="absolute bottom-0 -right-20 w-64 h-64 rounded-full blur-3xl opacity-10 animate-pulse-glow"
+        style={{
+          background:
+            "radial-gradient(circle at center, var(--color-highlight), transparent 70%)",
+          animationDelay: "1.5s",
+        }}
+      ></div>
+
+      <div className="container mx-auto max-w-6xl relative z-10">
+        <div className="text-center mb-4 md:mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4 high-contrast-text">
+            Inicia sesión
+          </h2>
+          <p className="text-base md:text-lg text-foreground max-w-2xl mx-auto text-shadow-sm">
             Conecta tu número de WhatsApp o Telegram para comenzar a usar
-            CashBot. No necesitas crear contraseñas adicionales.
+            CashBot.
           </p>
         </div>
 
         <div className="max-w-md mx-auto">
-          <Card className="px-0">
-            <CardContent className="pt-6 mx-[2px] px-[3px]">
+          <Card className="glass-card backdrop-blur-sm shadow-lg border-0 animate-fade-up">
+            <CardContent className="pt-4 pb-6 px-4 md:px-6">
               {verificationStep ? (
                 <VerificationCodeForm
                   phoneNumber={fullPhoneNumber}
@@ -217,17 +240,17 @@ const WaitlistForm = () => {
                   onValueChange={setActiveTab}
                   className="w-full"
                 >
-                  <TabsList className="grid grid-cols-2 mb-8">
+                  <TabsList className="grid grid-cols-2 mb-6 bg-background/50 backdrop-blur-sm">
                     <TabsTrigger
                       value="whatsapp"
-                      className="flex gap-2 items-center"
+                      className="flex gap-2 items-center data-[state=active]:bg-success/20 data-[state=active]:text-foreground font-medium"
                     >
                       <MessageSquare className="h-4 w-4" />
                       WhatsApp
                     </TabsTrigger>
                     <TabsTrigger
                       value="telegram"
-                      className="flex gap-2 items-center"
+                      className="flex gap-2 items-center data-[state=active]:bg-[#0088cc]/20 data-[state=active]:text-foreground font-medium"
                     >
                       <MessageSquare className="h-4 w-4" />
                       Telegram
@@ -235,9 +258,12 @@ const WaitlistForm = () => {
                   </TabsList>
 
                   <TabsContent value="whatsapp">
-                    <form className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="whatsapp-number">
+                    <form className="space-y-3">
+                      <div className="space-y-1">
+                        <Label
+                          htmlFor="whatsapp-number"
+                          className="text-foreground font-medium text-sm"
+                        >
                           Número de WhatsApp
                         </Label>
                         <div className="flex gap-2">
@@ -246,10 +272,10 @@ const WaitlistForm = () => {
                               value={countryCode}
                               onValueChange={setCountryCode}
                             >
-                              <SelectTrigger>
+                              <SelectTrigger className="bg-background/60 backdrop-blur-sm border-white/10 h-9">
                                 <SelectValue placeholder="Código" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="bg-background/90 backdrop-blur-md border-white/10">
                                 {countryCodes.map((country) => (
                                   <SelectItem
                                     key={country.code}
@@ -274,34 +300,36 @@ const WaitlistForm = () => {
                               value={phoneNumber}
                               onChange={(e) => setPhoneNumber(e.target.value)}
                               required
+                              className="bg-background/60 backdrop-blur-sm border-white/10 text-foreground placeholder:text-foreground/60 h-9"
                             />
                           </div>
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                          Ingresa tu número sin el código de país (ej:
-                          31234567890)
+                        <p className="text-xs text-foreground/80">
+                          Ingresa tu número sin el código de país
                         </p>
                       </div>
 
                       <Button
                         type="button"
-                        className="w-full bg-success hover:bg-success/90"
+                        className="w-full bg-success-dark hover:bg-success/90 text-white font-medium transform transition-all duration-300 mt-4 py-2 h-9"
                         disabled={true}
                       >
                         Próximamente
                       </Button>
 
-                      <p className="text-xs text-center text-muted-foreground mt-4">
-                        Al continuar, aceptas nuestros términos de servicio y
-                        política de privacidad.
+                      <p className="text-xs text-center text-foreground/80 mt-3">
+                        Al continuar, aceptas nuestros términos de servicio
                       </p>
                     </form>
                   </TabsContent>
 
                   <TabsContent value="telegram">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="telegram-phone">
+                    <form onSubmit={handleSubmit} className="space-y-3">
+                      <div className="space-y-1">
+                        <Label
+                          htmlFor="telegram-phone"
+                          className="text-foreground font-medium text-sm"
+                        >
                           Número de teléfono
                         </Label>
                         <div className="flex gap-2">
@@ -310,10 +338,10 @@ const WaitlistForm = () => {
                               value={telegramCountryCode}
                               onValueChange={setTelegramCountryCode}
                             >
-                              <SelectTrigger>
+                              <SelectTrigger className="bg-background/60 backdrop-blur-sm border-white/10 h-9">
                                 <SelectValue placeholder="Código" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="bg-background/90 backdrop-blur-md border-white/10">
                                 {countryCodes.map((country) => (
                                   <SelectItem
                                     key={country.code}
@@ -338,28 +366,30 @@ const WaitlistForm = () => {
                               value={telegramPhone}
                               onChange={(e) => setTelegramPhone(e.target.value)}
                               required
+                              className="bg-background/60 backdrop-blur-sm border-white/10 text-foreground placeholder:text-foreground/60 h-9"
                             />
                           </div>
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                          Ingresa tu número sin el código de país (ej:
-                          31234567890)
+                        <p className="text-xs text-foreground/80">
+                          Ingresa tu número sin el código de país
                         </p>
                       </div>
 
                       <Button
                         type="submit"
-                        className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white hover:cursor-pointer"
+                        className="w-full bg-[#008ecc] hover:bg-[#0088cc]/90 text-white hover:cursor-pointer font-medium relative overflow-hidden group transform transition-all duration-300 mt-4 py-2 h-9"
                         disabled={isSubmitting}
                       >
-                        {isSubmitting
-                          ? "Procesando..."
-                          : "Continuar con Telegram"}
+                        <span className="relative z-10">
+                          {isSubmitting
+                            ? "Procesando..."
+                            : "Continuar con Telegram"}
+                        </span>
+                        <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                       </Button>
 
-                      <p className="text-xs text-center text-muted-foreground mt-4">
-                        Al continuar, aceptas nuestros términos de servicio y
-                        política de privacidad.
+                      <p className="text-xs text-center text-foreground/80 mt-3">
+                        Al continuar, aceptas nuestros términos de servicio
                       </p>
                     </form>
                   </TabsContent>

@@ -1,11 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   // Función para abrir el enlace de Telegram
   const openTelegramBot = () => {
     window.location.href = "https://t.me/tresqu_bot";
+  };
+
+  // Función para navegar a la página de login
+  const navigateToLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -52,7 +59,7 @@ const Hero = () => {
 
               <Button
                 variant="outline"
-                className="text-base w-full px-4 md:px-8 py-5 md:py-6 text-white font-medium  group relative z-20 overflow-hidden hover:cursor-pointer"
+                className="text-base w-full px-4 md:px-8 py-5 md:py-6 text-white font-medium group relative z-20 overflow-hidden hover:cursor-pointer"
                 size="lg"
                 style={{
                   backgroundColor: "#008ecc",
@@ -95,24 +102,23 @@ const Hero = () => {
                 >
                   ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
                 </p>
-                <Link to="/login" className="w-full relative z-20">
-                  <Button
-                    className="text-base w-full px-4 md:px-8 py-5 md:py-6 relative overflow-hidden group font-medium hover:cursor-pointer"
-                    size="lg"
-                    style={{
-                      background:
-                        "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
-                      color: "white",
-                      position: "relative",
-                    }}
-                  >
-                    <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                    <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10" />
-                    <span className="relative z-10 text-shadow-sm">
-                      Iniciar ahora
-                    </span>
-                  </Button>
-                </Link>
+                <Button
+                  className="text-base w-full px-4 md:px-8 py-5 md:py-6 relative overflow-hidden group font-medium hover:cursor-pointer"
+                  size="lg"
+                  style={{
+                    background:
+                      "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
+                    color: "white",
+                    position: "relative",
+                  }}
+                  onClick={navigateToLogin}
+                >
+                  <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                  <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10" />
+                  <span className="relative z-10 text-shadow-sm">
+                    Iniciar ahora
+                  </span>
+                </Button>
               </div>
             </div>
           </div>
