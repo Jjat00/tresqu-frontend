@@ -16,6 +16,8 @@ import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
 import { env } from "@/config";
+import * as XLSX from "xlsx";
+
 interface ExpensesTableProps {
   categoryFilter: string;
   onCategoryClick: (category: string) => void;
@@ -136,9 +138,51 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   };
 
   const handleExportExcel = () => {
-    toast.info("Exportando a Excel...");
-    console.log("Exporting expenses to Excel");
-    // Implementation would go here
+    if (!filteredExpenses.length) {
+      toast.error("No hay datos para exportar");
+      return;
+    }
+
+    try {
+      // Preparar los datos para Excel
+      const excelData = filteredExpenses.map((expense) => ({
+        Descripción: expense.note || "Sin descripción",
+        Categoría: expense.category_str || "Sin categoría",
+        Monto: `${parseFloat(expense.amount).toLocaleString("es-CO")} ${
+          expense.currency
+        }`,
+        Fecha: formatDate(expense.spent_at),
+      }));
+
+      // Crear un nuevo libro de Excel
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Gastos");
+
+      // Generar el archivo Excel
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Crear un enlace de descarga
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `gastos_${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Archivo Excel descargado exitosamente");
+    } catch (error) {
+      console.error("Error al exportar a Excel:", error);
+      toast.error("Error al exportar a Excel");
+    }
   };
 
   const formatDate = (dateString: string) => {

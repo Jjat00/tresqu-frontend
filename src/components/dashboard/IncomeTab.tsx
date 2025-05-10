@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import * as XLSX from "xlsx";
+import { toast } from "sonner";
+import { useIncomeSummary } from "@/hooks/useIncomeSummary";
+import { IncomeSummaryItem, IncomeTableItem } from "@/types/incomes";
 
 import { Input } from "@/components/ui/input";
 import { Plus, Download } from "lucide-react";
@@ -38,6 +42,73 @@ const IncomeTab = ({
     "day" | "week" | "month" | "year"
   >(viewMode);
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
+  const [period, setPeriod] = useState<"week" | "month" | "year" | "all">(
+    "month"
+  );
+
+  // Obtener datos del resumen de ingresos
+  const { data: summaryData, isLoading } = useIncomeSummary({ period });
+
+  // Estado para los datos de la tabla
+  const [tableData, setTableData] = useState<IncomeTableItem[]>([]);
+  const [filteredIncome, setFilteredIncome] = useState<IncomeTableItem[]>([]);
+
+  // Transformar los datos del resumen cuando se reciben
+  useEffect(() => {
+    if (summaryData && summaryData.summary) {
+      const transformedData = summaryData.summary.map(
+        (item: IncomeSummaryItem, index: number) => ({
+          id: index + 1,
+          description: `Ingreso por ${item.category__name || "Sin categoría"}`,
+          category: item.category__name || "Sin categoría",
+          subcategory: "",
+          amount: item.total,
+          date: new Date().toISOString().split("T")[0],
+        })
+      );
+      setTableData(transformedData);
+    }
+  }, [summaryData]);
+
+  // Aplicar filtros a los datos
+  useEffect(() => {
+    if (!tableData.length) {
+      setFilteredIncome([]);
+      return;
+    }
+
+    let filtered = [...tableData];
+
+    // Aplicar filtro de categoría
+    if (categoryFilter !== "all") {
+      const normalizedCategoryFilter = categoryFilter
+        .toLowerCase()
+        .replace("salary", "empleo")
+        .replace("freelance", "freelance")
+        .replace("investments", "inversiones")
+        .replace("other", "otros");
+
+      filtered = filtered.filter(
+        (income) => income.category.toLowerCase() === normalizedCategoryFilter
+      );
+    }
+
+    // Aplicar filtro de búsqueda
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (income) =>
+          income.description.toLowerCase().includes(query) ||
+          income.category.toLowerCase().includes(query) ||
+          (income.subcategory &&
+            income.subcategory.toLowerCase().includes(query))
+      );
+    }
+
+    // Ordenar por monto (mayor a menor)
+    filtered.sort((a, b) => b.amount - a.amount);
+    setFilteredIncome(filtered);
+  }, [tableData, categoryFilter, searchQuery]);
 
   // Update localSelectedMonth when prop changes
   useEffect(() => {
@@ -59,8 +130,57 @@ const IncomeTab = ({
   };
 
   const handleExportExcel = () => {
-    console.log("Exporting income data to Excel");
-    // Implementation would go here
+    if (!filteredIncome || filteredIncome.length === 0) {
+      toast.error("No hay datos para exportar");
+      return;
+    }
+
+    try {
+      // Preparar los datos para Excel
+      const excelData = filteredIncome.map((income: IncomeTableItem) => ({
+        Descripción: income.description || "Sin descripción",
+        Categoría: income.category || "Sin categoría",
+        Subcategoría: income.subcategory || "-",
+        Monto: formatCurrency(income.amount),
+        Período:
+          period === "week"
+            ? "Esta semana"
+            : period === "month"
+            ? "Este mes"
+            : period === "year"
+            ? "Este año"
+            : "Todo el período",
+      }));
+
+      // Crear un nuevo libro de Excel
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Ingresos");
+
+      // Generar el archivo Excel
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Crear un enlace de descarga
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `ingresos_${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Archivo Excel descargado exitosamente");
+    } catch (error) {
+      console.error("Error al exportar a Excel:", error);
+      toast.error("Error al exportar a Excel");
+    }
   };
 
   const handleShare = () => {
