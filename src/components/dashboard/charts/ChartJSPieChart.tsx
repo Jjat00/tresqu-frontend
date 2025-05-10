@@ -52,6 +52,14 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
       };
     }
 
+    // Función para convertir hex a rgba
+    const hexToRGBA = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
     // Filtrar datos válidos
     const validData = originalData.filter(
       (item) => item && Number.isFinite(item.value) && item.value > 0
@@ -62,7 +70,7 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
       datasets: [
         {
           data: validData.map((item) => item.value),
-          backgroundColor: validData.map((item) => item.color),
+          backgroundColor: validData.map((item) => hexToRGBA(item.color, 0.5)),
           borderColor: validData.map((item) => item.textColor),
           borderWidth: 1,
         },

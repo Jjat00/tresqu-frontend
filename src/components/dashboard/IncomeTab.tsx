@@ -284,7 +284,7 @@ const IncomeTab = ({
   };
 
   return (
-    <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px] relative">
+    <div className="space-y-3 md:space-y-4 flex flex-col px-0 mx-0 my-0 relative">
       {/* Efectos de fondo */}
       <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
         <div
@@ -319,7 +319,7 @@ const IncomeTab = ({
         }}
       ></div>
 
-      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
+      {/* <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <Button
           className="bg-success hover:bg-success/90 h-8 xs:h-9 w-[200] xs:w-auto whitespace-nowrap text-[10px] xs:text-xs sm:text-sm animate-fade-up"
           onClick={() => setNewIncomeOpen(true)}
@@ -333,7 +333,7 @@ const IncomeTab = ({
           onOpenChange={setNewIncomeOpen}
           onAddIncome={handleAddIncome}
         />
-      </div>
+      </div> */}
 
       {/* KPIs Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

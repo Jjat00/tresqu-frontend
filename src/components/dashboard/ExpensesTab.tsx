@@ -127,7 +127,7 @@ const ExpensesTab = ({
   }
 
   return (
-    <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px] relative">
+    <div className="space-y-3 md:space-y-4 flex flex-col px-0 mx-0 my-0 relative">
       {/* Efectos de fondo */}
       <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
         <div
@@ -162,11 +162,11 @@ const ExpensesTab = ({
         }}
       ></div>
 
-      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3 animate-fade-up">
+      {/* <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3 animate-fade-up">
         <div className="w-full xs:w-auto">
           <NewExpenseDialog onAddExpense={handleAddExpense} />
         </div>
-      </div>
+      </div> */}
 
       {/* KPIs Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -14,6 +14,7 @@ import {
   Title,
   Tooltip as ChartTooltip,
   Legend,
+  TooltipItem,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
@@ -126,13 +127,23 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
       };
     }
 
+    // Función para convertir hex a rgba
+    const hexToRGBA = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
     // Transformar datasets al formato de Chart.js
     const chartJsDatasets = data.datasets.map((dataset) => ({
       label: dataset.label,
       data: dataset.data.map((value) =>
         value === undefined || value === null || isNaN(value) ? 0 : value
       ),
-      backgroundColor: dataset.backgroundColor,
+      backgroundColor: Array.isArray(dataset.backgroundColor)
+        ? dataset.backgroundColor.map((color: string) => hexToRGBA(color, 0.5))
+        : hexToRGBA(dataset.backgroundColor, 0.5),
       borderColor: dataset.borderColor,
       borderWidth: dataset.borderWidth,
     }));
@@ -179,18 +190,12 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
       },
       tooltip: {
         callbacks: {
-          label: function (context: {
-            dataset: { label: string };
-            parsed: { y: number };
-          }) {
-            let label = context.dataset.label || "";
+          label: function (tooltipItem: TooltipItem<"bar">) {
+            const label = tooltipItem.dataset.label || "";
             if (label) {
-              label += ": ";
+              return `${label}: ${formatTooltipValue(tooltipItem.parsed.y)}`;
             }
-            if (context.parsed.y !== null) {
-              label += formatTooltipValue(context.parsed.y);
-            }
-            return label;
+            return formatTooltipValue(tooltipItem.parsed.y);
           },
         },
       },
@@ -215,7 +220,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
           font: {
             size: isMobile ? 8 : 12,
           },
-          callback: function (value: number) {
+          callback: function (tickValue: number) {
+            const value = Number(tickValue);
             if (value >= 1000000) {
               return `${(value / 1000000).toFixed(1)}M`;
             } else if (value >= 1000) {

@@ -89,7 +89,9 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
       datasets: data.datasets.map((dataset) => ({
         label: dataset.label,
         data: dataset.data,
-        backgroundColor: dataset.backgroundColor,
+        backgroundColor: Array.isArray(dataset.backgroundColor)
+          ? dataset.backgroundColor.map((color: string) => `${color}80`)
+          : `${dataset.backgroundColor}80`,
         borderColor: dataset.borderColor,
         borderWidth: dataset.borderWidth,
       })),

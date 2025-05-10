@@ -59,12 +59,22 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
       };
     }
 
+    // Función para convertir hex a rgba
+    const hexToRGBA = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
     return {
       labels: chartData.labels,
       datasets: [
         {
           data: chartData.datasets[0].data,
-          backgroundColor: chartData.datasets[0].backgroundColor,
+          backgroundColor: chartData.datasets[0].backgroundColor.map(
+            (color: string) => hexToRGBA(color, 0.5)
+          ),
           borderColor: chartData.datasets[0].backgroundColor.map(
             (color: string) => (color === "#4ade80" ? "#166534" : "#1e40af")
           ),

@@ -112,7 +112,7 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-4 sm:space-y-6 relative">
+      <div className="space-y-4 sm:space-y-6 relative px-0">
         {/* Efectos de fondo */}
         <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
           <div
@@ -147,37 +147,29 @@ const Dashboard = () => {
           }}
         ></div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 animate-fade-up">
-          <div className="w-full sm:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 animate-fade-up">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+            <h1 className="text-xl sm:text-2xl md:text-4xl font-bold tracking-tight gradient-text">
               Dashboard Financiero
             </h1>
-            <p className="text-sm text-muted-foreground">
-              Administra tus finanzas y mantén todo bajo control.
-            </p>
+            <Button
+              variant="ghost"
+              className="flex items-center gap-1 glass w-full sm:w-auto"
+              onClick={handleShareApp}
+              size="sm"
+            >
+              <Share2 className="h-3 w-3" />
+              <span className="text-xs">Compartir</span>
+            </Button>
           </div>
-
-          <Button
-            variant="outline"
-            className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 glass animate-fade-up"
-            onClick={handleShareApp}
-            size={isMobile ? "sm" : "default"}
-          >
-            <Share2 className="h-4 w-4" />
-            <span className="text-sm">Compartir Tresqu</span>
-          </Button>
-        </div>
-
-        <div
-          className="flex justify-between items-center animate-fade-up"
-          style={{ animationDelay: "0.1s" }}
-        >
-          <DateRangePicker
-            date={dateRange}
-            onDateChange={handleDateRangeChange}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
+          <div className="w-full sm:w-auto">
+            <DateRangePicker
+              date={dateRange}
+              onDateChange={handleDateRangeChange}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+            />
+          </div>
         </div>
 
         <Tabs
