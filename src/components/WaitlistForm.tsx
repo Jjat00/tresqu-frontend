@@ -153,7 +153,9 @@ const WaitlistForm = () => {
     }
     try {
       // Formatear el número de teléfono con el código de país
-      const formattedPhoneNumber = `${telegramCountryCode}${telegramPhone}`;
+      const formattedPhoneNumber = telegramCountryCode.startsWith("+")
+        ? `${telegramCountryCode}${telegramPhone}`
+        : `+${telegramCountryCode}${telegramPhone}`;
       setFullPhoneNumber(formattedPhoneNumber);
       console.log("Enviando solicitud para:", formattedPhoneNumber);
 

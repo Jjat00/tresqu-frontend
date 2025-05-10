@@ -45,10 +45,17 @@ const VerificationCodeForm = ({
     setIsSubmitting(true);
 
     try {
-      console.log("Verificando código para el número:", phoneNumber);
+      const formattedPhoneNumber = phoneNumber.startsWith("+")
+        ? phoneNumber
+        : `+${phoneNumber}`;
+
+      console.log("Verificando código para el número:", formattedPhoneNumber);
       console.log("Código ingresado:", verificationCode);
 
-      const response = await verifyTelegramCode(phoneNumber, verificationCode);
+      const response = await verifyTelegramCode(
+        formattedPhoneNumber,
+        verificationCode
+      );
 
       if (response && response.access) {
         toast.success("¡Verificación exitosa! Redirigiendo al dashboard...");
