@@ -86,12 +86,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
             <div className="flex space-x-4 md:space-x-6">
               <Link
-                to="/cookie-policy"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Política de cookies
-              </Link>
-              <Link
                 to="/legal-notice"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >

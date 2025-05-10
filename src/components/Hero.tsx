@@ -1,16 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
 
 const Hero = () => {
   const navigate = useNavigate();
 
-  // Función para abrir el enlace de Telegram
-  const openTelegramBot = () => {
-    window.location.href = "https://t.me/tresqu_bot";
-  };
-
-  // Función para navegar a la página de login
   const navigateToLogin = () => {
     navigate("/login");
   };
@@ -21,7 +15,7 @@ const Hero = () => {
         <div className="flex flex-col items-center justify-center space-y-6 md:space-y-10 text-center">
           <div className="space-y-4 md:space-y-6 max-w-4xl">
             <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold font-display gradient-text animate-fade-in my-[71px]">
-              La manera más fácil de controlar tus finanzas, Potenciado por IA
+              Tu dinero, bajo control. Sin apps, sin excusas.
             </h1>
 
             <p
@@ -31,11 +25,12 @@ const Hero = () => {
                 color: "var(--color-foreground)",
               }}
             >
-              Tresqu utiliza inteligencia artificial para ofrecer análisis
-              financieros claros, automáticos y sin complicaciones, a través de
-              las aplicaciones que ya usas: WhatsApp y Telegram.
+              Tresqu es tu asistente financiero que vive en WhatsApp y Telegram.
+              Registra tus gastos e ingresos con un mensaje y recibe análisis al
+              instante. Empieza ahora, sin descargar nada.
             </p>
           </div>
+
           <div
             className="flex flex-col gap-8 w-full max-w-md animate-fade-in relative z-20"
             style={{

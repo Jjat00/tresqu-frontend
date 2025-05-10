@@ -1,27 +1,25 @@
-import { ArrowRight, DollarSign, FileText, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { DollarSign, FileText, Calendar } from "lucide-react";
 
 const futureFeatures = [
   {
     icon: <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-success" />,
-    title: "Envío de dinero sin complicaciones",
+    title: "Inversión e inteligencia financiera",
     description:
-      'Envía dinero a tus contactos solo escribiendo: "Pásale 30 mil a Juan por Nequi".',
+      "Recibe recomendaciones de inversión según tu perfil financiero. Desde ahorro en CETES hasta cripto o ETFs.",
     color: "success",
   },
   {
     icon: <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-highlight" />,
-    title: "Pago automático de facturas",
+    title: "Integración con plataformas de pago globales",
     description:
-      "Paga facturas automáticamente, sin complicaciones ni vencimientos.",
+      "Conecta con Stripe, Wise, PayPal o Apple Pay para hacer pagos sin fricciones desde tu chat.",
     color: "highlight",
   },
   {
     icon: <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-purple" />,
-    title: "Análisis y consejos personalizados",
+    title: "Simulador de metas financieras",
     description:
-      "Recibe análisis y consejos personalizados sobre tus finanzas.",
+      "Planea viajes, compras o ahorro con simulaciones automáticas basadas en tu comportamiento real.",
     color: "purple",
   },
 ];
