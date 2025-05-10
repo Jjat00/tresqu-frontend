@@ -7,6 +7,10 @@ import {
   ArcElement,
   Tooltip as ChartTooltip,
   Legend,
+  ChartOptions,
+  TooltipItem,
+  ChartEvent,
+  ActiveElement,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -28,6 +32,7 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
     isLoading,
     error,
     filterSummary,
+    totalAmount,
   } = useCategoryPieChartData(dateRange);
   const isMobile = useIsMobile();
 
@@ -66,7 +71,7 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
   }, [originalData]);
 
   // Opciones para Chart.js
-  const options = {
+  const options: ChartOptions<"doughnut"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -83,20 +88,19 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
       },
       tooltip: {
         callbacks: {
-          label: function (context: any) {
+          label: function (context: TooltipItem<"doughnut">) {
             const label = context.label || "";
-            const value = context.raw || 0;
+            const value = (context.raw as number) || 0;
             const formattedValue = new Intl.NumberFormat("es-CO").format(value);
-            const percentage = context.parsed || 0;
-            return `${label}: $${formattedValue} (${(percentage * 100).toFixed(
-              0
-            )}%)`;
+            const percentage =
+              totalAmount > 0 ? (value / totalAmount) * 100 : 0;
+            return `${label}: $${formattedValue} (${percentage.toFixed(1)}%)`;
           },
         },
       },
     },
     // Permitir hacer clic en segmentos del gráfico
-    onClick: (_event: any, elements: any[]) => {
+    onClick: (_event: ChartEvent, elements: ActiveElement[]) => {
       if (elements.length > 0) {
         const index = elements[0].index;
         const category = chartData.labels[index]?.toString() || "";

@@ -1,13 +1,26 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { useIncomeSummary } from "@/hooks/useIncomeSummary";
-import { IncomeSummaryItem, IncomeTableItem } from "@/types/incomes";
-
+import { useIncomeLineData } from "@/hooks/useIncomeLineData";
+import { useIncomeBarData } from "@/hooks/useIncomeBarData";
+import { useIncomePieChart } from "@/hooks/useIncomePieChart";
+import {
+  IncomeSummaryItem,
+  IncomeTableItem,
+  DonutChartData,
+} from "@/types/incomes";
 import { Input } from "@/components/ui/input";
-import { Plus, Download } from "lucide-react";
+import {
+  Plus,
+  Download,
+  TrendingUpIcon,
+  WalletIcon,
+  CalendarIcon,
+  TagIcon,
+} from "lucide-react";
 import { DateRange } from "./DateRangePicker";
 
 // Import refactored components
@@ -47,7 +60,12 @@ const IncomeTab = ({
   );
 
   // Obtener datos del resumen de ingresos
-  const { data: summaryData, isLoading } = useIncomeSummary({ period });
+  const { data: summaryData, isLoading: isSummaryLoading } = useIncomeSummary({
+    period,
+  });
+  const { isLoading: isLineLoading } = useIncomeLineData(dateRange, viewMode);
+  const { isLoading: isBarLoading } = useIncomeBarData();
+  const { data: pieData, isLoading: isPieLoading } = useIncomePieChart();
 
   // Estado para los datos de la tabla
   const [tableData, setTableData] = useState<IncomeTableItem[]>([]);
@@ -201,6 +219,70 @@ const IncomeTab = ({
     });
   };
 
+  // Calcular el ingreso total
+  const getTotalIncome = () => {
+    if (!summaryData?.summary) return 0;
+    return summaryData.summary.reduce((total, item) => total + item.total, 0);
+  };
+
+  // Calcular el ingreso promedio diario
+  const calculateDailyAverage = () => {
+    if (!dateRange?.from || !dateRange?.to || !getTotalIncome()) return 0;
+
+    // Si es el mismo día, retornar el total directamente
+    if (dateRange.from.toDateString() === dateRange.to.toDateString()) {
+      return getTotalIncome();
+    }
+
+    const startDate = new Date(dateRange.from);
+    const endDate = new Date(dateRange.to);
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    const daysDiff =
+      Math.floor(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      ) + 1;
+
+    return Number((getTotalIncome() / daysDiff).toFixed(2));
+  };
+
+  // Obtener la categoría principal de ingresos
+  const getMainCategory = () => {
+    if (
+      !pieData ||
+      !pieData.labels ||
+      !pieData.datasets ||
+      pieData.labels.length === 0
+    ) {
+      return { name: "N/A", percentage: 0 };
+    }
+
+    // Encontrar el índice del valor más alto
+    const data = pieData.datasets[0].data;
+    const maxIndex = data.indexOf(Math.max(...data));
+
+    // Obtener el nombre y valor de la categoría principal
+    const name = pieData.labels[maxIndex] || "Sin categoría";
+    const value = data[maxIndex];
+
+    // Calcular el porcentaje
+    const total = data.reduce((sum, val) => sum + val, 0);
+    const percentage = total > 0 ? (value / total) * 100 : 0;
+
+    return {
+      name,
+      percentage: percentage.toFixed(1),
+    };
+  };
+
+  // Calcular el número de ingresos
+  const getIncomeCount = () => {
+    if (!summaryData?.summary) return 0;
+    return summaryData.summary.length;
+  };
+
   return (
     <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px]">
       <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
@@ -217,6 +299,83 @@ const IncomeTab = ({
           onOpenChange={setNewIncomeOpen}
           onAddIncome={handleAddIncome}
         />
+      </div>
+
+      {/* KPIs Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Ingreso Total</CardTitle>
+            <WalletIcon className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              $
+              {getTotalIncome().toLocaleString("es-ES", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </div>
+            <p className="text-xs text-muted-foreground mt-auto">
+              {isSummaryLoading ? "Cargando..." : "Ingresos del período"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Ingreso Promedio Diario
+            </CardTitle>
+            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              $
+              {calculateDailyAverage().toLocaleString("es-ES", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </div>
+            <p className="text-xs text-muted-foreground mt-auto">
+              {isSummaryLoading ? "Cargando..." : "Promedio por día"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Categoría Principal
+            </CardTitle>
+            <TagIcon className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{getMainCategory().name}</div>
+            <p className="text-xs text-muted-foreground mt-auto">
+              {isPieLoading
+                ? "Cargando..."
+                : `${getMainCategory().percentage}% del ingreso total`}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Número de Ingresos
+            </CardTitle>
+            <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {getIncomeCount().toLocaleString("es-ES")}
+            </div>
+            <p className="text-xs text-muted-foreground mt-auto">
+              {isSummaryLoading ? "Cargando..." : "Ingresos registrados"}
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">

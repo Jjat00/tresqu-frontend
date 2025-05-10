@@ -95,10 +95,11 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
           label: function (tooltipItem) {
             const label = tooltipItem.label || "";
             const value = tooltipItem.raw as number;
-            const percent = tooltipItem.parsed;
-            return `${label}: ${formatCurrency(value)} (${(
-              percent * 100
-            ).toFixed(0)}%)`;
+            const total = chartData?.total_amount || 0;
+            const percentage = total > 0 ? (value / total) * 100 : 0;
+            return `${label}: ${formatCurrency(value)} (${percentage.toFixed(
+              1
+            )}%)`;
           },
         },
       },
