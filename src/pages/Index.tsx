@@ -4,6 +4,7 @@ import HowItWorks from "@/components/HowItWorks";
 import Benefits from "@/components/Benefits";
 import FutureVision from "@/components/FutureVision";
 import Pricing from "@/components/Pricing";
+import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -51,6 +52,7 @@ const Index = () => {
       <Benefits />
       <Pricing />
       <FutureVision />
+      <Contact />
       <Footer />
     </main>
   );

@@ -1,5 +1,11 @@
-import React from "react";
-import { Check, X } from "lucide-react";
+import {
+  Check,
+  X,
+  Mail,
+  Linkedin,
+  Facebook,
+  MessageCircle,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -73,15 +79,20 @@ const Pricing = () => {
               <div className="space-y-3">
                 <PricingFeature
                   included={true}
-                  text="Registro de ingresos y gastos "
+                  text="Registro de ingresos y gastos básico"
                 />
                 <PricingFeature included={true} text="Estadísticas básicas" />
                 <PricingFeature
                   included={true}
                   text="Interacción por texto en WhatsApp/Telegram"
                 />
+                <PricingFeature included={false} text="Registro por audio" />
+                <PricingFeature included={false} text="Registro múltiple" />
+                <PricingFeature included={false} text="Reportes detallados" />
+                <PricingFeature included={false} text="Visualización gráfica" />
+                <PricingFeature included={false} text="Análisis por periodos" />
+                <PricingFeature included={false} text="Memoria contextual" />
                 <PricingFeature included={false} text="Exportación de datos" />
-                <PricingFeature included={false} text="Interacción por voz" />
                 <PricingFeature included={false} text="Soporte prioritario" />
               </div>
             </CardContent>
@@ -124,46 +135,50 @@ const Pricing = () => {
                   <div className="text-sm text-foreground/80">
                     ó $50 anual (20% descuento)
                   </div>
+                  <div className="text-sm text-success-dark font-medium mt-2">
+                    ¡Prueba gratis por 1 mes!
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
                 <div className="space-y-3">
                   <PricingFeature
                     included={true}
-                    text="analisis financiero con IA "
+                    text="Registro de ingresos y gastos en lenguaje natural"
                   />
                   <PricingFeature
                     included={true}
-                    text="Registro de ingresos, gastos , deudas y ahorros "
+                    text="Registro por audio para ingresos y gastos"
                   />
                   <PricingFeature
                     included={true}
-                    text="Estadísticas detalladas y avanzadas"
+                    text="Registro múltiple en un solo mensaje"
                   />
                   <PricingFeature
                     included={true}
-                    text="Reportes semanales, mensuales y anuales"
+                    text="Modificación y eliminación de registros"
                   />
                   <PricingFeature
                     included={true}
-                    text="Sin límite de registros"
+                    text="Análisis por periodos: diario, semanal, mensual"
                   />
                   <PricingFeature
                     included={true}
-                    text="Planificación de deudas con alertas"
+                    text="Reportes detallados con gráficos"
                   />
                   <PricingFeature
                     included={true}
-                    text="Seguimiento de metas de ahorro"
+                    text="Visualización gráfica: dona, barras y líneas"
                   />
                   <PricingFeature
                     included={true}
-                    text="Exportación a PDF y Excel"
+                    text="Memoria contextual y reconocimiento de tiempo"
                   />
                   <PricingFeature
                     included={true}
-                    text="Interacción por voz con el bot"
+                    text="Dashboard con análisis comparativo"
                   />
+                  <PricingFeature included={true} text="Exportación a Excel" />
                   <PricingFeature
                     included={true}
                     text="Soporte técnico prioritario"
@@ -178,10 +193,11 @@ const Pricing = () => {
                     background:
                       "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
                   }}
+                  onClick={() => (window.location.href = "/login")}
                 >
                   <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                   <span className="relative z-10 text-shadow-sm">
-                    Suscribirse
+                    Comenzar Prueba Gratuita
                   </span>
                 </Button>
               </CardFooter>
@@ -216,12 +232,21 @@ const Pricing = () => {
                 <PricingFeature included={true} text="Acceso multiusuario" />
                 <PricingFeature
                   included={true}
-                  text="Informes financieros personalizados"
+                  text="Reportes financieros personalizados"
                 />
                 <PricingFeature
                   included={true}
                   text="Control centralizado de gastos"
                 />
+                <PricingFeature
+                  included={true}
+                  text="Análisis financiero avanzado"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Integración con sistemas contables"
+                />
+                <PricingFeature included={true} text="API personalizada" />
                 <PricingFeature
                   included={true}
                   text="Licencia anual con renovación automática"
@@ -237,6 +262,11 @@ const Pricing = () => {
                 variant="outline"
                 className="w-full relative overflow-hidden group font-medium"
                 size="lg"
+                onClick={() =>
+                  document
+                    .getElementById("contacto")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
               >
                 <span className="absolute inset-0 bg-white/5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                 <span className="relative z-10 text-foreground">
