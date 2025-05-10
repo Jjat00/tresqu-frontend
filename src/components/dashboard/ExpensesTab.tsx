@@ -175,10 +175,10 @@ const ExpensesTab = ({
             <CardTitle className="text-sm font-medium gradient-text">
               Gasto Total
             </CardTitle>
-            <WalletIcon className="h-4 w-4 text-destructive" />
+            <WalletIcon className="h-4 w-4 text-rose-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">
+            <div className="text-2xl font-bold text-rose-500">
               $
               {totalAmount?.toLocaleString("es-ES", {
                 minimumFractionDigits: 2,
@@ -245,10 +245,10 @@ const ExpensesTab = ({
             <CardTitle className="text-sm font-medium gradient-text">
               Número de Gastos
             </CardTitle>
-            <TrendingUpIcon className="h-4 w-4 text-destructive" />
+            <TrendingUpIcon className="h-4 w-4 text-rose-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">
+            <div className="text-2xl font-bold text-rose-500">
               {getExpensesCount().toLocaleString("es-ES")}
             </div>
             <p className="text-xs text-muted-foreground mt-auto">
