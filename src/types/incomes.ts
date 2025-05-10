@@ -168,6 +168,7 @@ export interface IncomeSummaryParams {
  * Interfaz para un elemento del resumen de ingresos por categoría
  */
 export interface IncomeSummaryItem {
+  id: number;
   category__name: string;
   currency: string;
   total: number;

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import getIncomeSummary from "@/services/incomes/summary";
 import { IncomeSummaryParams } from "@/types/incomes";
 
@@ -9,6 +9,8 @@ import { IncomeSummaryParams } from "@/types/incomes";
  * @returns Estado de la consulta con el resumen de ingresos
  */
 export const useIncomeSummary = (params: IncomeSummaryParams = {}) => {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: ["incomeSummary", params.period],
     queryFn: () => getIncomeSummary(params),
