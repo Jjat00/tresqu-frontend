@@ -223,7 +223,7 @@ const WaitlistForm = () => {
           </h2>
           <p className="text-base md:text-lg text-foreground max-w-2xl mx-auto text-shadow-sm">
             Conecta tu número de WhatsApp o Telegram para comenzar a usar
-            CashBot.
+            Tresqu.
           </p>
         </div>
 

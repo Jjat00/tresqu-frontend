@@ -204,15 +204,6 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={onExportPDF}
-            className="h-8 text-xs"
-          >
-            <Download className="mr-1 h-3 w-3" />
-            PDF
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
             onClick={onExportExcel}
             className="h-8 text-xs"
           >
@@ -220,16 +211,6 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
             Excel
           </Button>
         </div>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onShare}
-          className="ml-auto h-8 sm:h-9 text-xs"
-        >
-          <Share2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-          Compartir CashBot
-        </Button>
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ const ExpensesTab = ({
   };
 
   const handleShare = () => {
-    console.log("Sharing CashBot");
+    console.log("Sharing Tresqu");
     // Implementation would go here
   };
 

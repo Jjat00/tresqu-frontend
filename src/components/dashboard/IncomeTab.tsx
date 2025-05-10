@@ -184,7 +184,7 @@ const IncomeTab = ({
   };
 
   const handleShare = () => {
-    console.log("Sharing CashBot");
+    console.log("Sharing Tresqu");
     // Implementation would go here
   };
 
@@ -279,15 +279,6 @@ const IncomeTab = ({
                 />
               </div>
               <div className="hidden sm:flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleExportPDF}
-                  className="h-9 text-xs"
-                >
-                  <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                  PDF
-                </Button>
                 <Button
                   variant="outline"
                   size="sm"
