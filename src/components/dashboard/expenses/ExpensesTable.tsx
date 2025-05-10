@@ -194,8 +194,8 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     <Card>
       <CardContent className="pt-4 sm:pt-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-          <h3 className="text-base sm:text-lg font-semibold">
-            Historial de gastos
+          <h3 className="text-base sm:text-lg font-semibold mb-2 gradient-text">
+            Historial de Gastos
           </h3>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:flex-none">

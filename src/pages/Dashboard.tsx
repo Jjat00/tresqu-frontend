@@ -112,10 +112,44 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
+      <div className="space-y-4 sm:space-y-6 relative">
+        {/* Efectos de fondo */}
+        <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
+          <div
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 25% 25%, rgba(74, 222, 128, 0.1), transparent 40%)",
+            }}
+          ></div>
+          <div
+            className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1), transparent 40%)",
+            }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at center, rgba(167, 139, 250, 0.05), transparent 50%)",
+            }}
+          ></div>
+        </div>
+
+        {/* Patrón sutil de puntos */}
+        <div
+          className="fixed inset-0 z-[-2] opacity-5 pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
+            backgroundSize: "30px 30px",
+          }}
+        ></div>
+
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 animate-fade-up">
           <div className="w-full sm:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">
               Dashboard Financiero
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -125,7 +159,7 @@ const Dashboard = () => {
 
           <Button
             variant="outline"
-            className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0"
+            className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 glass animate-fade-up"
             onClick={handleShareApp}
             size={isMobile ? "sm" : "default"}
           >
@@ -134,7 +168,10 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div className="flex justify-between items-center">
+        <div
+          className="flex justify-between items-center animate-fade-up"
+          style={{ animationDelay: "0.1s" }}
+        >
           <DateRangePicker
             date={dateRange}
             onDateChange={handleDateRangeChange}
@@ -148,25 +185,31 @@ const Dashboard = () => {
           onValueChange={setActiveTab}
           className="space-y-2"
         >
-          {/* Ajustamos el contenedor de TabsList para evitar el scroll horizontal/vertical en pantallas pequeñas */}
-          <div className="pb-2">
-            <TabsList className="w-full grid grid-cols-2  gap-1 sm:gap-2 p-1 bg-muted/50">
+          <div
+            className="pb-2 animate-fade-up"
+            style={{ animationDelay: "0.2s" }}
+          >
+            <TabsList className="w-full grid grid-cols-2 gap-1 sm:gap-2 p-1 glass">
               <TabsTrigger
                 value="expenses"
-                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto"
+                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto data-[state=active]:bg-success/20 data-[state=active]:text-success"
               >
                 Gastos
               </TabsTrigger>
               <TabsTrigger
                 value="income"
-                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto"
+                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto data-[state=active]:bg-highlight/20 data-[state=active]:text-highlight"
               >
                 Ingresos
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="expenses" className="p-0 min-h-[60vh]">
+          <TabsContent
+            value="expenses"
+            className="p-0 min-h-[60vh] animate-fade-up"
+            style={{ animationDelay: "0.3s" }}
+          >
             <ExpensesTab
               selectedMonth={currentMonth}
               activeTab={activeTab}
@@ -175,7 +218,11 @@ const Dashboard = () => {
             />
           </TabsContent>
 
-          <TabsContent value="income" className="p-0 min-h-[60vh]">
+          <TabsContent
+            value="income"
+            className="p-0 min-h-[60vh] animate-fade-up"
+            style={{ animationDelay: "0.3s" }}
+          >
             <IncomeTab
               selectedMonth={currentMonth}
               activeTab={activeTab}
@@ -184,11 +231,19 @@ const Dashboard = () => {
             />
           </TabsContent>
 
-          <TabsContent value="debt" className="p-0 min-h-[60vh]">
+          <TabsContent
+            value="debt"
+            className="p-0 min-h-[60vh] animate-fade-up"
+            style={{ animationDelay: "0.3s" }}
+          >
             <DebtTab />
           </TabsContent>
 
-          <TabsContent value="savings" className="p-0 min-h-[60vh]">
+          <TabsContent
+            value="savings"
+            className="p-0 min-h-[60vh] animate-fade-up"
+            style={{ animationDelay: "0.3s" }}
+          >
             <SavingsGoalsTab />
           </TabsContent>
         </Tabs>

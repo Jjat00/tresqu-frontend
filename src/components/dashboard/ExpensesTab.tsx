@@ -127,8 +127,42 @@ const ExpensesTab = ({
   }
 
   return (
-    <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px]">
-      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
+    <div className="space-y-3 md:space-y-4 sm:px-2 md:px-4 flex flex-col px-0 mx-0 my-[10px] relative">
+      {/* Efectos de fondo */}
+      <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
+        <div
+          className="absolute top-0 left-0 w-full h-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at 25% 25%, rgba(74, 222, 128, 0.1), transparent 40%)",
+          }}
+        ></div>
+        <div
+          className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1), transparent 40%)",
+          }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at center, rgba(167, 139, 250, 0.05), transparent 50%)",
+          }}
+        ></div>
+      </div>
+
+      {/* Patrón sutil de puntos */}
+      <div
+        className="fixed inset-0 z-[-2] opacity-5 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
+          backgroundSize: "30px 30px",
+        }}
+      ></div>
+
+      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3 animate-fade-up">
         <div className="w-full xs:w-auto">
           <NewExpenseDialog onAddExpense={handleAddExpense} />
         </div>
@@ -136,13 +170,15 @@ const ExpensesTab = ({
 
       {/* KPIs Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="glass-card animate-fade-up">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Gasto Total</CardTitle>
-            <WalletIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium gradient-text">
+              Gasto Total
+            </CardTitle>
+            <WalletIcon className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-destructive">
               $
               {totalAmount?.toLocaleString("es-ES", {
                 minimumFractionDigits: 2,
@@ -155,15 +191,18 @@ const ExpensesTab = ({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className="glass-card animate-fade-up"
+          style={{ animationDelay: "0.1s" }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium gradient-text-cyan">
               Gasto Promedio Diario
             </CardTitle>
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+            <CalendarIcon className="h-4 w-4 text-highlight" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-highlight">
               $
               {calculateDailyAverage().toLocaleString("es-ES", {
                 minimumFractionDigits: 2,
@@ -176,15 +215,20 @@ const ExpensesTab = ({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className="glass-card animate-fade-up"
+          style={{ animationDelay: "0.2s" }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium gradient-text-purple">
               Categoría Principal
             </CardTitle>
-            <TagIcon className="h-4 w-4 text-muted-foreground" />
+            <TagIcon className="h-4 w-4 text-purple" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{getMainCategory().name}</div>
+            <div className="text-2xl font-bold text-purple">
+              {getMainCategory().name}
+            </div>
             <p className="text-xs text-muted-foreground mt-auto">
               {isPieLoading
                 ? "Cargando..."
@@ -193,15 +237,18 @@ const ExpensesTab = ({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className="glass-card animate-fade-up"
+          style={{ animationDelay: "0.3s" }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium gradient-text">
               Número de Gastos
             </CardTitle>
-            <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
+            <TrendingUpIcon className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-destructive">
               {getExpensesCount().toLocaleString("es-ES")}
             </div>
             <p className="text-xs text-muted-foreground mt-auto">
@@ -212,10 +259,16 @@ const ExpensesTab = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+        <div
+          className="h-[280px] xs:h-[320px] sm:h-[350px] glass-card animate-fade-up"
+          style={{ animationDelay: "0.4s" }}
+        >
           <ChartJSPieChart onCategoryClick={() => {}} dateRange={dateRange} />
         </div>
-        <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+        <div
+          className="h-[280px] xs:h-[320px] sm:h-[350px] glass-card animate-fade-up"
+          style={{ animationDelay: "0.5s" }}
+        >
           <ChartJSBarChart
             viewMode={localViewMode}
             selectedMonth={localSelectedMonth}
@@ -225,7 +278,10 @@ const ExpensesTab = ({
       </div>
 
       {/* Gráfico comparativo */}
-      <div className="h-[280px] xs:h-[320px] sm:h-[350px]">
+      <div
+        className="h-[280px] xs:h-[320px] sm:h-[350px] glass-card animate-fade-up"
+        style={{ animationDelay: "0.6s" }}
+      >
         <ComparativeLineChart
           viewMode={localViewMode}
           selectedMonth={localSelectedMonth}
@@ -234,12 +290,17 @@ const ExpensesTab = ({
         />
       </div>
 
-      <ExpensesTable
-        categoryFilter={categoryFilter}
-        onCategoryClick={setSelectedCategory}
-        onShare={handleShare}
-        dateRange={dateRange}
-      />
+      <Card
+        className="glass-card animate-fade-up"
+        style={{ animationDelay: "0.7s" }}
+      >
+        <ExpensesTable
+          categoryFilter={categoryFilter}
+          onCategoryClick={setSelectedCategory}
+          onShare={handleShare}
+          dateRange={dateRange}
+        />
+      </Card>
     </div>
   );
 };
