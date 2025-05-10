@@ -194,20 +194,6 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
         <div className="flex-1 flex items-center justify-center h-full">
           <div style={{ height: "100%", width: "100%", position: "relative" }}>
             <Doughnut data={chartData} options={options} />
-            {isMobile && (
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "5px",
-                  width: "100%",
-                  textAlign: "center",
-                  fontSize: "0.75rem",
-                  color: "var(--muted-foreground)",
-                }}
-              >
-                Toca para ver subcategorías
-              </div>
-            )}
           </div>
         </div>
       </CardContent>

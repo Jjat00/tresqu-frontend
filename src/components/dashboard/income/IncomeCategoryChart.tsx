@@ -160,20 +160,6 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
               }}
             >
               <Doughnut data={pieData} options={options} />
-              {isMobile && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "5px",
-                    width: "100%",
-                    textAlign: "center",
-                    fontSize: "0.75rem",
-                    color: "var(--muted-foreground)",
-                  }}
-                >
-                  Toca para ver subcategorías
-                </div>
-              )}
             </div>
           )}
         </div>
