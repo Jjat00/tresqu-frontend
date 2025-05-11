@@ -295,11 +295,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : (
                   filteredExpenses.map((expense) => (
-                    <TableRow
-                      key={expense.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => onCategoryClick(expense.category_str)}
-                    >
+                    <TableRow key={expense.id} className="hover:bg-muted/50">
                       <TableCell className="py-2 text-xs sm:text-sm">
                         {expense.note || "Sin descripción"}
                       </TableCell>
