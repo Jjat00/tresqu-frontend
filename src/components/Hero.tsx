@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, BarChart3 } from "lucide-react";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -31,15 +31,60 @@ const Hero = () => {
             </p>
           </div>
 
+          {/* Dashboard Image Section */}
           <div
-            className="flex flex-col gap-8 w-full max-w-md animate-fade-in relative z-20"
+            className="w-full max-w-5xl mx-auto mt-6 md:mt-10 animate-fade-in"
+            style={{
+              animationDelay: "150ms",
+            }}
+          >
+            <div className="glass-card p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-4 gradient-text">
+                Dashboard Financiero
+              </h2>
+              <p
+                className="text-base mb-4"
+                style={{ color: "var(--color-foreground)" }}
+              >
+                Accede a tu dashboard personal para visualizar tus finanzas en
+                tiempo real
+              </p>
+              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-gray-800/20">
+                <img
+                  src="https://i.ibb.co/RpYwPZXV/dashboard3.png"
+                  alt="Dashboard Financiero de Tresqu"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                  <Button
+                    className="px-6 py-2 relative overflow-hidden group font-medium hover:cursor-pointer"
+                    style={{
+                      background:
+                        "linear-gradient(45deg, var(--color-success-dark), var(--color-highlight))",
+                      color: "white",
+                    }}
+                    onClick={navigateToLogin}
+                  >
+                    <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                    <BarChart3 className="mr-2 h-4 w-4 relative z-10" />
+                    <span className="relative z-10 text-shadow-sm">
+                      Ver mi dashboard
+                    </span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="flex flex-col md:flex-row gap-8 w-full max-w-5xl animate-fade-in relative z-20"
             style={{
               animationDelay: "200ms",
             }}
           >
             {/* Telegram Bot Registration Section */}
             <div
-              className="glass-card p-6 shadow-lg hover:glow-blue transition-all duration-300 relative z-20"
+              className="glass-card p-6 shadow-lg hover:glow-blue transition-all duration-300 relative z-20 flex-1"
               style={{
                 borderColor: "rgba(96, 165, 250, 0.3)",
               }}
@@ -89,7 +134,7 @@ const Hero = () => {
             </div>
 
             {/* Login Section */}
-            <div className="gradient-border p-[1px] relative z-20">
+            <div className="gradient-border p-[1px] relative z-20 flex-1">
               <div className="glass-card p-6 shadow-lg hover:glow transition-all duration-300">
                 <p
                   className="mb-4 text-base font-medium"
