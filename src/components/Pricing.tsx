@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
+import { useNavigate } from "react-router-dom";
 const PricingFeature = ({
   included,
   text,
@@ -43,6 +43,12 @@ const PricingFeature = ({
 };
 
 const Pricing = () => {
+  const navigate = useNavigate();
+
+  const navigateToLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <section
       id="pricing"
@@ -101,6 +107,7 @@ const Pricing = () => {
                 variant="outline"
                 className="w-full relative overflow-hidden group font-medium"
                 size="lg"
+                onClick={navigateToLogin}
               >
                 <span className="absolute inset-0 bg-white/5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                 <span className="relative z-10 text-foreground">
