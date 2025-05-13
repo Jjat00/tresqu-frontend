@@ -1,26 +1,26 @@
-import { Instagram, Twitter, Facebook, Mail } from "lucide-react";
+import { Mail, Linkedin, Facebook, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
 import { Link } from "react-router-dom";
 const socialLinks = [
   {
-    icon: <Twitter className="h-5 w-5" />,
-    href: "#",
-    label: "Twitter",
-  },
-  {
-    icon: <Instagram className="h-5 w-5" />,
-    href: "#",
-    label: "Instagram",
+    icon: <Linkedin className="h-5 w-5" />,
+    href: "https://www.linkedin.com/company/tresqu/",
+    label: "LinkedIn",
   },
   {
     icon: <Facebook className="h-5 w-5" />,
-    href: "#",
+    href: "https://www.facebook.com/people/Tresqu/61576223664321/",
     label: "Facebook",
   },
   {
     icon: <Mail className="h-5 w-5" />,
     href: "mailto:contacto@tresqu.com",
     label: "Email",
+  },
+  {
+    icon: <MessageCircle className="h-5 w-5" />,
+    href: "https://wa.me/573164277879",
+    label: "WhatsApp",
   },
 ];
 const Footer = () => {
