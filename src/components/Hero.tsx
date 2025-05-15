@@ -82,6 +82,37 @@ const Hero = () => {
               animationDelay: "200ms",
             }}
           >
+            {/* Login Section */}
+            <div className="gradient-border p-[1px] relative z-20 flex-1">
+              <div className="glass-card p-6 shadow-lg hover:glow transition-all duration-300">
+                <p
+                  className="mb-4 text-base font-medium"
+                  style={{ color: "var(--color-foreground)" }}
+                >
+                  ¿Aún no tienes cuenta? Regístrate fácilmente usando el bot de
+                  Telegram.
+                </p>
+                <Button
+                  className="text-base w-full px-4 md:px-8 py-5 md:py-6 relative overflow-hidden group font-medium hover:cursor-pointer"
+                  size="lg"
+                  style={{
+                    background:
+                      "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
+                    color: "white",
+                    position: "relative",
+                  }}
+                  onClick={() => {
+                    window.open("https://t.me/tresqu_bot", "_blank");
+                  }}
+                >
+                  <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                  <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10" />
+                  <span className="relative z-10 text-shadow-sm">
+                    Iniciar ahora
+                  </span>
+                </Button>
+              </div>
+            </div>
             {/* Telegram Bot Registration Section */}
             <div
               className="glass-card p-6 shadow-lg hover:glow-blue transition-all duration-300 relative z-20 flex-1"
@@ -93,8 +124,8 @@ const Hero = () => {
                 className="mb-4 text-base font-medium"
                 style={{ color: "var(--color-foreground)" }}
               >
-                ¿Aún no tienes cuenta? Regístrate fácilmente usando el bot de
-                Telegram.
+                Ya tienes una cuenta? Puedes acceder a tu dashboard. Pulsa en
+                'Ver mi dashboard' para acceder.
               </p>
 
               <Button
@@ -106,60 +137,14 @@ const Hero = () => {
                   borderColor: "#0088cc",
                   position: "relative",
                 }}
-                onClick={() => {
-                  window.open("https://t.me/tresqu_bot", "_blank");
-                }}
+                onClick={navigateToLogin}
               >
                 <div className="relative z-10 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mr-2"
-                  >
-                    <path d="m22 2-7 20-4-9-9-4Z" />
-                    <path d="M22 2 11 13" />
-                  </svg>
-                  <span>Bot de Telegram</span>
+                  <span>Ver mi dashboard</span>
                 </div>
 
                 <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
               </Button>
-            </div>
-
-            {/* Login Section */}
-            <div className="gradient-border p-[1px] relative z-20 flex-1">
-              <div className="glass-card p-6 shadow-lg hover:glow transition-all duration-300">
-                <p
-                  className="mb-4 text-base font-medium"
-                  style={{ color: "var(--color-foreground)" }}
-                >
-                  ¿Ya tienes una cuenta? Pulsa en 'Iniciar ahora' para acceder.
-                </p>
-                <Button
-                  className="text-base w-full px-4 md:px-8 py-5 md:py-6 relative overflow-hidden group font-medium hover:cursor-pointer"
-                  size="lg"
-                  style={{
-                    background:
-                      "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
-                    color: "white",
-                    position: "relative",
-                  }}
-                  onClick={navigateToLogin}
-                >
-                  <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                  <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10" />
-                  <span className="relative z-10 text-shadow-sm">
-                    Iniciar ahora
-                  </span>
-                </Button>
-              </div>
             </div>
           </div>
 

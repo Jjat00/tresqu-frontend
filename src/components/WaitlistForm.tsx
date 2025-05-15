@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -284,6 +290,11 @@ const WaitlistForm = () => {
 
         <div className="max-w-xs sm:max-w-sm md:max-w-md mx-auto">
           <Card className="glass-card backdrop-blur-sm shadow-lg border-0 animate-fade-up">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base sm:text-lg font-bold gradient-text text-center">
+                ¿Ya tienes una cuenta? Pulsa en 'Ver mi dashboard' para acceder.
+              </CardTitle>
+            </CardHeader>
             <CardContent className="pt-3 sm:pt-4 pb-4 sm:pb-6 px-3 sm:px-4 md:px-6">
               {verificationStep ? (
                 <VerificationCodeForm
@@ -441,9 +452,7 @@ const WaitlistForm = () => {
                         disabled={isSubmitting}
                       >
                         <span className="relative z-10">
-                          {isSubmitting
-                            ? "Procesando..."
-                            : "Continuar con Telegram"}
+                          {isSubmitting ? "Procesando..." : "Ver mi dashboard"}
                         </span>
                         <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                       </Button>
