@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, BarChart3 } from "lucide-react";
+import { MessageSquare, BarChart3, Phone } from "lucide-react";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -29,6 +29,67 @@ const Hero = () => {
               Registra tus gastos e ingresos con un mensaje y recibe análisis al
               instante. Empieza ahora, sin descargar nada.
             </p>
+          </div>
+
+          {/* Login Section */}
+          <div className="gradient-border p-[1px] relative z-20 flex-1">
+            <div className="glass-card p-8 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-xl bg-opacity-20 backdrop-blur-md border border-cyan-500/20">
+              <h3 className="text-2xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-emerald-400">
+                Comienza ahora
+              </h3>
+              <p
+                className="mb-8 text-base font-medium text-center"
+                style={{ color: "var(--color-foreground)" }}
+              >
+                Elige tu plataforma preferida para comenzar a gestionar tus
+                finanzas
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Button
+                  className="group relative overflow-hidden rounded-xl text-white font-medium hover:shadow-lg transition duration-300"
+                  size="lg"
+                  style={{
+                    background: "linear-gradient(135deg, #25D366, #128C7E)",
+                    border: "none",
+                    height: "60px",
+                  }}
+                  onClick={() => {
+                    window.open(
+                      "https://wa.me/573116331308?text=Hola%20Tresqu",
+                      "_blank"
+                    );
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-xl"></div>
+                  <div className="flex items-center justify-center space-x-2 relative z-10">
+                    <div className="flex items-center justify-center bg-white/20 rounded-full p-2">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <span className="font-semibold">Iniciar con WhatsApp</span>
+                  </div>
+                </Button>
+                <Button
+                  className="group relative overflow-hidden rounded-xl text-white font-medium hover:shadow-lg transition duration-300"
+                  size="lg"
+                  style={{
+                    background: "linear-gradient(135deg, #0088cc, #00a2ff)",
+                    border: "none",
+                    height: "60px",
+                  }}
+                  onClick={() => {
+                    window.open("https://t.me/tresqu_bot", "_blank");
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-xl"></div>
+                  <div className="flex items-center justify-center space-x-2 relative z-10">
+                    <div className="flex items-center justify-center bg-white/20 rounded-full p-2">
+                      <MessageSquare className="h-5 w-5" />
+                    </div>
+                    <span className="font-semibold">Iniciar con Telegram</span>
+                  </div>
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Dashboard Image Section */}
@@ -77,73 +138,41 @@ const Hero = () => {
           </div>
 
           <div
-            className="flex flex-col md:flex-row gap-8 w-full max-w-5xl animate-fade-in relative z-20"
+            className="flex flex-col animate-fade-in relative z-20"
             style={{
               animationDelay: "200ms",
             }}
           >
-            {/* Login Section */}
-            <div className="gradient-border p-[1px] relative z-20 flex-1">
-              <div className="glass-card p-6 shadow-lg hover:glow transition-all duration-300">
-                <p
-                  className="mb-4 text-base font-medium"
-                  style={{ color: "var(--color-foreground)" }}
-                >
-                  ¿Aún no tienes cuenta? Regístrate fácilmente usando el bot de
-                  Telegram.
-                </p>
-                <Button
-                  className="text-base w-full px-4 md:px-8 py-5 md:py-6 relative overflow-hidden group font-medium hover:cursor-pointer"
-                  size="lg"
-                  style={{
-                    background:
-                      "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
-                    color: "white",
-                    position: "relative",
-                  }}
-                  onClick={() => {
-                    window.open("https://t.me/tresqu_bot", "_blank");
-                  }}
-                >
-                  <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                  <MessageSquare className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10" />
-                  <span className="relative z-10 text-shadow-sm">
-                    Iniciar ahora
-                  </span>
-                </Button>
-              </div>
-            </div>
             {/* Telegram Bot Registration Section */}
-            <div
-              className="glass-card p-6 shadow-lg hover:glow-blue transition-all duration-300 relative z-20 flex-1"
-              style={{
-                borderColor: "rgba(96, 165, 250, 0.3)",
-              }}
-            >
+            <div className="glass-card p-8 shadow-lg hover:shadow-2xl transition-all duration-300 relative z-20 flex-1 rounded-xl bg-opacity-20 backdrop-blur-md border border-blue-500/20">
+              <h3 className="text-2xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-violet-400">
+                Acceso a Dashboard
+              </h3>
               <p
-                className="mb-4 text-base font-medium"
+                className="mb-8 text-base font-medium text-center"
                 style={{ color: "var(--color-foreground)" }}
               >
-                Ya tienes una cuenta? Puedes acceder a tu dashboard. Pulsa en
-                'Ver mi dashboard' para acceder.
+                Ya tienes una cuenta? Accede a tu dashboard para visualizar tus
+                finanzas
               </p>
 
               <Button
-                variant="outline"
-                className="text-base w-full px-4 md:px-8 py-5 md:py-6 text-white font-medium group relative z-20 overflow-hidden hover:cursor-pointer"
+                className="w-full rounded-xl group relative overflow-hidden text-white font-medium hover:shadow-lg transition duration-300"
                 size="lg"
                 style={{
-                  backgroundColor: "#008ecc",
-                  borderColor: "#0088cc",
-                  position: "relative",
+                  background: "linear-gradient(135deg, #0088cc, #6b46c1)",
+                  border: "none",
+                  height: "60px",
                 }}
                 onClick={navigateToLogin}
               >
-                <div className="relative z-10 flex items-center justify-center">
-                  <span>Ver mi dashboard</span>
+                <div className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-xl"></div>
+                <div className="flex items-center justify-center space-x-2 relative z-10">
+                  <div className="flex items-center justify-center bg-white/20 rounded-full p-2">
+                    <BarChart3 className="h-5 w-5" />
+                  </div>
+                  <span className="font-semibold">Ver mi dashboard</span>
                 </div>
-
-                <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
               </Button>
             </div>
           </div>

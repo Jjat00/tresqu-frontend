@@ -300,41 +300,80 @@ const WaitlistForm = () => {
                 </h3>
                 <p className="mt-1 sm:mt-2 mb-3 sm:mb-4 text-sm sm:text-base">
                   Para utilizar Tresqu, primero necesitas registrarte mediante
-                  nuestro bot de Telegram.
+                  nuestro bot de Telegram o WhatsApp.
                 </p>
 
-                <Button
-                  variant="outline"
-                  className="w-full text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-4 text-white font-medium group relative overflow-hidden hover:cursor-pointer"
-                  style={{
-                    backgroundColor: "#008ecc",
-                    borderColor: "#0088cc",
-                    position: "relative",
-                  }}
-                  onClick={() => {
-                    window.open("https://t.me/tresqu_bot", "_blank");
-                  }}
-                >
-                  <div className="relative z-10 flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="mr-2"
-                    >
-                      <path d="m22 2-7 20-4-9-9-4Z" />
-                      <path d="M22 2 11 13" />
-                    </svg>
-                    <span>Regístrate con el Bot de Telegram</span>
-                  </div>
-                  <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                </Button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Button
+                    variant="outline"
+                    className="text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-4 text-white font-medium group relative overflow-hidden hover:cursor-pointer rounded-lg"
+                    style={{
+                      background: "linear-gradient(135deg, #25D366, #128C7E)",
+                      borderColor: "#25D366",
+                      position: "relative",
+                    }}
+                    onClick={() => {
+                      window.open(
+                        "https://wa.me/573116331308?text=Hola%20Tresqu",
+                        "_blank"
+                      );
+                    }}
+                  >
+                    <div className="relative z-10 flex items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="mr-2"
+                      >
+                        <path d="M14.05 4C18.37 4.07 21.93 7.63 22 11.95"></path>
+                        <path d="M14.05 8C16.15 8.07 17.93 9.85 18 11.95"></path>
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                      </svg>
+                      <span>Inicia con WhatsApp</span>
+                    </div>
+                    <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-4 text-white font-medium group relative overflow-hidden hover:cursor-pointer rounded-lg"
+                    style={{
+                      background: "linear-gradient(135deg, #0088cc, #00a2ff)",
+                      borderColor: "#0088cc",
+                      position: "relative",
+                    }}
+                    onClick={() => {
+                      window.open("https://t.me/tresqu_bot", "_blank");
+                    }}
+                  >
+                    <div className="relative z-10 flex items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="mr-2"
+                      >
+                        <path d="m22 2-7 20-4-9-9-4Z" />
+                        <path d="M22 2 11 13" />
+                      </svg>
+                      <span>Inicia con Telegram</span>
+                    </div>
+                    <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                  </Button>
+                </div>
 
                 <p className="text-xs mt-2 sm:mt-3 text-foreground/80">
                   Una vez registrado, podrás iniciar sesión aquí para acceder a
