@@ -6,6 +6,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { verifyTelegramCode } from "@/services/authService";
+import { verifyWhatsappCode } from "@/services/whatsappAuthService";
 import { AuthResponse } from "@/types/auth";
 import { toast } from "sonner";
 
@@ -13,12 +14,14 @@ interface VerificationCodeFormProps {
   phoneNumber: string;
   onVerificationSuccess: (response: AuthResponse) => void;
   onCancel: () => void;
+  authMethod: "telegram" | "whatsapp";
 }
 
 const VerificationCodeForm = ({
   phoneNumber,
   onVerificationSuccess,
   onCancel,
+  authMethod,
 }: VerificationCodeFormProps) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,13 +52,26 @@ const VerificationCodeForm = ({
         ? phoneNumber
         : `+${phoneNumber}`;
 
-      console.log("Verificando código para el número:", formattedPhoneNumber);
+      console.log(
+        `Verificando código para el número (${authMethod}):`,
+        formattedPhoneNumber
+      );
       console.log("Código ingresado:", verificationCode);
 
-      const response = await verifyTelegramCode(
-        formattedPhoneNumber,
-        verificationCode
-      );
+      // Verificar según el método de autenticación seleccionado
+      let response: AuthResponse;
+
+      if (authMethod === "telegram") {
+        response = await verifyTelegramCode(
+          formattedPhoneNumber,
+          verificationCode
+        );
+      } else {
+        response = await verifyWhatsappCode(
+          formattedPhoneNumber,
+          verificationCode
+        );
+      }
 
       if (response && response.access) {
         toast.success("¡Verificación exitosa! Redirigiendo al dashboard...");
@@ -75,12 +91,22 @@ const VerificationCodeForm = ({
     }
   };
 
+  // Determinar el servicio de mensajería
+  const messagingService = authMethod === "telegram" ? "Telegram" : "WhatsApp";
+
+  // Determinar la clase de color para el botón según el servicio
+  const buttonColorClass =
+    authMethod === "telegram"
+      ? "bg-[#0088cc] hover:bg-[#0088cc]/90"
+      : "bg-success-dark hover:bg-success/90";
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-medium">Ingresa el código de verificación</h3>
       <p className="text-sm text-muted-foreground">
-        Hemos enviado un código de verificación a tu cuenta de Telegram asociada
-        al número <span className="font-medium">{phoneNumber}</span>
+        Hemos enviado un código de verificación a tu cuenta de{" "}
+        {messagingService} asociada al número{" "}
+        <span className="font-medium">{phoneNumber}</span>
       </p>
 
       <p
@@ -122,7 +148,7 @@ const VerificationCodeForm = ({
           </Button>
           <Button
             type="submit"
-            className="flex-1 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white"
+            className={`flex-1 ${buttonColorClass} text-white`}
             disabled={isSubmitting || verificationCode.length !== 6}
           >
             {isSubmitting ? "Verificando..." : "Verificar código"}

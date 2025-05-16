@@ -23,6 +23,7 @@ import {
 import VerificationCodeForm from "./VerificationCodeForm";
 import { requestTelegramCode, saveAuthTokens } from "@/services/authService";
 import { AuthResponse } from "@/types/auth";
+import { useWhatsappAuth } from "@/hooks/useWhatsappAuth";
 
 // Array of common country codes with flag emojis
 const countryCodes = [
@@ -146,40 +147,96 @@ const WaitlistForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [verificationStep, setVerificationStep] = useState(false);
   const [fullPhoneNumber, setFullPhoneNumber] = useState("");
+  const [authMethod, setAuthMethod] = useState<"telegram" | "whatsapp">(
+    "telegram"
+  );
+
+  // Hook para la autenticación con WhatsApp
+  const {
+    sendVerificationCode: sendWhatsappCode,
+    isLoading: isWhatsappLoading,
+  } = useWhatsappAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Verificar que el número de teléfono no esté vacío
-    if (!telegramPhone) {
-      toast.error("Por favor ingresa un número de teléfono válido");
-      setIsSubmitting(false);
-      return;
-    }
-    try {
-      // Formatear el número de teléfono con el código de país
-      const formattedPhoneNumber = telegramCountryCode.startsWith("+")
-        ? `${telegramCountryCode}${telegramPhone}`
-        : `+${telegramCountryCode}${telegramPhone}`;
-      setFullPhoneNumber(formattedPhoneNumber);
-      console.log("Enviando solicitud para:", formattedPhoneNumber);
-
-      // Solicitar código de verificación
-      const response = await requestTelegramCode(formattedPhoneNumber);
-      if (response.success) {
-        toast.success(response.message);
-        setVerificationStep(true);
-      } else {
-        toast.error("Error al solicitar el código de verificación");
+    if (activeTab === "telegram") {
+      // Verificar que el número de teléfono no esté vacío
+      if (!telegramPhone) {
+        toast.error("Por favor ingresa un número de teléfono válido");
+        setIsSubmitting(false);
+        return;
       }
-    } catch (error) {
-      console.error("Error al solicitar código:", error);
-      toast.error(
-        "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
-      );
-    } finally {
-      setIsSubmitting(false);
+      try {
+        // Formatear el número de teléfono con el código de país
+        const formattedPhoneNumber = telegramCountryCode.startsWith("+")
+          ? `${telegramCountryCode}${telegramPhone}`
+          : `+${telegramCountryCode}${telegramPhone}`;
+        setFullPhoneNumber(formattedPhoneNumber);
+        setAuthMethod("telegram");
+        console.log("Enviando solicitud para:", formattedPhoneNumber);
+
+        // Solicitar código de verificación
+        const response = await requestTelegramCode(formattedPhoneNumber);
+        if (response.success) {
+          toast.success(response.message);
+          setVerificationStep(true);
+        } else {
+          toast.error("Error al solicitar el código de verificación");
+        }
+      } catch (error) {
+        console.error("Error al solicitar código:", error);
+        toast.error(
+          "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else if (activeTab === "whatsapp") {
+      // Verificar que el número de teléfono no esté vacío
+      if (!phoneNumber) {
+        toast.error("Por favor ingresa un número de teléfono válido");
+        setIsSubmitting(false);
+        return;
+      }
+      try {
+        // Formatear el número de teléfono con el código de país
+        const formattedPhoneNumber = countryCode.startsWith("+")
+          ? `${countryCode}${phoneNumber}`
+          : `+${countryCode}${phoneNumber}`;
+        setFullPhoneNumber(formattedPhoneNumber);
+        setAuthMethod("whatsapp");
+        console.log("Enviando solicitud WhatsApp para:", formattedPhoneNumber);
+
+        // Solicitar código de verificación por WhatsApp
+        const response = await sendWhatsappCode(formattedPhoneNumber);
+
+        console.log("Respuesta WhatsApp:", response);
+
+        // Si tenemos una respuesta (incluso si no tiene success=true) y el código fue enviado
+        // avanzamos al paso de verificación
+        if (response) {
+          // Mostrar el mensaje de la respuesta si existe
+          if (response.message) {
+            toast.success(response.message);
+          } else {
+            toast.success("Código enviado a tu WhatsApp");
+          }
+
+          // Avanzar al paso de verificación
+          setVerificationStep(true);
+        } else {
+          toast.error("Error al solicitar el código de verificación");
+        }
+      } catch (error) {
+        console.error("Error al solicitar código WhatsApp:", error);
+        toast.error(
+          "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
   const handleVerificationSuccess = (response: AuthResponse) => {
@@ -301,6 +358,7 @@ const WaitlistForm = () => {
                   phoneNumber={fullPhoneNumber}
                   onVerificationSuccess={handleVerificationSuccess}
                   onCancel={handleCancelVerification}
+                  authMethod={authMethod}
                 />
               ) : (
                 <Tabs
@@ -326,7 +384,10 @@ const WaitlistForm = () => {
                   </TabsList>
 
                   <TabsContent value="whatsapp">
-                    <form className="space-y-2 sm:space-y-3">
+                    <form
+                      onSubmit={handleSubmit}
+                      className="space-y-2 sm:space-y-3"
+                    >
                       <div className="space-y-1">
                         <Label
                           htmlFor="whatsapp-number"
@@ -378,11 +439,13 @@ const WaitlistForm = () => {
                       </div>
 
                       <Button
-                        type="button"
+                        type="submit"
                         className="w-full bg-success-dark hover:bg-success/90 text-white font-medium transform transition-all duration-300 mt-3 sm:mt-4 py-1.5 sm:py-2 h-8 sm:h-9 text-xs sm:text-sm"
-                        disabled={true}
+                        disabled={isSubmitting || isWhatsappLoading}
                       >
-                        Próximamente
+                        {isSubmitting || isWhatsappLoading
+                          ? "Procesando..."
+                          : "Ver mi dashboard"}
                       </Button>
 
                       <p className="text-xs text-center text-foreground/80 mt-2 sm:mt-3">
