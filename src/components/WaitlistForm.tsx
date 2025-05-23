@@ -139,7 +139,7 @@ const countryCodes = [
 ];
 const WaitlistForm = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("telegram");
+  const [activeTab, setActiveTab] = useState("whatsapp");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [telegramPhone, setTelegramPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+57"); // Default to Colombia

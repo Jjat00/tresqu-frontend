@@ -66,3 +66,57 @@ export interface DonutChartParams {
 export interface BarStackedChartParams extends DonutChartParams {
   group_by?: GroupByType;
 }
+
+// Tipos para la gráfica de comparación mensual
+export interface MonthlyComparisonChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+    borderWidth: number;
+    fill: boolean;
+    type: string;
+    tension: number;
+  }[];
+  month_info: {
+    month: number;
+    year: number;
+    month_name: string;
+    total_days: number;
+  };
+  financial_summary: {
+    total_monthly_income: number;
+    total_expenses_to_date: number;
+    remaining_budget: number;
+    percentage_consumed: number;
+    financial_status: "saludable" | "precaución" | "advertencia" | "crítico";
+    days_to_exceed_income: number | null;
+  };
+  chart_config: {
+    type: string;
+    responsive: boolean;
+    scales: {
+      y: {
+        beginAtZero: boolean;
+        title: {
+          display: boolean;
+          text: string;
+        };
+      };
+      x: {
+        title: {
+          display: boolean;
+          text: string;
+        };
+      };
+    };
+  };
+}
+
+export interface MonthlyComparisonChartParams {
+  month?: number;
+  year?: number;
+  timezone?: string;
+}

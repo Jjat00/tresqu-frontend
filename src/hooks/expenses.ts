@@ -23,6 +23,9 @@ export const useDeleteExpense = () => {
           queryKey: ["expensesStackedBarChartData"],
         }),
         queryClient.refetchQueries({ queryKey: ["expensesComparativeData"] }),
+        queryClient.refetchQueries({
+          queryKey: ["monthlyComparisonChartData"],
+        }),
       ]);
     },
   });

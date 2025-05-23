@@ -6,6 +6,7 @@ import { DateRange } from "./DateRangePicker";
 import ChartJSPieChart from "./charts/ChartJSPieChart";
 import ChartJSBarChart from "./charts/ChartJSBarChart";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
+import { MonthlyComparisonChart } from "./expenses/MonthlyComparisonChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ArrowDownIcon,
@@ -288,6 +289,14 @@ const ExpensesTab = ({
           activeTab={activeTab || "expenses"}
           dateRange={dateRange}
         />
+      </div>
+
+      {/* Gráfico de comparación mensual: Ingresos vs Gastos */}
+      <div
+        className="glass-card animate-fade-up"
+        style={{ animationDelay: "0.65s" }}
+      >
+        <MonthlyComparisonChart />
       </div>
 
       <Card
