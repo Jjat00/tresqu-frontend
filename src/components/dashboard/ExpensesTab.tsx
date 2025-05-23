@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ExpensesTable from "./expenses/ExpensesTable";
-import NewExpenseDialog, { ExpenseFormData } from "./expenses/NewExpenseDialog";
+import { ExpenseFormData } from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
 import ChartJSPieChart from "./charts/ChartJSPieChart";
@@ -9,8 +9,6 @@ import ComparativeLineChart from "./charts/ComparativeLineChart";
 import { MonthlyComparisonChart } from "./expenses/MonthlyComparisonChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
   TrendingUpIcon,
   WalletIcon,
   CalendarIcon,
@@ -34,7 +32,7 @@ const ExpensesTab = ({
   const [localViewMode, setLocalViewMode] = useState<"month" | "year">(
     viewMode === "year" ? "year" : "month"
   );
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [categoryFilter] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
 
@@ -106,11 +104,6 @@ const ExpensesTab = ({
   useEffect(() => {
     setLocalViewMode(viewMode === "year" ? "year" : "month");
   }, [viewMode]);
-
-  const handleAddExpense = (expense: ExpenseFormData) => {
-    console.log("Adding new expense:", expense);
-    // Here you would add logic to add the expense
-  };
 
   const handleShare = () => {
     console.log("Sharing Tresqu");

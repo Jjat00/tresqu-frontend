@@ -78,6 +78,8 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
         return "text-orange-600";
       case "crítico":
         return "text-red-600";
+      case "neutral":
+        return "text-gray-600";
       default:
         return "text-gray-600";
     }
@@ -91,6 +93,8 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
       case "advertencia":
       case "crítico":
         return <AlertTriangleIcon className="h-5 w-5 text-red-600" />;
+      case "neutral":
+        return <CalendarIcon className="h-5 w-5 text-gray-600" />;
       default:
         return <TrendingUpIcon className="h-5 w-5 text-gray-600" />;
     }
@@ -149,6 +153,30 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
       </Card>
     );
   }
+
+  const getFinancialStatusDisplay = () => {
+    if (data.financial_summary.total_monthly_income === 0) {
+      if (data.financial_summary.total_expenses_to_date > 0) {
+        return {
+          status: "crítico",
+          description: "Sin ingresos registrados",
+        };
+      } else {
+        return {
+          status: "neutral",
+          description: "Sin actividad financiera",
+        };
+      }
+    }
+    return {
+      status: data.financial_summary.financial_status,
+      description: `${data.financial_summary.percentage_consumed.toFixed(
+        1
+      )}% consumido`,
+    };
+  };
+
+  const financialStatus = getFinancialStatusDisplay();
 
   const chartOptions = {
     responsive: true,
@@ -218,7 +246,10 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
       y: {
         display: true,
         beginAtZero: true,
-        max: data.financial_summary.total_monthly_income * 1.2,
+        max:
+          data.financial_summary.total_monthly_income > 0
+            ? data.financial_summary.total_monthly_income * 1.2
+            : Math.max(...data.datasets.flatMap((d) => d.data)) * 1.2, // Si no hay ingresos, usar el máximo de gastos
         title: {
           display: window.innerWidth >= 640,
           text: "Monto",
@@ -268,20 +299,33 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
           return value > prevValue ? 4 : 0; // Solo si hay incremento
         });
       } else if (dataset.label?.toLowerCase().includes("ingresos")) {
-        // Para ingresos, mostrar puntos solo donde hay cambios o datos reales
-        pointRadius = dataset.data.map((value, i) => {
-          // Si es una línea constante de ingresos, solo mostrar algunos puntos de referencia
-          // pero verificar que realmente hay ingresos
-          if (value > 0) {
-            // Mostrar punto solo en el primer día con ingresos y el último día del mes
-            if (i === 0 || i === dataset.data.length - 1) {
-              return 4;
+        // Para ingresos, manejar el caso especial cuando todos son cero
+        const hasIncome = dataset.data.some((value) => value > 0);
+
+        if (!hasIncome) {
+          // Si no hay ingresos, mostrar solo algunos puntos de referencia en cero
+          pointRadius = dataset.data.map((value, i) => {
+            if (
+              i === 0 ||
+              i === Math.floor(dataset.data.length / 2) ||
+              i === dataset.data.length - 1
+            ) {
+              return 3; // Puntos más pequeños para indicar línea en cero
             }
-            // Para el resto, no mostrar puntos (línea constante limpia)
             return 0;
-          }
-          return 0; // No hay ingresos, no mostrar punto
-        });
+          });
+        } else {
+          // Si hay ingresos, comportamiento normal
+          pointRadius = dataset.data.map((value, i) => {
+            if (value > 0) {
+              if (i === 0 || i === dataset.data.length - 1) {
+                return 4;
+              }
+              return 0;
+            }
+            return 0;
+          });
+        }
       } else {
         // Para otros datasets, comportamiento normal
         pointRadius = dataset.data.map(() => 4);
@@ -438,36 +482,48 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
               <CardTitle className="text-xs sm:text-sm font-medium gradient-text">
                 Estado Financiero
               </CardTitle>
-              {getStatusIcon(data.financial_summary.financial_status)}
+              {getStatusIcon(financialStatus.status)}
             </CardHeader>
             <CardContent className="pt-0">
               <div
                 className={`text-lg sm:text-2xl font-bold capitalize ${getStatusColor(
-                  data.financial_summary.financial_status
+                  financialStatus.status
                 )}`}
               >
-                {data.financial_summary.financial_status}
+                {financialStatus.status}
               </div>
               <p className="text-xs text-muted-foreground mt-auto">
-                {data.financial_summary.percentage_consumed.toFixed(1)}%
-                consumido
+                {financialStatus.description}
               </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Información adicional */}
-        {data.financial_summary.days_to_exceed_income && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+        {data.financial_summary.total_monthly_income === 0 && (
+          <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
             <div className="flex items-center gap-2">
-              <AlertTriangleIcon className="h-5 w-5 text-red-600" />
-              <p className="text-red-800 font-medium">
-                Los gastos superaron los ingresos el día{" "}
-                {data.financial_summary.days_to_exceed_income} del mes
+              <AlertTriangleIcon className="h-5 w-5 text-yellow-600" />
+              <p className="text-yellow-800 font-medium">
+                No hay ingresos registrados para este mes. La línea verde
+                representa ingresos en $0.
               </p>
             </div>
           </div>
         )}
+
+        {data.financial_summary.days_to_exceed_income &&
+          data.financial_summary.total_monthly_income > 0 && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center gap-2">
+                <AlertTriangleIcon className="h-5 w-5 text-red-600" />
+                <p className="text-red-800 font-medium">
+                  Los gastos superaron los ingresos el día{" "}
+                  {data.financial_summary.days_to_exceed_income} del mes
+                </p>
+              </div>
+            </div>
+          )}
       </CardContent>
     </Card>
   );
