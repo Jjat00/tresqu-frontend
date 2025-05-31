@@ -1,6 +1,5 @@
 import { AuthResponse, RequestCodeResponse } from "@/types/auth";
 import { apiClient } from "./api";
-import { env } from "@/config";
 import { saveAuthTokens } from "./authService";
 
 const SEND_CODE_PATH = "/whatsapp/send-code/";
@@ -25,14 +24,7 @@ export const requestWhatsappCode = async (
 
     console.log("Número formateado:", formattedPhoneNumber);
 
-    // Obtener nombre de instancia de WhatsApp desde la configuración
-    const instanceName = env.instanceName;
-
-    console.log("Endpoint completo:", `${SEND_CODE_PATH}${instanceName}/`);
-    console.log("Instancia de WhatsApp:", instanceName);
-    console.log("Datos enviados:", { phone_number: formattedPhoneNumber });
-
-    const response = await apiClient.post(`${SEND_CODE_PATH}${instanceName}/`, {
+    const response = await apiClient.post(SEND_CODE_PATH, {
       phone_number: formattedPhoneNumber,
     });
 
