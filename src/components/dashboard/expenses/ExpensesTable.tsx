@@ -149,8 +149,18 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   };
 
   const formatDate = (dateString: string) => {
+    // Si el string es YYYY-MM-DD, parsear como local
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split("-");
+      const date = new Date(Number(year), Number(month) - 1, Number(day));
+      return date.toLocaleDateString("es-CO", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    }
+    // Si no, usar el método anterior
     const date = new Date(dateString);
-    // Usar la fecha local directamente
     return date.toLocaleDateString("es-CO", {
       year: "numeric",
       month: "2-digit",
