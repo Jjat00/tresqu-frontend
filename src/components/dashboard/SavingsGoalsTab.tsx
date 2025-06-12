@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,6 +17,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -33,6 +35,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Plus,
   BarChart3,
@@ -40,95 +43,263 @@ import {
   Download,
   Share2,
   Target,
+  Play,
+  Pause,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  TrendingUp,
+  Calendar,
+  DollarSign,
+  PiggyBank,
+  Star,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-// Sample data for savings history
-const savingsHistory = [
-  {
-    month: "Enero 2025",
-    saved: 1500,
-    target: 2000,
-    percentage: 75,
-  },
-  {
-    month: "Febrero 2025",
-    saved: 2200,
-    target: 2000,
-    percentage: 110,
-  },
-  {
-    month: "Marzo 2025",
-    saved: 1800,
-    target: 2000,
-    percentage: 90,
-  },
-  {
-    month: "Abril 2025",
-    saved: 2500,
-    target: 2000,
-    percentage: 125,
-  },
-];
+// Hooks personalizados
+import {
+  useSavingsGoals,
+  useSavingsAnalytics,
+  useSavingsCategoryDistribution,
+  useSavingsProgressOverTime,
+} from "@/hooks/useSavings";
+import { useSavingsCategories } from "@/hooks/useSavingsCategories";
+import { useSavingsTemplates } from "@/hooks/useSavingsTemplates";
+import { useSavingsDeposits } from "@/hooks/useSavingsDeposits";
 
-// Sample data for savings goals
-const savingsGoalsData = [
-  {
-    id: 1,
-    name: "Viaje a Cancún",
-    target: 15000,
-    saved: 9000,
-    deadline: "2025-08-01",
-    monthlyGoal: 2000,
-    progress: 60,
-  },
-  {
-    id: 2,
-    name: "MacBook Pro",
-    target: 25000,
-    saved: 5000,
-    deadline: "2025-12-15",
-    monthlyGoal: 3000,
-    progress: 20,
-  },
-  {
-    id: 3,
-    name: "Fondo de emergencia",
-    target: 50000,
-    saved: 20000,
-    deadline: "2026-01-30",
-    monthlyGoal: 3500,
-    progress: 40,
-  },
-];
+// Tipos
+import {
+  CreateSavingsGoalRequest,
+  SavingsGoalStatus,
+  SavingsGoalPriority,
+  AutoSaveFrequency,
+  SavingsGoalWithCategory,
+  CreateSavingsDepositRequest,
+} from "@/types/savings";
+
+// Utilidades
+import {
+  formatCurrency,
+  formatPercentage,
+  formatDate,
+  getPriorityText,
+  getPriorityColor,
+  getStatusText,
+  getStatusColor,
+  getProgressColor,
+  getFrequencyText,
+  getSavingRecommendation,
+  isGoalAtRisk,
+  getDaysUntilTarget,
+  calculateCompletionTime,
+} from "@/utils/savingsUtils";
+
 const SavingsGoalsTab = () => {
-  const [timeFilter, setTimeFilter] = useState("year");
+  // Estados locales
+  const [timeFilter, setTimeFilter] = useState<
+    "week" | "month" | "quarter" | "year"
+  >("month");
+  const [statusFilter, setStatusFilter] = useState<SavingsGoalStatus | "all">(
+    "all"
+  );
   const [newGoalOpen, setNewGoalOpen] = useState(false);
-  const [newGoal, setNewGoal] = useState({
-    name: "",
-    target: "",
-    deadline: "",
-  });
-  const handleCreateGoal = () => {
-    // Here you would add the logic to create a new goal
-    console.log("Creating new goal:", newGoal);
+  const [newDepositOpen, setNewDepositOpen] = useState(false);
+  const [selectedGoalId, setSelectedGoalId] = useState<string>("");
+  const [templatesOpen, setTemplatesOpen] = useState(false);
 
-    // Close the dialog and reset form
-    setNewGoalOpen(false);
+  // Formulario nueva meta
+  const [newGoal, setNewGoal] = useState<
+    Omit<CreateSavingsGoalRequest, "category"> & { category: string }
+  >({
+    category: "",
+    name: "",
+    description: "",
+    target_amount: "",
+    target_date: "",
+    priority: "medium" as SavingsGoalPriority,
+    auto_save_enabled: false,
+    auto_save_amount: "",
+    auto_save_frequency: "monthly" as AutoSaveFrequency,
+  });
+
+  // Formulario nuevo depósito
+  const [newDeposit, setNewDeposit] = useState<CreateSavingsDepositRequest>({
+    savings_goal: "",
+    amount: "",
+    transaction_type: "deposit",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
+  });
+
+  // Hooks de datos
+  const {
+    goals,
+    loading: goalsLoading,
+    error: goalsError,
+    createGoal,
+    pauseGoal,
+    resumeGoal,
+    completeGoal,
+    refetch: refetchGoals,
+  } = useSavingsGoals({
+    status: statusFilter === "all" ? undefined : statusFilter,
+  });
+
+  const { analytics, loading: analyticsLoading } = useSavingsAnalytics();
+
+  // Comentadas temporalmente hasta implementar gráficos
+  // const { distribution, loading: distributionLoading } =
+  //   useSavingsCategoryDistribution();
+
+  // const { progress, loading: progressLoading } = useSavingsProgressOverTime({
+  //   period: timeFilter,
+  // });
+
+  const { categories, loading: categoriesLoading } = useSavingsCategories();
+
+  const {
+    templates,
+    loading: templatesLoading,
+    createGoalFromTemplate,
+  } = useSavingsTemplates();
+
+  const { createDeposit } = useSavingsDeposits();
+
+  // Filtrar metas activas para mostrar en las cards principales
+  const activeGoals = goals.filter((goal) => goal.status === "active");
+
+  const handleCreateGoal = async () => {
+    try {
+      await createGoal(newGoal);
+      setNewGoalOpen(false);
+      resetNewGoalForm();
+    } catch (error) {
+      console.error("Error al crear meta:", error);
+    }
+  };
+
+  const handleCreateDeposit = async () => {
+    try {
+      await createDeposit(newDeposit);
+      setNewDepositOpen(false);
+      resetNewDepositForm();
+      refetchGoals(); // Actualizar metas para reflejar nuevos montos
+    } catch (error) {
+      console.error("Error al crear depósito:", error);
+    }
+  };
+
+  const handleCreateFromTemplate = async (templateId: string) => {
+    try {
+      await createGoalFromTemplate(templateId);
+      setTemplatesOpen(false);
+      refetchGoals();
+    } catch (error) {
+      console.error("Error al crear meta desde plantilla:", error);
+    }
+  };
+
+  const handleGoalAction = async (
+    goalId: string,
+    action: "pause" | "resume" | "complete"
+  ) => {
+    try {
+      switch (action) {
+        case "pause":
+          await pauseGoal(goalId);
+          break;
+        case "resume":
+          await resumeGoal(goalId);
+          break;
+        case "complete":
+          await completeGoal(goalId);
+          break;
+      }
+    } catch (error) {
+      console.error(`Error al ${action} meta:`, error);
+    }
+  };
+
+  const resetNewGoalForm = () => {
     setNewGoal({
+      category: "",
       name: "",
-      target: "",
-      deadline: "",
+      description: "",
+      target_amount: "",
+      target_date: "",
+      priority: "medium",
+      auto_save_enabled: false,
+      auto_save_amount: "",
+      auto_save_frequency: "monthly",
     });
   };
+
+  const resetNewDepositForm = () => {
+    setNewDeposit({
+      savings_goal: "",
+      amount: "",
+      transaction_type: "deposit",
+      description: "",
+      date: new Date().toISOString().split("T")[0],
+    });
+  };
+
+  if (goalsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Cargando metas de ahorro...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (goalsError) {
+    return (
+      <div className="space-y-6 py-0 my-[60px]">
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Error al cargar datos de ahorros: {goalsError}
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 py-0 my-[60px]">
+      {/* Header con filtros y acciones */}
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-wrap gap-2">
-          <Select value={timeFilter} onValueChange={setTimeFilter}>
+          <Select
+            value={statusFilter}
+            onValueChange={(value: SavingsGoalStatus | "all") =>
+              setStatusFilter(value)
+            }
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              <SelectItem value="active">Activas</SelectItem>
+              <SelectItem value="completed">Completadas</SelectItem>
+              <SelectItem value="paused">Pausadas</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={timeFilter}
+            onValueChange={(value: typeof timeFilter) => setTimeFilter(value)}
+          >
             <SelectTrigger className="w-[150px]">
               <SelectValue placeholder="Período" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="week">Esta semana</SelectItem>
               <SelectItem value="month">Este mes</SelectItem>
               <SelectItem value="quarter">Trimestre</SelectItem>
               <SelectItem value="year">Este año</SelectItem>
@@ -136,84 +307,397 @@ const SavingsGoalsTab = () => {
           </Select>
         </div>
 
-        <Dialog open={newGoalOpen} onOpenChange={setNewGoalOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-success hover:bg-success/90">
-              <Plus className="mr-2 h-4 w-4" />
-              Nueva meta de ahorro
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Crear nueva meta de ahorro</DialogTitle>
-              <DialogDescription>
-                Define tu meta de ahorro con un nombre, cantidad y fecha límite.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="name" className="text-right text-sm">
-                  Nombre
-                </label>
-                <Input
-                  id="name"
-                  value={newGoal.name}
-                  onChange={(e) =>
-                    setNewGoal({
-                      ...newGoal,
-                      name: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                  placeholder="Ej: Viaje a Europa"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="target" className="text-right text-sm">
-                  Monto
-                </label>
-                <Input
-                  id="target"
-                  value={newGoal.target}
-                  onChange={(e) =>
-                    setNewGoal({
-                      ...newGoal,
-                      target: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                  type="number"
-                  placeholder="$0.00"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="deadline" className="text-right text-sm">
-                  Fecha límite
-                </label>
-                <Input
-                  id="deadline"
-                  value={newGoal.deadline}
-                  onChange={(e) =>
-                    setNewGoal({
-                      ...newGoal,
-                      deadline: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                  type="date"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setNewGoalOpen(false)}>
-                Cancelar
+        <div className="flex gap-2">
+          {/* Botón Ver Plantillas */}
+          <Dialog open={templatesOpen} onOpenChange={setTemplatesOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Star className="mr-2 h-4 w-4" />
+                Plantillas
               </Button>
-              <Button onClick={handleCreateGoal}>Crear meta</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl">
+              <DialogHeader>
+                <DialogTitle>Plantillas de Ahorro Expertas</DialogTitle>
+                <DialogDescription>
+                  Elige una plantilla para crear rápidamente una meta de ahorro
+                  basada en mejores prácticas financieras.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto">
+                {templatesLoading ? (
+                  <div className="col-span-2 text-center py-8">
+                    Cargando plantillas...
+                  </div>
+                ) : (
+                  templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="cursor-pointer hover:shadow-md transition-shadow"
+                    >
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">
+                          {template.name}
+                        </CardTitle>
+                        <Badge
+                          variant="outline"
+                          style={{ color: getPriorityColor(template.priority) }}
+                        >
+                          {getPriorityText(template.priority)}
+                        </Badge>
+                      </CardHeader>
+                      <CardContent className="pb-2">
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {template.description}
+                        </p>
+                        <div className="flex justify-between text-sm">
+                          <span>
+                            Monto sugerido:{" "}
+                            {formatCurrency(template.suggested_amount)}
+                          </span>
+                          <span>
+                            {template.suggested_timeframe_months} meses
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {template.financial_advice}
+                        </p>
+                      </CardContent>
+                      <CardFooter>
+                        <Button
+                          onClick={() => handleCreateFromTemplate(template.id)}
+                          className="w-full"
+                          size="sm"
+                        >
+                          Crear Meta
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Botón Agregar Depósito */}
+          <Dialog open={newDepositOpen} onOpenChange={setNewDepositOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <DollarSign className="mr-2 h-4 w-4" />
+                Agregar Depósito
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Agregar Depósito</DialogTitle>
+                <DialogDescription>
+                  Registra un nuevo depósito a una de tus metas de ahorro.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-select" className="text-right">
+                    Meta
+                  </Label>
+                  <Select
+                    value={newDeposit.savings_goal}
+                    onValueChange={(value) =>
+                      setNewDeposit({ ...newDeposit, savings_goal: value })
+                    }
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="Selecciona una meta" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeGoals.map((goal) => (
+                        <SelectItem key={goal.id} value={goal.id}>
+                          {goal.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="deposit-amount" className="text-right">
+                    Monto
+                  </Label>
+                  <Input
+                    id="deposit-amount"
+                    value={newDeposit.amount}
+                    onChange={(e) =>
+                      setNewDeposit({ ...newDeposit, amount: e.target.value })
+                    }
+                    className="col-span-3"
+                    type="number"
+                    placeholder="$0"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="deposit-description" className="text-right">
+                    Descripción
+                  </Label>
+                  <Input
+                    id="deposit-description"
+                    value={newDeposit.description}
+                    onChange={(e) =>
+                      setNewDeposit({
+                        ...newDeposit,
+                        description: e.target.value,
+                      })
+                    }
+                    className="col-span-3"
+                    placeholder="Depósito mensual"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="deposit-date" className="text-right">
+                    Fecha
+                  </Label>
+                  <Input
+                    id="deposit-date"
+                    value={newDeposit.date}
+                    onChange={(e) =>
+                      setNewDeposit({ ...newDeposit, date: e.target.value })
+                    }
+                    className="col-span-3"
+                    type="date"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setNewDepositOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleCreateDeposit}
+                  disabled={!newDeposit.savings_goal || !newDeposit.amount}
+                >
+                  Agregar Depósito
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Botón Nueva Meta */}
+          <Dialog open={newGoalOpen} onOpenChange={setNewGoalOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-success hover:bg-success/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Nueva meta de ahorro
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Crear nueva meta de ahorro</DialogTitle>
+                <DialogDescription>
+                  Define tu meta de ahorro con todos los detalles necesarios.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-category" className="text-right">
+                    Categoría
+                  </Label>
+                  <Select
+                    value={newGoal.category}
+                    onValueChange={(value) =>
+                      setNewGoal({ ...newGoal, category: value })
+                    }
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="Selecciona una categoría" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{ backgroundColor: category.color }}
+                            ></div>
+                            {category.name}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-name" className="text-right">
+                    Nombre
+                  </Label>
+                  <Input
+                    id="goal-name"
+                    value={newGoal.name}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, name: e.target.value })
+                    }
+                    className="col-span-3"
+                    placeholder="Ej: Viaje a Europa"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-description" className="text-right">
+                    Descripción
+                  </Label>
+                  <Textarea
+                    id="goal-description"
+                    value={newGoal.description}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, description: e.target.value })
+                    }
+                    className="col-span-3"
+                    placeholder="Describe tu meta de ahorro..."
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-amount" className="text-right">
+                    Monto objetivo
+                  </Label>
+                  <Input
+                    id="goal-amount"
+                    value={newGoal.target_amount}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, target_amount: e.target.value })
+                    }
+                    className="col-span-3"
+                    type="number"
+                    placeholder="$0"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-date" className="text-right">
+                    Fecha objetivo
+                  </Label>
+                  <Input
+                    id="goal-date"
+                    value={newGoal.target_date}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, target_date: e.target.value })
+                    }
+                    className="col-span-3"
+                    type="date"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goal-priority" className="text-right">
+                    Prioridad
+                  </Label>
+                  <Select
+                    value={newGoal.priority}
+                    onValueChange={(value: SavingsGoalPriority) =>
+                      setNewGoal({ ...newGoal, priority: value })
+                    }
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="urgent">Urgente</SelectItem>
+                      <SelectItem value="high">Alta</SelectItem>
+                      <SelectItem value="medium">Media</SelectItem>
+                      <SelectItem value="low">Baja</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* Sección de ahorro automático */}
+                <div className="border-t pt-4">
+                  <h4 className="font-medium mb-2">
+                    Ahorro Automático (Opcional)
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="auto-save"
+                        checked={newGoal.auto_save_enabled}
+                        onChange={(e) =>
+                          setNewGoal({
+                            ...newGoal,
+                            auto_save_enabled: e.target.checked,
+                          })
+                        }
+                      />
+                      <Label htmlFor="auto-save">
+                        Habilitar ahorro automático
+                      </Label>
+                    </div>
+                    {newGoal.auto_save_enabled && (
+                      <>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="auto-amount" className="text-right">
+                            Monto
+                          </Label>
+                          <Input
+                            id="auto-amount"
+                            value={newGoal.auto_save_amount}
+                            onChange={(e) =>
+                              setNewGoal({
+                                ...newGoal,
+                                auto_save_amount: e.target.value,
+                              })
+                            }
+                            className="col-span-3"
+                            type="number"
+                            placeholder="$0"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label
+                            htmlFor="auto-frequency"
+                            className="text-right"
+                          >
+                            Frecuencia
+                          </Label>
+                          <Select
+                            value={newGoal.auto_save_frequency}
+                            onValueChange={(value: AutoSaveFrequency) =>
+                              setNewGoal({
+                                ...newGoal,
+                                auto_save_frequency: value,
+                              })
+                            }
+                          >
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="daily">Diario</SelectItem>
+                              <SelectItem value="weekly">Semanal</SelectItem>
+                              <SelectItem value="monthly">Mensual</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setNewGoalOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleCreateGoal}
+                  disabled={
+                    !newGoal.category ||
+                    !newGoal.name ||
+                    !newGoal.target_amount ||
+                    !newGoal.target_date
+                  }
+                >
+                  Crear meta
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
+      {/* Resumen de estadísticas */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -222,91 +706,47 @@ const SavingsGoalsTab = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-muted/30 p-4 rounded-lg">
-              <p className="text-sm text-muted-foreground">Ahorrado este mes</p>
-              <p className="text-2xl font-bold text-success">$2,500</p>
-              <p className="text-sm text-success flex items-center mt-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4 mr-1"
-                >
-                  <path d="m18 8-6-6-6 6" />
-                  <path d="M18 22H6a2 2 0 0 1-2-2V8" />
-                </svg>
-                12% vs. mes anterior
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-muted/30 p-4 rounded-lg">
               <p className="text-sm text-muted-foreground">Total ahorrado</p>
-              <p className="text-2xl font-bold">$34,000</p>
-              <p className="text-sm flex items-center mt-1">Desde enero 2025</p>
+              <p className="text-2xl font-bold text-success">
+                {analytics ? formatCurrency(analytics.total_saved) : "..."}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                de {analytics ? formatCurrency(analytics.total_target) : "..."}{" "}
+                objetivo
+              </p>
             </div>
             <div className="bg-muted/30 p-4 rounded-lg">
-              <p className="text-sm text-muted-foreground">
-                Meta mensual sugerida
+              <p className="text-sm text-muted-foreground">Progreso general</p>
+              <p className="text-2xl font-bold text-highlight">
+                {analytics
+                  ? formatPercentage(analytics.overall_progress)
+                  : "..."}
               </p>
-              <p className="text-2xl font-bold text-highlight">$3,200</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Basado en tus ingresos y gastos
+              <p className="text-sm text-muted-foreground">completado</p>
+            </div>
+            <div className="bg-muted/30 p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground">Metas activas</p>
+              <p className="text-2xl font-bold">
+                {analytics ? analytics.active_goals : "..."}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                de {analytics ? analytics.total_goals : "..."} totales
               </p>
             </div>
-          </div>
-
-          <div className="rounded-md border mb-6">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Mes</TableHead>
-                  <TableHead>Ahorrado</TableHead>
-                  <TableHead>Meta</TableHead>
-                  <TableHead>Progreso</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {savingsHistory.map((month, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{month.month}</TableCell>
-                    <TableCell>${month.saved.toLocaleString()}</TableCell>
-                    <TableCell>${month.target.toLocaleString()}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Progress
-                          value={month.percentage}
-                          className="h-2 flex-1"
-                        />
-                        <span className="text-xs w-12">
-                          {month.percentage}%
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" size="sm" className="mx-0 my-0 py-0 px-0">
-              <Download className="mr-2 h-4 w-4" />
-              Exportar PDF
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Exportar Excel
-            </Button>
+            <div className="bg-muted/30 p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground">Ahorro mensual</p>
+              <p className="text-2xl font-bold text-highlight">
+                {analytics ? formatCurrency(analytics.monthly_deposits) : "..."}
+              </p>
+              <p className="text-sm text-muted-foreground">promedio</p>
+            </div>
           </div>
         </CardContent>
       </Card>
 
+      {/* Metas activas principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -317,76 +757,219 @@ const SavingsGoalsTab = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {savingsGoalsData.map((goal) => (
-                <div key={goal.id} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="font-semibold">{goal.name}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Meta: ${goal.target.toLocaleString()} | Fecha:{" "}
-                        {new Date(goal.deadline).toLocaleDateString()}
-                      </p>
+              {activeGoals.slice(0, 3).map((goal) => {
+                const goalWithCategory = goal as SavingsGoalWithCategory;
+                const daysLeft = getDaysUntilTarget(goal.target_date);
+                const isRisk = isGoalAtRisk(goal);
+
+                return (
+                  <div key={goal.id} className="border rounded-lg p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{
+                              backgroundColor: goalWithCategory.category.color,
+                            }}
+                          ></div>
+                          <h4 className="font-semibold">{goal.name}</h4>
+                          {isRisk && (
+                            <AlertCircle className="h-4 w-4 text-red-500" />
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Meta: {formatCurrency(goal.target_amount)} |{" "}
+                          {formatDate(goal.target_date)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {daysLeft > 0
+                            ? `${daysLeft} días restantes`
+                            : "Fecha vencida"}
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        <Badge
+                          variant="outline"
+                          style={{ color: getPriorityColor(goal.priority) }}
+                        >
+                          {getPriorityText(goal.priority)}
+                        </Badge>
+                        {goal.auto_save_enabled && (
+                          <Badge variant="outline">
+                            <PiggyBank className="h-3 w-3 mr-1" />
+                            Auto
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-sm bg-muted px-2 py-1 rounded-full">
-                      ${goal.monthlyGoal.toLocaleString()}/mes
-                    </span>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>${goal.saved.toLocaleString()} ahorrado</span>
-                      <span>{goal.progress}%</span>
+                    <div className="mb-2">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>
+                          {formatCurrency(goal.current_amount)} ahorrado
+                        </span>
+                        <span>
+                          {formatPercentage(goal.progress_percentage)}
+                        </span>
+                      </div>
+                      <Progress
+                        value={parseFloat(goal.progress_percentage)}
+                        className="h-2"
+                        style={{
+                          backgroundColor: "#f0f0f0",
+                        }}
+                      />
                     </div>
-                    <Progress value={goal.progress} className="h-2" />
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">
+                        {formatCurrency(goal.daily_savings_needed)}/día
+                        necesario
+                      </span>
+                      <div className="flex gap-1">
+                        {goal.status === "active" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleGoalAction(goal.id, "pause")}
+                          >
+                            <Pause className="h-3 w-3" />
+                          </Button>
+                        )}
+                        {goal.status === "paused" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleGoalAction(goal.id, "resume")}
+                          >
+                            <Play className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleGoalAction(goal.id, "complete")}
+                        >
+                          <CheckCircle className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                    {isRisk && (
+                      <Alert className="mt-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="text-xs">
+                          {getSavingRecommendation(goal)}
+                        </AlertDescription>
+                      </Alert>
+                    )}
                   </div>
+                );
+              })}
+              {activeGoals.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Target className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+                  <p>No tienes metas activas</p>
+                  <p className="text-sm">Crea tu primera meta de ahorro</p>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
+          {activeGoals.length > 3 && (
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                Ver todas las metas ({activeGoals.length})
+              </Button>
+            </CardFooter>
+          )}
         </Card>
 
+        {/* Panel de recomendaciones y analíticas */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Wallet className="h-5 w-5" />
-              Sugerencias de ahorro
+              <TrendingUp className="h-5 w-5" />
+              Insights y Recomendaciones
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="border rounded-lg p-4 bg-muted/30">
-                <h4 className="font-semibold mb-2">Oportunidades de ahorro</h4>
-                <ul className="space-y-2 pl-5 list-disc">
-                  <li className="text-sm">
-                    Reducir gastos en{" "}
-                    <span className="font-medium">Entretenimiento</span> podría
-                    ahorrarte{" "}
-                    <span className="text-success font-medium">$800/mes</span>
+              {analytics && (
+                <>
+                  <div className="border rounded-lg p-4 bg-muted/30">
+                    <h4 className="font-semibold mb-2">
+                      Próximas completaciones
+                    </h4>
+                    <div className="text-sm space-y-1">
+                      <p>
+                        Este mes:{" "}
+                        {analytics.goals_completion_prediction.this_month} metas
+                      </p>
+                      <p>
+                        Próximos 3 meses:{" "}
+                        {analytics.goals_completion_prediction.next_3_months}{" "}
+                        metas
+                      </p>
+                      <p>
+                        Próximos 6 meses:{" "}
+                        {analytics.goals_completion_prediction.next_6_months}{" "}
+                        metas
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="border rounded-lg p-4 bg-success/10">
+                    <h4 className="font-semibold mb-2">
+                      Distribución por prioridad
+                    </h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Urgente:</span>
+                        <span className="font-medium">
+                          {analytics.goals_by_priority.urgent}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Alta:</span>
+                        <span className="font-medium">
+                          {analytics.goals_by_priority.high}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Media:</span>
+                        <span className="font-medium">
+                          {analytics.goals_by_priority.medium}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Baja:</span>
+                        <span className="font-medium">
+                          {analytics.goals_by_priority.low}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="border rounded-lg p-4 bg-highlight/10">
+                <h4 className="font-semibold mb-2">
+                  Recomendaciones generales
+                </h4>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-highlight">•</span>
+                    Considera configurar ahorros automáticos para mantener
+                    consistencia
                   </li>
-                  <li className="text-sm">
-                    Has gastado un 30% más en{" "}
-                    <span className="font-medium">Restaurantes</span> este mes
+                  <li className="flex items-start gap-2">
+                    <span className="text-highlight">•</span>
+                    Revisa tus metas mensualmente para ajustar montos si es
+                    necesario
                   </li>
-                  <li className="text-sm">
-                    Ideal para ahorrar:{" "}
-                    <span className="text-highlight font-medium">15-20%</span>{" "}
-                    de tus ingresos mensuales
+                  <li className="flex items-start gap-2">
+                    <span className="text-highlight">•</span>
+                    Prioriza las metas urgentes antes de crear nuevas metas
                   </li>
                 </ul>
-              </div>
-
-              <div className="border rounded-lg p-4 bg-success/10">
-                <h4 className="font-semibold mb-2">
-                  Plan automático de ahorro
-                </h4>
-                <p className="text-sm mb-2">
-                  Basado en tus ingresos y gastos, te sugerimos ahorrar:
-                </p>
-                <div className="bg-card p-3 rounded-lg mb-4">
-                  <span className="text-xl font-bold text-success">
-                    $3,200 mensuales
-                  </span>
-                </div>
-                <Button size="sm">Activar plan automático</Button>
               </div>
             </div>
           </CardContent>
@@ -398,7 +981,139 @@ const SavingsGoalsTab = () => {
           </CardFooter>
         </Card>
       </div>
+
+      {/* Tabla de todas las metas */}
+      {goals.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Todas las metas de ahorro</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Meta</TableHead>
+                    <TableHead>Categoría</TableHead>
+                    <TableHead>Progreso</TableHead>
+                    <TableHead>Estado</TableHead>
+                    <TableHead>Prioridad</TableHead>
+                    <TableHead>Fecha objetivo</TableHead>
+                    <TableHead>Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {goals.map((goal) => {
+                    const goalWithCategory = goal as SavingsGoalWithCategory;
+
+                    return (
+                      <TableRow key={goal.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{goal.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {formatCurrency(goal.current_amount)} /{" "}
+                              {formatCurrency(goal.target_amount)}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor:
+                                  goalWithCategory.category.color,
+                              }}
+                            ></div>
+                            {goalWithCategory.category.name}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Progress
+                              value={parseFloat(goal.progress_percentage)}
+                              className="h-2 w-[80px]"
+                            />
+                            <span className="text-sm w-12">
+                              {formatPercentage(goal.progress_percentage)}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            style={{ color: getStatusColor(goal.status) }}
+                          >
+                            {getStatusText(goal.status)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            style={{ color: getPriorityColor(goal.priority) }}
+                          >
+                            {getPriorityText(goal.priority)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="text-sm">
+                              {formatDate(goal.target_date)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {getDaysUntilTarget(goal.target_date) > 0
+                                ? `${getDaysUntilTarget(goal.target_date)} días`
+                                : "Vencida"}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1">
+                            {goal.status === "active" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleGoalAction(goal.id, "pause")
+                                }
+                              >
+                                <Pause className="h-3 w-3" />
+                              </Button>
+                            )}
+                            {goal.status === "paused" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleGoalAction(goal.id, "resume")
+                                }
+                              >
+                                <Play className="h-3 w-3" />
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleGoalAction(goal.id, "complete")
+                              }
+                            >
+                              <CheckCircle className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
+
 export default SavingsGoalsTab;
