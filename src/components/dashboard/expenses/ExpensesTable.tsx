@@ -148,6 +148,18 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     // Implementation would go here
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    // Ajustamos la fecha para que use la zona horaria local
+    return new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    ).toLocaleDateString("es-CO", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
   const handleExportExcel = () => {
     if (!filteredExpenses.length) {
       toast.error("No hay datos para exportar");
@@ -155,13 +167,12 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     }
 
     try {
-      // Preparar los datos para Excel
+      // Preparar los datos para Excel con la moneda en una columna separada
       const excelData = filteredExpenses.map((expense) => ({
         Descripción: expense.note || "Sin descripción",
         Categoría: expense.category_str || "Sin categoría",
-        Monto: `${parseFloat(expense.amount).toLocaleString("es-CO")} ${
-          expense.currency
-        }`,
+        Monto: parseFloat(expense.amount).toLocaleString("es-CO"),
+        Moneda: expense.currency,
         Fecha: formatDate(expense.spent_at),
       }));
 
@@ -194,11 +205,6 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       console.error("Error al exportar a Excel:", error);
       toast.error("Error al exportar a Excel");
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-CO");
   };
 
   const handleDeleteClick = (e: React.MouseEvent, expense: Expense) => {
