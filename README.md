@@ -1,8 +1,4 @@
-# Welcome to your Lovable project
-
-## Project info
-
-**URL**: https://lovable.dev/projects/35591135-3d7e-4f7c-9059-cdd6137fb0f5
+# Tresqu
 
 ## How can I edit this code?
 
