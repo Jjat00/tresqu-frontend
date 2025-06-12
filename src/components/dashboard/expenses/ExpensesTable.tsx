@@ -150,10 +150,8 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    // Ajustamos la fecha para que use la zona horaria local
-    return new Date(
-      date.getTime() - date.getTimezoneOffset() * 60000
-    ).toLocaleDateString("es-CO", {
+    // Usar la fecha local directamente
+    return date.toLocaleDateString("es-CO", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -171,7 +169,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       const excelData = filteredExpenses.map((expense) => ({
         Descripción: expense.note || "Sin descripción",
         Categoría: expense.category_str || "Sin categoría",
-        Monto: parseFloat(expense.amount).toLocaleString("es-CO"),
+        Monto: Number(expense.amount), // Exportar como número
         Moneda: expense.currency,
         Fecha: formatDate(expense.spent_at),
       }));
