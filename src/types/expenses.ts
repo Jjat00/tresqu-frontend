@@ -1,14 +1,34 @@
 // Tipos para la respuesta de la API de gastos
 export interface Expense {
   id: number;
-  amount: number;
+  user: number;
+  amount: string;
+  currency: string;
   description: string;
-  category: {
-    id: number;
-    name: string;
-  };
   timestamp: string;
+  raw_message: string;
+  created_at: string;
+  updated_at: string;
+  category: number | null;
+  category_str: string;
+  spent_at: string;
+  note: string;
 }
+
+// Tipos para actualizar un gasto
+export interface UpdateExpenseRequest {
+  amount?: string;
+  currency?: string;
+  description?: string;
+  timestamp?: string;
+  spent_at?: string;
+  note?: string;
+  category_name?: string;
+  category_str?: string;
+}
+
+// Tipos para la respuesta de actualización
+export type UpdateExpenseResponse = Expense;
 
 // Tipos para la gráfica de dona
 export interface DonutChartData {

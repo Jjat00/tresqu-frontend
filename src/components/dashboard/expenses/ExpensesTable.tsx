@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Download, Share2, AlertCircle, Trash2 } from "lucide-react";
+import { Search, Download, AlertCircle, Trash2, Edit } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import EditExpenseDialog from "./EditExpenseDialog";
 
 interface ExpensesTableProps {
   categoryFilter: string;
@@ -64,6 +65,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
+  const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null);
   const deleteExpense = useDeleteExpense();
 
   const fetchExpenses = async (): Promise<ExpensesData> => {
@@ -72,7 +74,6 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       throw new Error("No auth token available");
     }
 
-    // You could modify the URL to include date range filters
     const response = await fetch(
       `${env.apiUrl}/api/expenses/summary/?months=1`,
       {
@@ -134,22 +135,13 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     if (!filteredExpenses?.length) return 0;
 
     return filteredExpenses.reduce((total, expense) => {
-      // Convert to number and handle multiple currencies
       const amount = parseFloat(expense.amount);
-      // Simple conversion - in a real app you'd use proper currency conversion
-      const multiplier = expense.currency === "USD" ? 4000 : 1; // Rough conversion USD to COP
+      const multiplier = expense.currency === "USD" ? 4000 : 1;
       return total + amount * multiplier;
     }, 0);
   }, [filteredExpenses]);
 
-  const handleExportPDF = () => {
-    toast.info("Exportando a PDF...");
-    console.log("Exporting expenses to PDF");
-    // Implementation would go here
-  };
-
   const formatDate = (dateString: string) => {
-    // Si el string es YYYY-MM-DD, parsear como local
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
       const [year, month, day] = dateString.split("-");
       const date = new Date(Number(year), Number(month) - 1, Number(day));
@@ -159,7 +151,6 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
         day: "2-digit",
       });
     }
-    // Si no, usar el método anterior
     const date = new Date(dateString);
     return date.toLocaleDateString("es-CO", {
       year: "numeric",
@@ -175,21 +166,18 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     }
 
     try {
-      // Preparar los datos para Excel con la moneda en una columna separada
       const excelData = filteredExpenses.map((expense) => ({
         Descripción: expense.note || "Sin descripción",
         Categoría: expense.category_str || "Sin categoría",
-        Monto: Number(expense.amount), // Exportar como número
+        Monto: Number(expense.amount),
         Moneda: expense.currency,
         Fecha: formatDate(expense.spent_at),
       }));
 
-      // Crear un nuevo libro de Excel
       const worksheet = XLSX.utils.json_to_sheet(excelData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Gastos");
 
-      // Generar el archivo Excel
       const excelBuffer = XLSX.write(workbook, {
         bookType: "xlsx",
         type: "array",
@@ -198,7 +186,6 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
 
-      // Crear un enlace de descarga
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -216,8 +203,13 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   };
 
   const handleDeleteClick = (e: React.MouseEvent, expense: Expense) => {
-    e.stopPropagation(); // Prevenir que se active el onClick de la fila
+    e.stopPropagation();
     setExpenseToDelete(expense);
+  };
+
+  const handleEditClick = (e: React.MouseEvent, expense: Expense) => {
+    e.stopPropagation();
+    setExpenseToEdit(expense);
   };
 
   const handleConfirmDelete = async () => {
@@ -233,13 +225,21 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     }
   };
 
+  const handleEditSuccess = () => {
+    // El hook se encarga de refrescar los datos automáticamente
+  };
+
   return (
     <>
       <Card>
         <CardContent className="pt-4 sm:pt-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
             <h3 className="text-base sm:text-lg font-semibold mb-2 gradient-text">
-              Historial de Gastos
+              Historial de Gastos del mes{" "}
+              {new Date().toLocaleDateString("es-CO", {
+                month: "long",
+                year: "numeric",
+              })}
             </h3>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
@@ -273,13 +273,13 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   <TableHead className="text-xs">Categoría</TableHead>
                   <TableHead className="text-xs">Monto</TableHead>
                   <TableHead className="text-xs">Fecha</TableHead>
-                  <TableHead className="text-xs w-[50px]">Acciones</TableHead>
+                  <TableHead className="text-xs w-[80px]">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">
+                    <TableCell colSpan={5} className="h-24 text-center">
                       <div className="flex flex-col items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
                         <p className="text-sm text-muted-foreground">
@@ -290,7 +290,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">
+                    <TableCell colSpan={5} className="h-24 text-center">
                       <div className="flex flex-col items-center justify-center">
                         <AlertCircle className="h-8 w-8 text-destructive mb-2" />
                         <p className="text-sm text-muted-foreground">
@@ -301,7 +301,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : filteredExpenses.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">
+                    <TableCell colSpan={5} className="h-24 text-center">
                       <p className="text-sm text-muted-foreground">
                         No hay gastos que mostrar
                       </p>
@@ -324,14 +324,24 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                         {formatDate(expense.spent_at)}
                       </TableCell>
                       <TableCell className="py-2 text-xs sm:text-sm">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
-                          onClick={(e) => handleDeleteClick(e, expense)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+                            onClick={(e) => handleEditClick(e, expense)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                            onClick={(e) => handleDeleteClick(e, expense)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -365,6 +375,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
         </CardContent>
       </Card>
 
+      {/* Dialog para confirmar eliminación */}
       <Dialog
         open={!!expenseToDelete}
         onOpenChange={() => setExpenseToDelete(null)}
@@ -395,6 +406,13 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog para editar gasto */}
+      <EditExpenseDialog
+        expense={expenseToEdit}
+        onClose={() => setExpenseToEdit(null)}
+        onSuccess={handleEditSuccess}
+      />
     </>
   );
 };
