@@ -372,24 +372,32 @@ const CategoriesTab = () => {
                           </div>
                         </div>
 
-                        {!category.is_default && (
-                          <div className="flex gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => openEditDialog(category)}
-                            >
-                              <EditIcon className="h-3 w-3" />
-                            </Button>
+                        <div className="flex gap-1">
+                          {/* ✅ Permitir editar TODAS las categorías */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEditDialog(category)}
+                            title={
+                              category.is_default
+                                ? "Editar categoría predefinida"
+                                : "Editar categoría personalizada"
+                            }
+                          >
+                            <EditIcon className="h-3 w-3" />
+                          </Button>
+                          {/* ❌ Solo permitir eliminar categorías personalizadas */}
+                          {!category.is_default && (
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDeleteCategory(category.id)}
+                              title="Eliminar categoría personalizada"
                             >
                               <TrashIcon className="h-3 w-3" />
                             </Button>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
 
                       <div className="mt-2 flex items-center gap-2">
@@ -429,13 +437,37 @@ const CategoriesTab = () => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Editar Categoría</DialogTitle>
+            <DialogTitle>
+              {editingCategory?.is_default
+                ? "Editar Categoría Predefinida"
+                : "Editar Categoría Personalizada"}
+            </DialogTitle>
             <DialogDescription>
-              Modifica los detalles de tu categoría personalizada.
+              {editingCategory?.is_default
+                ? "Puedes personalizar el color y descripción de esta categoría predefinida."
+                : "Modifica los detalles de tu categoría personalizada."}
             </DialogDescription>
           </DialogHeader>
           {editingCategory && (
             <div className="grid gap-4 py-4">
+              {/* Indicador del tipo de categoría */}
+              <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                <div
+                  className="w-4 h-4 rounded-full"
+                  style={{ backgroundColor: editingCategory.color }}
+                ></div>
+                <span className="text-sm font-medium">
+                  {editingCategory.name}
+                </span>
+                <Badge
+                  variant={editingCategory.is_default ? "outline" : "secondary"}
+                >
+                  {editingCategory.is_default
+                    ? "Predefinida"
+                    : "★ Personalizada"}
+                </Badge>
+              </div>
+
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-name" className="text-right">
                   Nombre
@@ -450,7 +482,19 @@ const CategoriesTab = () => {
                     })
                   }
                   className="col-span-3"
+                  disabled={editingCategory.is_default} // ❌ No permitir cambiar nombre de predefinidas
+                  placeholder={
+                    editingCategory.is_default
+                      ? "Nombre fijo"
+                      : "Nombre de la categoría"
+                  }
                 />
+                {editingCategory.is_default && (
+                  <div className="col-span-4 text-xs text-muted-foreground text-center">
+                    💡 El nombre de las categorías predefinidas no se puede
+                    cambiar
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-color" className="text-right">
@@ -483,8 +527,31 @@ const CategoriesTab = () => {
                     })
                   }
                   className="col-span-3"
+                  placeholder={
+                    editingCategory.is_default
+                      ? "Personaliza la descripción..."
+                      : "Descripción de la categoría"
+                  }
                 />
               </div>
+
+              {/* Nota informativa para categorías predefinidas */}
+              {editingCategory.is_default && (
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <div className="text-blue-600 mt-0.5">ℹ️</div>
+                    <div className="text-sm text-blue-800">
+                      <p className="font-medium mb-1">Categoría Predefinida</p>
+                      <p>
+                        ✅ Puedes cambiar: <strong>Color</strong> y{" "}
+                        <strong>Descripción</strong>
+                        <br />❌ No puedes cambiar: <strong>Nombre</strong> (es
+                        fijo del sistema)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           <DialogFooter>
