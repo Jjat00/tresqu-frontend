@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ExpensesTable from "./expenses/ExpensesTable";
-import NewExpenseDialog from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
 import ChartJSPieChart from "./charts/ChartJSPieChart";
@@ -156,12 +155,6 @@ const ExpensesTab = ({
           backgroundSize: "30px 30px",
         }}
       ></div>
-
-      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3 animate-fade-up">
-        <div className="w-full xs:w-auto">
-          <NewExpenseDialog />
-        </div>
-      </div>
 
       {/* Información sobre nuevas funcionalidades */}
       <Card className="glass-card animate-fade-up bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
