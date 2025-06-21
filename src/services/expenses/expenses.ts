@@ -4,6 +4,8 @@ import {
   MonthlyComparisonChartParams,
   UpdateExpenseRequest,
   UpdateExpenseResponse,
+  CreateExpenseRequest,
+  Expense,
 } from "@/types/expenses";
 
 // Tipo para las categorías
@@ -15,6 +17,14 @@ export interface ExpenseCategory {
 // Respuesta del endpoint de categorías
 export interface ExpenseCategoriesResponse {
   categories: string[];
+}
+
+// Tipo para categoría de usuario
+interface UserCategoryResponse {
+  name: string;
+  id: number;
+  color: string;
+  is_default: boolean;
 }
 
 /**
@@ -30,6 +40,7 @@ export class ExpensesService {
   /**
    * Obtiene las categorías disponibles para gastos
    * @returns Promise con la lista de categorías
+   * @deprecated Usar ExpenseCategoriesService.getCategories() para obtener categorías completas
    */
   async getCategories(): Promise<string[]> {
     try {
@@ -48,6 +59,51 @@ export class ExpensesService {
       return [];
     } catch (error) {
       console.error("Error al obtener categorías:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene las categorías mejoradas con información del usuario
+   * @returns Promise con categorías por usuario (compatible con migración)
+   */
+  async getUserCategories(): Promise<string[]> {
+    try {
+      // Intentar usar el nuevo endpoint primero
+      const newResponse = await apiClient.get(
+        `${this.baseUrl}/categories/expenses/`
+      );
+
+      if (newResponse.data && Array.isArray(newResponse.data)) {
+        return newResponse.data.map((cat: UserCategoryResponse) => cat.name);
+      }
+
+      // Fallback al endpoint antiguo
+      return await this.getCategories();
+    } catch (error) {
+      console.error(
+        "Error al obtener categorías del usuario, usando fallback:",
+        error
+      );
+      // Fallback al método anterior
+      return await this.getCategories();
+    }
+  }
+
+  /**
+   * Crea un nuevo gasto
+   * @param expenseData Datos del gasto a crear
+   * @returns Promise con el gasto creado
+   */
+  async createExpense(expenseData: CreateExpenseRequest): Promise<Expense> {
+    try {
+      const response = await apiClient.post<Expense>(
+        `${this.baseUrl}/expenses/`,
+        expenseData
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error al crear el gasto:", error);
       throw error;
     }
   }

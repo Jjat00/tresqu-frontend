@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ExpensesTable from "./expenses/ExpensesTable";
-import { ExpenseFormData } from "./expenses/NewExpenseDialog";
+import NewExpenseDialog from "./expenses/NewExpenseDialog";
 import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
 import ChartJSPieChart from "./charts/ChartJSPieChart";
@@ -8,6 +8,7 @@ import ChartJSBarChart from "./charts/ChartJSBarChart";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
 import { MonthlyComparisonChart } from "./expenses/MonthlyComparisonChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   TrendingUpIcon,
   WalletIcon,
@@ -156,11 +157,38 @@ const ExpensesTab = ({
         }}
       ></div>
 
-      {/* <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3 animate-fade-up">
+      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3 animate-fade-up">
         <div className="w-full xs:w-auto">
-          <NewExpenseDialog onAddExpense={handleAddExpense} />
+          <NewExpenseDialog />
         </div>
-      </div> */}
+      </div>
+
+      {/* Información sobre nuevas funcionalidades */}
+      <Card className="glass-card animate-fade-up bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+        <CardContent className="pt-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <TagIcon className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-medium text-blue-900">
+                  ¡Nuevas funcionalidades disponibles!
+                </h3>
+                <p className="text-sm text-blue-700">
+                  Ahora puedes crear y gestionar tus propias categorías
+                  personalizadas
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                ★ Categorías Personalizadas
+              </Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* KPIs Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

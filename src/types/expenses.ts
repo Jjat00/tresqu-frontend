@@ -13,6 +13,30 @@ export interface Expense {
   category_str: string;
   spent_at: string;
   note: string;
+
+  // ✅ MIGRACIÓN: Nuevos campos para categorías por usuario
+  user_expense_category?: {
+    id: number;
+    name: string;
+    color: string;
+    is_default: boolean;
+    description?: string;
+    examples?: string;
+  };
+
+  // 🎯 Campo híbrido que prioriza categoría del usuario
+  category_name?: string;
+}
+
+// Tipos para crear un nuevo gasto
+export interface CreateExpenseRequest {
+  amount: string;
+  currency: string;
+  description?: string;
+  spent_at: string;
+  note?: string;
+  user_category_name: string; // ✅ CORRECTO - Campo principal para categoría
+  user_expense_category?: number; // ✅ ALTERNATIVO - ID de categoría específica
 }
 
 // Tipos para actualizar un gasto
@@ -24,7 +48,9 @@ export interface UpdateExpenseRequest {
   spent_at?: string;
   note?: string;
   category_name?: string;
-  category_str?: string;
+  category_str?: string; // ❌ DEPRECADO - Solo lectura
+  user_category_name?: string; // ✅ CORRECTO - Usar este campo para actualizar categoría
+  user_expense_category?: number; // ✅ ALTERNATIVO - ID de categoría específica
 }
 
 // Tipos para la respuesta de actualización

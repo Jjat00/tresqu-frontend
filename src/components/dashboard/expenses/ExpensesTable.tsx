@@ -49,6 +49,29 @@ interface Expense {
   category_str: string;
   spent_at: string;
   note: string;
+
+  // ✅ MIGRACIÓN: Nuevos campos para categorías por usuario
+  user_expense_category?: {
+    id: number;
+    name: string;
+    color: string;
+    is_default: boolean;
+    description?: string;
+    examples?: string;
+  };
+
+  // 🎯 Campo híbrido que prioriza categoría del usuario
+  category_name?: string;
+
+  // 📊 Categoría actual (campo calculado del backend)
+  current_category?: {
+    id: number;
+    name: string;
+    color: string;
+    description?: string;
+    is_default: boolean;
+    type: string;
+  };
 }
 
 interface ExpensesData {
@@ -112,20 +135,22 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
 
     // Apply category filter
     if (categoryFilter !== "all") {
-      filtered = filtered.filter(
-        (expense) =>
-          expense.category_str.toLowerCase() === categoryFilter.toLowerCase()
-      );
+      filtered = filtered.filter((expense) => {
+        const categoryName = getCategoryName(expense);
+        return categoryName.toLowerCase() === categoryFilter.toLowerCase();
+      });
     }
 
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (expense) =>
+      filtered = filtered.filter((expense) => {
+        const categoryName = getCategoryName(expense);
+        return (
           expense.note.toLowerCase().includes(query) ||
-          expense.category_str.toLowerCase().includes(query)
-      );
+          categoryName.toLowerCase().includes(query)
+        );
+      });
     }
 
     return filtered;
@@ -159,6 +184,40 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     });
   };
 
+  // ✅ Helper para obtener el nombre correcto de la categoría
+  const getCategoryName = (expense: Expense): string => {
+    // Prioridad: current_category > user_expense_category > category_str
+    if (expense.current_category?.name) {
+      return expense.current_category.name;
+    }
+    if (expense.user_expense_category?.name) {
+      return expense.user_expense_category.name;
+    }
+    return expense.category_str || "Sin categoría";
+  };
+
+  // ✅ Helper para obtener el color de la categoría
+  const getCategoryColor = (expense: Expense): string | undefined => {
+    if (expense.current_category?.color) {
+      return expense.current_category.color;
+    }
+    if (expense.user_expense_category?.color) {
+      return expense.user_expense_category.color;
+    }
+    return undefined;
+  };
+
+  // ✅ Helper para verificar si es categoría personalizada
+  const isCustomCategory = (expense: Expense): boolean => {
+    if (expense.current_category) {
+      return !expense.current_category.is_default;
+    }
+    if (expense.user_expense_category) {
+      return !expense.user_expense_category.is_default;
+    }
+    return false;
+  };
+
   const handleExportExcel = () => {
     if (!filteredExpenses.length) {
       toast.error("No hay datos para exportar");
@@ -168,7 +227,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     try {
       const excelData = filteredExpenses.map((expense) => ({
         Descripción: expense.note || "Sin descripción",
-        Categoría: expense.category_str || "Sin categoría",
+        Categoría: getCategoryName(expense), // ✅ Usar nombre correcto de categoría
         Monto: Number(expense.amount),
         Moneda: expense.currency,
         Fecha: formatDate(expense.spent_at),
@@ -314,7 +373,20 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                         {expense.note || "Sin descripción"}
                       </TableCell>
                       <TableCell className="py-2 text-xs sm:text-sm">
-                        {expense.category_str || "Sin categoría"}
+                        <div className="flex items-center gap-2">
+                          {getCategoryColor(expense) && (
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor: getCategoryColor(expense),
+                              }}
+                            ></div>
+                          )}
+                          <span>
+                            {getCategoryName(expense)}
+                            {isCustomCategory(expense) && " ★"}
+                          </span>
+                        </div>
                       </TableCell>
                       <TableCell className="py-2 text-xs sm:text-sm">
                         {parseFloat(expense.amount).toLocaleString("es-CO")}{" "}

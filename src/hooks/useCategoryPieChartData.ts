@@ -10,6 +10,8 @@ import {
   isLocalYesterday,
   toLocalISODate,
 } from "@/utils/dateUtils";
+// Nuevos hooks para categorías mejoradas
+import { useExpenseCategoryColorsMap } from "@/hooks/useExpenseCategories";
 
 export interface DonutChartDataItem {
   name: string;
@@ -22,6 +24,9 @@ export interface DonutChartDataItem {
 
 export const useCategoryPieChartData = (dateRange?: DateRange) => {
   const [filterSummary, setFilterSummary] = useState("");
+
+  // Obtener mapa de colores personalizados del usuario
+  const { data: userColorsMap } = useExpenseCategoryColorsMap();
 
   // Determinar el tipo de filtro basado en el dateRange
   const getDateFilter = (): DateFilterType => {
@@ -83,14 +88,18 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
   // Process the API data into the format needed for the pie chart
   const processedData = data
     ? data.labels.map((category: string, index: number) => {
-        const color = data.datasets[0].backgroundColor[index];
+        // Usar color personalizado del usuario si está disponible,
+        // de lo contrario usar el color de la API
+        const apiColor = data.datasets[0].backgroundColor[index];
+        const userColor = userColorsMap?.[category];
+        const finalColor = userColor || apiColor;
 
         return {
           name: category,
           value: data.datasets[0].data[index],
-          color: color,
+          color: finalColor,
           // Derivar el color de texto oscureciendo el color principal
-          textColor: getDarkerShade(color),
+          textColor: getDarkerShade(finalColor),
         };
       })
     : [];

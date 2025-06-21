@@ -17,10 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
+import { useExpenseCategoriesHybrid } from "@/hooks/useExpenseCategories";
+import { useCreateExpense } from "@/hooks/expenses";
+import { toast } from "sonner";
 
 interface NewExpenseDialogProps {
-  onAddExpense: (expense: ExpenseFormData) => void;
+  onAddExpense?: (expense: ExpenseFormData) => void; // Hacer opcional
 }
 
 export interface ExpenseFormData {
@@ -43,16 +46,58 @@ const NewExpenseDialog: React.FC<NewExpenseDialogProps> = ({
     date: new Date().toISOString().split("T")[0],
   });
 
-  const handleAddExpense = () => {
-    onAddExpense(newExpense);
-    setOpen(false);
-    setNewExpense({
-      description: "",
-      category: "",
-      subcategory: "",
-      amount: "",
-      date: new Date().toISOString().split("T")[0],
-    });
+  // Hooks para crear gasto y obtener categorías
+  const createExpense = useCreateExpense();
+  const { data: categoriesData = [], isLoading: categoriesLoading } =
+    useExpenseCategoriesHybrid();
+
+  // Ordenar categorías: personalizadas primero, luego predefinidas
+  const sortedCategories = categoriesData.sort((a, b) => {
+    // Personalizadas (is_default = false) primero
+    if (!a.is_default && b.is_default) return -1;
+    if (a.is_default && !b.is_default) return 1;
+    // Luego ordenar alfabéticamente
+    return a.name.localeCompare(b.name);
+  });
+
+  const handleAddExpense = async () => {
+    // Validar campos requeridos
+    if (!newExpense.amount || !newExpense.category || !newExpense.description) {
+      toast.error("Por favor completa todos los campos requeridos");
+      return;
+    }
+
+    try {
+      // Crear el gasto usando el nuevo sistema
+      await createExpense.mutateAsync({
+        amount: newExpense.amount,
+        currency: "COP", // Por defecto COP, se puede hacer configurable
+        description: newExpense.description,
+        note: newExpense.subcategory || newExpense.description,
+        spent_at: newExpense.date,
+        user_category_name: newExpense.category, // ✅ Usar user_category_name
+      });
+
+      toast.success("Gasto creado exitosamente");
+
+      // Llamar callback si existe (para compatibilidad)
+      if (onAddExpense) {
+        onAddExpense(newExpense);
+      }
+
+      // Limpiar formulario y cerrar
+      setOpen(false);
+      setNewExpense({
+        description: "",
+        category: "",
+        subcategory: "",
+        amount: "",
+        date: new Date().toISOString().split("T")[0],
+      });
+    } catch (error) {
+      console.error("Error al crear gasto:", error);
+      toast.error("Error al crear el gasto");
+    }
   };
 
   return (
@@ -99,16 +144,33 @@ const NewExpenseDialog: React.FC<NewExpenseDialogProps> = ({
               onValueChange={(value) =>
                 setNewExpense({ ...newExpense, category: value })
               }
+              disabled={categoriesLoading}
             >
               <SelectTrigger className="col-span-2 xs:col-span-3 h-7 xs:h-8 sm:h-9 text-xs">
-                <SelectValue placeholder="Seleccionar categoría" />
+                {categoriesLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <span>Cargando...</span>
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Seleccionar categoría" />
+                )}
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="alimentacion">Alimentación</SelectItem>
-                <SelectItem value="transporte">Transporte</SelectItem>
-                <SelectItem value="entretenimiento">Entretenimiento</SelectItem>
-                <SelectItem value="servicios">Servicios</SelectItem>
-                <SelectItem value="otros">Otros</SelectItem>
+                {sortedCategories.map((categoryObj) => (
+                  <SelectItem key={categoryObj.name} value={categoryObj.name}>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: categoryObj.color }}
+                      ></div>
+                      <span>
+                        {categoryObj.name}
+                        {!categoryObj.is_default && " ★"}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -169,8 +231,19 @@ const NewExpenseDialog: React.FC<NewExpenseDialogProps> = ({
           >
             Cancelar
           </Button>
-          <Button onClick={handleAddExpense} className="h-7 xs:h-8 text-xs">
-            Guardar
+          <Button
+            onClick={handleAddExpense}
+            className="h-7 xs:h-8 text-xs"
+            disabled={createExpense.isPending}
+          >
+            {createExpense.isPending ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>Guardando...</span>
+              </div>
+            ) : (
+              "Guardar"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -32,6 +32,19 @@ export interface IncomeItem {
     name: string;
   };
   timestamp: string;
+
+  // ✅ MIGRACIÓN: Nuevos campos para categorías por usuario
+  user_income_category?: {
+    id: number;
+    name: string;
+    color: string;
+    is_default: boolean;
+    description?: string;
+    example?: string;
+  };
+
+  // 🎯 Campo híbrido que prioriza categoría del usuario
+  category_name?: string;
 }
 
 /**

@@ -6,6 +6,7 @@ import ExpensesTab from "@/components/dashboard/ExpensesTab";
 import IncomeTab from "@/components/dashboard/IncomeTab";
 import DebtTab from "@/components/dashboard/DebtTab";
 import SavingsGoalsTab from "@/components/dashboard/SavingsGoalsTab";
+import CategoriesTab from "@/components/dashboard/CategoriesTab";
 import ChatBot from "@/components/ChatBot";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -181,7 +182,7 @@ const Dashboard = () => {
             className="pb-2 animate-fade-up"
             style={{ animationDelay: "0.2s" }}
           >
-            <TabsList className="w-full grid grid-cols-2 gap-1 sm:gap-2 p-1 glass">
+            <TabsList className="w-full grid grid-cols-3 gap-1 sm:gap-2 p-1 glass">
               <TabsTrigger
                 value="expenses"
                 className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto data-[state=active]:bg-success/20 data-[state=active]:text-success"
@@ -193,6 +194,12 @@ const Dashboard = () => {
                 className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto data-[state=active]:bg-highlight/20 data-[state=active]:text-highlight"
               >
                 Ingresos
+              </TabsTrigger>
+              <TabsTrigger
+                value="categories"
+                className="text-xs sm:text-sm py-1.5 px-2 sm:py-1.5 sm:px-3 whitespace-normal h-auto data-[state=active]:bg-purple/20 data-[state=active]:text-purple"
+              >
+                Categorías
               </TabsTrigger>
             </TabsList>
           </div>
@@ -221,6 +228,14 @@ const Dashboard = () => {
               dateRange={dateRange}
               viewMode={viewMode}
             />
+          </TabsContent>
+
+          <TabsContent
+            value="categories"
+            className="p-0 min-h-[60vh] animate-fade-up"
+            style={{ animationDelay: "0.3s" }}
+          >
+            <CategoriesTab />
           </TabsContent>
 
           <TabsContent

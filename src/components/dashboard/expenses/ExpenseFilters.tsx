@@ -10,6 +10,8 @@ import { Loader2 } from "lucide-react";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
 import { env } from "@/config";
+// Nuevos hooks migrados
+import { useExpenseCategoriesHybrid } from "@/hooks/useExpenseCategories";
 interface ExpenseFiltersProps {
   categoryFilter: string;
   onCategoryFilterChange: (value: string) => void;
@@ -18,40 +20,11 @@ const ExpenseFilters: React.FC<ExpenseFiltersProps> = ({
   categoryFilter,
   onCategoryFilterChange,
 }) => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setIsLoading(true);
-      try {
-        const token = getAccessToken();
-        if (!token) {
-          throw new Error("No auth token available");
-        }
-        const response = await fetch(
-          `${env.apiUrl}/api/expenses/by_category/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error(`Error fetching categories: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data && data.categories && Array.isArray(data.categories)) {
-          setCategories(data.categories);
-        }
-      } catch (error) {
-        console.error("Error loading categories:", error);
-        toast.error("No se pudieron cargar las categorías");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // Usar el nuevo hook híbrido que mantiene compatibilidad
+  const { data: userCategories = [], isLoading } = useExpenseCategoriesHybrid();
+
+  // Convertir las categorías del usuario a nombres para compatibilidad
+  const categories = userCategories.map((cat) => cat.name);
   return (
     <div className="flex flex-wrap gap-2 w-full xs:w-auto">
       <Select value={categoryFilter} onValueChange={onCategoryFilterChange}>
@@ -70,6 +43,9 @@ const ExpenseFilters: React.FC<ExpenseFiltersProps> = ({
           {categories.map((category) => (
             <SelectItem key={category} value={category.toLowerCase()}>
               {category}
+              {/* Mostrar indicador si es categoría personalizada */}
+              {userCategories.find((cat) => cat.name === category)
+                ?.is_default === false && " ★"}
             </SelectItem>
           ))}
         </SelectContent>

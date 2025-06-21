@@ -18,7 +18,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useUpdateExpense, useExpenseCategories } from "@/hooks/expenses";
+import { useUpdateExpense } from "@/hooks/expenses";
+import { useExpenseCategoriesHybrid } from "@/hooks/useExpenseCategories";
 import { useCommonCurrencies } from "@/hooks/currencies";
 import { UpdateExpenseRequest } from "@/types/expenses";
 
@@ -51,10 +52,22 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
 }) => {
   const [formData, setFormData] = useState<UpdateExpenseRequest>({});
   const updateExpense = useUpdateExpense();
-  const { data: categories = [], isLoading: categoriesLoading } =
-    useExpenseCategories();
+  const { data: categoriesData = [], isLoading: categoriesLoading } =
+    useExpenseCategoriesHybrid();
   const { data: commonCurrencies = [], isLoading: currenciesLoading } =
     useCommonCurrencies();
+
+  // Convertir categorías a formato legacy para compatibilidad
+  const categories = categoriesData.map((cat) => cat.name);
+
+  // Ordenar categorías: personalizadas primero, luego predefinidas
+  const sortedCategories = categoriesData.sort((a, b) => {
+    // Personalizadas (is_default = false) primero
+    if (!a.is_default && b.is_default) return -1;
+    if (a.is_default && !b.is_default) return 1;
+    // Luego ordenar alfabéticamente
+    return a.name.localeCompare(b.name);
+  });
 
   // Reset form data when expense changes
   useEffect(() => {
@@ -63,7 +76,7 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
         amount: expense.amount,
         currency: expense.currency,
         note: expense.note,
-        category_str: expense.category_str,
+        user_category_name: expense.category_str, // ✅ Usar user_category_name para actualizar
         spent_at: expense.spent_at,
       });
     } else {
@@ -171,11 +184,11 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
               Categoría
             </Label>
             <Select
-              value={formData.category_str || ""}
+              value={formData.user_category_name || ""}
               onValueChange={(value) => {
                 setFormData((prev) => ({
                   ...prev,
-                  category_str: value,
+                  user_category_name: value, // ✅ Usar user_category_name para actualizar
                 }));
               }}
               disabled={categoriesLoading}
@@ -184,9 +197,18 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
                 <SelectValue placeholder="Selecciona una categoría" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
+                {sortedCategories.map((categoryObj) => (
+                  <SelectItem key={categoryObj.name} value={categoryObj.name}>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: categoryObj.color }}
+                      ></div>
+                      <span>
+                        {categoryObj.name}
+                        {!categoryObj.is_default && " ★"}
+                      </span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
