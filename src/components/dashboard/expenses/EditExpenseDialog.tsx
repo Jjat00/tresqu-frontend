@@ -37,6 +37,29 @@ interface Expense {
   category_str: string;
   spent_at: string;
   note: string;
+
+  // ✅ MIGRACIÓN: Nuevos campos para categorías por usuario
+  user_expense_category?: {
+    id: number;
+    name: string;
+    color: string;
+    is_default: boolean;
+    description?: string;
+    examples?: string;
+  };
+
+  // 🎯 Campo híbrido que prioriza categoría del usuario
+  category_name?: string;
+
+  // 📊 Categoría actual (campo calculado del backend)
+  current_category?: {
+    id: number;
+    name: string;
+    color: string;
+    description?: string;
+    is_default: boolean;
+    type: string;
+  };
 }
 
 interface EditExpenseDialogProps {
@@ -69,20 +92,51 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
     return a.name.localeCompare(b.name);
   });
 
+  // ✅ Helper para obtener el nombre correcto de la categoría del gasto
+  const getCurrentCategoryName = (expense: Expense): string => {
+    // Prioridad: current_category > user_expense_category > category_str
+    if (expense.current_category?.name) {
+      return expense.current_category.name;
+    }
+    if (expense.user_expense_category?.name) {
+      return expense.user_expense_category.name;
+    }
+    return expense.category_str || "";
+  };
+
   // Reset form data when expense changes
   useEffect(() => {
-    if (expense) {
+    if (expense && categoriesData.length > 0) {
+      const currentCategoryName = getCurrentCategoryName(expense);
+
+      // ✅ Verificar si la categoría existe en la lista disponible
+      const categoryExists = categoriesData.some(
+        (cat) => cat.name === currentCategoryName
+      );
+      const finalCategoryName = categoryExists
+        ? currentCategoryName
+        : expense.category_str;
+
       setFormData({
         amount: expense.amount,
         currency: expense.currency,
         note: expense.note,
-        user_category_name: expense.category_str, // ✅ Usar user_category_name para actualizar
+        user_category_name: finalCategoryName, // ✅ Usar nombre válido de categoría
+        spent_at: expense.spent_at,
+      });
+    } else if (expense) {
+      // Si no hay categorías cargadas aún, usar category_str por defecto
+      setFormData({
+        amount: expense.amount,
+        currency: expense.currency,
+        note: expense.note,
+        user_category_name: expense.category_str,
         spent_at: expense.spent_at,
       });
     } else {
       setFormData({});
     }
-  }, [expense]);
+  }, [expense, categoriesData]);
 
   const handleSave = async () => {
     if (!expense) return;
