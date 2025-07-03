@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import LegalNotice from "./pages/LegalNotice";
+import TresquCent from "./pages/TresquCent";
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/dashboard/profile" element={<Profile />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/legal-notice" element={<LegalNotice />} />
+            <Route path="/tresqu-cent" element={<TresquCent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
