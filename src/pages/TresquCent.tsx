@@ -99,8 +99,13 @@ const TresquCent = () => {
 
         {/* Sección con dos tarjetas comparativas */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-16">
-          {/* Tarjeta 1: Solo Cent */}
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-[#3bbcc8]/50 flex flex-col">
+          {/* Tarjeta 1: Plan CENT */}
+          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-[#3bbcc8]/50 relative flex flex-col">
+            {/* Etiqueta "Completo" */}
+            <div className="absolute top-4 right-4 bg-[#3bbcc8] text-white text-xs font-semibold px-3 py-1 rounded-full">
+              Completo
+            </div>
+
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 flex items-center justify-center">
                 <img
@@ -109,26 +114,92 @@ const TresquCent = () => {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <h3 className="text-xl font-semibold text-white">Solo Cent</h3>
+              <div>
+                <h3 className="text-xl font-semibold text-white">Plan CENT</h3>
+                <p className="text-[#3bbcc8] text-sm font-medium">
+                  $200 MXN/mes
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-3 mb-6 flex-grow">
+            <div className="space-y-2 mb-6 flex-grow">
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-[#3bbcc8] rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-sm text-gray-300">
-                  Convierte tu cambio suelto en inversión automáticamente
+                  Inversiones ilimitadas en CETES
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#3bbcc8] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-sm text-gray-300">
-                  Abona con tu número celular en tiendas
+                  <span className="font-semibold text-yellow-400">
+                    Seguro CENT:
+                  </span>{" "}
+                  Microseguros CENT x THONA
                 </p>
               </div>
+              <div className="ml-5 space-y-1">
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Gastos médicos por accidente: Hasta $50,000 MXN
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Gastos funerarios por accidente: Hasta $50,000 MXN
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Asesoría funeraria 24/7 (por cualquier causa)
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Servicio funerario completo (cremación o inhumación)
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Asistencias médicas, legales, psicológicas, nutricionales
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Taxi seguro, laboratorio a domicilio, enfermera, asistencia
+                    dental y visual
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Videollamada médica de emergencia
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Planes dentales y visuales gratuitos (consultas, exámenes y
+                    descuentos)
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-400">
+                    Descuentos en clínicas, hospitales, laboratorios y farmacias
+                  </p>
+                </div>
+              </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#3bbcc8] rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-sm text-gray-300">
-                  Visualiza tu progreso financiero
+                  CENT asiste x Tresqu ilimitado
                 </p>
               </div>
             </div>
@@ -145,73 +216,36 @@ const TresquCent = () => {
             </a>
           </div>
 
-          {/* Tarjeta 2: Cent + Tresqu */}
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-success/50 relative flex flex-col">
-            {/* Etiqueta "Recomendado" */}
-            <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-              Recomendado
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-700 border border-[#3bbcc8]">
-                  <img
-                    src="/logo_teal.png"
-                    alt="Cent Logo"
-                    className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
-                  />
-                </div>
-                <div className="text-gray-400 text-sm">+</div>
-                <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-700 border border-success">
-                  <img
-                    src="/3q.png"
-                    alt="Tresqu Logo"
-                    className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
-                  />
-                </div>
+          {/* Tarjeta 2: Plan Tresqu */}
+          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-success/50 flex flex-col">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 flex items-center justify-center">
+                <img
+                  src="/3q.png"
+                  alt="Tresqu Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-white">
-                Cent + Tresqu
-              </h3>
+              <div>
+                <h3 className="text-xl font-semibold text-white">
+                  Plan Tresqu
+                </h3>
+                <p className="text-success text-sm font-medium">$</p>
+              </div>
             </div>
 
             <div className="space-y-3 mb-6 flex-grow">
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#3bbcc8] rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">Todo lo de Cent</p>
-              </div>
-              <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-sm text-gray-300">
-                  Registro de gastos por WhatsApp
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Clasificación automática con IA
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Reportes financieros en tiempo real
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  <span className="font-semibold text-yellow-400">
-                    Premium:
-                  </span>{" "}
-                  Seguro personal + 2% adicional en inversiones
+                  CENT asiste x Tresqu ilimitado
                 </p>
               </div>
             </div>
 
             <Link to="/login" className="inline-block w-full">
               <button className="w-full bg-success hover:bg-success/80 text-white py-3 px-4 rounded-md transition-colors font-medium">
-                Probar con Tresqu
+                Empezar Gratis
               </button>
             </Link>
           </div>
