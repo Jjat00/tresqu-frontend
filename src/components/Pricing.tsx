@@ -90,7 +90,7 @@ const Pricing = () => {
                 <PricingFeature included={true} text="Estadísticas básicas" />
                 <PricingFeature
                   included={true}
-                  text="Interacción por texto en WhatsApp/Telegram"
+                  text="Interacción por texto en Telegram" // Temporalmente solo disponible Telegram
                 />
                 <PricingFeature included={false} text="Registro por audio" />
                 <PricingFeature included={false} text="Registro múltiple" />

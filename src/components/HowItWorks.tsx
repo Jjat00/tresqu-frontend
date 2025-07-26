@@ -4,7 +4,7 @@ const steps = [
     icon: <MessageSquare className="h-8 w-8 text-success" />,
     title: "Escribe tu gasto",
     description:
-      "Envía un mensaje a Tresqu por WhatsApp o Telegram como lo harías normalmente.",
+      "Envía un mensaje a Tresqu por Telegram como lo harías normalmente.", // Temporalmente solo disponible Telegram
     example: "Gasté 15 mil en almuerzo",
   },
   {
@@ -60,7 +60,9 @@ const HowItWorks = () => {
                 >
                   {step.icon}
                 </div>
-                <h3 className="text-lg font-semibold mb-3 text-foreground text-shadow-sm">{step.title}</h3>
+                <h3 className="text-lg font-semibold mb-3 text-foreground text-shadow-sm">
+                  {step.title}
+                </h3>
                 <p className="text-sm text-foreground/90 mb-4">
                   {step.description}
                 </p>

@@ -291,8 +291,9 @@ const TresquCent = () => {
                 Registra con Tresqu
               </h3>
               <p className="text-gray-300 text-xs sm:text-sm">
-                Envía un mensaje por WhatsApp y Tresqu registrará
+                Envía un mensaje por Telegram y Tresqu registrará
                 automáticamente tu gasto
+                {/* Temporalmente solo disponible Telegram por problemas con WhatsApp */}
               </p>
             </div>
             <div className="text-center">
@@ -335,7 +336,8 @@ const TresquCent = () => {
             </div>
             <p className="text-gray-300 text-sm mb-4">
               Tresqu es un asistente inteligente que transforma tus mensajes de
-              WhatsApp en reportes financieros automáticos y organizados.
+              Telegram en reportes financieros automáticos y organizados.
+              {/* Temporalmente solo disponible Telegram por problemas con WhatsApp */}
             </p>
             <p className="text-gray-400 text-xs">
               Estamos validando esta alianza con usuarios seleccionados de Cent

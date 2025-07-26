@@ -17,7 +17,8 @@ import {
 import VerificationCodeForm from "./VerificationCodeForm";
 import { requestTelegramCode, saveAuthTokens } from "@/services/authService";
 import { AuthResponse } from "@/types/auth";
-import { useWhatsappAuth } from "@/hooks/useWhatsappAuth";
+// TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
+// import { useWhatsappAuth } from "@/hooks/useWhatsappAuth";
 
 // Array of common country codes with flag emojis
 const countryCodes = [
@@ -133,7 +134,7 @@ const countryCodes = [
 ];
 const WaitlistForm = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("whatsapp");
+  const [activeTab, setActiveTab] = useState("telegram"); // Cambiado de "whatsapp" a "telegram" temporalmente
   const [phoneNumber, setPhoneNumber] = useState("");
   const [telegramPhone, setTelegramPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+57"); // Default to Colombia
@@ -145,11 +146,12 @@ const WaitlistForm = () => {
     "telegram"
   );
 
+  // TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
   // Hook para la autenticación con WhatsApp
-  const {
-    sendVerificationCode: sendWhatsappCode,
-    isLoading: isWhatsappLoading,
-  } = useWhatsappAuth();
+  // const {
+  //   sendVerificationCode: sendWhatsappCode,
+  //   isLoading: isWhatsappLoading,
+  // } = useWhatsappAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,7 +189,9 @@ const WaitlistForm = () => {
       } finally {
         setIsSubmitting(false);
       }
-    } else if (activeTab === "whatsapp") {
+    }
+    /* TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
+    else if (activeTab === "whatsapp") {
       // Verificar que el número de teléfono no esté vacío
       if (!phoneNumber) {
         toast.error("Por favor ingresa un número de teléfono válido");
@@ -232,6 +236,7 @@ const WaitlistForm = () => {
         setIsSubmitting(false);
       }
     }
+    */
   };
   const handleVerificationSuccess = (response: AuthResponse) => {
     // Guardar tokens en localStorage
@@ -279,8 +284,8 @@ const WaitlistForm = () => {
             Inicia sesión
           </h2>
           <p className="text-sm sm:text-base md:text-lg text-foreground max-w-2xl mx-auto text-shadow-sm px-2">
-            Conecta tu número de WhatsApp o Telegram para comenzar a usar
-            Tresqu.
+            Conecta tu número de Telegram para comenzar a usar Tresqu.
+            {/* Temporalmente solo disponible Telegram por problemas con WhatsApp */}
           </p>
         </div>
 
@@ -294,10 +299,12 @@ const WaitlistForm = () => {
                 </h3>
                 <p className="mt-1 sm:mt-2 mb-3 sm:mb-4 text-sm sm:text-base">
                   Para utilizar Tresqu, primero necesitas registrarte mediante
-                  nuestro bot de Telegram o WhatsApp.
+                  nuestro bot de Telegram.
+                  {/* Temporalmente solo disponible Telegram por problemas con WhatsApp */}
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex justify-center">
+                  {/* TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
                   <Button
                     variant="outline"
                     className="text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-4 text-white font-medium group relative overflow-hidden hover:cursor-pointer rounded-lg"
@@ -334,6 +341,7 @@ const WaitlistForm = () => {
                     </div>
                     <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                   </Button>
+                  */}
 
                   <Button
                     variant="outline"
@@ -399,7 +407,8 @@ const WaitlistForm = () => {
                   onValueChange={setActiveTab}
                   className="w-full"
                 >
-                  <TabsList className="grid grid-cols-2 mb-4 sm:mb-6 bg-background/50 backdrop-blur-sm">
+                  <TabsList className="grid grid-cols-1 mb-4 sm:mb-6 bg-background/50 backdrop-blur-sm">
+                    {/* TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
                     <TabsTrigger
                       value="whatsapp"
                       className="flex gap-1 sm:gap-2 items-center data-[state=active]:bg-success/20 data-[state=active]:text-foreground font-medium text-xs sm:text-sm py-1.5"
@@ -407,6 +416,7 @@ const WaitlistForm = () => {
                       <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4" />
                       <span>WhatsApp</span>
                     </TabsTrigger>
+                    */}
                     <TabsTrigger
                       value="telegram"
                       className="flex gap-1 sm:gap-2 items-center data-[state=active]:bg-[#0088cc]/20 data-[state=active]:text-foreground font-medium text-xs sm:text-sm py-1.5"
@@ -416,6 +426,7 @@ const WaitlistForm = () => {
                     </TabsTrigger>
                   </TabsList>
 
+                  {/* TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
                   <TabsContent value="whatsapp">
                     <form
                       onSubmit={handleSubmit}
@@ -486,6 +497,7 @@ const WaitlistForm = () => {
                       </p>
                     </form>
                   </TabsContent>
+                  */}
 
                   <TabsContent value="telegram">
                     <form
