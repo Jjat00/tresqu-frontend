@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -58,10 +57,21 @@ const TresquCent = () => {
             Convierte tu cambio en inversión y controla tus gastos con
             inteligencia
           </h1>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
+          <p className="text-gray-400 text-lg max-w-3xl mx-auto mb-8">
             Explora cómo Cent y Tresqu juntos te ayudan a alcanzar tus metas
             financieras
           </p>
+          {/* Botón principal CTA */}
+          <a
+            href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20controlar%20mis%20finanzas%20gratis%20con%20la%20alianza%20Cent%20x%20Tresqu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block"
+          >
+            <button className="bg-gradient-to-r from-[#3bbcc8] to-success hover:from-[#3bbcc8]/80 hover:to-success/80 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg">
+              Controla tus finanzas gratis
+            </button>
+          </a>
         </div>
 
         {/* Logos de alianza */}
@@ -205,13 +215,13 @@ const TresquCent = () => {
             </div>
 
             <a
-              href="https://play.google.com/store/apps/details?id=com.centapp.mx&hl=es_CO"
+              href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20adquirir%20el%20Plan%20CENT%20por%20%24200%20MXN%2Fmes"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block w-full"
             >
               <button className="w-full bg-[#3bbcc8] hover:bg-[#3bbcc8]/80 text-white py-3 px-4 rounded-md transition-colors font-medium">
-                Descargar Cent
+                Obtener Plan CENT
               </button>
             </a>
           </div>
@@ -230,11 +240,47 @@ const TresquCent = () => {
                 <h3 className="text-xl font-semibold text-white">
                   Plan Tresqu
                 </h3>
-                <p className="text-success text-sm font-medium">$</p>
+                <p className="text-success text-sm font-medium">$100 MXN/mes</p>
               </div>
             </div>
 
-            <div className="space-y-3 mb-6 flex-grow">
+            <div className="space-y-2 mb-6 flex-grow">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-sm text-gray-300">
+                  Registro automático de gastos vía Telegram
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-sm text-gray-300">
+                  Categorización inteligente de transacciones
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-sm text-gray-300">
+                  Reportes financieros automáticos
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-sm text-gray-300">
+                  Análisis de patrones de gasto
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-sm text-gray-300">
+                  Alertas y notificaciones inteligentes
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-sm text-gray-300">
+                  Dashboard de control financiero
+                </p>
+              </div>
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-sm text-gray-300">
@@ -243,11 +289,16 @@ const TresquCent = () => {
               </div>
             </div>
 
-            <Link to="/login" className="inline-block w-full">
+            <a
+              href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20adquirir%20el%20Plan%20Tresqu%20por%20%24100%20MXN%2Fmes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block w-full"
+            >
               <button className="w-full bg-success hover:bg-success/80 text-white py-3 px-4 rounded-md transition-colors font-medium">
-                Empezar Gratis
+                Próximamente disponible
               </button>
-            </Link>
+            </a>
           </div>
         </div>
 
