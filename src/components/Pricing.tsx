@@ -1,11 +1,4 @@
-import {
-  Check,
-  X,
-  Mail,
-  Linkedin,
-  Facebook,
-  MessageCircle,
-} from "lucide-react";
+import { Check, X } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -60,7 +53,7 @@ const Pricing = () => {
             Planes para todo tipo de usuario
           </h2>
           <p className="text-foreground text-lg md:text-xl max-w-2xl mx-auto text-shadow-sm">
-            Elige el plan que mejor se adapte a tus necesidades financieras
+            Control financiero inteligente con IA avanzada
           </p>
         </div>
 
@@ -72,7 +65,7 @@ const Pricing = () => {
                 Plan Básico
               </CardTitle>
               <CardDescription className="text-foreground/90">
-                Para usuarios que inician
+                Prueba Tresqu y descubre el control financiero inteligente
               </CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold high-contrast-text-highlight">
@@ -85,21 +78,46 @@ const Pricing = () => {
               <div className="space-y-3">
                 <PricingFeature
                   included={true}
-                  text="Registro de ingresos y gastos básico"
+                  text="Registro Limitado: 20 gastos + 20 ingresos por mes"
                 />
-                <PricingFeature included={true} text="Estadísticas básicas" />
                 <PricingFeature
                   included={true}
-                  text="Interacción por texto en Telegram" // Temporalmente solo disponible Telegram
+                  text="Bot Básico: Solo mensajes de texto (sin voz)"
                 />
-                <PricingFeature included={false} text="Registro por audio" />
-                <PricingFeature included={false} text="Registro múltiple" />
-                <PricingFeature included={false} text="Reportes detallados" />
-                <PricingFeature included={false} text="Visualización gráfica" />
-                <PricingFeature included={false} text="Análisis por periodos" />
-                <PricingFeature included={false} text="Memoria contextual" />
-                <PricingFeature included={false} text="Exportación de datos" />
-                <PricingFeature included={false} text="Soporte prioritario" />
+                <PricingFeature
+                  included={true}
+                  text="Estadísticas Simples: Totales mensuales básicos"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Categorías Fijas: Solo categorías predefinidas"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Multi-plataforma: WhatsApp + Telegram"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Exportación Limitada: Solo datos del mes actual"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Soporte Estándar: Respuesta en 48-72 horas"
+                />
+                <PricingFeature included={false} text="Metas de ahorro" />
+                <PricingFeature included={false} text="Mensajes de voz" />
+                <PricingFeature
+                  included={false}
+                  text="Procesamiento de fotos/facturas"
+                />
+                <PricingFeature
+                  included={false}
+                  text="Estadísticas avanzadas"
+                />
+                <PricingFeature
+                  included={false}
+                  text="Categorías personalizadas"
+                />
               </div>
             </CardContent>
             <CardFooter>
@@ -121,7 +139,7 @@ const Pricing = () => {
           <Card className="gradient-border relative flex flex-col transform transition-all duration-300 hover:translate-y-[-8px] hover:glow">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
               <Badge className="bg-success-dark text-white hover:bg-success/90 shadow-md font-medium">
-                Recomendado
+                ⭐ MÁS POPULAR
               </Badge>
             </div>
             <div className="glass-card backdrop-blur-sm h-full">
@@ -130,7 +148,7 @@ const Pricing = () => {
                   Plan Premium
                 </CardTitle>
                 <CardDescription className="text-foreground/90">
-                  Para usuarios avanzados
+                  Control financiero completo sin límites + IA avanzada
                 </CardDescription>
                 <div className="mt-4 space-y-1">
                   <div>
@@ -142,53 +160,61 @@ const Pricing = () => {
                   <div className="text-sm text-foreground/80">
                     ó $50 anual (20% descuento)
                   </div>
-                  <div className="text-sm text-success-dark font-medium mt-2">
-                    ¡Prueba gratis por 1 mes!
-                  </div>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
                 <div className="space-y-3">
+                  <div className="text-sm font-semibold text-success-dark mb-2">
+                    TODO LO DEL BÁSICO +
+                  </div>
                   <PricingFeature
                     included={true}
-                    text="Registro de ingresos y gastos en lenguaje natural"
+                    text="Registros Ilimitados: Sin límites mensuales"
                   />
                   <PricingFeature
                     included={true}
-                    text="Registro por audio para ingresos y gastos"
+                    text="Metas de Ahorro: Sistema completo con 25+ funcionalidades"
                   />
                   <PricingFeature
                     included={true}
-                    text="Registro múltiple en un solo mensaje"
+                    text="Mensajes de Voz: Transcripción automática con IA"
                   />
                   <PricingFeature
                     included={true}
-                    text="Modificación y eliminación de registros"
+                    text="Procesamiento de Fotos: Sube fotos de recibos y facturas"
                   />
                   <PricingFeature
                     included={true}
-                    text="Análisis por periodos: diario, semanal, mensual"
+                    text="Extracción de Facturas: IA extrae monto, fecha y concepto"
                   />
                   <PricingFeature
                     included={true}
-                    text="Reportes detallados con gráficos"
+                    text="Análisis de Documentos: Procesa PDFs de estados de cuenta"
+                  />
+
+                  <PricingFeature
+                    included={true}
+                    text="Analytics Avanzados: Tendencias, patrones y recomendaciones"
                   />
                   <PricingFeature
                     included={true}
-                    text="Visualización gráfica: dona, barras y líneas"
+                    text="Categorías Personalizadas: Crea tus propias categorías"
                   />
                   <PricingFeature
                     included={true}
-                    text="Memoria contextual y reconocimiento de tiempo"
+                    text="Exportación Completa: TODO tu historial en múltiples formatos"
                   />
                   <PricingFeature
                     included={true}
-                    text="Dashboard con análisis comparativo"
+                    text="Búsqueda Inteligente: Encuentra gastos similares con IA"
                   />
-                  <PricingFeature included={true} text="Exportación a Excel" />
                   <PricingFeature
                     included={true}
-                    text="Soporte técnico prioritario"
+                    text="Soporte Prioritario: Respuesta en 4-8 horas"
+                  />
+                  <PricingFeature
+                    included={true}
+                    text="Reportes Detallados: Análisis profundo de tus finanzas"
                   />
                 </div>
               </CardContent>
@@ -204,63 +230,84 @@ const Pricing = () => {
                 >
                   <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                   <span className="relative z-10 text-shadow-sm">
-                    Comenzar Prueba Gratuita
+                    Comenzar Premium
                   </span>
                 </Button>
               </CardFooter>
             </div>
           </Card>
 
-          {/* Plan Empresas */}
+          {/* Plan Business */}
           <Card className="glass-card backdrop-blur-sm relative flex flex-col transform transition-all duration-300 hover:translate-y-[-8px] hover:shadow-lg">
             <CardHeader>
               <CardTitle className="text-xl md:text-2xl text-foreground text-shadow-sm">
-                Plan Empresas
+                Plan Business
               </CardTitle>
               <CardDescription className="text-foreground/90">
-                Para equipos y empresas
+                Gestión financiera para equipos y empresas + IA empresarial
               </CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold high-contrast-text-purple">
-                  $200
+                  $25
                 </span>
-                <span className="text-foreground/90"> / usuario al año</span>
+                <span className="text-foreground/90"> / mes</span>
                 <div className="text-sm text-foreground/80 mt-1">
-                  Descuentos por volumen disponibles
+                  Hasta 5 usuarios incluidos
                 </div>
               </div>
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="space-y-3">
+                <div className="text-sm font-semibold text-success-dark mb-2">
+                  TODO LO DEL PREMIUM +
+                </div>
                 <PricingFeature
                   included={true}
-                  text="Todo lo del Plan Premium"
-                />
-                <PricingFeature included={true} text="Acceso multiusuario" />
-                <PricingFeature
-                  included={true}
-                  text="Reportes financieros personalizados"
+                  text="Hasta 5 Usuarios: Gestión de equipos completa"
                 />
                 <PricingFeature
                   included={true}
-                  text="Control centralizado de gastos"
+                  text="Organizaciones: Crea y administra tu empresa"
                 />
                 <PricingFeature
                   included={true}
-                  text="Análisis financiero avanzado"
+                  text="Reportes Corporativos: Consolidados de todo el equipo"
                 />
                 <PricingFeature
                   included={true}
-                  text="Integración con sistemas contables"
-                />
-                <PricingFeature included={true} text="API personalizada" />
-                <PricingFeature
-                  included={true}
-                  text="Licencia anual con renovación automática"
+                  text="Invitaciones: Gestión de miembros por email"
                 />
                 <PricingFeature
                   included={true}
-                  text="Prioridad en nuevas funcionalidades"
+                  text="Analytics Empresariales: Métricas de equipo y departamentos"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Metas Grupales: Objetivos de ahorro compartidos"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Soporte VIP: Respuesta en 1-2 horas + llamadas"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Seguridad Avanzada: Roles y permisos granulares"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Reportes Personalizados: Diseña reportes específicos"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Procesamiento Masivo: Múltiples facturas simultáneamente"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Validación Cruzada: IA detecta duplicados entre miembros"
+                />
+                <PricingFeature
+                  included={true}
+                  text="Auditoría Inteligente: Detecta gastos inusuales"
                 />
               </div>
             </CardContent>
@@ -277,7 +324,7 @@ const Pricing = () => {
               >
                 <span className="absolute inset-0 bg-white/5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                 <span className="relative z-10 text-foreground">
-                  Contactar Ventas
+                  Comenzar Prueba Business
                 </span>
               </Button>
             </CardFooter>
@@ -285,6 +332,10 @@ const Pricing = () => {
         </div>
 
         <div className="text-center mt-12">
+          <p className="text-foreground mb-6 text-shadow-sm">
+            <strong>Funcionalidad Exclusiva de IA:</strong> "Foto y Listo" -
+            Toma foto al recibo, la IA hace el resto
+          </p>
           <p className="text-foreground mb-6 text-shadow-sm">
             ¿Tienes preguntas sobre nuestros planes?
             <a
