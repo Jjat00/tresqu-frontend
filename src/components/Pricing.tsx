@@ -78,7 +78,7 @@ const Pricing = () => {
               <div className="space-y-3">
                 <PricingFeature
                   included={true}
-                  text="Registro Limitado: 20 gastos + 20 ingresos por mes"
+                  text="Hata 40 movimientos: 20 gastos + 20 ingresos por mes"
                 />
                 <PricingFeature
                   included={true}
@@ -100,6 +100,8 @@ const Pricing = () => {
                   included={true}
                   text="Exportación Limitada: Solo datos del mes actual"
                 />
+                <PricingFeature included={true} text="Sin tarjeta de crédito" />
+                <PricingFeature included={true} text="Gratis para siempre" />
                 <PricingFeature
                   included={true}
                   text="Soporte Estándar: Respuesta en 48-72 horas"
@@ -248,7 +250,7 @@ const Pricing = () => {
               </CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold high-contrast-text-purple">
-                  $25
+                  $49
                 </span>
                 <span className="text-foreground/90"> / mes</span>
                 <div className="text-sm text-foreground/80 mt-1">
