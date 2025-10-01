@@ -25,10 +25,9 @@ const Hero = () => {
                 color: "var(--color-foreground)",
               }}
             >
-              Tresqu es tu asistente financiero que vive en Telegram. Registra
-              tus gastos e ingresos con un mensaje y recibe análisis al
+              Tresqu es tu asistente financiero que vive en WhatsApp y Telegram.
+              Registra tus gastos e ingresos con un mensaje y recibe análisis al
               instante. Empieza ahora, sin descargar nada.
-              {/* Temporalmente solo disponible Telegram por problemas con WhatsApp */}
             </p>
           </div>
 
@@ -45,8 +44,7 @@ const Hero = () => {
                 Elige tu plataforma preferida para comenzar a gestionar tus
                 finanzas
               </p>
-              <div className="flex justify-center">
-                {/* TEMPORALMENTE COMENTADO - PROBLEMAS CON WHATSAPP
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   className="group relative overflow-hidden rounded-xl text-white font-medium hover:shadow-lg transition duration-300"
                   size="lg"
@@ -57,7 +55,7 @@ const Hero = () => {
                   }}
                   onClick={() => {
                     window.open(
-                      "https://wa.me/573116331308?text=Hola%20Tresqu",
+                      "https://wa.me/573116534337?text=Hola%20Tresqu",
                       "_blank"
                     );
                   }}
@@ -70,7 +68,6 @@ const Hero = () => {
                     <span className="font-semibold">Iniciar con WhatsApp</span>
                   </div>
                 </Button>
-                */}
                 <Button
                   className="group relative overflow-hidden rounded-xl text-white font-medium hover:shadow-lg transition duration-300"
                   size="lg"

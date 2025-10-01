@@ -15,7 +15,8 @@ const benefits = [
   },
   {
     title: "Compatible con tus apps favoritas",
-    description: "Funciona con Telegram, la app que ya usas todos los días.", // Temporalmente solo disponible Telegram
+    description:
+      "Funciona con WhatsApp y Telegram, las apps que ya usas todos los días.",
     color: "purple",
   },
   {

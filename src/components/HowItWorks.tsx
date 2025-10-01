@@ -4,7 +4,7 @@ const steps = [
     icon: <MessageSquare className="h-8 w-8 text-success" />,
     title: "Escribe tu gasto",
     description:
-      "Envía un mensaje a Tresqu por Telegram como lo harías normalmente.", // Temporalmente solo disponible Telegram
+      "Envía un mensaje a Tresqu por WhatsApp o Telegram como lo harías normalmente.",
     example: "Gasté 15 mil en almuerzo",
   },
   {
