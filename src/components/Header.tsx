@@ -77,7 +77,7 @@ const Header = () => {
                   size="sm"
                   className="bg-success hover:bg-success/80 hover:cursor-pointer"
                 >
-                  Comenzar ahora
+                  Ver dashboard
                 </Button>
               </Link>
             )}
