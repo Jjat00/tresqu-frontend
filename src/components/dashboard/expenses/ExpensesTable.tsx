@@ -10,7 +10,16 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Download, AlertCircle, Trash2, Edit } from "lucide-react";
+import {
+  Search,
+  Download,
+  AlertCircle,
+  Trash2,
+  Edit,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
@@ -27,6 +36,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import EditExpenseDialog from "./EditExpenseDialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ExpensesTableProps {
   categoryFilter: string;
@@ -80,6 +90,9 @@ interface ExpensesData {
   recent_expenses: Expense[];
 }
 
+type SortField = "date" | "amount" | "category" | "description";
+type SortOrder = "asc" | "desc" | null;
+
 const ExpensesTable: React.FC<ExpensesTableProps> = ({
   categoryFilter,
   onCategoryClick,
@@ -89,6 +102,12 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
   const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null);
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(null);
+  const [selectedExpenses, setSelectedExpenses] = useState<Set<number>>(
+    new Set()
+  );
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const deleteExpense = useDeleteExpense();
 
   const fetchExpenses = async (): Promise<ExpensesData> => {
@@ -127,7 +146,19 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     }
   }, [error]);
 
-  // Filter expenses based on search query and category filter
+  // Helper para obtener el nombre correcto de la categoría
+  const getCategoryName = (expense: Expense): string => {
+    // Prioridad: current_category > user_expense_category > category_str
+    if (expense.current_category?.name) {
+      return expense.current_category.name;
+    }
+    if (expense.user_expense_category?.name) {
+      return expense.user_expense_category.name;
+    }
+    return expense.category_str || "Sin categoría";
+  };
+
+  // Filter and sort expenses based on search query, category filter, and sorting
   const filteredExpenses = React.useMemo(() => {
     if (!data?.recent_expenses) return [];
 
@@ -153,8 +184,33 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       });
     }
 
+    // Apply sorting
+    if (sortField && sortOrder) {
+      filtered.sort((a, b) => {
+        let comparison = 0;
+
+        switch (sortField) {
+          case "date":
+            comparison =
+              new Date(a.spent_at).getTime() - new Date(b.spent_at).getTime();
+            break;
+          case "amount":
+            comparison = parseFloat(a.amount) - parseFloat(b.amount);
+            break;
+          case "category":
+            comparison = getCategoryName(a).localeCompare(getCategoryName(b));
+            break;
+          case "description":
+            comparison = (a.note || "").localeCompare(b.note || "");
+            break;
+        }
+
+        return sortOrder === "asc" ? comparison : -comparison;
+      });
+    }
+
     return filtered;
-  }, [data, categoryFilter, searchQuery]);
+  }, [data, categoryFilter, searchQuery, sortField, sortOrder]);
 
   const totalAmount = React.useMemo(() => {
     if (!filteredExpenses?.length) return 0;
@@ -184,16 +240,78 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     });
   };
 
-  // ✅ Helper para obtener el nombre correcto de la categoría
-  const getCategoryName = (expense: Expense): string => {
-    // Prioridad: current_category > user_expense_category > category_str
-    if (expense.current_category?.name) {
-      return expense.current_category.name;
+  // Función para manejar el ordenamiento
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Si ya está ordenado por este campo, cambiar el orden
+      if (sortOrder === "asc") {
+        setSortOrder("desc");
+      } else if (sortOrder === "desc") {
+        setSortOrder(null);
+        setSortField(null);
+      }
+    } else {
+      // Nuevo campo, empezar con orden ascendente
+      setSortField(field);
+      setSortOrder("asc");
     }
-    if (expense.user_expense_category?.name) {
-      return expense.user_expense_category.name;
+  };
+
+  // Función para renderizar el icono de ordenamiento
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="ml-1 h-3 w-3 inline" />;
     }
-    return expense.category_str || "Sin categoría";
+    if (sortOrder === "asc") {
+      return <ArrowUp className="ml-1 h-3 w-3 inline" />;
+    }
+    if (sortOrder === "desc") {
+      return <ArrowDown className="ml-1 h-3 w-3 inline" />;
+    }
+    return <ArrowUpDown className="ml-1 h-3 w-3 inline" />;
+  };
+
+  // Función para seleccionar/deseleccionar todos
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allIds = new Set(filteredExpenses.map((expense) => expense.id));
+      setSelectedExpenses(allIds);
+    } else {
+      setSelectedExpenses(new Set());
+    }
+  };
+
+  // Función para seleccionar/deseleccionar individual
+  const handleSelectExpense = (expenseId: number, checked: boolean) => {
+    const newSelected = new Set(selectedExpenses);
+    if (checked) {
+      newSelected.add(expenseId);
+    } else {
+      newSelected.delete(expenseId);
+    }
+    setSelectedExpenses(newSelected);
+  };
+
+  // Función para eliminar múltiples gastos
+  const handleDeleteSelected = async () => {
+    if (selectedExpenses.size === 0) return;
+
+    try {
+      // Eliminar cada gasto seleccionado
+      const deletePromises = Array.from(selectedExpenses).map((id) =>
+        deleteExpense.mutateAsync(id)
+      );
+
+      await Promise.all(deletePromises);
+
+      toast.success(
+        `${selectedExpenses.size} gasto(s) eliminado(s) exitosamente`
+      );
+      setSelectedExpenses(new Set());
+      setShowDeleteDialog(false);
+    } catch (error) {
+      toast.error("Error al eliminar algunos gastos");
+    }
   };
 
   // ✅ Helper para obtener el color de la categoría
@@ -311,6 +429,17 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                 />
               </div>
               <div className="hidden sm:flex items-center gap-2">
+                {selectedExpenses.size > 0 && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setShowDeleteDialog(true)}
+                    className="h-9 text-xs"
+                  >
+                    <Trash2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    Eliminar ({selectedExpenses.size})
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="sm"
@@ -328,17 +457,46 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-xs">Descripción</TableHead>
-                  <TableHead className="text-xs">Categoría</TableHead>
-                  <TableHead className="text-xs">Monto</TableHead>
-                  <TableHead className="text-xs">Fecha</TableHead>
+                  <TableHead className="text-xs w-[40px]">
+                    <Checkbox
+                      checked={
+                        selectedExpenses.size === filteredExpenses.length &&
+                        filteredExpenses.length > 0
+                      }
+                      onCheckedChange={handleSelectAll}
+                    />
+                  </TableHead>
+                  <TableHead
+                    className="text-xs cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort("description")}
+                  >
+                    Descripción {renderSortIcon("description")}
+                  </TableHead>
+                  <TableHead
+                    className="text-xs cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort("category")}
+                  >
+                    Categoría {renderSortIcon("category")}
+                  </TableHead>
+                  <TableHead
+                    className="text-xs cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort("amount")}
+                  >
+                    Monto {renderSortIcon("amount")}
+                  </TableHead>
+                  <TableHead
+                    className="text-xs cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort("date")}
+                  >
+                    Fecha {renderSortIcon("date")}
+                  </TableHead>
                   <TableHead className="text-xs w-[80px]">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={6} className="h-24 text-center">
                       <div className="flex flex-col items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
                         <p className="text-sm text-muted-foreground">
@@ -349,7 +507,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={6} className="h-24 text-center">
                       <div className="flex flex-col items-center justify-center">
                         <AlertCircle className="h-8 w-8 text-destructive mb-2" />
                         <p className="text-sm text-muted-foreground">
@@ -360,7 +518,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : filteredExpenses.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={6} className="h-24 text-center">
                       <p className="text-sm text-muted-foreground">
                         No hay gastos que mostrar
                       </p>
@@ -369,6 +527,14 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                 ) : (
                   filteredExpenses.map((expense) => (
                     <TableRow key={expense.id} className="hover:bg-muted/50">
+                      <TableCell className="py-2 text-xs sm:text-sm">
+                        <Checkbox
+                          checked={selectedExpenses.has(expense.id)}
+                          onCheckedChange={(checked) =>
+                            handleSelectExpense(expense.id, checked as boolean)
+                          }
+                        />
+                      </TableCell>
                       <TableCell className="py-2 text-xs sm:text-sm">
                         {expense.note || "Sin descripción"}
                       </TableCell>
@@ -433,6 +599,17 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             </div>
 
             <div className="flex sm:hidden gap-2">
+              {selectedExpenses.size > 0 && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="h-8 text-xs"
+                >
+                  <Trash2 className="mr-1 h-3 w-3" />
+                  Eliminar ({selectedExpenses.size})
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -485,6 +662,35 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
         onClose={() => setExpenseToEdit(null)}
         onSuccess={handleEditSuccess}
       />
+
+      {/* Dialog para confirmar eliminación masiva */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¿Eliminar gastos seleccionados?</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que deseas eliminar {selectedExpenses.size}{" "}
+              gasto(s)? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(false)}
+              disabled={deleteExpense.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteSelected}
+              disabled={deleteExpense.isPending}
+            >
+              {deleteExpense.isPending ? "Eliminando..." : "Eliminar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
