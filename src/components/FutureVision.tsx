@@ -1,98 +1,115 @@
-import { DollarSign, FileText, Calendar } from "lucide-react";
+import { TrendingUp, CreditCard, Target, ArrowRight } from "lucide-react";
 
 const futureFeatures = [
   {
-    icon: <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-success" />,
-    title: "Inversión e inteligencia financiera",
+    icon: <TrendingUp className="w-6 h-6" />,
+    title: "Inversión inteligente",
     description:
-      "Recibe recomendaciones de inversión según tu perfil financiero. Desde ahorro en CETES hasta cripto o ETFs.",
-    color: "success",
+      "Recibe recomendaciones personalizadas según tu perfil. Desde CDTs hasta ETFs.",
+    status: "Próximamente",
   },
   {
-    icon: <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-highlight" />,
-    title: "Integración con plataformas de pago globales",
+    icon: <CreditCard className="w-6 h-6" />,
+    title: "Pagos integrados",
     description:
-      "Conecta con Stripe, Wise, PayPal o Apple Pay para hacer pagos sin fricciones desde tu chat.",
-    color: "highlight",
+      "Conecta con Stripe, PayPal, Nequi y más. Paga directo desde el chat.",
+    status: "En desarrollo",
   },
   {
-    icon: <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-purple" />,
-    title: "Simulador de metas financieras",
+    icon: <Target className="w-6 h-6" />,
+    title: "Simulador de metas",
     description:
-      "Planea viajes, compras o ahorro con simulaciones automáticas basadas en tu comportamiento real.",
-    color: "purple",
+      "Planea viajes, compras o ahorro con simulaciones basadas en tu comportamiento real.",
+    status: "Próximamente",
   },
 ];
 
 const FutureVision = () => {
   return (
-    <section id="futuro" className="section-padding relative overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background/90 backdrop-blur-sm z-[-1]"></div>
+    <section
+      id="futuro"
+      className="relative py-20 md:py-32 overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%)",
+      }}
+    >
+      {/* Decorative */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 gradient-text-cyan">
-            ¿Qué sigue?
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
-            Esto apenas comienza. Estamos construyendo un verdadero asistente
-            financiero potenciado por IA a:
-          </p>
-        </div>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left - Content */}
+          <div>
+            <span className="inline-block px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
+              Roadmap
+            </span>
+            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+              EL FUTURO DE
+              <br />
+              <span className="text-[#00FF7F] italic">TUS FINANZAS</span>
+            </h2>
+            <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
+              Esto apenas comienza. Estamos construyendo el asistente financiero
+              más completo, todo desde tu app de mensajería favorita.
+            </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
-          {futureFeatures.map((feature, index) => (
-            <div
-              key={index}
-              className="glass-card p-4 md:p-6 h-full flex flex-col animate-fade-up rounded-xl transform transition-all duration-300 hover:translate-y-[-5px]"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                borderTop: `3px solid var(--color-${feature.color})`,
-              }}
+            {/* CTA */}
+            <button
+              onClick={() =>
+                window.open(
+                  "https://wa.me/573116534337?text=Quiero%20saber%20más",
+                  "_blank"
+                )
+              }
+              className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 border border-zinc-800 text-white font-medium rounded-full hover:border-[#00FF7F]/30 hover:bg-zinc-800 transition-all duration-300"
             >
+              Mantenerme informado
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Right - Features */}
+          <div className="space-y-4">
+            {futureFeatures.map((feature, index) => (
               <div
-                className={`mb-2 md:mb-4 flex items-center justify-center sm:justify-start`}
+                key={index}
+                className="group trii-card p-6 flex items-start gap-5 hover:border-[#00FF7F]/20 transition-all duration-300"
               >
-                <div
-                  className={`w-10 h-10 rounded-full bg-${feature.color}/20 flex items-center justify-center`}
-                >
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-[#00FF7F]/10 flex items-center justify-center text-[#00FF7F] flex-shrink-0 group-hover:bg-[#00FF7F]/20 transition-colors">
                   {feature.icon}
                 </div>
+
+                {/* Content */}
+                <div className="flex-grow">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="text-lg font-bold text-white font-display">
+                      {feature.title}
+                    </h3>
+                    <span className="px-2 py-0.5 bg-zinc-800 text-zinc-400 text-xs rounded-full">
+                      {feature.status}
+                    </span>
+                  </div>
+                  <p className="text-zinc-400 text-sm">{feature.description}</p>
+                </div>
+
+                {/* Arrow */}
+                <ArrowRight className="w-5 h-5 text-zinc-700 group-hover:text-[#00FF7F] transition-colors flex-shrink-0" />
               </div>
-              <h3 className="text-base md:text-lg font-semibold mb-2 text-center sm:text-left">
-                {feature.title}
-              </h3>
-              <p className="text-xs md:text-sm text-muted-foreground text-center sm:text-left">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <div className="text-center">
-          <p className="italic text-xs md:text-sm text-muted-foreground mb-4 md:mb-6 backdrop-blur-sm bg-background/20 p-3 rounded-lg inline-block">
-            Todo, usando lenguaje natural desde tu app de mensajería favorita.
-          </p>
+        {/* Bottom Note */}
+        <div className="mt-16 text-center">
+          <div className="inline-block px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
+            <p className="text-zinc-400 text-sm italic">
+              "Todo usando lenguaje natural, desde tu app de mensajería favorita"
+            </p>
+          </div>
         </div>
       </div>
-
-      {/* Background effects */}
-      <div
-        className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full blur-3xl opacity-10 animate-pulse-glow"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-success), transparent 70%)",
-        }}
-      ></div>
-      <div
-        className="absolute top-1/3 -left-20 w-64 h-64 rounded-full blur-3xl opacity-10 animate-pulse-glow"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-purple), transparent 70%)",
-          animationDelay: "1.5s",
-        }}
-      ></div>
     </section>
   );
 };

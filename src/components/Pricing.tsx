@@ -1,374 +1,249 @@
-import { Check, X } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Check, X, Sparkles, Building2, Rocket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-const PricingFeature = ({
-  included,
-  text,
-}: {
-  included: boolean;
+
+interface PlanFeature {
   text: string;
-}) => {
-  return (
-    <div className="flex items-center gap-2 text-sm">
-      {included ? (
-        <Check className="h-4 w-4 text-success" />
-      ) : (
-        <X className="h-4 w-4 text-muted-foreground" />
-      )}
-      <span
-        className={
-          included ? "text-foreground font-medium" : "text-muted-foreground"
-        }
-      >
-        {text}
-      </span>
-    </div>
-  );
-};
+  included: boolean;
+}
+
+interface Plan {
+  name: string;
+  icon: React.ReactNode;
+  description: string;
+  price: string;
+  period: string;
+  badge?: string;
+  features: PlanFeature[];
+  cta: string;
+  highlighted?: boolean;
+  onClick: () => void;
+}
 
 const Pricing = () => {
   const navigate = useNavigate();
 
-  const navigateToLogin = () => {
-    navigate("/login");
-  };
+  const plans: Plan[] = [
+    {
+      name: "Básico",
+      icon: <Rocket className="w-5 h-5" />,
+      description: "Para comenzar a organizar tus finanzas",
+      price: "Gratis",
+      period: "para siempre",
+      features: [
+        { text: "40 movimientos/mes (20 gastos + 20 ingresos)", included: true },
+        { text: "Bot básico (solo texto)", included: true },
+        { text: "Estadísticas mensuales simples", included: true },
+        { text: "Categorías predefinidas", included: true },
+        { text: "WhatsApp + Telegram", included: true },
+        { text: "Exportación mes actual", included: true },
+        { text: "Mensajes de voz", included: false },
+        { text: "Fotos de recibos", included: false },
+        { text: "Metas de ahorro", included: false },
+        { text: "Categorías personalizadas", included: false },
+      ],
+      cta: "Comenzar Gratis",
+      onClick: () => navigate("/login"),
+    },
+    {
+      name: "Premium",
+      icon: <Sparkles className="w-5 h-5" />,
+      description: "Control financiero completo con IA avanzada",
+      price: "$5",
+      period: "/mes",
+      badge: "MÁS POPULAR",
+      highlighted: true,
+      features: [
+        { text: "Registros ilimitados", included: true },
+        { text: "Metas de ahorro completas", included: true },
+        { text: "Mensajes de voz con IA", included: true },
+        { text: "Fotos de recibos y facturas", included: true },
+        { text: "Extracción automática de datos", included: true },
+        { text: "Analytics avanzados", included: true },
+        { text: "Categorías personalizadas", included: true },
+        { text: "Exportación completa", included: true },
+        { text: "Búsqueda inteligente", included: true },
+        { text: "Soporte prioritario (4-8h)", included: true },
+      ],
+      cta: "Comenzar Premium",
+      onClick: () => navigate("/login"),
+    },
+    {
+      name: "Business",
+      icon: <Building2 className="w-5 h-5" />,
+      description: "Gestión financiera para equipos",
+      price: "$49",
+      period: "/mes",
+      features: [
+        { text: "Todo lo de Premium", included: true },
+        { text: "Hasta 5 usuarios", included: true },
+        { text: "Gestión de organización", included: true },
+        { text: "Reportes consolidados", included: true },
+        { text: "Analytics empresariales", included: true },
+        { text: "Metas grupales", included: true },
+        { text: "Roles y permisos", included: true },
+        { text: "Procesamiento masivo", included: true },
+        { text: "Detección de duplicados", included: true },
+        { text: "Soporte VIP (1-2h)", included: true },
+      ],
+      cta: "Contactar Ventas",
+      onClick: () =>
+        document
+          .getElementById("contacto")
+          ?.scrollIntoView({ behavior: "smooth" }),
+    },
+  ];
 
   return (
     <section
       id="pricing"
-      className="relative overflow-hidden py-16 md:py-24 lg:py-28 gradient-bg"
+      className="relative py-20 md:py-32 overflow-hidden bg-[#0a0a0a]"
     >
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00FF7F]/5 rounded-full blur-[150px] pointer-events-none" />
+      </div>
+
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3 font-display high-contrast-text-purple">
-            Planes para todo tipo de usuario
+        {/* Section Header */}
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <span className="inline-block px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
+            Precios
+          </span>
+          <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+            PLANES PARA CADA
+            <br />
+            <span className="text-[#00FF7F] italic">NECESIDAD</span>
           </h2>
-          <p className="text-foreground text-lg md:text-xl max-w-2xl mx-auto text-shadow-sm">
-            Control financiero inteligente con IA avanzada
+          <p className="text-zinc-400 text-lg">
+            Control financiero inteligente con IA avanzada. Elige el plan que
+            mejor se adapte a ti.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Plan Básico */}
-          <Card className="glass-card backdrop-blur-sm relative flex flex-col transform transition-all duration-300 hover:translate-y-[-8px] hover:shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-xl md:text-2xl text-foreground text-shadow-sm">
-                Plan Básico
-              </CardTitle>
-              <CardDescription className="text-foreground/90">
-                Prueba Tresqu y descubre el control financiero inteligente
-              </CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold high-contrast-text-highlight">
-                  Gratis
-                </span>
-                <span className="text-foreground/90"> - para siempre</span>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="space-y-3">
-                <PricingFeature
-                  included={true}
-                  text="Hata 40 movimientos: 20 gastos + 20 ingresos por mes"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Bot Básico: Solo mensajes de texto (sin voz)"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Estadísticas Simples: Totales mensuales básicos"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Categorías Fijas: Solo categorías predefinidas"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Multi-plataforma: WhatsApp + Telegram"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Exportación Limitada: Solo datos del mes actual"
-                />
-                <PricingFeature included={true} text="Sin tarjeta de crédito" />
-                <PricingFeature included={true} text="Gratis para siempre" />
-                <PricingFeature
-                  included={true}
-                  text="Soporte Estándar: Respuesta en 48-72 horas"
-                />
-                <PricingFeature included={false} text="Metas de ahorro" />
-                <PricingFeature included={false} text="Mensajes de voz" />
-                <PricingFeature
-                  included={false}
-                  text="Procesamiento de fotos/facturas"
-                />
-                <PricingFeature
-                  included={false}
-                  text="Estadísticas avanzadas"
-                />
-                <PricingFeature
-                  included={false}
-                  text="Categorías personalizadas"
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                variant="outline"
-                className="w-full relative overflow-hidden group font-medium"
-                size="lg"
-                onClick={navigateToLogin}
-              >
-                <span className="absolute inset-0 bg-white/5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                <span className="relative z-10 text-foreground">
-                  Comenzar Gratis
-                </span>
-              </Button>
-            </CardFooter>
-          </Card>
-
-          {/* Plan Premium */}
-          <Card className="gradient-border relative flex flex-col transform transition-all duration-300 hover:translate-y-[-8px] hover:glow">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-              <Badge className="bg-success-dark text-white hover:bg-success/90 shadow-md font-medium">
-                ⭐ MÁS POPULAR
-              </Badge>
-            </div>
-            <div className="glass-card backdrop-blur-sm h-full">
-              <CardHeader>
-                <CardTitle className="text-xl md:text-2xl text-foreground text-shadow-sm">
-                  Plan Premium
-                </CardTitle>
-                <CardDescription className="text-foreground/90">
-                  Control financiero completo sin límites + IA avanzada
-                </CardDescription>
-                <div className="mt-4 space-y-1">
-                  <div>
-                    <span className="text-3xl font-bold high-contrast-text-success">
-                      $5
-                    </span>
-                    <span className="text-foreground/90"> / mes</span>
-                  </div>
-                  <div className="text-sm text-foreground/80">
-                    ó $50 anual (20% descuento)
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <div className="space-y-3">
-                  <div className="text-sm font-semibold text-success-dark mb-2">
-                    TODO LO DEL BÁSICO +
-                  </div>
-                  <PricingFeature
-                    included={true}
-                    text="Registros Ilimitados: Sin límites mensuales"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Metas de Ahorro: Sistema completo con 25+ funcionalidades"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Mensajes de Voz: Transcripción automática con IA"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Procesamiento de Fotos: Sube fotos de recibos y facturas"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Extracción de Facturas: IA extrae monto, fecha y concepto"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Análisis de Documentos: Procesa PDFs de estados de cuenta"
-                  />
-
-                  <PricingFeature
-                    included={true}
-                    text="Analytics Avanzados: Tendencias, patrones y recomendaciones"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Categorías Personalizadas: Crea tus propias categorías"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Exportación Completa: TODO tu historial en múltiples formatos"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Búsqueda Inteligente: Encuentra gastos similares con IA"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Soporte Prioritario: Respuesta en 4-8 horas"
-                  />
-                  <PricingFeature
-                    included={true}
-                    text="Reportes Detallados: Análisis profundo de tus finanzas"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  className="w-full relative overflow-hidden group font-medium"
-                  size="lg"
-                  style={{
-                    background:
-                      "linear-gradient(45deg, var(--color-success-dark), var(--color-cyan))",
-                  }}
-                  onClick={() => (window.location.href = "/login")}
-                >
-                  <span className="absolute inset-0 bg-black/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                  <span className="relative z-10 text-shadow-sm">
-                    Comenzar Premium
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+          {plans.map((plan, index) => (
+            <div
+              key={index}
+              className={`relative flex flex-col rounded-2xl transition-all duration-300 ${
+                plan.highlighted
+                  ? "bg-gradient-to-b from-[#00FF7F]/10 to-transparent border-2 border-[#00FF7F]/30 scale-105 shadow-[0_0_60px_-15px_rgba(0,255,127,0.3)]"
+                  : "trii-card"
+              }`}
+            >
+              {/* Popular Badge */}
+              {plan.badge && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="px-4 py-1.5 bg-[#00FF7F] text-black text-xs font-bold rounded-full">
+                    ⭐ {plan.badge}
                   </span>
-                </Button>
-              </CardFooter>
-            </div>
-          </Card>
+                </div>
+              )}
 
-          {/* Plan Business */}
-          <Card className="glass-card backdrop-blur-sm relative flex flex-col transform transition-all duration-300 hover:translate-y-[-8px] hover:shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-xl md:text-2xl text-foreground text-shadow-sm">
-                Plan Business
-              </CardTitle>
-              <CardDescription className="text-foreground/90">
-                Gestión financiera para equipos y empresas + IA empresarial
-              </CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold high-contrast-text-purple">
-                  $49
-                </span>
-                <span className="text-foreground/90"> / mes</span>
-                <div className="text-sm text-foreground/80 mt-1">
-                  Hasta 5 usuarios incluidos
+              <div className="p-6 lg:p-8 flex flex-col h-full">
+                {/* Plan Header */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                        plan.highlighted
+                          ? "bg-[#00FF7F] text-black"
+                          : "bg-zinc-800 text-[#00FF7F]"
+                      }`}
+                    >
+                      {plan.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-white font-display">
+                      {plan.name}
+                    </h3>
+                  </div>
+                  <p className="text-zinc-500 text-sm">{plan.description}</p>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="space-y-3">
-                <div className="text-sm font-semibold text-success-dark mb-2">
-                  TODO LO DEL PREMIUM +
+
+                {/* Price */}
+                <div className="mb-6 pb-6 border-b border-zinc-800">
+                  <div className="flex items-baseline gap-1">
+                    <span
+                      className={`text-4xl font-bold font-display ${
+                        plan.highlighted ? "text-[#00FF7F]" : "text-white"
+                      }`}
+                    >
+                      {plan.price}
+                    </span>
+                    <span className="text-zinc-500 text-sm">{plan.period}</span>
+                  </div>
+                  {plan.name === "Premium" && (
+                    <p className="text-xs text-zinc-500 mt-2">
+                      ó $50/año (ahorra 20%)
+                    </p>
+                  )}
                 </div>
-                <PricingFeature
-                  included={true}
-                  text="Hasta 5 Usuarios: Gestión de equipos completa"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Organizaciones: Crea y administra tu empresa"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Reportes Corporativos: Consolidados de todo el equipo"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Invitaciones: Gestión de miembros por email"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Analytics Empresariales: Métricas de equipo y departamentos"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Metas Grupales: Objetivos de ahorro compartidos"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Soporte VIP: Respuesta en 1-2 horas + llamadas"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Seguridad Avanzada: Roles y permisos granulares"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Reportes Personalizados: Diseña reportes específicos"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Procesamiento Masivo: Múltiples facturas simultáneamente"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Validación Cruzada: IA detecta duplicados entre miembros"
-                />
-                <PricingFeature
-                  included={true}
-                  text="Auditoría Inteligente: Detecta gastos inusuales"
-                />
+
+                {/* Features */}
+                <div className="flex-grow space-y-3 mb-8">
+                  {plan.features.map((feature, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      {feature.included ? (
+                        <div className="w-5 h-5 rounded-full bg-[#00FF7F]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Check className="w-3 h-3 text-[#00FF7F]" />
+                        </div>
+                      ) : (
+                        <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <X className="w-3 h-3 text-zinc-600" />
+                        </div>
+                      )}
+                      <span
+                        className={`text-sm ${
+                          feature.included ? "text-zinc-300" : "text-zinc-600"
+                        }`}
+                      >
+                        {feature.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA Button */}
+                <button
+                  onClick={plan.onClick}
+                  className={`w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                    plan.highlighted
+                      ? "bg-[#00FF7F] text-black hover:bg-[#00CC66] hover:shadow-[0_0_30px_rgba(0,255,127,0.3)]"
+                      : "bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700"
+                  }`}
+                >
+                  {plan.cta}
+                </button>
               </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                variant="outline"
-                className="w-full relative overflow-hidden group font-medium"
-                size="lg"
-                onClick={() =>
-                  document
-                    .getElementById("contacto")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-              >
-                <span className="absolute inset-0 bg-white/5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                <span className="relative z-10 text-foreground">
-                  Comenzar Prueba Business
-                </span>
-              </Button>
-            </CardFooter>
-          </Card>
+            </div>
+          ))}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-foreground mb-6 text-shadow-sm">
-            <strong>Funcionalidad Exclusiva de IA:</strong> "Foto y Listo" -
-            Toma foto al recibo, la IA hace el resto
-          </p>
-          <p className="text-foreground mb-6 text-shadow-sm">
-            ¿Tienes preguntas sobre nuestros planes?
+        {/* Bottom Note */}
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-zinc-900/50 border border-zinc-800 rounded-full">
+            <span className="text-2xl">📸</span>
+            <div className="text-left">
+              <p className="text-sm text-white font-medium">
+                Funcionalidad exclusiva: "Foto y Listo"
+              </p>
+              <p className="text-xs text-zinc-500">
+                Toma foto al recibo, la IA hace el resto
+              </p>
+            </div>
+          </div>
+          <p className="mt-6 text-zinc-500 text-sm">
+            ¿Tienes preguntas?{" "}
             <a
               href="#contacto"
-              className="text-success-dark hover:text-success/90 ml-1 font-medium"
+              className="text-[#00FF7F] hover:underline font-medium"
             >
               Contáctanos
             </a>
           </p>
         </div>
       </div>
-
-      {/* Overlay para mejorar contraste */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/50 to-background/80 pointer-events-none z-[1]"></div>
-
-      {/* Background gradient effects */}
-      <div
-        className="absolute -bottom-40 -right-40 w-80 md:w-96 h-80 md:h-96 rounded-full blur-3xl opacity-20 animate-pulse-glow"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-purple), transparent 70%)",
-        }}
-      ></div>
-      <div
-        className="absolute -top-40 -left-40 w-80 md:w-96 h-80 md:h-96 rounded-full blur-3xl opacity-20 animate-pulse-glow"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-highlight), transparent 70%)",
-          animationDelay: "1.5s",
-        }}
-      ></div>
     </section>
   );
 };

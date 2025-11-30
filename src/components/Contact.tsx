@@ -1,83 +1,115 @@
-import { Mail, Linkedin, Facebook, MessageCircle } from "lucide-react";
+import { Mail, Linkedin, Facebook, MessageCircle, ArrowUpRight } from "lucide-react";
+
+const contactMethods = [
+  {
+    icon: <Mail className="w-6 h-6" />,
+    title: "Email",
+    value: "contacto@tresqu.com",
+    href: "mailto:contacto@tresqu.com",
+    color: "#00FF7F",
+  },
+  {
+    icon: <Linkedin className="w-6 h-6" />,
+    title: "LinkedIn",
+    value: "@tresqu",
+    href: "https://www.linkedin.com/company/tresqu/",
+    color: "#0A66C2",
+  },
+  {
+    icon: <Facebook className="w-6 h-6" />,
+    title: "Facebook",
+    value: "@Tresqu",
+    href: "https://www.facebook.com/people/Tresqu/61576223664321/",
+    color: "#1877F2",
+  },
+  {
+    icon: <MessageCircle className="w-6 h-6" />,
+    title: "WhatsApp",
+    value: "+57 316 427 7879",
+    href: "https://wa.me/573164277879",
+    color: "#25D366",
+  },
+];
 
 const Contact = () => {
   return (
     <section
       id="contacto"
-      className="relative overflow-hidden py-8 md:py-24 lg:py-28"
+      className="relative py-20 md:py-32 overflow-hidden bg-[#0a0a0a]"
     >
+      {/* Background */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
+      <div className="absolute bottom-1/3 right-0 w-[400px] h-[400px] bg-[#00FF7F]/5 rounded-full blur-[150px] pointer-events-none" />
+
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        <div className="text-center mb-12">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4 font-display high-contrast-text-purple">
-            Contáctanos
-          </h3>
-          <p className="text-foreground/90 max-w-2xl mx-auto">
-            Estamos aquí para ayudarte. Elige el canal que prefieras para
-            comunicarte con nosotros.
+        {/* Section Header */}
+        <div className="max-w-2xl mx-auto text-center mb-16">
+          <span className="inline-block px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
+            Contacto
+          </span>
+          <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+            ¿TIENES
+            <br />
+            <span className="text-[#00FF7F] italic">PREGUNTAS?</span>
+          </h2>
+          <p className="text-zinc-400 text-lg">
+            Estamos aquí para ayudarte. Elige el canal que prefieras.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
-          <a
-            href="mailto:contacto@tresqu.com"
-            className="glass-card p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-4px]"
-          >
-            <Mail className="h-8 w-8 mx-auto mb-4 text-success" />
-            <h4 className="font-semibold mb-2">Email</h4>
-            <p className="text-sm text-foreground/80">contacto@tresqu.com</p>
-          </a>
+        {/* Contact Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          {contactMethods.map((method, index) => (
+            <a
+              key={index}
+              href={method.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group trii-card p-6 text-center hover:border-zinc-700 transition-all duration-300"
+            >
+              {/* Icon */}
+              <div
+                className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                style={{
+                  backgroundColor: `${method.color}15`,
+                  color: method.color,
+                }}
+              >
+                {method.icon}
+              </div>
 
-          <a
-            href="https://www.linkedin.com/company/tresqu/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-card p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-4px]"
-          >
-            <Linkedin className="h-8 w-8 mx-auto mb-4 text-blue-500" />
-            <h4 className="font-semibold mb-2">LinkedIn</h4>
-            <p className="text-sm text-foreground/80">@tresqu</p>
-          </a>
+              {/* Content */}
+              <h3 className="text-white font-semibold mb-1 flex items-center justify-center gap-1">
+                {method.title}
+                <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-[#00FF7F] transition-colors" />
+              </h3>
+              <p className="text-zinc-500 text-sm">{method.value}</p>
+            </a>
+          ))}
+        </div>
 
-          <a
-            href="https://www.facebook.com/people/Tresqu/61576223664321/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-card p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-4px]"
-          >
-            <Facebook className="h-8 w-8 mx-auto mb-4 text-blue-600" />
-            <h4 className="font-semibold mb-2">Facebook</h4>
-            <p className="text-sm text-foreground/80">@Tresqu</p>
-          </a>
-
-          <a
-            href="https://wa.me/573164277879"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-card p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-4px]"
-          >
-            <MessageCircle className="h-8 w-8 mx-auto mb-4 text-green-500" />
-            <h4 className="font-semibold mb-2">WhatsApp</h4>
-            <p className="text-sm text-foreground/80">+57 316 427 7879</p>
-          </a>
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
+            <div className="text-left">
+              <p className="text-white font-semibold">
+                ¿Prefieres una respuesta rápida?
+              </p>
+              <p className="text-zinc-500 text-sm">
+                Escríbenos por WhatsApp y te respondemos en minutos
+              </p>
+            </div>
+            <a
+              href="https://wa.me/573164277879"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 bg-[#25D366] text-white font-semibold rounded-full hover:bg-[#1fa855] transition-colors flex-shrink-0"
+            >
+              Chatear ahora
+            </a>
+          </div>
         </div>
       </div>
-
-      {/* Background effects */}
-      <div
-        className="absolute -bottom-40 -right-40 w-80 md:w-96 h-80 md:h-96 rounded-full blur-3xl opacity-20 animate-pulse-glow"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-purple), transparent 70%)",
-        }}
-      ></div>
-      <div
-        className="absolute -top-40 -left-40 w-80 md:w-96 h-80 md:h-96 rounded-full blur-3xl opacity-20 animate-pulse-glow"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-highlight), transparent 70%)",
-          animationDelay: "1.5s",
-        }}
-      ></div>
     </section>
   );
 };
