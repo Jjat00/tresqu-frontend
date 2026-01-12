@@ -37,6 +37,13 @@ import {
 } from "@/components/ui/dialog";
 import EditExpenseDialog from "./EditExpenseDialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ExpensesTableProps {
   categoryFilter: string;
@@ -110,20 +117,49 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const deleteExpense = useDeleteExpense();
 
+  // Estado para mes y año seleccionados
+  const currentDate = new Date();
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    currentDate.getMonth() + 1
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(
+    currentDate.getFullYear()
+  );
+
+  // Generar lista de años (últimos 5 años hasta el año actual)
+  const currentYear = currentDate.getFullYear();
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
+  // Nombres de meses en español
+  const monthNames = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
+
   const fetchExpenses = async (): Promise<ExpensesData> => {
     const token = getAccessToken();
     if (!token) {
       throw new Error("No auth token available");
     }
 
-    const response = await fetch(
-      `${env.apiUrl}/api/expenses/summary/?months=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    // Construir URL con month y year
+    const url = `${env.apiUrl}/api/expenses/summary/?month=${selectedMonth}&year=${selectedYear}`;
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Error fetching expenses: ${response.status}`);
@@ -133,7 +169,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["expensesData"],
+    queryKey: ["expensesData", selectedMonth, selectedYear],
     queryFn: fetchExpenses,
     retry: 1,
   });
@@ -366,7 +402,8 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `gastos_${new Date().toISOString().split("T")[0]}.xlsx`;
+      const monthStr = String(selectedMonth).padStart(2, "0");
+      link.download = `gastos_${selectedYear}_${monthStr}.xlsx`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -411,13 +448,44 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
       <Card>
         <CardContent className="pt-4 sm:pt-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-            <h3 className="text-base sm:text-lg font-semibold mb-2 gradient-text">
-              Historial de Gastos del mes{" "}
-              {new Date().toLocaleDateString("es-CO", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h3>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+              <h3 className="text-base sm:text-lg font-semibold mb-2 gradient-text">
+                Historial de Gastos del mes{" "}
+                {monthNames[selectedMonth - 1]} {selectedYear}
+              </h3>
+              <div className="flex items-center gap-2">
+                <Select
+                  value={selectedMonth.toString()}
+                  onValueChange={(value) => setSelectedMonth(parseInt(value))}
+                >
+                  <SelectTrigger className="w-[140px] h-8 text-xs">
+                    <SelectValue placeholder="Mes" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {monthNames.map((month, index) => (
+                      <SelectItem key={index + 1} value={(index + 1).toString()}>
+                        {month}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={selectedYear.toString()}
+                  onValueChange={(value) => setSelectedYear(parseInt(value))}
+                >
+                  <SelectTrigger className="w-[100px] h-8 text-xs">
+                    <SelectValue placeholder="Año" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
                 <Input

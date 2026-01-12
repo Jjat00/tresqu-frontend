@@ -396,7 +396,7 @@ const Hero = () => {
               </div>
 
               {/* Secondary Phone - Only visible on xl screens */}
-              <div className="absolute -left-16 top-28 z-10 opacity-60 scale-[0.75] hidden xl:block">
+              <div className="absolute -left-20 -top-4 z-0 opacity-50 scale-[0.65] hidden xl:block rotate-[-8deg]">
                 <div className="w-[240px] bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-[2.5rem] p-2 shadow-xl">
                   <div className="bg-[#0b141a] rounded-[2rem] overflow-hidden">
                     <div className="bg-[#1f2c34] px-3 py-2 flex items-center gap-2">
