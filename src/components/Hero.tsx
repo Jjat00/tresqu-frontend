@@ -38,7 +38,7 @@ const Hero = () => {
             {/* Main Title */}
             <div className="space-y-2 md:space-y-4">
               <h1 className="trii-title text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] xl:text-6xl text-white leading-[1.1]">
-                CONTROLA TUS
+                CONTROLAR TUS
                 <br />
                 FINANZAS NUNCA
                 <br />
@@ -112,381 +112,584 @@ const Hero = () => {
           </div>
 
           {/* Right Column - WhatsApp Phone Mockup */}
-          <div className="relative flex justify-center order-2">
-            <div className="relative">
+          <div className="relative flex justify-center order-2" style={{ perspective: "2000px" }}>
+            <div className="relative transition-transform duration-1000 ease-out hover:[transform:rotateY(-10deg)_rotateX(5deg)]">
               {/* Main Phone - WhatsApp Chat */}
               <div className="relative z-20 animate-float">
+                {/* Layered Shadow System */}
+                <div
+                  className="absolute inset-0 rounded-[2.5rem] sm:rounded-[3rem]"
+                  style={{
+                    boxShadow: `
+                      0 2px 8px rgba(0,0,0,0.6),
+                      0 15px 35px rgba(0,0,0,0.5),
+                      0 40px 70px rgba(0,0,0,0.4),
+                      0 60px 90px rgba(0,0,0,0.2),
+                      0 50px 80px rgba(0,255,127,0.04)
+                    `,
+                  }}
+                />
                 <div className="relative mx-auto w-[240px] xs:w-[260px] sm:w-[280px] md:w-[300px] lg:w-[300px] xl:w-[320px]">
-                  {/* Phone Frame */}
-                  <div className="relative bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-[2.5rem] sm:rounded-[3rem] p-2 sm:p-3 shadow-2xl shadow-black/50">
+
+                  {/* Hardware Buttons - Titanium Style */}
+                  {/* Action Button (small, round-ish) */}
+                  <div
+                    className="absolute -left-[3px] sm:-left-[4px] top-[100px] w-[3px] sm:w-[4px] h-[26px] rounded-l-md"
+                    style={{
+                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 30%, #b0b1b5 50%, #78797d 70%, #606166)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), -1px 0 3px rgba(0,0,0,0.4)",
+                    }}
+                  />
+                  {/* Volume Up */}
+                  <div
+                    className="absolute -left-[3px] sm:-left-[4px] top-[140px] w-[3px] sm:w-[4px] h-[50px] rounded-l-md"
+                    style={{
+                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 20%, #b0b1b5 50%, #78797d 80%, #606166)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), -1px 0 3px rgba(0,0,0,0.4)",
+                    }}
+                  />
+                  {/* Volume Down */}
+                  <div
+                    className="absolute -left-[3px] sm:-left-[4px] top-[200px] w-[3px] sm:w-[4px] h-[50px] rounded-l-md"
+                    style={{
+                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 20%, #b0b1b5 50%, #78797d 80%, #606166)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), -1px 0 3px rgba(0,0,0,0.4)",
+                    }}
+                  />
+                  {/* Power Button */}
+                  <div
+                    className="absolute -right-[3px] sm:-right-[4px] top-[160px] w-[3px] sm:w-[4px] h-[70px] rounded-r-md"
+                    style={{
+                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 20%, #b0b1b5 50%, #78797d 80%, #606166)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), 1px 0 3px rgba(0,0,0,0.4)",
+                    }}
+                  />
+
+                  {/* 3D Depth/Outer Edge - Titanium */}
+                  <div
+                    className="absolute inset-0 rounded-[2.7rem] sm:rounded-[3.2rem] translate-y-1 sm:translate-y-2"
+                    style={{
+                      background: "linear-gradient(135deg, #2a2a2e, #1a1a1e 30%, #3a3a3e 50%, #1a1a1e 70%, #2a2a2e)",
+                      boxShadow: "inset 0 -2px 4px rgba(255,255,255,0.08), 0 20px 40px rgba(0,0,0,0.8)",
+                    }}
+                  />
+
+                  {/* Phone Frame (Bezel) - Titanium Multi-stop Gradient */}
+                  <div
+                    className="relative rounded-[2.5rem] sm:rounded-[3rem] p-[8px] sm:p-[12px] border border-zinc-500/30"
+                    style={{
+                      background: "linear-gradient(145deg, #8e8e93 0%, #636366 8%, #48484a 15%, #3a3a3c 25%, #58585a 40%, #48484a 55%, #3a3a3c 70%, #636366 85%, #8e8e93 92%, #48484a 100%)",
+                      boxShadow: `
+                        inset 0 1px 1px rgba(255,255,255,0.4),
+                        inset 0 -1px 1px rgba(0,0,0,0.3),
+                        inset 0 0 20px rgba(255,255,255,0.05),
+                        0 0 0 1px rgba(255,255,255,0.08)
+                      `,
+                    }}
+                  >
+                    {/* Double ring bevel effect */}
+                    <div className="absolute inset-[1px] rounded-[2.45rem] sm:rounded-[2.95rem] pointer-events-none"
+                      style={{
+                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2)",
+                      }}
+                    />
+
+                    {/* Glass Glare / Shine Effect */}
+                    <div className="absolute inset-0 z-50 rounded-[2.5rem] sm:rounded-[3rem] pointer-events-none overflow-hidden">
+                      {/* Diagonal reflection */}
+                      <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent transform -rotate-45 translate-x-1/2 -translate-y-1/2 blur-sm" />
+                      {/* Top highlight - curved */}
+                      <div className="absolute top-0 left-[10%] right-[10%] h-[20%] bg-gradient-to-b from-white/[0.06] to-transparent rounded-t-[2.5rem] sm:rounded-t-[3rem] blur-[1px]" />
+                      {/* Specular corner highlight */}
+                      <div className="absolute top-[5%] right-[8%] w-[15%] h-[8%] bg-gradient-to-bl from-white/[0.08] to-transparent rounded-full blur-[2px]" />
+                      {/* Border highlight ring */}
+                      <div className="absolute inset-0 rounded-[2.5rem] sm:rounded-[3rem] ring-1 ring-inset ring-white/[0.07]" />
+                    </div>
+
                     {/* Screen */}
-                    <div className="bg-[#0b141a] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
+                    <div
+                      className="bg-[#0b141a] rounded-[2rem] sm:rounded-[2.4rem] overflow-hidden relative"
+                      style={{
+                        boxShadow: "inset 0 0 15px rgba(0,0,0,0.9), inset 0 0 3px rgba(0,0,0,1), 0 0 0 1px rgba(0,0,0,0.8)",
+                      }}
+                    >
                       {/* Status Bar */}
-                      <div className="flex justify-between items-center px-4 sm:px-6 py-1.5 sm:py-2 text-[9px] sm:text-[10px] text-white/60 bg-[#1f2c34]">
-                        <span className="font-medium">9:41</span>
+                      <div className="flex justify-between items-center px-4 sm:px-6 py-1.5 sm:py-2 text-[9px] sm:text-[10px] text-white/70 bg-[#1f2c34]">
+                        <span className="font-semibold text-white/80">9:41</span>
                         <div className="flex items-center gap-1 sm:gap-1.5">
                           {/* Signal Bars */}
-                          <div className="flex items-end gap-[1px] sm:gap-[2px]">
-                            <div className="w-[2px] sm:w-[3px] h-[3px] sm:h-[4px] bg-white rounded-[1px]" />
-                            <div className="w-[2px] sm:w-[3px] h-[4px] sm:h-[6px] bg-white rounded-[1px]" />
-                            <div className="w-[2px] sm:w-[3px] h-[6px] sm:h-[8px] bg-white rounded-[1px]" />
-                            <div className="w-[2px] sm:w-[3px] h-[8px] sm:h-[10px] bg-white rounded-[1px]" />
+                          <div className="flex items-end gap-[1px] sm:gap-[1.5px]">
+                            <div className="w-[2px] sm:w-[3px] h-[3px] sm:h-[4px] bg-white/90 rounded-[0.5px]" />
+                            <div className="w-[2px] sm:w-[3px] h-[5px] sm:h-[6px] bg-white/90 rounded-[0.5px]" />
+                            <div className="w-[2px] sm:w-[3px] h-[7px] sm:h-[8px] bg-white/90 rounded-[0.5px]" />
+                            <div className="w-[2px] sm:w-[3px] h-[9px] sm:h-[10px] bg-white/90 rounded-[0.5px]" />
                           </div>
+                          {/* 5G Label */}
+                          <span className="text-[7px] sm:text-[8px] font-bold text-white/70 tracking-tight">5G</span>
                           {/* WiFi */}
                           <svg
-                            className="w-3 h-3 sm:w-4 sm:h-4 text-white"
+                            className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white/90"
                             viewBox="0 0 24 24"
                             fill="currentColor"
                           >
                             <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4.9-2.3l1.4 1.4C9.4 16.4 10.6 16 12 16s2.6.4 3.5 1.1l1.4-1.4C15.6 14.6 13.9 14 12 14s-3.6.6-4.9 1.7zm-2.8-2.8l1.4 1.4C7.3 13 9.5 12 12 12s4.7 1 6.3 2.3l1.4-1.4C17.7 11.1 15 10 12 10s-5.7 1.1-7.7 2.9z" />
                           </svg>
-                          {/* Battery */}
-                          <div className="flex items-center gap-0.5">
-                            <div className="w-5 sm:w-6 h-[8px] sm:h-[10px] border border-white/60 rounded-[2px] p-[1px]">
+                          {/* Battery with percentage */}
+                          <div className="flex items-center gap-[2px]">
+                            <span className="text-[7px] sm:text-[8px] font-medium text-white/60">72</span>
+                            <div className="w-5 sm:w-6 h-[8px] sm:h-[10px] border border-white/50 rounded-[2px] p-[1px] relative">
                               <div className="w-[70%] h-full bg-[#30D158] rounded-[1px]" />
                             </div>
-                            <div className="w-[1px] sm:w-[2px] h-[3px] sm:h-[4px] bg-white/60 rounded-r-[1px]" />
+                            <div className="w-[2px] sm:w-[2px] h-[3px] sm:h-[4px] bg-white/50 rounded-r-[1px]" />
                           </div>
                         </div>
                       </div>
 
                       {/* WhatsApp Header */}
-                      <div className="bg-[#1f2c34] px-2 sm:px-3 py-1.5 sm:py-2 flex items-center gap-2 sm:gap-3">
-                        <svg
-                          className="w-4 h-4 sm:w-5 sm:h-5 text-white/80"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                          />
-                        </svg>
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#25D366] flex items-center justify-center">
-                          <span className="text-white font-bold text-xs sm:text-sm">
-                            T
-                          </span>
+                      <div className="bg-[#202c33] px-2 sm:px-3 py-2 flex items-center gap-2 sm:gap-3 z-10 relative shadow-[0_1px_3px_rgba(0,0,0,0.4)]">
+                        <div className="flex items-center gap-1 cursor-pointer">
+                          <svg className="w-5 h-5 text-[#aebac1] -ml-1" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 4l1.4 1.4L7.8 11H20v2H7.8l5.6 5.6L12 20l-8-8 8-8z" />
+                          </svg>
+                          {/* Profile pic with border and shadow */}
+                          <div className="relative">
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#25D366] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.3)] ring-1 ring-white/10">
+                              <span className="text-white font-bold text-sm">T</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <div className="text-white font-semibold text-xs sm:text-sm">
+                        <div className="flex-1 cursor-pointer">
+                          <div className="text-[#e9edef] font-medium text-[13px] sm:text-[15px] leading-tight">
                             Tresqu Bot
                           </div>
-                          <div className="text-[8px] sm:text-[10px] text-[#25D366]">
-                            en línea
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <div className="w-[5px] h-[5px] rounded-full bg-[#25D366] shadow-[0_0_3px_rgba(37,211,102,0.5)]" />
+                            <span className="text-[10px] sm:text-[11px] text-[#25D366] leading-tight">en línea</span>
                           </div>
                         </div>
-                        <div className="flex gap-3 sm:gap-4 text-white/80">
-                          <svg
-                            className="w-4 h-4 sm:w-5 sm:h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                            />
+                        <div className="flex gap-4 sm:gap-5 text-[#aebac1]">
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
                           </svg>
-                          <svg
-                            className="w-4 h-4 sm:w-5 sm:h-5 hidden sm:block"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                            />
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                          </svg>
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z" />
                           </svg>
                         </div>
                       </div>
 
                       {/* Chat Background */}
                       <div
-                        className="h-[280px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[380px] xl:h-[400px] px-2 sm:px-3 py-2 overflow-hidden relative"
+                        className="h-[280px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[380px] xl:h-[400px] px-2 sm:px-3 py-3 overflow-y-auto relative flex flex-col scrollbar-hide"
                         style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
                           backgroundColor: "#0b141a",
                         }}
                       >
-                        <div className="space-y-1.5 sm:space-y-2">
+                        <div className="flex-1 space-y-2">
                           {/* Date Badge */}
-                          <div className="flex justify-center mb-2 sm:mb-3">
-                            <span className="bg-[#1d2b33] text-[8px] sm:text-[10px] text-white/60 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg">
+                          <div className="flex justify-center mb-3 mt-1">
+                            <span className="bg-[#182229] text-[10px] sm:text-[11px] text-[#8696a0] px-3 py-1 rounded-lg shadow-sm">
                               HOY
                             </span>
                           </div>
 
                           {/* Bot Message */}
-                          <div className="flex justify-start">
-                            <div className="bg-[#1f2c34] rounded-xl sm:rounded-2xl rounded-tl-sm px-2 sm:px-3 py-1.5 sm:py-2 max-w-[88%] shadow-sm">
-                              <p className="text-[11px] sm:text-[13px] text-white/90 leading-relaxed">
-                                👋 ¡Hola! Soy{" "}
-                                <span className="font-semibold text-[#25D366]">
-                                  Tresqu
-                                </span>
-                                , tu asistente financiero.
+                          <div className="flex justify-start mb-2">
+                            <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                              {/* Tail */}
+                              <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
+                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
+                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
+                                </svg>
+                              </div>
+                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35]">
+                                👋 ¡Hola! Soy <span className="font-semibold text-[#e9edef]">Tresqu</span>, tu asistente financiero.
                               </p>
-                              <p className="text-[11px] sm:text-[13px] text-white/90 leading-relaxed mt-0.5 sm:mt-1">
+                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] mt-1 pr-6">
                                 Escríbeme tus gastos o ingresos 📊
                               </p>
-                              <div className="flex justify-end mt-0.5 sm:mt-1">
-                                <span className="text-[8px] sm:text-[10px] text-white/40">
-                                  10:30
-                                </span>
+                              <div className="absolute bottom-1 right-2 flex justify-end items-center">
+                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:30</span>
                               </div>
                             </div>
                           </div>
 
                           {/* User Message */}
-                          <div className="flex justify-end">
-                            <div className="bg-[#005c4b] rounded-xl sm:rounded-2xl rounded-tr-sm px-2 sm:px-3 py-1.5 sm:py-2 max-w-[75%] shadow-sm">
-                              <p className="text-[11px] sm:text-[13px] text-white leading-relaxed">
+                          <div className="flex justify-end mb-2">
+                            <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                              {/* Tail */}
+                              <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
+                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
+                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
+                                </svg>
+                              </div>
+                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] pr-12">
                                 Gasté 45 mil en almuerzo
                               </p>
-                              <div className="flex justify-end items-center gap-0.5 sm:gap-1 mt-0.5 sm:mt-1">
-                                <span className="text-[8px] sm:text-[10px] text-white/60">
-                                  10:31
-                                </span>
-                                <CheckCheck className="w-3 h-3 sm:w-4 sm:h-4 text-[#53bdeb]" />
+                              <div className="absolute bottom-1 right-2 flex justify-end items-center gap-1">
+                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:31</span>
+                                <CheckCheck className="w-[14px] h-[14px] text-[#53bdeb]" />
                               </div>
                             </div>
                           </div>
 
                           {/* Bot Response */}
-                          <div className="flex justify-start">
-                            <div className="bg-[#1f2c34] rounded-xl sm:rounded-2xl rounded-tl-sm px-2 sm:px-3 py-1.5 sm:py-2 max-w-[88%] shadow-sm">
-                              <p className="text-[11px] sm:text-[13px] text-white/90 leading-relaxed">
-                                ✅{" "}
-                                <span className="font-semibold">
-                                  ¡Gasto registrado!
-                                </span>
-                              </p>
-                              <div className="mt-1.5 sm:mt-2 bg-[#0b141a]/50 rounded-lg p-1.5 sm:p-2 border-l-2 border-[#25D366]">
-                                <div className="flex justify-between text-[10px] sm:text-[12px]">
-                                  <span className="text-white/60">Monto:</span>
-                                  <span className="text-white font-medium">
-                                    $45.000
-                                  </span>
+                          <div className="flex justify-start mb-2">
+                            <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                              <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
+                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
+                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
+                                </svg>
+                              </div>
+                              <div className="bg-[#1b252a] rounded p-2 mb-1.5 border-l-4 border-[#25D366]">
+                                <div className="text-[#25D366] text-[11px] sm:text-[12px] font-medium mb-0.5">
+                                  Gasto Registrado
                                 </div>
-                                <div className="flex justify-between text-[10px] sm:text-[12px] mt-0.5 sm:mt-1">
-                                  <span className="text-white/60">
-                                    Categoría:
-                                  </span>
-                                  <span className="text-[#25D366] font-medium">
-                                    🍽️ Alimentación
-                                  </span>
+                                <div className="text-[#e9edef] text-[12px] sm:text-[13px] font-semibold">
+                                  $45.000
+                                </div>
+                                <div className="text-[#8696a0] text-[11px]">
+                                  🍽️ Alimentación
                                 </div>
                               </div>
-                              <div className="flex justify-end mt-0.5 sm:mt-1">
-                                <span className="text-[8px] sm:text-[10px] text-white/40">
-                                  10:31
-                                </span>
+                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] pr-8">
+                                ¡Listo! Lo he guardado. ✅
+                              </p>
+                              <div className="absolute bottom-1 right-2 flex justify-end items-center">
+                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:31</span>
                               </div>
                             </div>
                           </div>
 
                           {/* User Message 2 */}
-                          <div className="flex justify-end">
-                            <div className="bg-[#005c4b] rounded-xl sm:rounded-2xl rounded-tr-sm px-2 sm:px-3 py-1.5 sm:py-2 max-w-[75%] shadow-sm">
-                              <p className="text-[11px] sm:text-[13px] text-white leading-relaxed">
-                                ¿Cuánto llevo gastado hoy?
+                          <div className="flex justify-end mb-2">
+                            <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                              <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
+                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
+                                </svg>
+                              </div>
+                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] pr-12">
+                                ¿Mi resumen?
                               </p>
-                              <div className="flex justify-end items-center gap-0.5 sm:gap-1 mt-0.5 sm:mt-1">
-                                <span className="text-[8px] sm:text-[10px] text-white/60">
-                                  10:32
-                                </span>
-                                <CheckCheck className="w-3 h-3 sm:w-4 sm:h-4 text-[#53bdeb]" />
+                              <div className="absolute bottom-1 right-2 flex justify-end items-center gap-1">
+                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:32</span>
+                                <CheckCheck className="w-[14px] h-[14px] text-[#53bdeb]" />
                               </div>
                             </div>
                           </div>
 
                           {/* Bot Stats Response */}
-                          <div className="flex justify-start">
-                            <div className="bg-[#1f2c34] rounded-xl sm:rounded-2xl rounded-tl-sm px-2 sm:px-3 py-1.5 sm:py-2 max-w-[88%] shadow-sm">
-                              <p className="text-[11px] sm:text-[13px] text-white/90 leading-relaxed">
-                                📊{" "}
-                                <span className="font-semibold">
-                                  Resumen de hoy:
-                                </span>
+                          <div className="flex justify-start mb-2">
+                            <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                              <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
+                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
+                                </svg>
+                              </div>
+                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] font-medium">
+                                📊 Resumen del día
                               </p>
-                              <div className="mt-1 sm:mt-2 space-y-0.5 sm:space-y-1">
-                                <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[12px]">
-                                  <span className="text-red-400">↓</span>
-                                  <span className="text-white/80">
-                                    Gastos:{" "}
-                                    <span className="text-white font-medium">
-                                      $125.000
-                                    </span>
-                                  </span>
+                              <div className="mt-2 space-y-1.5 pb-2 pr-4">
+                                <div className="flex items-center justify-between text-[12px] sm:text-[13px] bg-[#1b252a] px-2 py-1.5 rounded">
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center">
+                                      <span className="text-red-400 text-[10px]">↓</span>
+                                    </div>
+                                    <span className="text-[#e9edef]">Gastos</span>
+                                  </div>
+                                  <span className="text-red-400 font-medium ml-4">$45.000</span>
                                 </div>
-                                <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[12px]">
-                                  <span className="text-[#25D366]">↑</span>
-                                  <span className="text-white/80">
-                                    Ingresos:{" "}
-                                    <span className="text-white font-medium">
-                                      $0
-                                    </span>
-                                  </span>
+                                <div className="flex items-center justify-between text-[12px] sm:text-[13px] bg-[#1b252a] px-2 py-1.5 rounded">
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="w-5 h-5 rounded-full bg-[#00FF7F]/10 flex items-center justify-center">
+                                      <span className="text-[#00FF7F] text-[10px]">↑</span>
+                                    </div>
+                                    <span className="text-[#e9edef]">Ingresos</span>
+                                  </div>
+                                  <span className="text-[#00FF7F] font-medium ml-4">$0</span>
                                 </div>
                               </div>
-                              <div className="flex justify-end mt-0.5 sm:mt-1">
-                                <span className="text-[8px] sm:text-[10px] text-white/40">
-                                  10:32
-                                </span>
+                              <div className="absolute bottom-1 right-2 flex justify-end items-center">
+                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:32</span>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Input Bar */}
-                      <div className="bg-[#1f2c34] px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-center gap-1.5 sm:gap-2">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white/60">
-                          <svg
-                            className="w-5 h-5 sm:w-6 sm:h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
+                      {/* Input Bar - More realistic */}
+                      <div className="bg-[#202c33] px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-end gap-1 sm:gap-1.5 z-10 relative">
+                        {/* Emoji icon */}
+                        <div className="flex pb-1.5 pl-0.5 text-[#8696a0]">
+                          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.298 1.011 0 6.31 0 12.813s5.298 11.803 11.804 11.803 11.804-5.298 11.804-11.803S18.31 1.011 11.804 1.011zM12 21.564c-5.246 0-9.5-4.253-9.5-9.5s4.254-9.5 9.5-9.5 9.5 4.254 9.5 9.5-4.254 9.5-9.5 9.5zm3.063-9.402c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z" />
                           </svg>
                         </div>
-                        <div className="flex-1 bg-[#2a3942] rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
-                          <span className="text-white/40 text-xs sm:text-sm">
-                            Mensaje...
+                        <div className="flex-1 bg-[#2a3942] rounded-3xl min-h-[36px] sm:min-h-[40px] px-3 sm:px-4 py-2 flex items-center shadow-sm">
+                          <span className="text-[#8696a0] text-[13px] sm:text-[14px]">
+                            Mensaje
                           </span>
                         </div>
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#25D366] rounded-full flex items-center justify-center">
-                          <svg
-                            className="w-4 h-4 sm:w-5 sm:h-5 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                            />
+                        <div className="flex items-end gap-1 pb-1.5 pr-0.5 text-[#8696a0]">
+                          {/* Camera icon */}
+                          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21.317 4.381H10.971L9.078 2.45c-.246-.251-.736-.457-1.089-.457H4.905c-.352 0-.837.211-1.078.468L2.515 4.381H2.683C1.198 4.381 0 5.58 0 7.065v12.27c0 1.485 1.199 2.684 2.683 2.684h18.634c1.485 0 2.683-1.199 2.683-2.684V7.065c0-1.485-1.198-2.684-2.683-2.684zM12 18.27c-3.088 0-5.592-2.504-5.592-5.592 0-3.088 2.504-5.592 5.592-5.592s5.592 2.504 5.592 5.592c0 3.088-2.504 5.592-5.592 5.592zm0-9.056c-1.91 0-3.464 1.553-3.464 3.464 0 1.91 1.553 3.464 3.464 3.464s3.464-1.554 3.464-3.464S13.91 9.214 12 9.214z"/>
                           </svg>
+                          {/* Mic button */}
+                          <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#00a884] flex items-center justify-center ml-0.5">
+                            <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.349 8.469 4.35v7.061c0 2.001 1.53 3.531 3.53 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.884h2.354v-3.884c3.884-.588 7.061-3.884 7.061-7.885h-2.002z"/>
+                            </svg>
+                          </div>
                         </div>
+                      </div>
+
+                      {/* Home indicator bar */}
+                      <div className="bg-[#0b141a] flex justify-center py-2">
+                        <div className="w-[100px] sm:w-[120px] h-[4px] bg-white/20 rounded-full" />
                       </div>
                     </div>
                   </div>
 
-                  {/* Dynamic Island */}
-                  <div className="absolute top-2 sm:top-3 left-1/2 -translate-x-1/2 w-16 xs:w-20 sm:w-24 h-5 xs:h-6 sm:h-7 bg-black rounded-full flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-zinc-900 border border-zinc-800" />
+                  {/* Dynamic Island - Enhanced */}
+                  <div
+                    className="absolute top-[12px] sm:top-[16px] left-1/2 -translate-x-1/2 w-[75px] xs:w-[85px] sm:w-[95px] h-[22px] xs:h-[26px] sm:h-[28px] bg-black rounded-full flex items-center justify-between px-2 sm:px-3 z-50"
+                    style={{
+                      boxShadow: "0 0 10px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.04), inset 0 0 4px rgba(255,255,255,0.02)",
+                      border: "0.5px solid rgba(255,255,255,0.06)",
+                    }}
+                  >
+                    {/* Face ID sensor - dot projector */}
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#080808] border border-white/[0.06] relative">
+                      <div className="absolute inset-[1px] rounded-full bg-gradient-to-br from-[#1a1a2e]/50 to-transparent" />
+                    </div>
+                    {/* Camera lens with iris rings */}
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full relative">
+                      {/* Outer ring */}
+                      <div className="absolute inset-0 rounded-full bg-[#0c0c14] border border-[#1a1a2e]/60" />
+                      {/* Middle iris ring */}
+                      <div className="absolute inset-[1.5px] rounded-full bg-gradient-to-br from-[#0f1028] to-[#080812] border border-[#1e1e3a]/40" />
+                      {/* Inner lens */}
+                      <div className="absolute inset-[3px] rounded-full bg-[#06060e]" />
+                      {/* Light reflection dot */}
+                      <div className="absolute top-[2px] right-[2px] w-[2px] h-[2px] rounded-full bg-blue-400/40" />
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Secondary Phone - Only visible on xl screens */}
-              <div className="absolute -left-20 -top-4 z-0 opacity-50 scale-[0.65] hidden xl:block rotate-[-8deg]">
-                <div className="w-[240px] bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-[2.5rem] p-2 shadow-xl">
-                  <div className="bg-[#0b141a] rounded-[2rem] overflow-hidden">
-                    <div className="bg-[#1f2c34] px-3 py-2 flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#25D366] flex items-center justify-center">
-                        <span className="text-white font-bold text-[10px]">
-                          T
-                        </span>
+              <div className="absolute -left-20 -top-4 z-0 opacity-60 scale-[0.65] hidden xl:block rotate-[-8deg] transition-transform duration-1000 ease-out hover:[transform:rotate(-8deg)_rotateY(-15deg)_rotateX(5deg)]" style={{ perspective: "1500px" }}>
+                <div className="relative w-[240px]">
+                  {/* Layered Shadows */}
+                  <div
+                    className="absolute inset-0 rounded-[2.5rem]"
+                    style={{
+                      boxShadow: `
+                        0 2px 6px rgba(0,0,0,0.5),
+                        0 10px 25px rgba(0,0,0,0.4),
+                        0 30px 50px rgba(0,0,0,0.3)
+                      `,
+                    }}
+                  />
+
+                  {/* 3D Depth - Titanium */}
+                  <div
+                    className="absolute inset-0 rounded-[2.7rem] translate-y-1"
+                    style={{
+                      background: "linear-gradient(135deg, #2a2a2e, #1a1a1e 30%, #3a3a3e 50%, #1a1a1e 70%, #2a2a2e)",
+                      boxShadow: "inset 0 -2px 4px rgba(255,255,255,0.08), 0 10px 20px rgba(0,0,0,0.8)",
+                    }}
+                  />
+
+                  {/* Frame - Titanium */}
+                  <div
+                    className="relative rounded-[2.5rem] p-[8px] border border-zinc-500/30"
+                    style={{
+                      background: "linear-gradient(145deg, #8e8e93 0%, #636366 8%, #48484a 15%, #3a3a3c 25%, #58585a 40%, #48484a 55%, #3a3a3c 70%, #636366 85%, #8e8e93 92%, #48484a 100%)",
+                      boxShadow: `
+                        inset 0 1px 1px rgba(255,255,255,0.4),
+                        inset 0 -1px 1px rgba(0,0,0,0.3),
+                        inset 0 0 20px rgba(255,255,255,0.05),
+                        0 0 0 1px rgba(255,255,255,0.08)
+                      `,
+                    }}
+                  >
+                    {/* Double ring bevel */}
+                    <div className="absolute inset-[1px] rounded-[2.45rem] pointer-events-none"
+                      style={{
+                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2)",
+                      }}
+                    />
+
+                    {/* Glass Glare */}
+                    <div className="absolute inset-0 z-50 rounded-[2.5rem] pointer-events-none overflow-hidden">
+                      <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent transform -rotate-45 translate-x-1/2 -translate-y-1/2 blur-sm" />
+                      <div className="absolute top-0 left-[10%] right-[10%] h-[20%] bg-gradient-to-b from-white/[0.06] to-transparent rounded-t-[2.5rem] blur-[1px]" />
+                      <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/[0.07]" />
+                    </div>
+
+                    <div
+                      className="bg-[#0b141a] rounded-[2rem] overflow-hidden relative"
+                      style={{
+                        boxShadow: "inset 0 0 15px rgba(0,0,0,0.9), inset 0 0 3px rgba(0,0,0,1), 0 0 0 1px rgba(0,0,0,0.8)",
+                      }}
+                    >
+                    {/* WhatsApp Header Secondary */}
+                    <div className="bg-[#202c33] px-3 py-2 flex items-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,0.4)] z-10 relative">
+                      <svg className="w-4 h-4 text-[#aebac1] -ml-1" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4l1.4 1.4L7.8 11H20v2H7.8l5.6 5.6L12 20l-8-8 8-8z" />
+                      </svg>
+                      <div className="w-7 h-7 rounded-full bg-[#25D366] flex items-center justify-center shadow-[0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-white/10">
+                        <span className="text-white font-bold text-[11px]">T</span>
                       </div>
-                      <div>
-                        <div className="text-white font-semibold text-[10px]">
+                      <div className="flex-1">
+                        <div className="text-[#e9edef] font-semibold text-[11px] leading-tight">
                           Tresqu Bot
                         </div>
-                        <div className="text-[7px] text-[#25D366]">
-                          en línea
+                        <div className="flex items-center gap-0.5 mt-0.5">
+                          <div className="w-[4px] h-[4px] rounded-full bg-[#25D366]" />
+                          <span className="text-[8px] text-[#25D366] leading-tight">en línea</span>
                         </div>
                       </div>
+                      <svg className="w-4 h-4 text-[#aebac1]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z" />
+                      </svg>
                     </div>
+
+                    {/* Chat Background Secondary */}
                     <div
-                      className="h-[340px] px-2 py-2 space-y-1.5"
-                      style={{ backgroundColor: "#0b141a" }}
+                      className="h-[340px] px-2 py-2 space-y-1.5 flex flex-col scrollbar-hide overflow-y-auto"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                        backgroundColor: "#0b141a",
+                      }}
                     >
-                      <div className="flex justify-end">
-                        <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-2 py-1 max-w-[80%]">
-                          <p className="text-[10px] text-white">
+                      {/* User Message */}
+                      <div className="flex justify-end mt-1 mb-1">
+                        <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                          <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
+                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
+                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
+                            </svg>
+                          </div>
+                          <p className="text-[10px] text-[#e9edef] pr-10">
                             Recibí mi salario 3.500.000
                           </p>
-                          <div className="flex justify-end items-center gap-0.5">
-                            <span className="text-[7px] text-white/60">
-                              9:15
-                            </span>
+                          <div className="absolute bottom-0.5 right-1.5 flex items-center gap-0.5">
+                            <span className="text-[7px] text-[#8696a0]">9:15</span>
                             <CheckCheck className="w-2.5 h-2.5 text-[#53bdeb]" />
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-start">
-                        <div className="bg-[#1f2c34] rounded-xl rounded-tl-sm px-2 py-1 max-w-[85%]">
-                          <p className="text-[10px] text-white/90">
-                            🎉{" "}
-                            <span className="font-semibold">
-                              ¡Ingreso registrado!
-                            </span>
-                          </p>
-                          <div className="mt-1 bg-[#0b141a]/50 rounded p-1 border-l-2 border-[#25D366]">
+
+                      {/* Bot Response */}
+                      <div className="flex justify-start mb-1">
+                        <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                          <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
+                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
+                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
+                            </svg>
+                          </div>
+                          <div className="bg-[#1b252a] rounded p-1.5 mb-1 border-l-2 border-[#25D366]">
                             <div className="text-[9px] text-[#25D366] font-medium">
                               +$3.500.000
                             </div>
-                            <div className="text-[8px] text-white/60">
+                            <div className="text-[8px] text-[#8696a0]">
                               💰 Salario
                             </div>
                           </div>
+                          <p className="text-[10px] text-[#e9edef] pr-6">
+                            ¡Ingreso registrado! 🎉
+                          </p>
+                          <div className="absolute bottom-0.5 right-1.5 flex items-center">
+                            <span className="text-[7px] text-[#8696a0]">9:15</span>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex justify-end">
-                        <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-2 py-1 max-w-[80%]">
-                          <p className="text-[10px] text-white">Uber 15.000</p>
-                          <div className="flex justify-end items-center gap-0.5">
-                            <span className="text-[7px] text-white/60">
-                              10:45
-                            </span>
+
+                      {/* User Message */}
+                      <div className="flex justify-end mb-1">
+                        <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                          <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
+                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
+                            </svg>
+                          </div>
+                          <p className="text-[10px] text-[#e9edef] pr-10">Uber 15.000</p>
+                          <div className="absolute bottom-0.5 right-1.5 flex items-center gap-0.5">
+                            <span className="text-[7px] text-[#8696a0]">10:45</span>
                             <CheckCheck className="w-2.5 h-2.5 text-[#53bdeb]" />
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-start">
-                        <div className="bg-[#1f2c34] rounded-xl rounded-tl-sm px-2 py-1 max-w-[85%]">
-                          <p className="text-[10px] text-white/90">
-                            ✅ Registrado
-                          </p>
-                          <div className="mt-1 bg-[#0b141a]/50 rounded p-1 border-l-2 border-orange-400">
+
+                      {/* Bot Response */}
+                      <div className="flex justify-start mb-1">
+                        <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                          <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
+                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
+                            </svg>
+                          </div>
+                          <div className="bg-[#1b252a] rounded p-1.5 mb-1 border-l-2 border-orange-400">
                             <div className="text-[9px] text-orange-400 font-medium">
                               -$15.000
                             </div>
-                            <div className="text-[8px] text-white/60">
+                            <div className="text-[8px] text-[#8696a0]">
                               🚗 Transporte
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="flex justify-end">
-                        <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-2 py-1 max-w-[80%]">
-                          <p className="text-[10px] text-white">
-                            ¿Mi balance del mes?
+                          <p className="text-[10px] text-[#e9edef] pr-6">
+                            ✅ Registrado
                           </p>
-                          <div className="flex justify-end items-center gap-0.5">
-                            <span className="text-[7px] text-white/60">
-                              11:00
-                            </span>
-                            <Check className="w-2.5 h-2.5 text-white/60" />
+                          <div className="absolute bottom-0.5 right-1.5 flex items-center">
+                            <span className="text-[7px] text-[#8696a0]">10:45</span>
                           </div>
                         </div>
+                      </div>
+
+                      {/* User Message */}
+                      <div className="flex justify-end">
+                        <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                          <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
+                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
+                            </svg>
+                          </div>
+                          <p className="text-[10px] text-[#e9edef] pr-10">
+                            ¿Mi balance del mes?
+                          </p>
+                          <div className="absolute bottom-0.5 right-1.5 flex items-center gap-0.5">
+                            <span className="text-[7px] text-[#8696a0]">11:00</span>
+                            <Check className="w-2.5 h-2.5 text-[#8696a0]" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Dynamic Island - Secondary */}
+                    <div
+                      className="absolute top-[8px] left-1/2 -translate-x-1/2 w-[75px] h-[22px] bg-black rounded-full flex items-center justify-between px-2 z-50"
+                      style={{
+                        boxShadow: "0 0 8px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.04)",
+                        border: "0.5px solid rgba(255,255,255,0.06)",
+                      }}
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#080808] border border-white/[0.06]" />
+                      <div className="w-2 h-2 rounded-full relative">
+                        <div className="absolute inset-0 rounded-full bg-[#0c0c14] border border-[#1a1a2e]/60" />
+                        <div className="absolute inset-[1px] rounded-full bg-[#06060e]" />
+                        <div className="absolute top-[1px] right-[1px] w-[1.5px] h-[1.5px] rounded-full bg-blue-400/40" />
                       </div>
                     </div>
                   </div>
@@ -494,6 +697,7 @@ const Hero = () => {
               </div>
             </div>
           </div>
+        </div>
         </div>
 
         {/* Bottom Section - Quick Access */}
