@@ -4,7 +4,7 @@ import { useSpeechRecognition } from "./useSpeechRecognition";
 import { useTextToSpeech } from "./useTextToSpeech";
 
 interface Message {
-  type: "bot" | "user";
+  type: "assistant" | "user";
   content: string;
 }
 
@@ -12,7 +12,7 @@ export const useChatBot = () => {
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      type: "bot",
+      type: "assistant",
       content:
         "¡Hola! Soy Tresqu, tu asistente financiero. ¿En qué puedo ayudarte hoy?",
     },
@@ -134,7 +134,7 @@ export const useChatBot = () => {
           "Entiendo. ¿Hay algo específico en lo que pueda ayudarte con tus finanzas? Puedo registrar gastos, ingresos, crear planes de pago o analizar tus hábitos financieros.";
       }
 
-      setMessages((prev) => [...prev, { type: "bot", content: botResponse }]);
+      setMessages((prev) => [...prev, { type: "assistant", content: botResponse }]);
       setIsProcessing(false);
 
       // Speak the response (text-to-speech)

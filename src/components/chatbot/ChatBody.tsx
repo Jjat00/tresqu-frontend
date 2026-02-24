@@ -3,7 +3,7 @@ import { RefObject, useState } from "react";
 import ChatMessage from "./ChatMessage";
 
 interface Message {
-  type: 'bot' | 'user';
+  type: 'assistant' | 'user';
   content: string;
 }
 

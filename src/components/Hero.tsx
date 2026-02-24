@@ -52,8 +52,7 @@ const Hero = () => {
 
             {/* Subtitle */}
             <p className="trii-subtitle text-sm sm:text-base md:text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-              Un bot para registrar tus gastos e ingresos en Colombia y el
-              mundo, fácil, rápido, seguro y desde tu celular.
+              Tu agente de inteligencia artificial para registrar tus gastos e ingresos en Colombia y el mundo, fácil, rápido, seguro y desde tu celular.
             </p>
 
             {/* CTA Buttons - Store Style */}
@@ -260,7 +259,7 @@ const Hero = () => {
                         </div>
                         <div className="flex-1 cursor-pointer">
                           <div className="text-[#e9edef] font-medium text-[13px] sm:text-[15px] leading-tight">
-                            Tresqu Bot
+                            Tresqu IA
                           </div>
                           <div className="flex items-center gap-1 mt-0.5">
                             <div className="w-[5px] h-[5px] rounded-full bg-[#25D366] shadow-[0_0_3px_rgba(37,211,102,0.5)]" />
@@ -296,7 +295,7 @@ const Hero = () => {
                             </span>
                           </div>
 
-                          {/* Bot Message */}
+                          {/* Assistant Message */}
                           <div className="flex justify-start mb-2">
                             <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                               {/* Tail */}
@@ -307,7 +306,7 @@ const Hero = () => {
                                 </svg>
                               </div>
                               <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35]">
-                                👋 ¡Hola! Soy <span className="font-semibold text-[#e9edef]">Tresqu</span>, tu asistente financiero.
+                                👋 ¡Hola! Soy <span className="font-semibold text-[#e9edef]">Tresqu</span>, tu agente financiero con IA.
                               </p>
                               <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] mt-1 pr-6">
                                 Escríbeme tus gastos o ingresos 📊
@@ -338,7 +337,7 @@ const Hero = () => {
                             </div>
                           </div>
 
-                          {/* Bot Response */}
+                          {/* Assistant Response */}
                           <div className="flex justify-start mb-2">
                             <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
@@ -385,7 +384,7 @@ const Hero = () => {
                             </div>
                           </div>
 
-                          {/* Bot Stats Response */}
+                          {/* Assistant Stats Response */}
                           <div className="flex justify-start mb-2">
                             <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
@@ -552,7 +551,7 @@ const Hero = () => {
                       </div>
                       <div className="flex-1">
                         <div className="text-[#e9edef] font-semibold text-[11px] leading-tight">
-                          Tresqu Bot
+                          Tresqu IA
                         </div>
                         <div className="flex items-center gap-0.5 mt-0.5">
                           <div className="w-[4px] h-[4px] rounded-full bg-[#25D366]" />
@@ -591,7 +590,7 @@ const Hero = () => {
                         </div>
                       </div>
 
-                      {/* Bot Response */}
+                      {/* Assistant Response */}
                       <div className="flex justify-start mb-1">
                         <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
@@ -633,7 +632,7 @@ const Hero = () => {
                         </div>
                       </div>
 
-                      {/* Bot Response */}
+                      {/* Assistant Response */}
                       <div className="flex justify-start mb-1">
                         <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">

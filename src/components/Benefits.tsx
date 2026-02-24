@@ -86,41 +86,53 @@ const Benefits = () => {
           </div>
         </div>
 
-        {/* Benefits Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-          {benefits.map((benefit, index) => (
-            <div
-              key={index}
-              className="group relative trii-card p-6 lg:p-8 transition-all duration-300 hover:border-[#00FF7F]/20"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-[#00FF7F]/10 flex items-center justify-center text-[#00FF7F] mb-5 group-hover:bg-[#00FF7F]/20 transition-colors">
-                {benefit.icon}
-              </div>
+        {/* Benefits Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 lg:gap-6 max-w-6xl mx-auto">
+          {benefits.map((benefit, index) => {
+            // Asymmetric Bento Grid logic
+            const isLarge = index === 0 || index === 3;
+            const gridClass = isLarge ? "md:col-span-2 md:row-span-2" : "md:col-span-2";
+            
+            return (
+              <div
+                key={index}
+                className={`group relative overflow-hidden rounded-[2rem] bg-zinc-900/40 border border-white/5 p-6 lg:p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,255,127,0.1)] ${gridClass}`}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {/* Glass reflection */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Glow behind icon */}
+                <div className="absolute top-8 left-8 w-24 h-24 bg-[#00FF7F]/20 rounded-full blur-[40px] group-hover:bg-[#00FF7F]/30 transition-colors duration-500" />
 
-              {/* Content */}
-              <h3 className="text-lg font-bold text-white mb-2 font-display">
-                {benefit.title}
-              </h3>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-                {benefit.description}
-              </p>
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-6">
+                    {/* Icon */}
+                    <div className="w-12 h-12 rounded-2xl bg-zinc-800/80 backdrop-blur-md border border-white/10 flex items-center justify-center text-[#00FF7F] group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                      {benefit.icon}
+                    </div>
 
-              {/* Highlight Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 rounded-lg border border-zinc-800">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F]" />
-                <span className="text-xs font-medium text-zinc-300">
-                  {benefit.highlight}
-                </span>
-              </div>
+                    {/* Highlight Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900/80 backdrop-blur-md rounded-full border border-white/5 shadow-sm">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F] shadow-[0_0_8px_#00FF7F]" />
+                      <span className="text-[11px] font-medium text-zinc-300 uppercase tracking-wide">
+                        {benefit.highlight}
+                      </span>
+                    </div>
+                  </div>
 
-              {/* Hover Glow */}
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00FF7F]/5 to-transparent" />
+                  <div className={isLarge ? "mt-auto pt-12" : "mt-auto pt-6"}>
+                    <h3 className={`${isLarge ? "text-2xl" : "text-xl"} font-bold text-white mb-3 font-display tracking-tight`}>
+                      {benefit.title}
+                    </h3>
+                    <p className={`text-zinc-400 leading-relaxed ${isLarge ? "text-base" : "text-sm"}`}>
+                      {benefit.description}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Bottom Stats */}

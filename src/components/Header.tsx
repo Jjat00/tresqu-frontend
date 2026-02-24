@@ -23,10 +23,10 @@ const Header = () => {
   }, [location]);
 
   const navLinks = [
-    { href: "#como-funciona", label: "Inicio" },
-    { href: "#beneficios", label: "Sobre Tresqu" },
-    { href: "#pricing", label: "Productos" },
-    { href: "#futuro", label: "FAQ" },
+    { href: "#como-funciona", label: "Cómo funciona" },
+    { href: "#beneficios", label: "Beneficios" },
+    { href: "#pricing", label: "Precios" },
+    { href: "#futuro", label: "Roadmap" },
     { href: "#contacto", label: "Contacto" },
   ];
 
@@ -34,25 +34,25 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "py-3 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5"
-          : "py-5 bg-transparent"
+          ? "py-3 bg-[#0a0a0a]/70 backdrop-blur-2xl border-b border-white/[0.05] shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+          : "py-6 bg-transparent"
       }`}
     >
       <div className="container flex items-center justify-between max-w-7xl mx-auto px-4 md:px-6">
         {/* Logo */}
-        <Link to="/" className="group">
+        <Link to="/" className="group flex items-center hover:scale-105 transition-transform duration-500">
           <Logo size="md" />
         </Link>
 
         {isHomePage ? (
           <>
             {/* Navegación Desktop */}
-            <nav className="hidden lg:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] backdrop-blur-md shadow-inner">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-300"
+                  className="px-5 py-2 rounded-full text-[13px] font-medium text-zinc-400 hover:text-white hover:bg-white/[0.08] hover:shadow-sm transition-all duration-300"
                 >
                   {link.label}
                 </a>
@@ -63,7 +63,7 @@ const Header = () => {
             <div className="hidden lg:block">
               <Link
                 to={isLoggedIn ? "/dashboard" : "/login"}
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#00FF7F] text-black font-semibold text-sm rounded-full hover:bg-[#00CC66] transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,255,127,0.3)]"
+                className="inline-flex items-center gap-2 px-7 py-2.5 bg-[#00FF7F] text-black font-bold text-sm rounded-full hover:bg-white hover:text-black transition-all duration-500 shadow-[0_0_30px_-5px_rgba(0,255,127,0.4)] hover:shadow-[0_0_40px_-5px_rgba(255,255,255,0.6)] hover:-translate-y-0.5"
               >
                 {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
               </Link>

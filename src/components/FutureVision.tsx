@@ -50,7 +50,7 @@ const FutureVision = () => {
               <span className="text-[#00FF7F] italic">TUS FINANZAS</span>
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-              Esto apenas comienza. Estamos construyendo el asistente financiero
+              Esto apenas comienza. Estamos construyendo el agente de IA financiero
               más completo, todo desde tu app de mensajería favorita.
             </p>
 
@@ -62,10 +62,10 @@ const FutureVision = () => {
                   "_blank"
                 )
               }
-              className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 border border-zinc-800 text-white font-medium rounded-full hover:border-[#00FF7F]/30 hover:bg-zinc-800 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-zinc-900/50 backdrop-blur-md border border-white/10 text-white font-semibold rounded-full hover:border-[#00FF7F]/40 hover:bg-zinc-800/80 hover:shadow-[0_0_20px_-5px_rgba(0,255,127,0.3)] transition-all duration-500 group"
             >
               Mantenerme informado
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
@@ -74,28 +74,33 @@ const FutureVision = () => {
             {futureFeatures.map((feature, index) => (
               <div
                 key={index}
-                className="group trii-card p-6 flex items-start gap-5 hover:border-[#00FF7F]/20 transition-all duration-300"
+                className="group relative bg-zinc-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl flex items-start gap-5 hover:-translate-x-2 transition-all duration-500 overflow-hidden"
               >
+                {/* Hover Glow */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#00FF7F]/0 via-[#00FF7F]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-[#00FF7F]/10 flex items-center justify-center text-[#00FF7F] flex-shrink-0 group-hover:bg-[#00FF7F]/20 transition-colors">
+                <div className="w-14 h-14 rounded-2xl bg-zinc-800/80 border border-white/10 flex items-center justify-center text-[#00FF7F] flex-shrink-0 group-hover:scale-110 group-hover:bg-[#00FF7F]/20 transition-all duration-500 shadow-lg relative z-10">
                   {feature.icon}
                 </div>
 
                 {/* Content */}
-                <div className="flex-grow">
+                <div className="flex-grow relative z-10">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-white font-display">
+                    <h3 className="text-xl font-bold text-white font-display tracking-tight">
                       {feature.title}
                     </h3>
-                    <span className="px-2 py-0.5 bg-zinc-800 text-zinc-400 text-xs rounded-full">
+                    <span className="px-2.5 py-1 bg-zinc-800/80 border border-white/5 text-zinc-300 text-[10px] font-semibold uppercase tracking-wider rounded-full shadow-inner">
                       {feature.status}
                     </span>
                   </div>
-                  <p className="text-zinc-400 text-sm">{feature.description}</p>
+                  <p className="text-zinc-400 text-sm leading-relaxed">{feature.description}</p>
                 </div>
 
                 {/* Arrow */}
-                <ArrowRight className="w-5 h-5 text-zinc-700 group-hover:text-[#00FF7F] transition-colors flex-shrink-0" />
+                <div className="flex-shrink-0 mt-2 relative z-10">
+                  <ArrowRight className="w-5 h-5 text-zinc-700 group-hover:text-[#00FF7F] transition-colors" />
+                </div>
               </div>
             ))}
           </div>
@@ -103,8 +108,8 @@ const FutureVision = () => {
 
         {/* Bottom Note */}
         <div className="mt-16 text-center">
-          <div className="inline-block px-6 py-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
-            <p className="text-zinc-400 text-sm italic">
+          <div className="inline-block px-8 py-5 bg-zinc-900/40 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl">
+            <p className="text-zinc-400 text-[15px] font-medium italic tracking-wide">
               "Todo usando lenguaje natural, desde tu app de mensajería favorita"
             </p>
           </div>
