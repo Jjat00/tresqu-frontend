@@ -1,57 +1,221 @@
-# Tresqu
+# Tresqu - Asistente Financiero Inteligente
 
-## How can I edit this code?
+Tresqu es una plataforma de gestión financiera personal potenciada por **Inteligencia Artificial**, diseñada para ayudarte a controlar tus gastos e ingresos de forma automática e inteligente.
 
-There are several ways of editing your application.
+## Features de IA - Vistas Públicas
 
-**Use Lovable**
+### Página Principal (`/`)
+- **Información sobre Tresqu**: Descripción del asistente inteligente
+- **CTA (Call-to-Action)**: Acceso directo al servicio financiero
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/35591135-3d7e-4f7c-9059-cdd6137fb0f5) and start prompting.
+### Alianza Cent × Tresqu (`/tresqu-cent`)
+- **Asistente Financiero Tresqu**: Información detallada sobre funcionalidades de IA
+- **Características IA Destacadas**:
+  - Registro automático de gastos vía Telegram/WhatsApp con IA
+  - Categorización inteligente de transacciones automática
+  - Reportes financieros automáticos generados por IA
+  - Análisis de patrones de gasto con machine learning
+  - Alertas inteligentes personalizadas
+  - Insights financieros basados en datos
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Features de IA - Vistas Privadas (Dashboard)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Chat Inteligente (Asistente Tresqu)
+Accesible desde cualquier página del dashboard:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### Capacidades de Reconocimiento y Síntesis
+- **Reconocimiento de Voz**: Envía comandos mediante voz
+- **Síntesis de Texto**: El asistente responde con audio
+- **Interfaz Natural**: Conversación fluida y natural
 
-Follow these steps:
+#### Análisis y Categorización Automática
+- **Detección de Gastos**: Entiende automáticamente cuando registras un gasto
+  - Ejemplo: "Gasté $500 en comida" → Categoriza como "Alimentación"
+- **Identificación de Ingresos**: Reconoce registros de ingresos
+  - Ejemplo: "Recibí $2,000 de mi sueldo"
+- **Clasificación Inteligente**: Categoriza transacciones por contexto
+  - Transporte: Uber, taxi, bus
+  - Alimentación: comida, restaurante, supermercado
+  - Entretenimiento: Netflix, cine, juegos
+  - Servicios: luz, agua, internet
+
+#### Análisis Financiero Avanzado
+- **Resumen de Gastos Mensuales**: "¿Cuánto gasté este mes?"
+- **Desglose por Categorías**: Análisis automático de dónde va tu dinero
+- **Cálculo de Ahorros**: Estimación inteligente de potencial de ahorro
+- **Planes de Pago Optimizados**: Sugerencias para deudas y préstamos
+- **Comparativas de Períodos**: Análisis comparativo mes a mes
+
+#### Inteligencia Predictiva
+- **Patrones de Gasto**: Análisis automático de hábitos financieros
+- **Recomendaciones Personalizadas**:
+  - Reducción de gastos en categorías específicas
+  - Estrategias de pago de deudas
+  - Oportunidades de ahorro
+- **Benchmarking**: Comparación con el mes anterior
+- **Metas Financieras**: Creación de planes de ahorro personalizados
+
+### Dashboard Analítico
+- **Gráficos Inteligentes**: Visualización automática de datos
+  - Gráficos de pastel por categorías
+  - Gráficos de línea de tendencias
+  - Gráficos de barras comparativos
+- **Colores Personalizados**: Cada categoría tiene su propia identidad visual
+- **Estadísticas en Tiempo Real**: Métricas actualizadas automáticamente
+
+### Categorías Personalizadas con IA
+- **Categorización Híbrida**: Sistema predefinido + categorías personalizadas
+- **Categorías Inteligentes**: El asistente sugiere categorías basadas en el contexto
+- **Gestión Automática**:
+  - Crear categorías personalizadas
+  - Editar propiedades (nombre, color, descripción)
+  - Estadísticas de uso automáticas
+  - Búsqueda en tiempo real
+
+### Análisis de Ingresos y Gastos
+- **Predicción de Tendencias**: Basada en patrones históricos
+- **Distribución Automática**: Análisis de dónde va tu dinero
+- **Alertas Inteligentes**: Notificaciones cuando se sobrepasan límites
+- **Reportes Automáticos**: Generados por IA, listos para revisar
+
+### Perfil Personalizado
+- **Preferencias de IA**: Configuración de recomendaciones
+- **Historial Inteligente**: Registro automático de todas tus transacciones
+- **Sincronización**: Datos consistentes en todos los dispositivos
+
+---
+
+## Cómo Usar los Features de IA
+
+### Chatbot Inteligente
+1. Abre el chat desde cualquier página (ícono en esquina inferior)
+2. Habla o escribe: "Gasté $300 en comida"
+3. El asistente automáticamente:
+   - Categoriza la transacción
+   - Registra el gasto
+   - Actualiza los gráficos
+   - Proporciona análisis
+
+### Recibir Análisis
+- Pregunta al asistente: "¿En qué gasté más este mes?"
+- El asistente analiza automáticamente tus datos y proporciona:
+  - Desglose por categorías
+  - Comparativa con el mes anterior
+  - Recomendaciones personalizadas
+
+### Crear Planes Financieros
+- Pregunta: "¿Cuánto puedo ahorrar?"
+- El asistente calcula automáticamente tu potencial de ahorro
+
+---
+
+## Stack Tecnológico
+
+Este proyecto está construido con:
+
+- **Frontend**: React + TypeScript + Vite
+- **UI**: shadcn-ui + Tailwind CSS
+- **Inteligencia Artificial**:
+  - Web Speech API (Reconocimiento de Voz)
+  - Web Audio API (Síntesis de Texto)
+  - NLP Patterns (Procesamiento de Lenguaje Natural)
+  - Analytics Engine (Análisis de Datos)
+- **Estado**: Zustand Store
+- **API**: Axios + Interceptores
+
+---
+
+## Cómo Editar el Código
+
+### Usar Lovable (Editor Visual)
+
+Visita el [Proyecto Lovable](https://lovable.dev/projects/35591135-3d7e-4f7c-9059-cdd6137fb0f5) y comienza a prompts.
+
+Los cambios se sincronizarán automáticamente.
+
+### Usar tu IDE Preferido
+
+Requisito: Node.js & npm instalados ([instalar con nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Paso 1: Clonar el repositorio
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Paso 2: Navegar al directorio
+cd chat-finance-bot
 
-# Step 3: Install the necessary dependencies.
+# Paso 3: Instalar dependencias
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Paso 4: Iniciar servidor de desarrollo
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Editar en GitHub
+- Navega al archivo deseado
+- Haz clic en el botón "Edit" (ícono de lápiz)
+- Realiza tus cambios y commit
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Usar GitHub Codespaces
+- Click en el botón "Code" (botón verde)
+- Selecciona la pestaña "Codespaces"
+- Click en "New codespace"
+- Edita y realiza commits
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Estructura del Proyecto (IA)
 
-## What technologies are used for this project?
+```
+src/
+├── components/
+│   ├── chatbot/                    # Asistente IA
+│   │   ├── useChatBot.tsx         # Lógica principal del chat
+│   │   ├── useSpeechRecognition.tsx # Reconocimiento de voz
+│   │   ├── useTextToSpeech.tsx    # Síntesis de texto
+│   │   ├── ChatBody.tsx
+│   │   ├── ChatHeader.tsx
+│   │   ├── ChatInput.tsx
+│   │   └── ChatMessage.tsx
+│   ├── dashboard/
+│   │   ├── CategoriesTab.tsx      # Gestión de categorías
+│   │   └── (análisis y reportes)
+├── services/
+│   ├── expenses/                   # Análisis de gastos
+│   │   ├── expenses.ts
+│   │   ├── lineChart.ts
+│   │   ├── PieChart.ts
+│   │   └── BarStackedChart.ts
+│   ├── incomes/                    # Análisis de ingresos
+│   │   ├── incomes.ts
+│   │   ├── stats.ts
+│   │   ├── lineChart.ts
+│   │   ├── pieChart.ts
+│   │   └── barStackedChart.ts
+│   └── categories/                 # Categorización IA
+│       ├── expenseCategories.ts
+│       └── incomeCategories.ts
+├── hooks/
+│   └── useExpenseCategories.ts    # Hooks de categorías
+└── types/
+    └── categories.ts              # Tipos de datos IA
+```
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Próximas Características IA
+
+- Predicción de gastos futuros
+- Chatbot más avanzado con procesamiento NLP mejorado
+- Integración con WhatsApp/Telegram Bot
+- Notificaciones inteligentes en tiempo real
+- Metas financieras con IA predictiva
+- Recomendaciones de inversión personalizadas
+
+---
+
+## Licencia
+
+Este proyecto es parte de la alianza estratégica Cent × Tresqu para la gestión financiera personal inteligente.
