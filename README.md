@@ -7,9 +7,6 @@ Tresqu es una plataforma de gestión financiera personal potenciada por **Inteli
 ### Página Principal (`/`)
 - **Información sobre Tresqu**: Descripción del asistente inteligente
 - **CTA (Call-to-Action)**: Acceso directo al servicio financiero
-
-### Alianza Cent × Tresqu (`/tresqu-cent`)
-- **Asistente Financiero Tresqu**: Información detallada sobre funcionalidades de IA
 - **Características IA Destacadas**:
   - Registro automático de gastos vía Telegram/WhatsApp con IA
   - Categorización inteligente de transacciones automática
