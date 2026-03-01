@@ -361,6 +361,28 @@
     animation: float 6s infinite ease-in-out;
   }
 
+  /* WhatsApp Features section animations */
+  @keyframes wa-typing {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(-3px); opacity: 1; }
+  }
+
+  @keyframes wa-wave {
+    0%   { transform: scaleY(0.35); }
+    100% { transform: scaleY(1.1); }
+  }
+
+  @keyframes wa-scan {
+    0%   { top: 0%; opacity: 1; }
+    80%  { top: 88%; opacity: 1; }
+    100% { top: 88%; opacity: 0; }
+  }
+
+  @keyframes wa-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
   .blur-effect {
     backdrop-filter: blur(8px);
   }
