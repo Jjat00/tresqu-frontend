@@ -213,7 +213,7 @@ const Hero = () => {
                       }}
                     >
                       {/* Status Bar */}
-                      <div className="flex justify-between items-center px-4 sm:px-6 py-1.5 sm:py-2 text-[9px] sm:text-[10px] text-white/70 bg-[#1f2c34]">
+                      <div className="flex justify-between items-center px-4 sm:px-6 py-1.5 sm:py-2 text-[9px] sm:text-[10px] text-white/70 bg-[#202c33]">
                         <span className="font-semibold text-white/80">9:41</span>
                         <div className="flex items-center gap-1 sm:gap-1.5">
                           {/* Signal Bars */}
@@ -225,10 +225,10 @@ const Hero = () => {
                           </div>
                           {/* 5G Label */}
                           <span className="text-[7px] sm:text-[8px] font-bold text-white/70 tracking-tight">5G</span>
-                          {/* WiFi */}
+                          {/* WiFi — viewBox cropped to content (y:9–23) */}
                           <svg
-                            className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white/90"
-                            viewBox="0 0 24 24"
+                            className="w-[10px] sm:w-[11px] h-[8px] sm:h-[9px] text-white/90"
+                            viewBox="0 9 24 14"
                             fill="currentColor"
                           >
                             <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4.9-2.3l1.4 1.4C9.4 16.4 10.6 16 12 16s2.6.4 3.5 1.1l1.4-1.4C15.6 14.6 13.9 14 12 14s-3.6.6-4.9 1.7zm-2.8-2.8l1.4 1.4C7.3 13 9.5 12 12 12s4.7 1 6.3 2.3l1.4-1.4C17.7 11.1 15 10 12 10s-5.7 1.1-7.7 2.9z" />
@@ -283,140 +283,144 @@ const Hero = () => {
                       <div
                         className="h-[280px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[380px] xl:h-[400px] px-2 sm:px-3 py-3 overflow-y-auto relative flex flex-col scrollbar-hide"
                         style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
                           backgroundColor: "#0b141a",
                         }}
                       >
                         <div className="flex-1 space-y-2">
                           {/* Date Badge */}
                           <div className="flex justify-center mb-3 mt-1">
-                            <span className="bg-[#182229] text-[10px] sm:text-[11px] text-[#8696a0] px-3 py-1 rounded-lg shadow-sm">
+                            <span className="bg-[#182229] text-[11px] text-[#8696a0] px-3 py-1 rounded-lg shadow-sm">
                               HOY
                             </span>
                           </div>
 
-                          {/* Assistant Message */}
+                          {/* Bot: greeting */}
                           <div className="flex justify-start mb-2">
-                            <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
-                              {/* Tail */}
+                            <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
                                 <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
                                   <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
                                   <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
                                 </svg>
                               </div>
-                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35]">
-                                👋 ¡Hola! Soy <span className="font-semibold text-[#e9edef]">Tresqu</span>, tu agente financiero con IA.
+                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
+                                👋 ¡Hola! Soy <span className="font-semibold">Tresqu</span>, tu agente financiero con IA.
                               </p>
-                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] mt-1 pr-6">
+                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4] mt-[3px]">
                                 Escríbeme tus gastos o ingresos 📊
+                                <span className="inline-block w-[44px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                               </p>
-                              <div className="absolute bottom-1 right-2 flex justify-end items-center">
-                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:30</span>
+                              <div className="absolute bottom-[5px] right-[7px]">
+                                <span className="text-[11px] text-[#8696a0]">10:30</span>
                               </div>
                             </div>
                           </div>
 
-                          {/* User Message */}
+                          {/* User: expense */}
                           <div className="flex justify-end mb-2">
-                            <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
-                              {/* Tail */}
+                            <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
                                 <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
                                   <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
                                   <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
                                 </svg>
                               </div>
-                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] pr-12">
+                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
                                 Gasté 45 mil en almuerzo
+                                <span className="inline-block w-[52px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                               </p>
-                              <div className="absolute bottom-1 right-2 flex justify-end items-center gap-1">
-                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:31</span>
+                              <div className="absolute bottom-[5px] right-[7px] flex items-center gap-[3px]">
+                                <span className="text-[11px] text-[#8696a0]">10:31</span>
                                 <CheckCheck className="w-[14px] h-[14px] text-[#53bdeb]" />
                               </div>
                             </div>
                           </div>
 
-                          {/* Assistant Response */}
+                          {/* Bot: registered confirmation */}
                           <div className="flex justify-start mb-2">
-                            <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                            <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
                                 <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
                                   <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
                                   <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
                                 </svg>
                               </div>
-                              <div className="bg-[#1b252a] rounded p-2 mb-1.5 border-l-4 border-[#25D366]">
-                                <div className="text-[#25D366] text-[11px] sm:text-[12px] font-medium mb-0.5">
-                                  Gasto Registrado
+                              <div className="bg-[#1b252a] rounded-[5px] px-[9px] py-[7px] mb-[6px] border-l-[3px] border-[#25D366]">
+                                <div className="text-[#25D366] text-[11px] sm:text-[12px] font-semibold leading-tight mb-[3px]">
+                                  Gasto registrado ✅
                                 </div>
-                                <div className="text-[#e9edef] text-[12px] sm:text-[13px] font-semibold">
+                                <div className="text-[#e9edef] text-[13px] sm:text-[14px] font-bold leading-tight">
                                   $45.000
                                 </div>
-                                <div className="text-[#8696a0] text-[11px]">
+                                <div className="text-[#8696a0] text-[11px] sm:text-[12px] mt-[2px]">
                                   🍽️ Alimentación
                                 </div>
                               </div>
-                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] pr-8">
-                                ¡Listo! Lo he guardado. ✅
+                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
+                                ¡Listo! Lo he guardado.
+                                <span className="inline-block w-[44px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                               </p>
-                              <div className="absolute bottom-1 right-2 flex justify-end items-center">
-                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:31</span>
+                              <div className="absolute bottom-[5px] right-[7px]">
+                                <span className="text-[11px] text-[#8696a0]">10:31</span>
                               </div>
                             </div>
                           </div>
 
-                          {/* User Message 2 */}
+                          {/* User: summary request */}
                           <div className="flex justify-end mb-2">
-                            <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                            <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
                                 <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
                                   <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
                                 </svg>
                               </div>
-                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] pr-12">
+                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
                                 ¿Mi resumen?
+                                <span className="inline-block w-[52px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                               </p>
-                              <div className="absolute bottom-1 right-2 flex justify-end items-center gap-1">
-                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:32</span>
+                              <div className="absolute bottom-[5px] right-[7px] flex items-center gap-[3px]">
+                                <span className="text-[11px] text-[#8696a0]">10:32</span>
                                 <CheckCheck className="w-[14px] h-[14px] text-[#53bdeb]" />
                               </div>
                             </div>
                           </div>
 
-                          {/* Assistant Stats Response */}
+                          {/* Bot: daily stats */}
                           <div className="flex justify-start mb-2">
-                            <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2.5 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5 max-w-[85%] sm:max-w-[80%] shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                            <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
                               <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
                                 <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
                                   <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
                                 </svg>
                               </div>
-                              <p className="text-[12.5px] sm:text-[14.2px] text-[#e9edef] leading-[1.35] font-medium">
+                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4] font-semibold mb-[6px]">
                                 📊 Resumen del día
                               </p>
-                              <div className="mt-2 space-y-1.5 pb-2 pr-4">
-                                <div className="flex items-center justify-between text-[12px] sm:text-[13px] bg-[#1b252a] px-2 py-1.5 rounded">
-                                  <div className="flex items-center gap-1.5">
-                                    <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center">
-                                      <span className="text-red-400 text-[10px]">↓</span>
+                              <div className="space-y-[5px] mb-[4px]">
+                                <div className="flex items-center justify-between text-[11px] sm:text-[12px] bg-[#1b252a] px-[8px] py-[5px] rounded-[5px]">
+                                  <div className="flex items-center gap-[6px]">
+                                    <div className="w-[18px] h-[18px] rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                                      <span className="text-red-400 text-[9px] leading-none">↓</span>
                                     </div>
                                     <span className="text-[#e9edef]">Gastos</span>
                                   </div>
-                                  <span className="text-red-400 font-medium ml-4">$45.000</span>
+                                  <span className="text-red-400 font-semibold">$45.000</span>
                                 </div>
-                                <div className="flex items-center justify-between text-[12px] sm:text-[13px] bg-[#1b252a] px-2 py-1.5 rounded">
-                                  <div className="flex items-center gap-1.5">
-                                    <div className="w-5 h-5 rounded-full bg-[#00FF7F]/10 flex items-center justify-center">
-                                      <span className="text-[#00FF7F] text-[10px]">↑</span>
+                                <div className="flex items-center justify-between text-[11px] sm:text-[12px] bg-[#1b252a] px-[8px] py-[5px] rounded-[5px]">
+                                  <div className="flex items-center gap-[6px]">
+                                    <div className="w-[18px] h-[18px] rounded-full bg-[#00FF7F]/10 flex items-center justify-center flex-shrink-0">
+                                      <span className="text-[#00FF7F] text-[9px] leading-none">↑</span>
                                     </div>
                                     <span className="text-[#e9edef]">Ingresos</span>
                                   </div>
-                                  <span className="text-[#00FF7F] font-medium ml-4">$0</span>
+                                  <span className="text-[#00FF7F] font-semibold">$0</span>
                                 </div>
                               </div>
-                              <div className="absolute bottom-1 right-2 flex justify-end items-center">
-                                <span className="text-[9px] sm:text-[10px] text-[#8696a0]">10:32</span>
+                              <div className="absolute bottom-[5px] right-[7px]">
+                                <span className="text-[11px] text-[#8696a0]">10:32</span>
                               </div>
                             </div>
                           </div>
@@ -424,9 +428,9 @@ const Hero = () => {
                       </div>
 
                       {/* Input Bar - More realistic */}
-                      <div className="bg-[#202c33] px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-end gap-1 sm:gap-1.5 z-10 relative">
+                      <div className="bg-[#202c33] px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-center gap-1 sm:gap-1.5 z-10 relative">
                         {/* Emoji icon */}
-                        <div className="flex pb-1.5 pl-0.5 text-[#8696a0]">
+                        <div className="flex pl-0.5 text-[#8696a0]">
                           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.298 1.011 0 6.31 0 12.813s5.298 11.803 11.804 11.803 11.804-5.298 11.804-11.803S18.31 1.011 11.804 1.011zM12 21.564c-5.246 0-9.5-4.253-9.5-9.5s4.254-9.5 9.5-9.5 9.5 4.254 9.5 9.5-4.254 9.5-9.5 9.5zm3.063-9.402c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z" />
                           </svg>
@@ -436,7 +440,7 @@ const Hero = () => {
                             Mensaje
                           </span>
                         </div>
-                        <div className="flex items-end gap-1 pb-1.5 pr-0.5 text-[#8696a0]">
+                        <div className="flex items-center gap-1 pr-0.5 text-[#8696a0]">
                           {/* Camera icon */}
                           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M21.317 4.381H10.971L9.078 2.45c-.246-.251-.736-.457-1.089-.457H4.905c-.352 0-.837.211-1.078.468L2.515 4.381H2.683C1.198 4.381 0 5.58 0 7.065v12.27c0 1.485 1.199 2.684 2.683 2.684h18.634c1.485 0 2.683-1.199 2.683-2.684V7.065c0-1.485-1.198-2.684-2.683-2.684zM12 18.27c-3.088 0-5.592-2.504-5.592-5.592 0-3.088 2.504-5.592 5.592-5.592s5.592 2.504 5.592 5.592c0 3.088-2.504 5.592-5.592 5.592zm0-9.056c-1.91 0-3.464 1.553-3.464 3.464 0 1.91 1.553 3.464 3.464 3.464s3.464-1.554 3.464-3.464S13.91 9.214 12 9.214z"/>
@@ -541,6 +545,23 @@ const Hero = () => {
                         boxShadow: "inset 0 0 15px rgba(0,0,0,0.9), inset 0 0 3px rgba(0,0,0,1), 0 0 0 1px rgba(0,0,0,0.8)",
                       }}
                     >
+                    {/* Status Bar Secondary */}
+                    <div className="flex justify-between items-center px-3 py-1.5 bg-[#202c33]">
+                      <span className="text-[9px] font-semibold text-white/80">9:41</span>
+                      <div className="flex items-center gap-1">
+                        <div className="flex items-end gap-px">
+                          <div className="w-[2px] h-[3px] bg-white/80 rounded-[0.5px]" />
+                          <div className="w-[2px] h-[5px] bg-white/80 rounded-[0.5px]" />
+                          <div className="w-[2px] h-[7px] bg-white/80 rounded-[0.5px]" />
+                          <div className="w-[2px] h-[9px] bg-white/80 rounded-[0.5px]" />
+                        </div>
+                        <div className="w-[14px] h-[7px] border border-white/50 rounded-[1.5px] p-px relative">
+                          <div className="w-[65%] h-full bg-[#30D158] rounded-[0.5px]" />
+                          <div className="absolute -right-[2px] top-[2px] w-[1.5px] h-[3px] bg-white/50 rounded-r" />
+                        </div>
+                      </div>
+                    </div>
+
                     {/* WhatsApp Header Secondary */}
                     <div className="bg-[#202c33] px-3 py-2 flex items-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,0.4)] z-10 relative">
                       <svg className="w-4 h-4 text-[#aebac1] -ml-1" viewBox="0 0 24 24" fill="currentColor">
@@ -565,112 +586,119 @@ const Hero = () => {
 
                     {/* Chat Background Secondary */}
                     <div
-                      className="h-[340px] px-2 py-2 space-y-1.5 flex flex-col scrollbar-hide overflow-y-auto"
+                      className="h-[310px] px-2 py-2 flex flex-col gap-2 scrollbar-hide overflow-y-auto"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
                         backgroundColor: "#0b141a",
                       }}
                     >
-                      {/* User Message */}
-                      <div className="flex justify-end mt-1 mb-1">
-                        <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                      {/* Date badge */}
+                      <div className="flex justify-center mt-1 mb-0.5">
+                        <span className="bg-[#182229] text-[9px] text-[#8696a0] px-2.5 py-0.5 rounded-md">HOY</span>
+                      </div>
+
+                      {/* User: salary */}
+                      <div className="flex justify-end">
+                        <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
                             <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
                               <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
                               <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
                             </svg>
                           </div>
-                          <p className="text-[10px] text-[#e9edef] pr-10">
+                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
                             Recibí mi salario 3.500.000
+                            <span className="inline-block w-[48px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                           </p>
-                          <div className="absolute bottom-0.5 right-1.5 flex items-center gap-0.5">
-                            <span className="text-[7px] text-[#8696a0]">9:15</span>
-                            <CheckCheck className="w-2.5 h-2.5 text-[#53bdeb]" />
+                          <div className="absolute bottom-[4px] right-[6px] flex items-center gap-[3px]">
+                            <span className="text-[10px] text-[#8696a0]">9:15</span>
+                            <CheckCheck className="w-[13px] h-[13px] text-[#53bdeb]" />
                           </div>
                         </div>
                       </div>
 
-                      {/* Assistant Response */}
-                      <div className="flex justify-start mb-1">
-                        <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                      {/* Bot: salary confirmed */}
+                      <div className="flex justify-start">
+                        <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
                             <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
                               <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
                               <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
                             </svg>
                           </div>
-                          <div className="bg-[#1b252a] rounded p-1.5 mb-1 border-l-2 border-[#25D366]">
-                            <div className="text-[9px] text-[#25D366] font-medium">
-                              +$3.500.000
-                            </div>
-                            <div className="text-[8px] text-[#8696a0]">
-                              💰 Salario
-                            </div>
+                          <div className="bg-[#1b252a] rounded-[4px] px-[7px] py-[5px] mb-[5px] border-l-[3px] border-[#25D366]">
+                            <div className="text-[11px] sm:text-[12px] text-[#25D366] font-semibold leading-tight">+$3.500.000</div>
+                            <div className="text-[10px] text-[#8696a0] mt-[1px]">💰 Salario</div>
                           </div>
-                          <p className="text-[10px] text-[#e9edef] pr-6">
+                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
                             ¡Ingreso registrado! 🎉
+                            <span className="inline-block w-[40px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                           </p>
-                          <div className="absolute bottom-0.5 right-1.5 flex items-center">
-                            <span className="text-[7px] text-[#8696a0]">9:15</span>
+                          <div className="absolute bottom-[4px] right-[6px]">
+                            <span className="text-[10px] text-[#8696a0]">9:15</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* User Message */}
-                      <div className="flex justify-end mb-1">
-                        <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                      {/* User: Uber */}
+                      <div className="flex justify-end">
+                        <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
                             <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
                               <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
                             </svg>
                           </div>
-                          <p className="text-[10px] text-[#e9edef] pr-10">Uber 15.000</p>
-                          <div className="absolute bottom-0.5 right-1.5 flex items-center gap-0.5">
-                            <span className="text-[7px] text-[#8696a0]">10:45</span>
-                            <CheckCheck className="w-2.5 h-2.5 text-[#53bdeb]" />
+                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
+                            Uber 15.000
+                            <span className="inline-block w-[48px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
+                          </p>
+                          <div className="absolute bottom-[4px] right-[6px] flex items-center gap-[3px]">
+                            <span className="text-[10px] text-[#8696a0]">10:45</span>
+                            <CheckCheck className="w-[13px] h-[13px] text-[#53bdeb]" />
                           </div>
                         </div>
                       </div>
 
-                      {/* Assistant Response */}
-                      <div className="flex justify-start mb-1">
-                        <div className="relative bg-[#202c33] rounded-lg rounded-tl-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                      {/* Bot: Uber registered */}
+                      <div className="flex justify-start">
+                        <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
                             <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
+                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
                               <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
                             </svg>
                           </div>
-                          <div className="bg-[#1b252a] rounded p-1.5 mb-1 border-l-2 border-orange-400">
-                            <div className="text-[9px] text-orange-400 font-medium">
-                              -$15.000
-                            </div>
-                            <div className="text-[8px] text-[#8696a0]">
-                              🚗 Transporte
-                            </div>
+                          <div className="bg-[#1b252a] rounded-[4px] px-[7px] py-[5px] mb-[5px] border-l-[3px] border-orange-400">
+                            <div className="text-[11px] sm:text-[12px] text-orange-400 font-semibold leading-tight">-$15.000</div>
+                            <div className="text-[10px] text-[#8696a0] mt-[1px]">🚗 Transporte</div>
                           </div>
-                          <p className="text-[10px] text-[#e9edef] pr-6">
+                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
                             ✅ Registrado
+                            <span className="inline-block w-[40px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                           </p>
-                          <div className="absolute bottom-0.5 right-1.5 flex items-center">
-                            <span className="text-[7px] text-[#8696a0]">10:45</span>
+                          <div className="absolute bottom-[4px] right-[6px]">
+                            <span className="text-[10px] text-[#8696a0]">10:45</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* User Message */}
+                      {/* User: monthly balance */}
                       <div className="flex justify-end">
-                        <div className="relative bg-[#005c4b] rounded-lg rounded-tr-none px-2 pt-1 pb-0.5 max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
+                        <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
                           <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
                             <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
+                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
                               <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
                             </svg>
                           </div>
-                          <p className="text-[10px] text-[#e9edef] pr-10">
+                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
                             ¿Mi balance del mes?
+                            <span className="inline-block w-[36px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
                           </p>
-                          <div className="absolute bottom-0.5 right-1.5 flex items-center gap-0.5">
-                            <span className="text-[7px] text-[#8696a0]">11:00</span>
-                            <Check className="w-2.5 h-2.5 text-[#8696a0]" />
+                          <div className="absolute bottom-[4px] right-[6px] flex items-center gap-[3px]">
+                            <span className="text-[10px] text-[#8696a0]">11:00</span>
+                            <Check className="w-[13px] h-[13px] text-[#8696a0]" />
                           </div>
                         </div>
                       </div>
