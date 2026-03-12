@@ -108,6 +108,27 @@ Accesible desde cualquier página del dashboard:
 
 ---
 
+## Integración Gmail
+
+La app permite conectar una cuenta de Gmail para detectar compras automáticamente:
+
+- **Conexión OAuth2**: Desde Perfil > Conexiones, conectar cuenta de Google
+- **Tab Integraciones**: Nuevo tab en Dashboard mostrando servicios conectados, compras detectadas y pendientes de categorizar
+- **Perfil - Conexiones**: Gestión completa de la conexión Gmail (conectar, desconectar, sincronizar, ver estadísticas)
+
+### Archivos principales
+
+| Archivo | Función |
+|---------|---------|
+| `src/types/gmail.ts` | Interfaces TypeScript para Gmail |
+| `src/services/gmail/gmail.ts` | Servicio de API para Gmail |
+| `src/hooks/useGmailStatus.ts` | Hooks TanStack Query (status, disconnect, sync) |
+| `src/components/dashboard/IntegrationsTab.tsx` | Tab de integraciones en Dashboard |
+| `src/pages/Profile.tsx` | Tab "Conexiones" con gestión de Gmail |
+| `src/pages/Dashboard.tsx` | Tab "Integraciones" agregado |
+
+---
+
 ## Stack Tecnológico
 
 Este proyecto está construido con:
@@ -121,6 +142,7 @@ Este proyecto está construido con:
   - Analytics Engine (Análisis de Datos)
 - **Estado**: Zustand Store
 - **API**: Axios + Interceptores
+- **Integraciones**: Google Gmail API (OAuth2 + Pub/Sub)
 
 ---
 
@@ -178,6 +200,7 @@ src/
 │   │   └── ChatMessage.tsx
 │   ├── dashboard/
 │   │   ├── CategoriesTab.tsx      # Gestión de categorías
+│   │   ├── IntegrationsTab.tsx    # Tab de integraciones
 │   │   └── (análisis y reportes)
 ├── services/
 │   ├── expenses/                   # Análisis de gastos
@@ -191,10 +214,13 @@ src/
 │   │   ├── lineChart.ts
 │   │   ├── pieChart.ts
 │   │   └── barStackedChart.ts
+│   ├── gmail/                     # Integración Gmail
+│   │   └── gmail.ts
 │   └── categories/                 # Categorización IA
 │       ├── expenseCategories.ts
 │       └── incomeCategories.ts
 ├── hooks/
+│   ├── useGmailStatus.ts         # Hooks Gmail
 │   └── useExpenseCategories.ts    # Hooks de categorías
 └── types/
     └── categories.ts              # Tipos de datos IA
@@ -206,7 +232,8 @@ src/
 
 - Predicción de gastos futuros
 - Chatbot más avanzado con procesamiento NLP mejorado
-- Integración con WhatsApp/Telegram Bot
+- Categorización automática de compras por email con IA avanzada
+- Detección de patrones de compra recurrentes
 - Notificaciones inteligentes en tiempo real
 - Metas financieras con IA predictiva
 - Recomendaciones de inversión personalizadas
