@@ -77,10 +77,22 @@ const ChatInput = ({
         </div>
       </div>
       
-      <div className="mt-2 text-center">
-        <p className="text-[10px] sm:text-xs text-muted-foreground">
-          Prueba diciendo: "Gasté $1,500 en supermercado" o "¿Cuánto gasté este mes?"
-        </p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {[
+          "¿Cuánto gasté este mes?",
+          "Resumen semanal",
+          "Agregar ingreso",
+        ].map((suggestion) => (
+          <button
+            key={suggestion}
+            onClick={() => {
+              setInputMessage(suggestion);
+            }}
+            className="text-[10px] sm:text-xs px-2.5 py-1 rounded-full border border-border/50 text-muted-foreground hover:text-foreground hover:border-success/30 hover:bg-success/5 transition-colors"
+          >
+            {suggestion}
+          </button>
+        ))}
       </div>
     </>
   );

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, Share2, Loader2, AlertCircle, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import EmptyState from "@/components/EmptyState";
 import { useIncomeSummary } from "@/hooks/useIncomeSummary";
 import { IncomeSummaryItem, IncomeTableItem } from "@/types/incomes";
 import { useDeleteIncome } from "@/hooks/incomes";
@@ -204,9 +205,10 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
         {/* Vista mobile: cards */}
         <div className="sm:hidden space-y-2 max-h-[400px] overflow-y-auto">
           {filteredIncome.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              No se encontraron ingresos con los filtros actuales
-            </p>
+            <EmptyState
+              title="Sin ingresos registrados"
+              description="Registra tu primer ingreso por WhatsApp, Telegram o desde el dashboard"
+            />
           ) : (
             filteredIncome.map((income) => (
               <div key={income.id} className="glass-card p-3 space-y-1.5">
@@ -229,6 +231,7 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
                     size="sm"
                     className="h-7 w-7 p-0 hover:text-destructive"
                     onClick={(e) => handleDeleteClick(e, income)}
+                    aria-label="Eliminar ingreso"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
@@ -254,11 +257,11 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
             <TableBody>
               {filteredIncome.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center py-4 text-muted-foreground"
-                  >
-                    No se encontraron ingresos con los filtros actuales
+                  <TableCell colSpan={6}>
+                    <EmptyState
+                      title="Sin ingresos registrados"
+                      description="Registra tu primer ingreso por WhatsApp, Telegram o desde el dashboard"
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
@@ -287,6 +290,7 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
                         size="sm"
                         className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
                         onClick={(e) => handleDeleteClick(e, income)}
+                        aria-label="Eliminar ingreso"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

@@ -15,7 +15,7 @@ interface ChatBodyProps {
 
 const ChatBody = ({ messages, isProcessing, messageEndRef }: ChatBodyProps) => {
   return (
-    <div className="flex-1 overflow-auto mb-2 bg-muted/30 rounded-md p-1 sm:p-2 space-y-1 sm:space-y-2">
+    <div className="flex-1 overflow-auto mb-2 bg-muted/20 rounded-lg p-2 sm:p-3 space-y-1.5 sm:space-y-2">
       {messages.map((msg, index) => (
         <ChatMessage 
           key={index}

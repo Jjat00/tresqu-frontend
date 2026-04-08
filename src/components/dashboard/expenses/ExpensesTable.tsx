@@ -38,6 +38,7 @@ import {
 import EditExpenseDialog from "./EditExpenseDialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
+import EmptyState from "@/components/EmptyState";
 import {
   Select,
   SelectContent,
@@ -543,7 +544,10 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                 <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
               </div>
             ) : filteredExpenses.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No hay gastos que mostrar</p>
+              <EmptyState
+                title="Sin gastos registrados"
+                description="Envía un mensaje por WhatsApp o Telegram para registrar tu primer gasto"
+              />
             ) : (
               filteredExpenses.map((expense) => (
                 <div
@@ -582,6 +586,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                       size="sm"
                       className="h-7 w-7 p-0"
                       onClick={(e) => handleEditClick(e, expense)}
+                      aria-label="Editar gasto"
                     >
                       <Edit className="h-3.5 w-3.5" />
                     </Button>
@@ -590,6 +595,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                       size="sm"
                       className="h-7 w-7 p-0 hover:text-destructive"
                       onClick={(e) => handleDeleteClick(e, expense)}
+                      aria-label="Eliminar gasto"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -665,10 +671,11 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : filteredExpenses.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        No hay gastos que mostrar
-                      </p>
+                    <TableCell colSpan={6}>
+                      <EmptyState
+                        title="Sin gastos registrados"
+                        description="Envía un mensaje por WhatsApp o Telegram para registrar tu primer gasto"
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -715,6 +722,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                             size="sm"
                             className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
                             onClick={(e) => handleEditClick(e, expense)}
+                            aria-label="Editar gasto"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -723,6 +731,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                             size="sm"
                             className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
                             onClick={(e) => handleDeleteClick(e, expense)}
+                            aria-label="Eliminar gasto"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
