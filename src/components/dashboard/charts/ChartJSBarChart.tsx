@@ -2,31 +2,21 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { DateRange } from "../DateRangePicker";
 import { useBarStackedChart } from "@/hooks/userBarStackedChart";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toLocalISODate } from "@/utils/dateUtils";
 import { BarStackedChartParams } from "@/types/expenses";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip as ChartTooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   Legend,
-  TooltipItem,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-
-// Registrar los componentes de Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  ChartTooltip,
-  Legend
-);
+  ResponsiveContainer,
+} from "recharts";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
 
 interface ChartJSBarChartProps {
   viewMode: "month" | "year";
@@ -34,20 +24,9 @@ interface ChartJSBarChartProps {
   dateRange?: DateRange;
 }
 
-// Mapeo de nombres de meses a números
 const monthToNumber: Record<string, number> = {
-  Enero: 1,
-  Febrero: 2,
-  Marzo: 3,
-  Abril: 4,
-  Mayo: 5,
-  Junio: 6,
-  Julio: 7,
-  Agosto: 8,
-  Septiembre: 9,
-  Octubre: 10,
-  Noviembre: 11,
-  Diciembre: 12,
+  Enero: 1, Febrero: 2, Marzo: 3, Abril: 4, Mayo: 5, Junio: 6,
+  Julio: 7, Agosto: 8, Septiembre: 9, Octubre: 10, Noviembre: 11, Diciembre: 12,
 };
 
 const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
@@ -57,41 +36,28 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
 }) => {
   const isMobile = useIsMobile();
 
-  // Determinar los parámetros para la API según el viewMode y selectedMonth
   const getChartParams = (): BarStackedChartParams => {
     const params: BarStackedChartParams = {};
 
     if (dateRange) {
-      // Si hay un rango de fechas personalizado
       params.date_filter = "custom";
-      params.start_date = dateRange.from
-        ? toLocalISODate(dateRange.from)
-        : undefined;
+      params.start_date = dateRange.from ? toLocalISODate(dateRange.from) : undefined;
       params.end_date = dateRange.to ? toLocalISODate(dateRange.to) : undefined;
 
-      // Determinar group_by basado en la duración del rango
       if (dateRange.from && dateRange.to) {
         const diffDays = Math.ceil(
-          (dateRange.to.getTime() - dateRange.from.getTime()) /
-            (1000 * 60 * 60 * 24)
+          (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
         );
-        if (diffDays > 90) {
-          params.group_by = "month";
-        } else if (diffDays > 14) {
-          params.group_by = "week";
-        } else {
-          params.group_by = "day";
-        }
+        if (diffDays > 90) params.group_by = "month";
+        else if (diffDays > 14) params.group_by = "week";
+        else params.group_by = "day";
       }
     } else if (viewMode === "year" || selectedMonth === "year") {
-      // Si estamos en vista de año, agrupar por mes
       params.date_filter = "current_year";
       params.group_by = "month";
     } else if (viewMode === "month" && selectedMonth !== "year") {
-      // Si estamos en vista de mes específico
       const currentYear = new Date().getFullYear();
       const monthNum = monthToNumber[selectedMonth];
-
       if (monthNum === new Date().getMonth() + 1) {
         params.date_filter = "current_month";
       } else {
@@ -101,11 +67,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
         params.start_date = toLocalISODate(startDate);
         params.end_date = toLocalISODate(endDate);
       }
-
-      // Para vista de mes, agrupar por semana
       params.group_by = "week";
     } else {
-      // Caso por defecto
       params.date_filter = "current_month";
       params.group_by = "week";
     }
@@ -113,128 +76,34 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
     return params;
   };
 
-  // Usar el hook para obtener los datos
-  const { data, isLoading, isError, error, refetch } = useBarStackedChart(
-    getChartParams()
-  );
+  const { data, isLoading, isError, error, refetch } = useBarStackedChart(getChartParams());
 
-  // Preparar datos para Chart.js
-  const chartData = React.useMemo(() => {
-    if (!data || !data.labels || !data.datasets) {
-      return {
-        labels: [],
-        datasets: [],
-      };
-    }
-
-    // Función para convertir hex a rgba
-    const hexToRGBA = (hex: string, alpha: number) => {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    };
-
-    // Transformar datasets al formato de Chart.js
-    const chartJsDatasets = data.datasets.map((dataset) => ({
-      label: dataset.label,
-      data: dataset.data.map((value) =>
-        value === undefined || value === null || isNaN(value) ? 0 : value
-      ),
-      backgroundColor: Array.isArray(dataset.backgroundColor)
-        ? dataset.backgroundColor.map((color: string) => hexToRGBA(color, 0.5))
-        : hexToRGBA(dataset.backgroundColor, 0.5),
-      borderColor: dataset.borderColor,
-      borderWidth: dataset.borderWidth,
-    }));
-
-    return {
-      labels: data.labels,
-      datasets: chartJsDatasets,
-    };
-  }, [data]);
-
-  // Determinar el título del gráfico según el modo de vista
   const chartTitle = React.useMemo(() => {
     if (!data) return "Cargando...";
-
-    if (viewMode === "year" || selectedMonth === "year") {
-      return "Gastos Mensuales";
-    } else if (viewMode === "month") {
-      return `Gastos Semanales - ${selectedMonth}`;
-    } else {
-      return "Gastos Anuales";
-    }
+    if (viewMode === "year" || selectedMonth === "year") return "Gastos Mensuales";
+    if (viewMode === "month") return `Gastos Semanales - ${selectedMonth}`;
+    return "Gastos Anuales";
   }, [viewMode, selectedMonth, data]);
 
-  // Formatear valores para el Tooltip
-  const formatTooltipValue = (value: number) => {
-    return value ? `$${value.toLocaleString("es-CO")}` : "$0";
+  // Transform data for Recharts: from datasets format to array-of-objects
+  const rechartsData = React.useMemo(() => {
+    if (!data?.labels || !data?.datasets) return [];
+
+    return data.labels.map((label, i) => {
+      const point: Record<string, string | number> = { name: label };
+      data.datasets.forEach((dataset) => {
+        point[dataset.label] = dataset.data[i] ?? 0;
+      });
+      return point;
+    });
+  }, [data]);
+
+  const formatYAxis = (value: number) => {
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+    return `${value}`;
   };
 
-  // Opciones para Chart.js
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top" as const,
-        display: !isMobile,
-        labels: {
-          boxWidth: 10,
-          padding: 10,
-          font: {
-            size: isMobile ? 8 : 12,
-          },
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: function (tooltipItem: TooltipItem<"bar">) {
-            const label = tooltipItem.dataset.label || "";
-            if (label) {
-              return `${label}: ${formatTooltipValue(tooltipItem.parsed.y)}`;
-            }
-            return formatTooltipValue(tooltipItem.parsed.y);
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: true,
-        grid: {
-          display: false,
-        },
-        ticks: {
-          font: {
-            size: isMobile ? 8 : 12,
-          },
-          maxRotation: isMobile ? 45 : 0,
-        },
-      },
-      y: {
-        stacked: true,
-        beginAtZero: true,
-        ticks: {
-          font: {
-            size: isMobile ? 8 : 12,
-          },
-          callback: function (tickValue: number) {
-            const value = Number(tickValue);
-            if (value >= 1000000) {
-              return `${(value / 1000000).toFixed(1)}M`;
-            } else if (value >= 1000) {
-              return `${(value / 1000).toFixed(0)}K`;
-            }
-            return value;
-          },
-        },
-      },
-    },
-  };
-
-  // Mostrar error en toast cuando ocurre
   React.useEffect(() => {
     if (isError && error) {
       toast.error("No se pudieron cargar los datos de gastos");
@@ -249,39 +118,68 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
             {chartTitle}
           </h3>
           {data && (
-            <div className="text-xs text-muted-foreground">
-              {data.filter_summary}
-            </div>
+            <div className="text-xs text-muted-foreground">{data.filter_summary}</div>
           )}
         </div>
         <div className="flex-1 min-h-[200px] flex items-center justify-center">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
-              <p className="text-sm text-muted-foreground">Cargando datos...</p>
+            <div className="w-full space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-4 w-1/2" />
             </div>
           ) : isError ? (
             <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-destructive mb-1">
-                Error al cargar los datos
-              </p>
-              <button
-                onClick={() => refetch()}
-                className="text-xs text-primary hover:underline mt-2"
-              >
+              <p className="text-sm text-destructive mb-1">Error al cargar los datos</p>
+              <button onClick={() => refetch()} className="text-xs text-primary hover:underline mt-2">
                 Reintentar
               </button>
             </div>
-          ) : chartData.labels.length === 0 ? (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-sm text-muted-foreground">
-                No hay datos disponibles para este periodo
-              </p>
-            </div>
+          ) : rechartsData.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No hay datos disponibles para este periodo</p>
           ) : (
-            <div style={{ height: "100%", width: "100%" }}>
-              <Bar data={chartData} options={options} />
-            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={rechartsData} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tickFormatter={formatYAxis}
+                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "hsl(0 0% 7%)",
+                    border: "1px solid hsl(0 0% 14%)",
+                    borderRadius: "8px",
+                    fontSize: "12px",
+                  }}
+                  formatter={(value: number) => [`$${value.toLocaleString("es-CO")}`, undefined]}
+                />
+                {!isMobile && (
+                  <Legend
+                    wrapperStyle={{ fontSize: "11px" }}
+                    iconSize={8}
+                  />
+                )}
+                {data?.datasets.map((dataset, i) => (
+                  <Bar
+                    key={dataset.label}
+                    dataKey={dataset.label}
+                    stackId="stack"
+                    fill={dataset.backgroundColor}
+                    fillOpacity={0.7}
+                    radius={i === (data.datasets.length - 1) ? [2, 2, 0, 0] : [0, 0, 0, 0]}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
           )}
         </div>
         {data && data.total_amount > 0 && (
