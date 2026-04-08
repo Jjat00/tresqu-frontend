@@ -58,7 +58,7 @@ const stats = [
   },
   {
     icon: Zap,
-    value: 30,
+    value: 10,
     suffix: "seg",
     label: "Tiempo promedio de respuesta",
     prefix: "<",
