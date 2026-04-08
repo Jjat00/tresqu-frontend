@@ -772,7 +772,7 @@ const Hero = () => {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]"></span>
                     </span>
-                    Respuesta en &lt;30 seg
+                    Respuesta en &lt;10 seg
                   </p>
                 </div>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-[#25D366] transition-colors flex-shrink-0" />

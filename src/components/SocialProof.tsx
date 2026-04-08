@@ -74,19 +74,19 @@ const stats = [
 const testimonials = [
   {
     quote:
-      "Antes perdía el control de mis gastos. Ahora solo mando un mensaje y Tresqu organiza todo automáticamente.",
+      "Lo que más me gusta es que no tengo que abrir ninguna app. Le escribo a Tresqu por WhatsApp como si fuera un amigo y listo, queda registrado.",
     name: "María G.",
     role: "Freelancer",
   },
   {
     quote:
-      "La integración con WhatsApp es genial. No necesito abrir otra app, registro mis gastos desde la conversación.",
+      "Siempre me decía 'voy a anotar mis gastos' y nunca lo hacía. Con Tresqu es tan fácil que ya llevo 3 meses seguidos sin fallar.",
     name: "Carlos R.",
     role: "Emprendedor",
   },
   {
     quote:
-      "Los reportes me ayudaron a identificar que gastaba demasiado en suscripciones. Ahorré un 20% el primer mes.",
+      "Me di cuenta de que no tenía idea de cuánto gastaba en comida a domicilio hasta que vi las estadísticas. Ahora cocino más y me rinde mejor la plata.",
     name: "Ana P.",
     role: "Diseñadora",
   },
