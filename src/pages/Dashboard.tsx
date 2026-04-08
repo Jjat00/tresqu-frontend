@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import ExpensesTab from "@/components/dashboard/ExpensesTab";
 import IncomeTab from "@/components/dashboard/IncomeTab";
-import DebtTab from "@/components/dashboard/DebtTab";
-import SavingsGoalsTab from "@/components/dashboard/SavingsGoalsTab";
 import CategoriesTab from "@/components/dashboard/CategoriesTab";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,7 +14,7 @@ import { getCurrentWeekRange } from "@/components/dashboard/dateRangePicker/date
 import DashboardSummary from "@/components/dashboard/DashboardSummary";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("expenses");
+  const { section = "expenses" } = useParams<{ section: string }>();
   const [currentMonth, setCurrentMonth] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>(getCurrentWeekRange());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">(
@@ -25,25 +23,12 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  // Define los meses del año
   const months = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
   ];
 
-  // Comprobar si el usuario está autenticado
   useEffect(() => {
-    // Usando try-catch para evitar errores en producción
     try {
       if (!isAuthenticated()) {
         navigate("/login");
@@ -54,34 +39,25 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
-  // Detecta el mes actual al cargar el componente
   useEffect(() => {
     const date = new Date();
-    const monthIndex = date.getMonth();
-    setCurrentMonth(months[monthIndex]);
+    setCurrentMonth(months[date.getMonth()]);
   }, []);
 
   const handleShareApp = () => {
-    // Crea el mensaje para compartir
     const shareTitle = "Tresqu - Tu asistente financiero inteligente";
     const shareText =
       "¡Controla tus finanzas de forma inteligente con Tresqu! Registra gastos por voz o texto y obtén análisis personalizados.";
     const shareUrl = window.location.origin;
-
-    // URL para compartir en Telegram
     const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(
       shareUrl
     )}&text=${encodeURIComponent(`${shareTitle}\n\n${shareText}`)}`;
-
-    // Abre la ventana de compartir de Telegram
     window.open(telegramShareUrl, "_blank");
   };
 
-  // Manejar cambio de rango de fechas
   const handleDateRangeChange = (newRange: DateRange) => {
     setDateRange(newRange);
 
-    // Update view mode based on date range span
     if (newRange.from && newRange.to) {
       const daysDiff = Math.abs(
         Math.ceil(
@@ -90,31 +66,24 @@ const Dashboard = () => {
         )
       );
 
-      if (daysDiff === 0) {
-        setViewMode("day");
-      } else if (daysDiff <= 7) {
-        setViewMode("week");
-      } else if (daysDiff <= 31) {
-        setViewMode("month");
-      } else {
-        setViewMode("year");
-      }
+      if (daysDiff === 0) setViewMode("day");
+      else if (daysDiff <= 7) setViewMode("week");
+      else if (daysDiff <= 31) setViewMode("month");
+      else setViewMode("year");
     }
 
-    // Actualizar el mes seleccionado si estamos en modo mes
     if (viewMode === "month" && newRange.from) {
-      const monthIndex = newRange.from.getMonth();
-      setCurrentMonth(months[monthIndex]);
+      setCurrentMonth(months[newRange.from.getMonth()]);
     }
   };
 
-  const renderActiveSection = () => {
-    switch (activeTab) {
+  const renderSection = () => {
+    switch (section) {
       case "expenses":
         return (
           <ExpensesTab
             selectedMonth={currentMonth}
-            activeTab={activeTab}
+            activeTab={section}
             dateRange={dateRange}
             viewMode={viewMode}
           />
@@ -123,29 +92,20 @@ const Dashboard = () => {
         return (
           <IncomeTab
             selectedMonth={currentMonth}
-            activeTab={activeTab}
+            activeTab={section}
             dateRange={dateRange}
             viewMode={viewMode}
           />
         );
       case "categories":
         return <CategoriesTab />;
-      case "debt":
-        return <DebtTab />;
-      case "savings":
-        return <SavingsGoalsTab />;
-      case "integrations":
-        return <div className="text-center py-20 text-muted-foreground">Próximamente</div>;
       default:
         return null;
     }
   };
 
   return (
-    <DashboardLayout
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-    >
+    <DashboardLayout activeTab={section}>
       <div className="space-y-4 sm:space-y-6 relative">
         {/* Efectos de fondo */}
         <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
@@ -191,7 +151,7 @@ const Dashboard = () => {
         <DashboardSummary dateRange={dateRange} />
 
         <div className="min-h-[60vh] animate-fade-up">
-          {renderActiveSection()}
+          {renderSection()}
         </div>
       </div>
     </DashboardLayout>

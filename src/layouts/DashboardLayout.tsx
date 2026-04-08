@@ -13,13 +13,11 @@ import {
 interface DashboardLayoutProps {
   children: React.ReactNode;
   activeTab?: string;
-  onTabChange?: (tab: string) => void;
 }
 
 const DashboardLayout = ({
   children,
   activeTab = "expenses",
-  onTabChange,
 }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
@@ -45,10 +43,6 @@ const DashboardLayout = ({
     logout();
     toast.success("Has cerrado sesión correctamente");
     navigate("/");
-  };
-
-  const handleTabChange = (tab: string) => {
-    onTabChange?.(tab);
   };
 
   return (
@@ -91,7 +85,6 @@ const DashboardLayout = ({
         {/* Desktop sidebar */}
         <DesktopSidebar
           activeTab={activeTab}
-          onTabChange={handleTabChange}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
@@ -103,7 +96,7 @@ const DashboardLayout = ({
       </div>
 
       {/* Mobile bottom nav */}
-      <MobileBottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      <MobileBottomNav activeTab={activeTab} />
     </div>
   );
 };
