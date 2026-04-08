@@ -767,8 +767,12 @@ const Hero = () => {
                   <h3 className="text-white font-semibold text-sm sm:text-base">
                     Comenzar Ahora
                   </h3>
-                  <p className="text-zinc-500 text-xs sm:text-sm truncate">
-                    Inicia en WhatsApp
+                  <p className="text-zinc-500 text-xs sm:text-sm truncate flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]"></span>
+                    </span>
+                    Respuesta en &lt;30 seg
                   </p>
                 </div>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-[#25D366] transition-colors flex-shrink-0" />
