@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import EditExpenseDialog from "./EditExpenseDialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -521,7 +522,85 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
             </div>
           </div>
 
-          <div className="rounded-md border overflow-x-auto max-h-[300px] sm:max-h-[400px]">
+          {/* Vista mobile: cards */}
+          <div className="sm:hidden space-y-2 max-h-[400px] overflow-y-auto">
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={`mobile-skeleton-${i}`} className="glass-card p-3 space-y-2">
+                  <div className="flex justify-between">
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                  <div className="flex justify-between">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </div>
+              ))
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+                <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
+              </div>
+            ) : filteredExpenses.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No hay gastos que mostrar</p>
+            ) : (
+              filteredExpenses.map((expense) => (
+                <div
+                  key={expense.id}
+                  className="glass-card p-3 space-y-1.5"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {expense.note || "Sin descripción"}
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        {getCategoryColor(expense) && (
+                          <div
+                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: getCategoryColor(expense) }}
+                          />
+                        )}
+                        <span className="text-xs text-muted-foreground">
+                          {getCategoryName(expense)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0 ml-3">
+                      <p className="text-sm font-bold text-rose-500">
+                        ${parseFloat(expense.amount).toLocaleString("es-CO")}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {formatDate(expense.spent_at)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-1 pt-1 border-t border-border/50">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 w-7 p-0"
+                      onClick={(e) => handleEditClick(e, expense)}
+                    >
+                      <Edit className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 w-7 p-0 hover:text-destructive"
+                      onClick={(e) => handleDeleteClick(e, expense)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Vista desktop: tabla */}
+          <div className="hidden sm:block rounded-md border overflow-x-auto max-h-[300px] sm:max-h-[400px]">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -563,16 +642,16 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
               </TableHeader>
               <TableBody>
                 {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-success mb-2"></div>
-                        <p className="text-sm text-muted-foreground">
-                          Cargando gastos...
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={`skeleton-${i}`}>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-4" /></TableCell>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-14" /></TableCell>
+                    </TableRow>
+                  ))
                 ) : error ? (
                   <TableRow>
                     <TableCell colSpan={6} className="h-24 text-center">

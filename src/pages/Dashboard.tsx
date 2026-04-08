@@ -16,6 +16,7 @@ import DateRangePicker, {
   DateRange,
 } from "@/components/dashboard/DateRangePicker";
 import { getCurrentWeekRange } from "@/components/dashboard/dateRangePicker/dateRangeUtils";
+import DashboardSummary from "@/components/dashboard/DashboardSummary";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("expenses");
@@ -172,6 +173,8 @@ const Dashboard = () => {
             />
           </div>
         </div>
+
+        <DashboardSummary dateRange={dateRange} />
 
         <Tabs
           value={activeTab}
