@@ -27,7 +27,7 @@ const testimonials = [
 
 const RealExamples = () => {
   return (
-    <section className="py-16 md:py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-primary/5 via-background to-background">
+    <section className="section-padding overflow-hidden bg-gradient-to-br from-primary/5 via-background to-background">
       <div className="container">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
           <div className="lg:w-1/2">

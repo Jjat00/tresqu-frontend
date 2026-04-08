@@ -52,8 +52,8 @@
   /* Colores específicos - Paleta Trii */
   --color-success: #00FF7F;
   --color-success-dark: #00CC66;
-  --color-highlight: #00FF7F;
-  --color-highlight-dark: #00CC66;
+  --color-highlight: #60a5fa;
+  --color-highlight-dark: #3b82f6;
   --color-purple: #a78bfa;
   --color-purple-dark: #8b5cf6;
   --color-pink: #f472b6;
@@ -61,6 +61,14 @@
   --color-trii-green: #00FF7F;
   --color-trii-dark: #0a0a0a;
   --color-trii-card: #111111;
+
+  /* Timing tokens */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 800ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer base {
@@ -152,31 +160,17 @@
     font-weight: 700;
   }
 
+  .high-contrast-text-cyan {
+    color: var(--color-cyan);
+    font-weight: 700;
+  }
+
   .high-contrast-text-purple {
     color: var(--color-purple);
     font-weight: 700;
   }
 
-  /* Cards estilo Trii */
-  .trii-card {
-    background: linear-gradient(180deg, rgba(17, 17, 17, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: var(--radius);
-    backdrop-filter: blur(20px);
-  }
-
-  .trii-card-hover {
-    transition: all 0.3s ease;
-  }
-
-  .trii-card-hover:hover {
-    border-color: rgba(0, 255, 127, 0.2);
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5),
-                0 0 30px -10px rgba(0, 255, 127, 0.1);
-    transform: translateY(-4px);
-  }
-
-  /* Compatibilidad con clases existentes */
+  /* Sistema de superficies */
   .glass {
     background-color: rgba(17, 17, 17, 0.8);
     backdrop-filter: blur(16px);
@@ -184,11 +178,25 @@
     border-radius: var(--radius);
   }
 
-  .glass-card {
+  .glass-card,
+  .trii-card {
     background: linear-gradient(180deg, rgba(17, 17, 17, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius);
+  }
+
+  .glass-card-hover,
+  .trii-card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glass-card-hover:hover,
+  .trii-card-hover:hover {
+    border-color: rgba(0, 255, 127, 0.2);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                0 0 30px -10px rgba(0, 255, 127, 0.1);
+    transform: translateY(-4px);
   }
 
   .text-shadow-sm {
@@ -342,23 +350,44 @@
   }
 
   .animate-fade-in {
-    animation: fade-in 0.8s ease-out;
+    animation: fade-in var(--duration-slower) var(--ease-out);
   }
 
   .animate-fade-up {
-    animation: fade-up 0.6s ease-out;
+    animation: fade-up var(--duration-slow) var(--ease-out);
   }
 
   .animate-slide-in-right {
-    animation: slide-in-right 0.6s ease-out;
+    animation: slide-in-right var(--duration-slow) var(--ease-out);
   }
 
   .animate-pulse-glow {
-    animation: pulse-glow 4s infinite ease-in-out;
+    animation: pulse-glow 4s infinite var(--ease-in-out);
   }
 
   .animate-float {
-    animation: float 6s infinite ease-in-out;
+    animation: float 6s infinite var(--ease-in-out);
+  }
+
+  /* Accesibilidad: respetar preferencias de movimiento reducido */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-fade-up,
+    .animate-slide-in-right {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .animate-pulse-glow,
+    .animate-float {
+      animation: none !important;
+    }
+
+    .glass-card-hover:hover,
+    .trii-card-hover:hover {
+      transform: none !important;
+    }
   }
 
   /* WhatsApp Features section animations */

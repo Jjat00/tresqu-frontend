@@ -1,7 +1,7 @@
 
 // Sample data for the charts with specific dates
 export const categoryData = [
-  { name: "Alimentación", value: 2500, color: "#4ade80" },
+  { name: "Alimentación", value: 2500, color: "#00FF7F" },
   { name: "Transporte", value: 1500, color: "#60a5fa" },
   { name: "Entretenimiento", value: 1800, color: "#f472b6" },
   { name: "Servicios", value: 900, color: "#a78bfa" },

@@ -96,7 +96,7 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="relative py-20 md:py-32 overflow-hidden bg-[#0a0a0a]"
+      className="relative section-padding overflow-hidden bg-[#0a0a0a]"
     >
       {/* Background */}
       <div className="absolute inset-0">

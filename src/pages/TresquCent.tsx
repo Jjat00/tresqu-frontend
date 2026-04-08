@@ -46,7 +46,7 @@ const TresquCent = () => {
       <Header />
 
       {/* Contenido principal */}
-      <div className="container max-w-6xl mx-auto px-4 py-20 md:py-32">
+      <div className="container max-w-6xl mx-auto px-4 section-padding">
         {/* Encabezado centrado */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 px-4 py-2 rounded-full mb-6">

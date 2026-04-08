@@ -28,7 +28,7 @@ const FutureVision = () => {
   return (
     <section
       id="futuro"
-      className="relative py-20 md:py-32 overflow-hidden"
+      className="relative section-padding overflow-hidden"
       style={{
         background:
           "linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%)",

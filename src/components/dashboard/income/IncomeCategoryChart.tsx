@@ -76,7 +76,7 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
             (color: string) => hexToRGBA(color, 0.5)
           ),
           borderColor: chartData.datasets[0].backgroundColor.map(
-            (color: string) => (color === "#4ade80" ? "#166534" : "#1e40af")
+            (color: string) => (color === "#00FF7F" ? "#166534" : "#1e40af")
           ),
           borderWidth: 1,
         },

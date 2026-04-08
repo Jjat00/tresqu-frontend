@@ -17,7 +17,7 @@ const subcategoriesData = {
   "Transporte": [{
     name: "Uber",
     value: 850,
-    color: "#4ade80"
+    color: "#00FF7F"
   }, {
     name: "Taxi",
     value: 350,
@@ -34,7 +34,7 @@ const subcategoriesData = {
   "Alimentación": [{
     name: "Supermercado",
     value: 1200,
-    color: "#4ade80"
+    color: "#00FF7F"
   }, {
     name: "Restaurantes",
     value: 800,
@@ -51,7 +51,7 @@ const subcategoriesData = {
   "Entretenimiento": [{
     name: "Streaming",
     value: 800,
-    color: "#4ade80"
+    color: "#00FF7F"
   }, {
     name: "Cine",
     value: 600,
