@@ -140,32 +140,54 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={rechartsData} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <defs>
+                  {data?.datasets.map((dataset, i) => (
+                    <linearGradient key={`barGrad-${i}`} id={`barGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={dataset.backgroundColor} stopOpacity={0.85} />
+                      <stop offset="100%" stopColor={dataset.backgroundColor} stopOpacity={0.35} />
+                    </linearGradient>
+                  ))}
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
+                  tick={{ fontSize: isMobile ? 9 : 11, fill: "rgba(255,255,255,0.4)" }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
                   tickFormatter={formatYAxis}
-                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
+                  tick={{ fontSize: isMobile ? 9 : 11, fill: "rgba(255,255,255,0.4)" }}
                   axisLine={false}
                   tickLine={false}
+                  width={40}
                 />
                 <Tooltip
+                  cursor={{ fill: "rgba(255,255,255,0.03)", radius: 6 }}
                   contentStyle={{
-                    backgroundColor: "hsl(0 0% 7%)",
-                    border: "1px solid hsl(0 0% 14%)",
-                    borderRadius: "8px",
+                    background: "rgba(10, 10, 10, 0.9)",
+                    backdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: "12px",
                     fontSize: "12px",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+                    padding: "8px 12px",
                   }}
-                  formatter={(value: number) => [`$${value.toLocaleString("es-CO")}`, undefined]}
+                  formatter={(value: number, name: string) => {
+                    const color = data?.datasets.find((d) => d.label === name)?.backgroundColor;
+                    return [
+                      <span key={name} style={{ color: color || "#fff" }}>
+                        ${value.toLocaleString("es-CO")}
+                      </span>,
+                      name,
+                    ];
+                  }}
                 />
                 {!isMobile && (
                   <Legend
-                    wrapperStyle={{ fontSize: "11px" }}
-                    iconSize={8}
+                    wrapperStyle={{ fontSize: "10px", opacity: 0.7, paddingTop: "8px" }}
+                    iconSize={6}
+                    iconType="circle"
                   />
                 )}
                 {data?.datasets.map((dataset, i) => (
@@ -173,9 +195,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                     key={dataset.label}
                     dataKey={dataset.label}
                     stackId="stack"
-                    fill={dataset.backgroundColor}
-                    fillOpacity={0.7}
-                    radius={i === (data.datasets.length - 1) ? [2, 2, 0, 0] : [0, 0, 0, 0]}
+                    fill={`url(#barGrad-${i})`}
+                    radius={i === (data.datasets.length - 1) ? [4, 4, 0, 0] : [0, 0, 0, 0]}
                   />
                 ))}
               </BarChart>

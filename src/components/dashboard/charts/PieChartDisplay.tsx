@@ -51,55 +51,77 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
     );
   }
 
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+
   return (
     <div className="flex-1 min-h-[250px] sm:min-h-[300px] flex items-center justify-center h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
+          <defs>
+            {data.map((entry, i) => (
+              <linearGradient key={`grad-${i}`} id={`pieGrad-${i}`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor={entry.color} stopOpacity={0.9} />
+                <stop offset="100%" stopColor={entry.color} stopOpacity={0.5} />
+              </linearGradient>
+            ))}
+            <filter id="pieGlow">
+              <feGaussianBlur stdDeviation="3" result="glow" />
+              <feMerge>
+                <feMergeNode in="glow" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={isMobile ? 30 : 60}
-            outerRadius={isMobile ? 55 : 90}
-            paddingAngle={2}
+            innerRadius={isMobile ? 40 : 65}
+            outerRadius={isMobile ? 65 : 95}
+            paddingAngle={3}
             dataKey="value"
             nameKey="name"
-            label={({ name, percent }) =>
-              isMobile
-                ? `${(percent * 100).toFixed(0)}%`
-                : `${name}: ${(percent * 100).toFixed(0)}%`
-            }
-            labelLine={false}
-            onClick={(data) => onCategoryClick(data.name)}
+            cornerRadius={4}
+            stroke="none"
+            onClick={(d) => onCategoryClick(d.name)}
+            filter="url(#pieGlow)"
           >
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={entry.color}
-                stroke={entry.textColor}
-                strokeWidth={1.5}
-                style={{
-                  cursor: "pointer",
-                }}
+                fill={`url(#pieGrad-${index})`}
+                style={{ cursor: "pointer" }}
               />
             ))}
           </Pie>
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
-                const value = payload[0].value;
-                // Make sure value is a number before formatting it
-                const formattedValue =
-                  typeof value === "number"
-                    ? new Intl.NumberFormat("es-CO").format(value)
-                    : value;
+                const value = payload[0].value as number;
+                const name = payload[0].name as string;
+                const pct = total > 0 ? ((value / total) * 100).toFixed(1) : "0";
+                const formatted = new Intl.NumberFormat("es-CO").format(value);
+                const color = data.find((d) => d.name === name)?.color || "#fff";
 
                 return (
-                  <div className="bg-card p-2 xs:p-3 rounded shadow border text-xs xs:text-sm">
-                    <p className="font-semibold">{payload[0].name}</p>
-                    <p>${formattedValue}</p>
-                    <p className="text-success mt-1 text-xs">
-                      Click para ver subcategorías
+                  <div
+                    className="px-3 py-2.5 rounded-xl text-xs"
+                    style={{
+                      background: "rgba(10, 10, 10, 0.9)",
+                      backdropFilter: "blur(20px)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      <span className="font-medium text-foreground">{name}</span>
+                    </div>
+                    <p className="text-muted-foreground">
+                      ${formatted} · <span className="text-foreground font-medium">{pct}%</span>
                     </p>
                   </div>
                 );
@@ -107,6 +129,31 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
               return null;
             }}
           />
+          {/* Center label */}
+          <text
+            x="50%"
+            y="50%"
+            textAnchor="middle"
+            dominantBaseline="central"
+            className="fill-muted-foreground"
+            style={{ fontSize: isMobile ? "10px" : "11px" }}
+          >
+            <tspan
+              x="50%"
+              dy="-0.4em"
+              className="fill-foreground"
+              style={{ fontSize: isMobile ? "14px" : "18px", fontWeight: 600 }}
+            >
+              ${total >= 1000000
+                ? `${(total / 1000000).toFixed(1)}M`
+                : total >= 1000
+                ? `${(total / 1000).toFixed(0)}K`
+                : total.toLocaleString("es-CO")}
+            </tspan>
+            <tspan x="50%" dy="1.4em" style={{ fontSize: "10px" }}>
+              Total
+            </tspan>
+          </text>
         </PieChart>
       </ResponsiveContainer>
     </div>
