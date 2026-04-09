@@ -6,6 +6,7 @@ import ChartJSPieChart from "./charts/ChartJSPieChart";
 import ChartJSBarChart from "./charts/ChartJSBarChart";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
 import { MonthlyComparisonChart } from "./expenses/MonthlyComparisonChart";
+import CumulativeBalanceChart from "./CumulativeBalanceChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   TrendingUpIcon,
@@ -215,6 +216,9 @@ const ExpensesTab = ({
       >
         <MonthlyComparisonChart />
       </div>
+
+      {/* Balance acumulado mes a mes */}
+      <CumulativeBalanceChart />
 
       <Card
         className="glass-card animate-fade-up"
