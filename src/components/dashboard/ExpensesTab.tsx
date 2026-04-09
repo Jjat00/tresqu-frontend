@@ -128,18 +128,14 @@ const ExpensesTab = ({
           <div className="flex items-center gap-2 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-rose-400" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
-              Gasto Total
+              Transacciones
             </span>
           </div>
           <div className="text-lg sm:text-2xl md:text-3xl font-semibold text-rose-400 tracking-tight font-display">
-            $
-            {totalAmount?.toLocaleString("es-ES", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }) || "0"}
+            {getExpensesCount().toLocaleString("es-ES")}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
-            {isPieLoading ? "Cargando..." : "Gastos del período"}
+            {isPieLoading ? "Cargando..." : "Gastos registrados"}
           </p>
         </div>
 
