@@ -177,7 +177,7 @@ export class ExpenseCategoriesService {
   async getColorsMap(): Promise<CategoryColorsMapResponse> {
     try {
       const response = await apiClient.get<CategoryColorsMapResponse>(
-        `${this.baseUrl}/categories/expenses/colors_map/`
+        `${this.baseUrl}/categories/expenses/colors-map/`
       );
       return response.data;
     } catch (error) {
