@@ -81,7 +81,7 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
   };
 
   return (
-    <Card className="overflow-hidden h-full">
+    <Card className="overflow-hidden h-full bg-transparent border-0 shadow-none">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col px-[15px]">
         <div className="flex justify-between items-center mb-1 xs:mb-2">
           <h3 className="text-sm xs:text-base sm:text-lg font-semibold">{chartTitle}</h3>

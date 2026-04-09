@@ -284,40 +284,7 @@ const IncomeTab = ({
   };
 
   return (
-    <div className="space-y-3 md:space-y-4 flex flex-col px-0 mx-0 my-0 relative">
-      {/* Efectos de fondo */}
-      <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
-        <div
-          className="absolute top-0 left-0 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 25% 25%, rgba(74, 222, 128, 0.1), transparent 40%)",
-          }}
-        ></div>
-        <div
-          className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1), transparent 40%)",
-          }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at center, rgba(167, 139, 250, 0.05), transparent 50%)",
-          }}
-        ></div>
-      </div>
-
-      {/* Patrón sutil de puntos */}
-      <div
-        className="fixed inset-0 z-[-2] opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
-          backgroundSize: "30px 30px",
-        }}
-      ></div>
+    <div className="space-y-3 md:space-y-4 flex flex-col relative">
 
       {/* <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
         <Button
@@ -336,93 +303,58 @@ const IncomeTab = ({
       </div> */}
 
       {/* KPIs Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="glass-card animate-fade-up">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text">
-              Ingreso Total
-            </CardTitle>
-            <WalletIcon className="h-4 w-4 text-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">
-              $
-              {getTotalIncome().toLocaleString("es-ES", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isSummaryLoading ? "Cargando..." : "Ingresos del período"}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="glass-card p-4 sm:p-5 animate-fade-up">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Ingreso Total</span>
+          </div>
+          <div className="text-lg sm:text-2xl font-semibold text-emerald-400 tracking-tight font-display">
+            ${getTotalIncome().toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isSummaryLoading ? "Cargando..." : "Ingresos del período"}
+          </p>
+        </div>
 
-        <Card
-          className="glass-card animate-fade-up"
-          style={{ animationDelay: "0.1s" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text-cyan">
-              Ingreso Promedio Diario
-            </CardTitle>
-            <CalendarIcon className="h-4 w-4 text-highlight" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-highlight">
-              $
-              {calculateDailyAverage().toLocaleString("es-ES", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isSummaryLoading ? "Cargando..." : "Promedio por día"}
-            </p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Promedio Diario</span>
+          </div>
+          <div className="text-lg sm:text-2xl font-semibold text-sky-400 tracking-tight font-display">
+            ${calculateDailyAverage().toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isSummaryLoading ? "Cargando..." : "Promedio por día"}
+          </p>
+        </div>
 
-        <Card
-          className="glass-card animate-fade-up"
-          style={{ animationDelay: "0.2s" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text-purple">
-              Categoría Principal
-            </CardTitle>
-            <TagIcon className="h-4 w-4 text-purple" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple">
-              {getMainCategory().name}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isPieLoading
-                ? "Cargando..."
-                : `${getMainCategory().percentage}% del ingreso total`}
-            </p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Categoría Principal</span>
+          </div>
+          <div className="text-lg sm:text-2xl font-semibold text-violet-400 tracking-tight font-display truncate">
+            {getMainCategory().name}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isPieLoading ? "Cargando..." : `${getMainCategory().percentage}% del ingreso total`}
+          </p>
+        </div>
 
-        <Card
-          className="glass-card animate-fade-up"
-          style={{ animationDelay: "0.3s" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text">
-              Número de Ingresos
-            </CardTitle>
-            <TrendingUpIcon className="h-4 w-4 text-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">
-              {getIncomeCount().toLocaleString("es-ES")}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isSummaryLoading ? "Cargando..." : "Ingresos registrados"}
-            </p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.3s" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Registros</span>
+          </div>
+          <div className="text-lg sm:text-2xl font-semibold text-amber-400 tracking-tight font-display">
+            {getIncomeCount().toLocaleString("es-ES")}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isSummaryLoading ? "Cargando..." : "Ingresos registrados"}
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">

@@ -1,9 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   TrendingDownIcon,
   TrendingUpIcon,
-  WalletIcon,
   ArrowUpIcon,
   ArrowDownIcon,
   ScaleIcon,
@@ -24,10 +22,8 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
     period: "month",
   });
 
-  const totalIncome = summaryData?.summary?.reduce(
-    (total, item) => total + item.total,
-    0
-  ) ?? 0;
+  const totalIncome =
+    summaryData?.summary?.reduce((total, item) => total + item.total, 0) ?? 0;
 
   const balance = totalIncome - totalExpenses;
   const isPositive = balance >= 0;
@@ -42,15 +38,13 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-3 gap-2 sm:gap-4 animate-fade-up">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
         {[0, 1, 2].map((i) => (
-          <Card key={i} className="glass-card">
-            <CardContent className="p-3 sm:p-4">
-              <Skeleton className="h-3 w-16 mb-2" />
-              <Skeleton className="h-6 w-24 mb-1" />
-              <Skeleton className="h-3 w-20" />
-            </CardContent>
-          </Card>
+          <div key={i} className="glass-card p-4 sm:p-5">
+            <Skeleton className="h-3 w-14 mb-3 rounded-full" />
+            <Skeleton className="h-7 w-28 mb-2" />
+            <Skeleton className="h-3 w-20 rounded-full" />
+          </div>
         ))}
       </div>
     );
@@ -61,66 +55,59 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
       label: "Ingresos",
       amount: totalIncome,
       icon: TrendingUpIcon,
-      iconColor: "text-success",
-      amountColor: "text-success",
-      bgAccent: "bg-success/10",
+      iconColor: "text-emerald-400",
+      amountColor: "text-emerald-400",
+      dotColor: "bg-emerald-400",
     },
     {
       label: "Gastos",
       amount: totalExpenses,
       icon: TrendingDownIcon,
-      iconColor: "text-rose-500",
-      amountColor: "text-rose-500",
-      bgAccent: "bg-rose-500/10",
+      iconColor: "text-rose-400",
+      amountColor: "text-rose-400",
+      dotColor: "bg-rose-400",
     },
     {
       label: "Balance",
       amount: balance,
       icon: ScaleIcon,
-      iconColor: isPositive ? "text-success" : "text-rose-500",
-      amountColor: isPositive ? "text-success" : "text-rose-500",
-      bgAccent: isPositive ? "bg-success/10" : "bg-rose-500/10",
+      iconColor: isPositive ? "text-emerald-400" : "text-rose-400",
+      amountColor: isPositive ? "text-emerald-400" : "text-rose-400",
+      dotColor: isPositive ? "bg-emerald-400" : "bg-rose-400",
       prefix: isPositive ? "+" : "-",
       indicator: isPositive ? ArrowUpIcon : ArrowDownIcon,
     },
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-2 sm:gap-4 animate-fade-up">
-      {cards.map((card, i) => (
-        <Card
-          key={card.label}
-          className="glass-card"
-          style={{ animationDelay: `${i * 0.1}s` }}
-        >
-          <CardContent className="p-3 sm:p-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wide">
-                {card.label}
+    <div className="grid grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
+      {cards.map((card) => (
+        <div key={card.label} className="glass-card p-4 sm:p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className={`w-1.5 h-1.5 rounded-full ${card.dotColor}`} />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
+              {card.label}
+            </span>
+          </div>
+          <div
+            className={`text-lg sm:text-2xl md:text-3xl font-semibold ${card.amountColor} tracking-tight font-display`}
+          >
+            {card.prefix === "-" ? "-" : ""}
+            {formatAmount(card.amount)}
+          </div>
+          {card.indicator ? (
+            <div className="flex items-center gap-1 mt-1.5">
+              <card.indicator className={`h-3 w-3 ${card.iconColor}`} />
+              <span className={`text-[10px] sm:text-xs ${card.iconColor} opacity-80`}>
+                {isPositive ? "Superávit" : "Déficit"}
               </span>
-              <div className={`p-1 sm:p-1.5 rounded-md ${card.bgAccent}`}>
-                <card.icon className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${card.iconColor}`} />
-              </div>
             </div>
-            <div className={`text-base sm:text-xl md:text-2xl font-bold ${card.amountColor} tracking-tight`}>
-              {card.prefix === "-" ? "-" : ""}
-              {formatAmount(card.amount)}
-            </div>
-            {card.indicator && (
-              <div className="flex items-center gap-1 mt-0.5">
-                <card.indicator className={`h-3 w-3 ${card.iconColor}`} />
-                <span className={`text-[10px] sm:text-xs ${card.iconColor}`}>
-                  {isPositive ? "Superávit" : "Déficit"}
-                </span>
-              </div>
-            )}
-            {!card.indicator && (
-              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
-                Este período
-              </p>
-            )}
-          </CardContent>
-        </Card>
+          ) : (
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+              Este período
+            </p>
+          )}
+        </div>
       ))}
     </div>
   );

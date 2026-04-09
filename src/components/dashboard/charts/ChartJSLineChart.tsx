@@ -66,7 +66,7 @@ const ChartJSLineChart: React.FC<ChartJSLineChartProps> = ({
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full bg-transparent border-0 shadow-none">
       <CardHeader className="px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4">
         <CardTitle className="text-sm xs:text-base">
           Gastos - {getChartTitle()}

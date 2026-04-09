@@ -22,7 +22,7 @@ const ChartJSPieChart: React.FC<ChartJSPieChartProps> = ({
   } = useCategoryPieChartData(dateRange);
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col">
+    <Card className="overflow-hidden h-full flex flex-col bg-transparent border-0 shadow-none">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
         <div className="flex justify-between items-center mb-1 xs:mb-2">
           <h3 className="xs:text-base sm:text-lg font-semibold text-center">

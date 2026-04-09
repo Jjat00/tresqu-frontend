@@ -170,33 +170,68 @@
     font-weight: 700;
   }
 
-  /* Sistema de superficies */
+  /* Sistema de superficies — Liquid Glass + Vercel */
   .glass {
-    background-color: rgba(17, 17, 17, 0.8);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: var(--radius);
   }
 
   .glass-card,
   .trii-card {
-    background: linear-gradient(180deg, rgba(17, 17, 17, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: var(--radius);
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.01) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(40px) saturate(1.5);
+    -webkit-backdrop-filter: blur(40px) saturate(1.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: calc(var(--radius) + 4px);
+    box-shadow:
+      0 0 0 0.5px rgba(255, 255, 255, 0.04) inset,
+      0 2px 8px -2px rgba(0, 0, 0, 0.3),
+      0 0 40px -10px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  /* Liquid light refraction effect */
+  .glass-card::before,
+  .trii-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 30%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.1) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
   }
 
   .glass-card-hover,
   .trii-card-hover {
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-out);
   }
 
   .glass-card-hover:hover,
   .trii-card-hover:hover {
-    border-color: rgba(0, 255, 127, 0.2);
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5),
-                0 0 30px -10px rgba(0, 255, 127, 0.1);
-    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 0 0 0.5px rgba(255, 255, 255, 0.06) inset,
+      0 8px 24px -6px rgba(0, 0, 0, 0.4),
+      0 0 60px -15px rgba(0, 255, 127, 0.08);
+    transform: translateY(-2px);
   }
 
   .text-shadow-sm {
