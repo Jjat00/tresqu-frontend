@@ -80,20 +80,21 @@ const DashboardLayout = ({
         </div>
       </header>
 
-      {/* Main layout with sidebar */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Desktop sidebar */}
-        <DesktopSidebar
-          activeTab={activeTab}
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
+      {/* Desktop sidebar (fixed) */}
+      <DesktopSidebar
+        activeTab={activeTab}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
 
-        {/* Dashboard content */}
-        <main className="flex-1 overflow-y-auto px-3 md:px-6 py-4 md:py-6 pb-20 lg:pb-6">
-          {children}
-        </main>
-      </div>
+      {/* Dashboard content with sidebar offset */}
+      <main
+        className={`flex-1 px-3 md:px-6 py-4 md:py-6 pb-20 lg:pb-6 transition-all duration-200 ${
+          sidebarCollapsed ? "lg:ml-14" : "lg:ml-48"
+        }`}
+      >
+        {children}
+      </main>
 
       {/* Mobile bottom nav */}
       <MobileBottomNav activeTab={activeTab} />

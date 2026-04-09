@@ -6,6 +6,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
 
 interface NavItem {
@@ -60,42 +65,71 @@ export const DesktopSidebar = ({
 
   return (
     <aside
-      className={`hidden lg:flex flex-col border-r border-border bg-sidebar-background transition-all ${
-        collapsed ? "w-16" : "w-52"
+      className={`hidden lg:flex flex-col fixed top-14 left-0 bottom-0 z-20 border-r border-border bg-sidebar-background transition-all duration-200 ${
+        collapsed ? "w-14" : "w-48"
       }`}
     >
-      <div className="flex-1 py-4 space-y-1 px-2">
+      {/* Flecha colapsar/expandir arriba */}
+      <div className="p-1.5 border-b border-border flex justify-end">
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={onToggleCollapse}
+              aria-label={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right" sideOffset={8}>
+            {collapsed ? "Expandir" : "Colapsar"}
+          </TooltipContent>
+        </Tooltip>
+      </div>
+
+      {/* Nav items */}
+      <div className="flex-1 py-3 space-y-1 px-1.5">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
-          return (
+          const btn = (
             <button
               key={item.id}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                isActive ? item.activeColor : `${item.color} hover:text-foreground hover:bg-muted/50`
+              className={`w-full flex items-center gap-3 rounded-lg text-sm font-medium transition-colors ${
+                collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5"
+              } ${
+                isActive
+                  ? item.activeColor
+                  : `${item.color} hover:text-foreground hover:bg-muted/50`
               }`}
               aria-label={item.label}
             >
               <item.icon className="h-4 w-4 flex-shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && (
+                <span className="truncate">{item.label}</span>
+              )}
             </button>
           );
+
+          if (collapsed) {
+            return (
+              <Tooltip key={item.id} delayDuration={0}>
+                <TooltipTrigger asChild>{btn}</TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  {item.label}
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+
+          return btn;
         })}
-      </div>
-      <div className="p-2 border-t border-border">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-center"
-          onClick={onToggleCollapse}
-          aria-label={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
-        </Button>
       </div>
     </aside>
   );
