@@ -14,9 +14,13 @@ import DateRangePicker, {
 import { getCurrentWeekRange } from "@/components/dashboard/dateRangePicker/dateRangeUtils";
 import DashboardSummary from "@/components/dashboard/DashboardSummary";
 
+const MONTHS = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+] as const;
+
 const Dashboard = () => {
   const { section = "expenses" } = useParams<{ section: string }>();
-  const [currentMonth, setCurrentMonth] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>(getCurrentWeekRange());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">(
     "week"
@@ -24,10 +28,9 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const months = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
-  ];
+  const referenceDate =
+    viewMode === "month" && dateRange.from ? dateRange.from : new Date();
+  const currentMonth = MONTHS[referenceDate.getMonth()];
 
   useEffect(() => {
     try {
@@ -39,11 +42,6 @@ const Dashboard = () => {
       navigate("/login");
     }
   }, [navigate]);
-
-  useEffect(() => {
-    const date = new Date();
-    setCurrentMonth(months[date.getMonth()]);
-  }, []);
 
   const handleShareApp = () => {
     const shareTitle = "Tresqu - Tu asistente financiero inteligente";
@@ -71,10 +69,6 @@ const Dashboard = () => {
       else if (daysDiff <= 7) setViewMode("week");
       else if (daysDiff <= 31) setViewMode("month");
       else setViewMode("year");
-    }
-
-    if (viewMode === "month" && newRange.from) {
-      setCurrentMonth(months[newRange.from.getMonth()]);
     }
   };
 
