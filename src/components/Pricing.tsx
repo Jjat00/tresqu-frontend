@@ -1,4 +1,5 @@
-import { Check, X, Sparkles, Building2, Rocket, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Check, X, Sparkles, Building2, Rocket, ArrowRight, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface PlanFeature {
@@ -19,8 +20,29 @@ interface Plan {
   onClick: () => void;
 }
 
+const faqs = [
+  {
+    question: "¿Puedo cambiar de plan en cualquier momento?",
+    answer: "Sí, puedes actualizar o cambiar tu plan en cualquier momento. Si actualizas a un plan superior, solo pagarás la diferencia prorrateada del mes en curso.",
+  },
+  {
+    question: "¿Qué pasa con mis datos si cancelo?",
+    answer: "Tus datos se mantienen seguros durante 30 días después de la cancelación. Puedes exportar toda tu información en cualquier momento desde el dashboard.",
+  },
+  {
+    question: "¿Cómo funciona el reconocimiento de fotos de recibos?",
+    answer: "Simplemente toma una foto del recibo y envíala por WhatsApp o Telegram. Nuestra IA extrae automáticamente el monto, categoría, fecha y descripción del gasto.",
+  },
+  {
+    question: "¿Puedo usar Tresqu sin WhatsApp?",
+    answer: "Sí, también está disponible vía Telegram y desde el dashboard web. WhatsApp es solo una de las opciones de interacción.",
+  },
+];
+
 const Pricing = () => {
   const navigate = useNavigate();
+  const [isAnnual, setIsAnnual] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const plans: Plan[] = [
     {
@@ -48,8 +70,8 @@ const Pricing = () => {
       name: "Premium",
       icon: <Sparkles className="w-5 h-5" />,
       description: "Control financiero completo con IA avanzada",
-      price: "$5",
-      period: "/mes",
+      price: isAnnual ? "$50" : "$5",
+      period: isAnnual ? "/año" : "/mes",
       badge: "MÁS POPULAR",
       highlighted: true,
       features: [
@@ -71,8 +93,8 @@ const Pricing = () => {
       name: "Business",
       icon: <Building2 className="w-5 h-5" />,
       description: "Gestión financiera para equipos",
-      price: "$49",
-      period: "/mes",
+      price: isAnnual ? "$490" : "$49",
+      period: isAnnual ? "/año" : "/mes",
       features: [
         { text: "Todo lo de Premium", included: true },
         { text: "Hasta 5 usuarios", included: true },
@@ -96,7 +118,7 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="relative py-20 md:py-32 overflow-hidden bg-[#0a0a0a]"
+      className="relative section-padding overflow-hidden bg-[#0a0a0a]"
     >
       {/* Background */}
       <div className="absolute inset-0">
@@ -119,6 +141,33 @@ const Pricing = () => {
             Control financiero inteligente con IA avanzada. Elige el plan que
             mejor se adapte a ti.
           </p>
+
+          {/* Toggle mensual/anual */}
+          <div className="flex items-center justify-center gap-3 mt-8">
+            <span className={`text-sm font-medium transition-colors ${!isAnnual ? "text-white" : "text-zinc-500"}`}>
+              Mensual
+            </span>
+            <button
+              onClick={() => setIsAnnual(!isAnnual)}
+              className={`relative w-14 h-7 rounded-full transition-colors ${
+                isAnnual ? "bg-success" : "bg-zinc-700"
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-transform ${
+                  isAnnual ? "translate-x-7" : "translate-x-0.5"
+                }`}
+              />
+            </button>
+            <span className={`text-sm font-medium transition-colors ${isAnnual ? "text-white" : "text-zinc-500"}`}>
+              Anual
+            </span>
+            {isAnnual && (
+              <span className="text-xs font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-full">
+                -17%
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Pricing Cards */}
@@ -194,10 +243,10 @@ const Pricing = () => {
                         {plan.period}
                       </span>
                     </div>
-                    {plan.name === "Premium" && (
+                    {isAnnual && plan.price !== "Gratis" && (
                       <div className="mt-3 inline-flex items-center gap-2 bg-[#00FF7F]/10 border border-[#00FF7F]/20 px-3 py-1 rounded-full">
                         <span className="text-[11px] font-semibold text-[#00FF7F] uppercase tracking-wider">
-                          ó $50/año (ahorra 20%)
+                          Ahorra 2 meses gratis
                         </span>
                       </div>
                     )}
@@ -249,21 +298,44 @@ const Pricing = () => {
           })}
         </div>
 
-        {/* Bottom Note */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-zinc-900/50 border border-zinc-800 rounded-full">
-            <span className="text-2xl">📸</span>
-            <div className="text-left">
-              <p className="text-sm text-white font-medium">
-                Funcionalidad exclusiva: "Foto y Listo"
-              </p>
-              <p className="text-xs text-zinc-500">
-                Toma foto al recibo, la IA hace el resto
-              </p>
-            </div>
+        {/* FAQ Section */}
+        <div className="mt-20 max-w-2xl mx-auto">
+          <h3 className="trii-title text-2xl sm:text-3xl text-center text-white mb-8">
+            Preguntas <span className="trii-title-accent">frecuentes</span>
+          </h3>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div
+                key={i}
+                className="glass-card overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 text-left"
+                >
+                  <span className="text-sm sm:text-base font-medium text-foreground pr-4">
+                    {faq.question}
+                  </span>
+                  <ChevronDown
+                    className={`h-4 w-4 text-muted-foreground flex-shrink-0 transition-transform ${
+                      openFaq === i ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div
+                  className={`overflow-hidden transition-all ${
+                    openFaq === i ? "max-h-40 pb-4 px-4 sm:px-5" : "max-h-0"
+                  }`}
+                >
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-          <p className="mt-6 text-zinc-500 text-sm">
-            ¿Tienes preguntas?{" "}
+          <p className="mt-8 text-zinc-500 text-sm text-center">
+            ¿Más preguntas?{" "}
             <a
               href="#contacto"
               className="text-[#00FF7F] hover:underline font-medium"

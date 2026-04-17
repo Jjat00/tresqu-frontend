@@ -65,12 +65,14 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         success: {
-          DEFAULT: "#4ade80", // Verde acento
-          foreground: "#ffffff",
+          DEFAULT: "var(--color-success)",
+          dark: "var(--color-success-dark)",
+          foreground: "#000000",
         },
         highlight: {
-          DEFAULT: "#60a5fa", // Azul acento
-          foreground: "#ffffff",
+          DEFAULT: "var(--color-highlight)",
+          dark: "var(--color-highlight-dark)",
+          foreground: "#000000",
         },
       },
       borderRadius: {
@@ -79,8 +81,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Outfit", "sans-serif"],
+        sans: ["DM Sans", "sans-serif"],
+        display: ["Syne", "sans-serif"],
+        mono: ["Space Grotesk", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -101,10 +104,10 @@ export default {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 1s ease-in-out",
-        "fade-up": "fade-up 0.5s ease-out",
+        "accordion-down": "accordion-down var(--duration-fast) ease-out",
+        "accordion-up": "accordion-up var(--duration-fast) ease-out",
+        "fade-in": "fade-in var(--duration-slower) var(--ease-out)",
+        "fade-up": "fade-up var(--duration-slow) var(--ease-out)",
       },
     },
   },

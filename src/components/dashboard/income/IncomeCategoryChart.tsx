@@ -1,21 +1,19 @@
 import React, { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIncomePieChart } from "@/hooks/useIncomePieChart";
 import { DateRange } from "../DateRangePicker";
 import { DonutChartParams } from "@/types/incomes";
 import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip as ChartTooltip,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
   Legend,
-  ChartOptions,
-} from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-
-// Registrar los componentes de Chart.js
-ChartJS.register(ArcElement, ChartTooltip, Legend);
+  ResponsiveContainer,
+} from "recharts";
 
 interface IncomeCategoryChartProps {
   dateRange?: DateRange;
@@ -30,10 +28,8 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
 }) => {
   const isMobile = useIsMobile();
 
-  // Preparar parámetros para la consulta basados en el rango de fechas
   const queryParams: DonutChartParams = useMemo(() => {
     if (!dateRange) return {};
-
     return {
       date_filter: "custom",
       start_date: dateRange.from?.toISOString().split("T")[0],
@@ -43,141 +39,88 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
 
   const { data: chartData, isLoading, error } = useIncomePieChart(queryParams);
 
-  // Transformar datos de la API al formato esperado por Chart.js
   const pieData = useMemo(() => {
-    if (!chartData || !chartData.labels || !chartData.datasets) {
-      return {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-            backgroundColor: [],
-            borderColor: [],
-            borderWidth: 1,
-          },
-        ],
-      };
-    }
-
-    // Función para convertir hex a rgba
-    const hexToRGBA = (hex: string, alpha: number) => {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    };
-
-    return {
-      labels: chartData.labels,
-      datasets: [
-        {
-          data: chartData.datasets[0].data,
-          backgroundColor: chartData.datasets[0].backgroundColor.map(
-            (color: string) => hexToRGBA(color, 0.5)
-          ),
-          borderColor: chartData.datasets[0].backgroundColor.map(
-            (color: string) => (color === "#4ade80" ? "#166534" : "#1e40af")
-          ),
-          borderWidth: 1,
-        },
-      ],
-    };
+    if (!chartData?.labels || !chartData?.datasets?.[0]) return [];
+    return chartData.labels.map((label, i) => ({
+      name: label,
+      value: chartData.datasets[0].data[i],
+      color: chartData.datasets[0].backgroundColor[i],
+    }));
   }, [chartData]);
 
-  // Opciones para Chart.js
-  const options: ChartOptions<"doughnut"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: isMobile ? "bottom" : "right",
-        display: true,
-        labels: {
-          boxWidth: 10,
-          padding: 10,
-          font: {
-            size: isMobile ? 9 : 12,
-          },
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: function (tooltipItem) {
-            const label = tooltipItem.label || "";
-            const value = tooltipItem.raw as number;
-            const total = chartData?.total_amount || 0;
-            const percentage = total > 0 ? (value / total) * 100 : 0;
-            return `${label}: ${formatCurrency(value)} (${percentage.toFixed(
-              1
-            )}%)`;
-          },
-        },
-      },
-    },
-    // Permitir hacer clic en segmentos del gráfico
-    onClick: (event, elements) => {
-      if (elements.length > 0 && onSelectCategory) {
-        const index = elements[0].index;
-        const category = pieData.labels?.[index]?.toString() || "";
-        if (category) {
-          onSelectCategory(category);
-        }
-      }
-    },
-    cutout: "60%", // Hacer un donut en lugar de un pie
-  };
-
   return (
-    <Card className="overflow-hidden h-full flex flex-col">
+    <Card className="overflow-hidden h-full flex flex-col bg-transparent border-0 shadow-none">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
         <div className="flex justify-between items-center mb-1 xs:mb-2">
           <h3 className="xs:text-base sm:text-lg text-sm font-semibold">
             Ingresos por Categoría
           </h3>
           {chartData?.filter_summary && (
-            <p className="text-xs text-muted-foreground">
-              {chartData.filter_summary}
-            </p>
+            <p className="text-xs text-muted-foreground">{chartData.filter_summary}</p>
           )}
         </div>
-        <div className="flex-1 flex items-center justify-center relative">
+        <div className="flex-1 flex items-center justify-center relative min-h-[200px]">
           {isLoading ? (
-            <div className="flex items-center justify-center h-full w-full">
-              <Loader2 className="h-8 w-8 text-primary animate-spin" />
-              <span className="ml-2 text-sm text-muted-foreground">
-                Cargando datos...
-              </span>
-            </div>
+            <Skeleton className="w-32 h-32 sm:w-44 sm:h-44 rounded-full" />
           ) : error ? (
-            <div className="flex flex-col items-center justify-center h-full w-full">
+            <div className="flex flex-col items-center justify-center">
               <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-              <p className="text-sm text-muted-foreground">
-                Error al cargar los datos
-              </p>
+              <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
             </div>
-          ) : !pieData.labels || pieData.labels.length === 0 ? (
-            <div className="flex items-center justify-center h-full w-full">
-              <p className="text-sm text-muted-foreground">
-                No hay datos disponibles
-              </p>
-            </div>
+          ) : pieData.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
           ) : (
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: isMobile ? "200px" : "250px",
-              }}
-            >
-              <Doughnut data={pieData} options={options} />
-            </div>
+            <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={isMobile ? 30 : 55}
+                  outerRadius={isMobile ? 55 : 85}
+                  paddingAngle={2}
+                  dataKey="value"
+                  nameKey="name"
+                  label={({ name, percent }) =>
+                    isMobile
+                      ? `${(percent * 100).toFixed(0)}%`
+                      : `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                  labelLine={false}
+                  onClick={(data) => onSelectCategory?.(data.name)}
+                  style={{ cursor: onSelectCategory ? "pointer" : "default" }}
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.7} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload?.[0]) {
+                      const value = payload[0].value as number;
+                      return (
+                        <div className="bg-card p-2 rounded shadow border text-xs">
+                          <p className="font-semibold">{payload[0].name}</p>
+                          <p>{formatCurrency(value)}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                {!isMobile && (
+                  <Legend
+                    wrapperStyle={{ fontSize: "11px" }}
+                    iconSize={8}
+                  />
+                )}
+              </PieChart>
+            </ResponsiveContainer>
           )}
         </div>
         {chartData && (
           <div className="text-right mt-2 text-sm">
-            <p className="font-semibold">
-              Total: {formatCurrency(chartData.total_amount)}
-            </p>
+            <p className="font-semibold">Total: {formatCurrency(chartData.total_amount)}</p>
           </div>
         )}
       </CardContent>

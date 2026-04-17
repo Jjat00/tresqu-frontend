@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Download, Share2, Loader2, AlertCircle, Trash2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import EmptyState from "@/components/EmptyState";
 import { useIncomeSummary } from "@/hooks/useIncomeSummary";
 import { IncomeSummaryItem, IncomeTableItem } from "@/types/incomes";
 import { useDeleteIncome } from "@/hooks/incomes";
@@ -140,13 +142,42 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
   if (isLoading) {
     return (
       <div className="space-y-3">
-        <div className="rounded-md border p-8">
-          <div className="flex flex-col items-center justify-center">
-            <Loader2 className="h-8 w-8 text-primary animate-spin mb-2" />
-            <p className="text-sm text-muted-foreground">
-              Cargando datos de ingresos...
-            </p>
-          </div>
+        {/* Mobile skeleton */}
+        <div className="sm:hidden space-y-2">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={`mobile-skeleton-${i}`} className="glass-card p-3 space-y-2">
+              <div className="flex justify-between">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+              <Skeleton className="h-3 w-20" />
+            </div>
+          ))}
+        </div>
+        {/* Desktop skeleton */}
+        <div className="hidden sm:block rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-xs">Descripción</TableHead>
+                <TableHead className="text-xs">Categoría</TableHead>
+                <TableHead className="text-xs">Monto</TableHead>
+                <TableHead className="text-xs">Período</TableHead>
+                <TableHead className="text-xs w-[50px]">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <TableRow key={`skeleton-${i}`}>
+                  <TableCell className="py-2"><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell className="py-2"><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell className="py-2"><Skeleton className="h-4 w-8" /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     );
@@ -171,7 +202,47 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
   return (
     <>
       <div className="space-y-3">
-        <div className="rounded-md border overflow-auto">
+        {/* Vista mobile: cards */}
+        <div className="sm:hidden space-y-2 max-h-[400px] overflow-y-auto">
+          {filteredIncome.length === 0 ? (
+            <EmptyState
+              title="Sin ingresos registrados"
+              description="Registra tu primer ingreso por WhatsApp, Telegram o desde el dashboard"
+            />
+          ) : (
+            filteredIncome.map((income) => (
+              <div key={income.id} className="glass-card p-3 space-y-1.5">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{income.category}</p>
+                    <span className="text-xs text-muted-foreground">
+                      {period === "week" ? "Esta semana" : period === "month" ? "Este mes" : period === "year" ? "Este año" : "Todo"}
+                    </span>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-3">
+                    <p className="text-sm font-bold text-success">
+                      {formatCurrency(income.amount)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-end pt-1 border-t border-border/50">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0 hover:text-destructive"
+                    onClick={(e) => handleDeleteClick(e, income)}
+                    aria-label="Eliminar ingreso"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Vista desktop: tabla */}
+        <div className="hidden sm:block rounded-md border overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -186,11 +257,11 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
             <TableBody>
               {filteredIncome.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center py-4 text-muted-foreground"
-                  >
-                    No se encontraron ingresos con los filtros actuales
+                  <TableCell colSpan={6}>
+                    <EmptyState
+                      title="Sin ingresos registrados"
+                      description="Registra tu primer ingreso por WhatsApp, Telegram o desde el dashboard"
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
@@ -219,6 +290,7 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
                         size="sm"
                         className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
                         onClick={(e) => handleDeleteClick(e, income)}
+                        aria-label="Eliminar ingreso"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

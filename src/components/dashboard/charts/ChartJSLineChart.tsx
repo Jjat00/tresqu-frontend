@@ -2,32 +2,19 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DateRange } from "../DateRangePicker";
 import { useLineChartData } from "@/hooks/useLineChartData";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { isLocalToday, isLocalYesterday } from "@/utils/dateUtils";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip as ChartTooltip,
-  Legend,
-  Filler,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-
-// Registrar los componentes de Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  ChartTooltip,
-  Legend,
-  Filler
-);
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ChartJSLineChartProps {
   viewMode: "day" | "week" | "month" | "year";
@@ -41,167 +28,64 @@ const ChartJSLineChart: React.FC<ChartJSLineChartProps> = ({
   dateRange = { from: new Date(), to: new Date() },
 }) => {
   const { data, isLoading, error } = useLineChartData(dateRange, viewMode);
+  const isMobile = useIsMobile();
 
-  // Check if dateRange is today or yesterday
   const isToday =
-    dateRange.from &&
-    dateRange.to &&
-    isLocalToday(dateRange.from) &&
-    isLocalToday(dateRange.to);
-
+    dateRange.from && dateRange.to && isLocalToday(dateRange.from) && isLocalToday(dateRange.to);
   const isYesterday =
-    dateRange.from &&
-    dateRange.to &&
-    isLocalYesterday(dateRange.from) &&
-    isLocalYesterday(dateRange.to);
+    dateRange.from && dateRange.to && isLocalYesterday(dateRange.from) && isLocalYesterday(dateRange.to);
+  const isCustomDateRange = dateRange.from && dateRange.to && !isToday && !isYesterday;
 
-  // Check if dateRange is custom (not today or yesterday)
-  const isCustomDateRange =
-    dateRange.from && dateRange.to && !isToday && !isYesterday;
-
-  // Prepare data for Chart.js
-  const chartData = React.useMemo(() => {
-    if (!data || !data.labels || !data.datasets || data.datasets.length === 0) {
-      return {
-        labels: [],
-        datasets: [],
-      };
-    }
-
-    return {
-      labels: data.labels,
-      datasets: [
-        {
-          label: "Gastos",
-          data: data.datasets[0].data.map((value) =>
-            value === undefined || value === null || isNaN(value) ? 0 : value
-          ),
-          borderColor: "rgba(75, 192, 192, 1)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: "rgba(75, 192, 192, 1)",
-          pointBorderColor: "#fff",
-          pointBorderWidth: 1,
-          pointRadius: 3,
-          pointHoverRadius: 5,
-        },
-      ],
-    };
+  const rechartsData = React.useMemo(() => {
+    if (!data?.labels || !data?.datasets?.[0]) return [];
+    return data.labels.map((label, i) => ({
+      name: label,
+      gastos: data.datasets[0].data[i] ?? 0,
+    }));
   }, [data]);
 
-  // Function to format currency values
-  const formatCurrency = (amount: number) => {
-    return amount.toLocaleString("es-CO", {
-      style: "currency",
-      currency: "COP",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+  const formatCurrency = (amount: number) =>
+    amount.toLocaleString("es-CO", {
+      style: "currency", currency: "COP",
+      minimumFractionDigits: 0, maximumFractionDigits: 0,
     });
-  };
 
-  // Calculate chart title based on date range or view mode
   const getChartTitle = () => {
-    if (data?.filter_summary) {
-      return data.filter_summary;
-    }
-
-    if (isToday) {
-      return "Gastos de hoy";
-    } else if (isYesterday) {
-      return "Gastos de ayer";
-    } else if (isCustomDateRange) {
-      return "Gastos por día";
-    } else if (viewMode === "week") {
-      return "Gastos por día de la semana";
-    } else {
-      return "Gastos por período";
-    }
+    if (data?.filter_summary) return data.filter_summary;
+    if (isToday) return "Gastos de hoy";
+    if (isYesterday) return "Gastos de ayer";
+    if (isCustomDateRange) return "Gastos por día";
+    if (viewMode === "week") return "Gastos por día de la semana";
+    return "Gastos por período";
   };
 
-  // Chart.js options
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      mode: "index" as const,
-      intersect: false,
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context: any) {
-            let label = context.dataset.label || "";
-            if (label) {
-              label += ": ";
-            }
-            if (context.parsed.y !== null) {
-              label += formatCurrency(context.parsed.y);
-            }
-            return label;
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          maxRotation: 45,
-          minRotation: 0,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: function (value: any) {
-            if (value >= 1000000) {
-              return (value / 1000000).toFixed(1) + "M";
-            } else if (value >= 1000) {
-              return (value / 1000).toFixed(0) + "K";
-            }
-            return value;
-          },
-        },
-      },
-    },
+  const formatYAxis = (value: number) => {
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+    return `${value}`;
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full bg-transparent border-0 shadow-none">
       <CardHeader className="px-3 xs:px-4 sm:px-6 py-2 xs:py-3 sm:py-4">
         <CardTitle className="text-sm xs:text-base">
-          Gastos{" "}
-          {getChartTitle() !== "Gastos por período"
-            ? `- ${getChartTitle()}`
-            : "por período"}
+          Gastos - {getChartTitle()}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-0 xs:px-0 sm:px-2 py-0 sm:py-1 h-[calc(100%-60px)]">
         {isLoading ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 text-primary animate-spin" />
-            <span className="ml-2 text-sm text-muted-foreground">
-              Cargando datos...
-            </span>
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-40 w-full" />
           </div>
         ) : error ? (
           <div className="w-full h-full flex flex-col items-center justify-center">
             <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-            <p className="text-sm text-muted-foreground">
-              Error al cargar los datos
-            </p>
+            <p className="text-sm text-muted-foreground">Error al cargar los datos</p>
           </div>
-        ) : chartData.labels.length === 0 ? (
+        ) : rechartsData.length === 0 ? (
           <div className="w-full h-full flex items-center justify-center">
-            <p className="text-sm text-muted-foreground">
-              No hay datos disponibles
-            </p>
+            <p className="text-sm text-muted-foreground">No hay datos disponibles</p>
           </div>
         ) : (
           <div className="w-full h-full pt-2">
@@ -209,9 +93,47 @@ const ChartJSLineChart: React.FC<ChartJSLineChartProps> = ({
               <span className="font-semibold">Total: </span>
               <span>{formatCurrency(data?.total_amount || 0)}</span>
             </div>
-            <div style={{ height: "90%", width: "100%" }}>
-              <Line data={chartData} options={options} />
-            </div>
+            <ResponsiveContainer width="100%" height="85%">
+              <AreaChart data={rechartsData} margin={{ top: 5, right: 15, left: -10, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorGastos" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#4BC0C0" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#4BC0C0" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tickFormatter={formatYAxis}
+                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "hsl(0 0% 7%)",
+                    border: "1px solid hsl(0 0% 14%)",
+                    borderRadius: "8px",
+                    fontSize: "12px",
+                  }}
+                  formatter={(value: number) => [formatCurrency(value), "Gastos"]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="gastos"
+                  stroke="#4BC0C0"
+                  strokeWidth={2}
+                  fill="url(#colorGastos)"
+                  dot={{ fill: "#4BC0C0", r: 3 }}
+                  activeDot={{ r: 5, fill: "#4BC0C0" }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         )}
       </CardContent>

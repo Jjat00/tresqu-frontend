@@ -114,11 +114,11 @@ export function DateRangePicker({
               className={cn(
                 "justify-start text-left font-normal sm:min-w-[240px] w-full sm:w-auto relative",
                 !date.from && "text-muted-foreground",
-                date.from && "border-primary/40 bg-primary/5 shadow-sm" // Highlight selected state
+                date.from && "border-white/10 bg-white/[0.03] shadow-sm"
               )}
             >
               <div className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4 text-primary" />
+                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
                     <span>{formatDateRange()}</span>
@@ -142,7 +142,7 @@ export function DateRangePicker({
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className="p-0 max-w-[95vw] w-auto flex flex-col sm:flex-row overflow-hidden bg-slate-900 border-slate-700 shadow-lg"
+            className="p-0 max-w-[95vw] w-auto flex flex-col sm:flex-row overflow-hidden glass-card shadow-lg"
             align="center"
             sideOffset={4}
           >

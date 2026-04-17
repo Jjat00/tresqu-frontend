@@ -6,8 +6,8 @@ import ChartJSPieChart from "./charts/ChartJSPieChart";
 import ChartJSBarChart from "./charts/ChartJSBarChart";
 import ComparativeLineChart from "./charts/ComparativeLineChart";
 import { MonthlyComparisonChart } from "./expenses/MonthlyComparisonChart";
+import CumulativeBalanceChart from "./CumulativeBalanceChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   TrendingUpIcon,
   WalletIcon,
@@ -121,136 +121,60 @@ const ExpensesTab = ({
   }
 
   return (
-    <div className="space-y-3 md:space-y-4 flex flex-col px-0 mx-0 my-0 relative">
-      {/* Efectos de fondo */}
-      <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
-        <div
-          className="absolute top-0 left-0 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 25% 25%, rgba(74, 222, 128, 0.1), transparent 40%)",
-          }}
-        ></div>
-        <div
-          className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1), transparent 40%)",
-          }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at center, rgba(167, 139, 250, 0.05), transparent 50%)",
-          }}
-        ></div>
-      </div>
-
-      {/* Patrón sutil de puntos */}
-      <div
-        className="fixed inset-0 z-[-2] opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
-          backgroundSize: "30px 30px",
-        }}
-      ></div>
-
-      {/* Información sobre nuevas funcionalidades */}
-      <Card className="glass-card animate-fade-up bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
-        <CardContent className="pt-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <TagIcon className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-medium text-blue-900">
-                  ¡Nuevas funcionalidades disponibles!
-                </h3>
-                <p className="text-sm text-blue-700">
-                  Ahora puedes crear y gestionar tus propias categorías
-                  personalizadas
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
-                ★ Categorías Personalizadas
-              </Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-3 md:space-y-4 flex flex-col relative">
 
       {/* KPIs Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="glass-card animate-fade-up">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text">
-              Gasto Total
-            </CardTitle>
-            <WalletIcon className="h-4 w-4 text-rose-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-rose-500">
-              $
-              {totalAmount?.toLocaleString("es-ES", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }) || "0,00"}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isPieLoading ? "Cargando..." : "Gastos del período"}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+        <div className="glass-card p-4 sm:p-5 animate-fade-up">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
+              Transacciones
+            </span>
+          </div>
+          <div className="text-lg sm:text-2xl md:text-3xl font-semibold text-rose-400 tracking-tight font-display">
+            {getExpensesCount().toLocaleString("es-ES")}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isPieLoading ? "Cargando..." : "Gastos registrados"}
+          </p>
+        </div>
 
-        <Card
-          className="glass-card animate-fade-up"
-          style={{ animationDelay: "0.1s" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text-cyan">
-              Gasto Promedio Diario
-            </CardTitle>
-            <CalendarIcon className="h-4 w-4 text-highlight" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-highlight">
-              $
-              {calculateDailyAverage().toLocaleString("es-ES", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isPieLoading ? "Cargando..." : "Promedio por día"}
-            </p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
+              Promedio Diario
+            </span>
+          </div>
+          <div className="text-lg sm:text-2xl md:text-3xl font-semibold text-sky-400 tracking-tight font-display">
+            $
+            {calculateDailyAverage().toLocaleString("es-ES", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isPieLoading ? "Cargando..." : "Promedio por día"}
+          </p>
+        </div>
 
-        <Card
-          className="glass-card animate-fade-up"
-          style={{ animationDelay: "0.2s" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium gradient-text-purple">
+        <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
               Categoría Principal
-            </CardTitle>
-            <TagIcon className="h-4 w-4 text-purple" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple">
-              {getMainCategory().name}
-            </div>
-            <p className="text-xs text-muted-foreground mt-auto">
-              {isPieLoading
-                ? "Cargando..."
-                : `${getMainCategory().percentage}% del gasto total`}
-            </p>
-          </CardContent>
-        </Card>
+            </span>
+          </div>
+          <div className="text-lg sm:text-2xl md:text-3xl font-semibold text-violet-400 tracking-tight font-display truncate">
+            {getMainCategory().name}
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
+            {isPieLoading
+              ? "Cargando..."
+              : `${getMainCategory().percentage}% del gasto total`}
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
@@ -292,6 +216,9 @@ const ExpensesTab = ({
       >
         <MonthlyComparisonChart />
       </div>
+
+      {/* Balance acumulado mes a mes */}
+      <CumulativeBalanceChart />
 
       <Card
         className="glass-card animate-fade-up"

@@ -427,7 +427,7 @@ const features: {
 // ── Main section ─────────────────────────────────────────────────────────────
 const WhatsAppFeatures = () => {
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden bg-[#0a0a0a]">
+    <section className="relative section-padding overflow-hidden bg-[#0a0a0a]">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />

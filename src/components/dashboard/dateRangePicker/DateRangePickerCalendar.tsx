@@ -150,9 +150,9 @@ const DateRangePickerCalendar: React.FC<DateRangePickerCalendarProps> = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row rounded-lg shadow-sm border border-slate-700 bg-slate-900 text-white">
-      <div className="border-b sm:border-b-0 sm:border-r border-slate-700 p-2 space-y-1 overflow-y-auto max-h-[180px] sm:max-h-[280px] xl:max-h-[380px] w-full sm:w-[160px] xl:w-[200px] flex-shrink-0 bg-slate-800/50">
-        <h3 className="font-medium text-xs px-2 mb-1 text-slate-400">
+    <div className="flex flex-col sm:flex-row rounded-xl text-foreground">
+      <div className="border-b sm:border-b-0 sm:border-r border-white/[0.06] p-2 space-y-1 overflow-y-auto max-h-[180px] sm:max-h-[280px] xl:max-h-[380px] w-full sm:w-[160px] xl:w-[200px] flex-shrink-0 bg-white/[0.02]">
+        <h3 className="font-medium text-xs px-2 mb-1 text-muted-foreground">
           Periodos
         </h3>
         {predefinedRanges.map((range, index) => (
@@ -163,7 +163,7 @@ const DateRangePickerCalendar: React.FC<DateRangePickerCalendarProps> = ({
               "justify-start w-full text-xs py-1 h-auto transition-colors",
               range.type === activeRangeType
                 ? "bg-primary text-primary-foreground font-medium"
-                : "hover:bg-slate-700 text-slate-300"
+                : "hover:bg-white/[0.06] text-muted-foreground"
             )}
             onClick={range.action}
           >
@@ -171,16 +171,16 @@ const DateRangePickerCalendar: React.FC<DateRangePickerCalendarProps> = ({
           </Button>
         ))}
       </div>
-      <div className="p-2 flex flex-col overflow-x-auto flex-grow bg-slate-900 ">
+      <div className="p-2 flex flex-col overflow-x-auto flex-grow">
         {/* Estado de selección y mensaje de ayuda */}
         <div
           className={cn(
             "mb-2 px-2 py-1.5 text-xs rounded-md text-center transition-all duration-200",
             isSelecting
-              ? "bg-primary/20 border-primary border animate-pulse"
+              ? "bg-primary/10 border-primary/30 border animate-pulse"
               : date.from
-              ? "bg-slate-800 border border-slate-700"
-              : "bg-slate-800/80 border border-slate-700"
+              ? "bg-white/[0.03] border border-white/[0.06]"
+              : "bg-white/[0.02] border border-white/[0.06]"
           )}
         >
           {isSelecting ? (
@@ -229,9 +229,9 @@ const DateRangePickerCalendar: React.FC<DateRangePickerCalendarProps> = ({
           forceShowMonthNavigation={true}
         />
 
-        <div className="mt-2 pt-2 border-t border-slate-700 text-[10px] text-center flex items-center justify-center gap-1">
-          <Info size={10} className="text-slate-400" />
-          <span className="text-slate-400">
+        <div className="mt-2 pt-2 border-t border-white/[0.06] text-[10px] text-center flex items-center justify-center gap-1">
+          <Info size={10} className="text-muted-foreground" />
+          <span className="text-muted-foreground">
             Para seleccionar un rango, haz clic primero en la{" "}
             <strong>fecha inicial</strong> y luego en la{" "}
             <strong>fecha final</strong>
