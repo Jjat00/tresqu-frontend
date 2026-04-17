@@ -3,7 +3,6 @@ import {
   MessageCircle,
   Send,
   ArrowRight,
-  Check,
   CheckCheck,
 } from "lucide-react";
 
@@ -110,621 +109,342 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Column - WhatsApp Phone Mockup */}
-          <div className="relative flex justify-center order-2" style={{ perspective: "2000px" }}>
-            <div className="relative transition-transform duration-1000 ease-out hover:[transform:rotateY(-10deg)_rotateX(5deg)]">
-              {/* Main Phone - WhatsApp Chat */}
-              <div className="relative z-20 animate-float">
-                {/* Layered Shadow System */}
+          {/* Right Column - iPhone 16 Pro Mockup */}
+          <div className="relative flex justify-center order-2">
+            {/* Ambient glow behind phone */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-[280px] h-[280px] bg-[#25D366]/10 rounded-full blur-[120px]" />
+            </div>
+
+            <div
+              className="relative animate-float"
+              style={{
+                filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 60px 80px rgba(0,0,0,0.35))",
+              }}
+            >
+              {/* iPhone 16 Pro body — correct aspect ratio ~2.077:1 */}
+              <div className="relative w-[270px] sm:w-[290px] lg:w-[300px] xl:w-[320px] aspect-[9/18.7]">
+
+                {/* Side buttons (behind frame, protruding) */}
+                {/* Action button (left, top) */}
                 <div
-                  className="absolute inset-0 rounded-[2.5rem] sm:rounded-[3rem]"
+                  className="absolute -left-[2.5px] top-[13.5%] h-[2.2%] w-[3px] rounded-l-[1px] z-0"
                   style={{
+                    background: "linear-gradient(to right, #6b6b6f 0%, #98989c 50%, #6b6b6f 100%)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), -1px 0 2px rgba(0,0,0,0.5)",
+                  }}
+                />
+                {/* Volume up */}
+                <div
+                  className="absolute -left-[2.5px] top-[17.5%] h-[5.5%] w-[3px] rounded-l-[1px] z-0"
+                  style={{
+                    background: "linear-gradient(to right, #6b6b6f 0%, #98989c 50%, #6b6b6f 100%)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), -1px 0 2px rgba(0,0,0,0.5)",
+                  }}
+                />
+                {/* Volume down */}
+                <div
+                  className="absolute -left-[2.5px] top-[24.5%] h-[5.5%] w-[3px] rounded-l-[1px] z-0"
+                  style={{
+                    background: "linear-gradient(to right, #6b6b6f 0%, #98989c 50%, #6b6b6f 100%)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), -1px 0 2px rgba(0,0,0,0.5)",
+                  }}
+                />
+                {/* Side/Power button (right) */}
+                <div
+                  className="absolute -right-[2.5px] top-[20%] h-[9%] w-[3px] rounded-r-[1px] z-0"
+                  style={{
+                    background: "linear-gradient(to left, #6b6b6f 0%, #98989c 50%, #6b6b6f 100%)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 1px 0 2px rgba(0,0,0,0.5)",
+                  }}
+                />
+
+                {/* Titanium outer frame */}
+                <div
+                  className="absolute inset-0 rounded-[48px] z-10"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #c8c8cc 0%, #8e8e93 18%, #5a5a5e 38%, #3a3a3c 50%, #5a5a5e 62%, #8e8e93 82%, #c8c8cc 100%)",
                     boxShadow: `
-                      0 2px 8px rgba(0,0,0,0.6),
-                      0 15px 35px rgba(0,0,0,0.5),
-                      0 40px 70px rgba(0,0,0,0.4),
-                      0 60px 90px rgba(0,0,0,0.2),
-                      0 50px 80px rgba(0,255,127,0.04)
+                      inset 0 0 0 1px rgba(255,255,255,0.2),
+                      inset 0 1px 1px rgba(255,255,255,0.4),
+                      inset 0 -1px 1px rgba(0,0,0,0.4)
                     `,
                   }}
                 />
-                <div className="relative mx-auto w-[240px] xs:w-[260px] sm:w-[280px] md:w-[300px] lg:w-[300px] xl:w-[320px]">
 
-                  {/* Hardware Buttons - Titanium Style */}
-                  {/* Action Button (small, round-ish) */}
-                  <div
-                    className="absolute -left-[3px] sm:-left-[4px] top-[100px] w-[3px] sm:w-[4px] h-[26px] rounded-l-md"
-                    style={{
-                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 30%, #b0b1b5 50%, #78797d 70%, #606166)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), -1px 0 3px rgba(0,0,0,0.4)",
-                    }}
-                  />
-                  {/* Volume Up */}
-                  <div
-                    className="absolute -left-[3px] sm:-left-[4px] top-[140px] w-[3px] sm:w-[4px] h-[50px] rounded-l-md"
-                    style={{
-                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 20%, #b0b1b5 50%, #78797d 80%, #606166)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), -1px 0 3px rgba(0,0,0,0.4)",
-                    }}
-                  />
-                  {/* Volume Down */}
-                  <div
-                    className="absolute -left-[3px] sm:-left-[4px] top-[200px] w-[3px] sm:w-[4px] h-[50px] rounded-l-md"
-                    style={{
-                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 20%, #b0b1b5 50%, #78797d 80%, #606166)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), -1px 0 3px rgba(0,0,0,0.4)",
-                    }}
-                  />
-                  {/* Power Button */}
-                  <div
-                    className="absolute -right-[3px] sm:-right-[4px] top-[160px] w-[3px] sm:w-[4px] h-[70px] rounded-r-md"
-                    style={{
-                      background: "linear-gradient(to bottom, #a8a9ad, #78797d 20%, #b0b1b5 50%, #78797d 80%, #606166)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.3), 1px 0 3px rgba(0,0,0,0.4)",
-                    }}
-                  />
+                {/* Inner black bezel */}
+                <div
+                  className="absolute inset-[3px] rounded-[45px] bg-black z-10"
+                  style={{
+                    boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
+                  }}
+                />
 
-                  {/* 3D Depth/Outer Edge - Titanium */}
-                  <div
-                    className="absolute inset-0 rounded-[2.7rem] sm:rounded-[3.2rem] translate-y-1 sm:translate-y-2"
-                    style={{
-                      background: "linear-gradient(135deg, #2a2a2e, #1a1a1e 30%, #3a3a3e 50%, #1a1a1e 70%, #2a2a2e)",
-                      boxShadow: "inset 0 -2px 4px rgba(255,255,255,0.08), 0 20px 40px rgba(0,0,0,0.8)",
-                    }}
-                  />
+                {/* Screen */}
+                <div
+                  className="absolute inset-[6px] rounded-[42px] overflow-hidden bg-[#0b141a] z-20 flex flex-col"
+                >
+                  {/* Status bar */}
+                  <div className="flex justify-between items-center px-7 pt-[14px] pb-[6px] text-white">
+                    <span className="text-[12px] font-semibold tracking-tight tabular-nums">9:41</span>
+                    <div className="flex items-center gap-[5px]">
+                      {/* Signal bars */}
+                      <div className="flex items-end gap-[1.5px]">
+                        <div className="w-[3px] h-[4px] bg-white rounded-[0.5px]" />
+                        <div className="w-[3px] h-[5px] bg-white rounded-[0.5px]" />
+                        <div className="w-[3px] h-[7px] bg-white rounded-[0.5px]" />
+                        <div className="w-[3px] h-[9px] bg-white rounded-[0.5px]" />
+                      </div>
+                      {/* WiFi */}
+                      <svg className="w-[14px] h-[10px]" viewBox="0 0 16 11" fill="currentColor">
+                        <path d="M8 10.4a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm-3.5-3.9l1 1a3.5 3.5 0 012.5-1 3.5 3.5 0 012.5 1l1-1a4.9 4.9 0 00-7 0zm-2-2l1 1A6.4 6.4 0 018 3.5c1.8 0 3.4.7 4.5 1.9l1-1A7.8 7.8 0 008 2.1a7.8 7.8 0 00-5.5 2.3z"/>
+                      </svg>
+                      {/* Battery */}
+                      <div className="flex items-center">
+                        <div className="relative w-[22px] h-[11px] border border-white/60 rounded-[3px] p-[1px]">
+                          <div className="w-[78%] h-full bg-white rounded-[1.5px]" />
+                        </div>
+                        <div className="w-[1.5px] h-[4px] bg-white/60 rounded-r-[1px]" />
+                      </div>
+                    </div>
+                  </div>
 
-                  {/* Phone Frame (Bezel) - Titanium Multi-stop Gradient */}
+                  {/* WhatsApp header */}
+                  <div className="bg-[#1f2c34] px-2 py-[7px] flex items-center gap-[8px] border-b border-black/20">
+                    {/* Back arrow */}
+                    <svg className="w-[22px] h-[22px] text-[#e9edef] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 11H9l3.29-3.29a1 1 0 1 0-1.42-1.42l-5 5a1 1 0 0 0 0 1.42l5 5a1 1 0 0 0 1.42-1.42L9 13h10a1 1 0 0 0 0-2z"/>
+                    </svg>
+                    {/* Avatar */}
+                    <div className="relative w-[38px] h-[38px] flex-shrink-0">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#00FF7F] to-[#00a884] flex items-center justify-center">
+                        <span className="text-[#0b141a] font-bold text-[15px] tracking-tight">T</span>
+                      </div>
+                      <div className="absolute inset-0 rounded-full ring-[1.5px] ring-black/20" />
+                    </div>
+                    {/* Name + status */}
+                    <div className="flex-1 min-w-0 leading-tight">
+                      <div className="text-[#e9edef] font-medium text-[15px] truncate">Tresqu IA</div>
+                      <div className="text-[#8696a0] text-[12px] -mt-[1px]">en línea</div>
+                    </div>
+                    {/* Action icons */}
+                    <div className="flex items-center gap-[14px] text-[#e9edef] pr-[6px]">
+                      <svg className="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/>
+                      </svg>
+                      <svg className="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a1 1 0 0 0-1.01.24l-1.57 1.97A15.54 15.54 0 0 1 6.98 9.82l1.95-1.66a.96.96 0 0 0 .24-1C8.8 6.04 8.6 4.85 8.6 3.62c0-.54-.45-.99-.99-.99H4.19c-.54 0-1.19.24-1.19.99A17 17 0 0 0 20 20c.71 0 .99-.63.99-1.18v-3.44c0-.54-.45-1-.99-1z"/>
+                      </svg>
+                      <svg className="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Chat area with doodle pattern */}
                   <div
-                    className="relative rounded-[2.5rem] sm:rounded-[3rem] p-[8px] sm:p-[12px] border border-zinc-500/30"
+                    className="flex-1 overflow-hidden relative px-[8px] py-[8px] flex flex-col"
                     style={{
-                      background: "linear-gradient(145deg, #8e8e93 0%, #636366 8%, #48484a 15%, #3a3a3c 25%, #58585a 40%, #48484a 55%, #3a3a3c 70%, #636366 85%, #8e8e93 92%, #48484a 100%)",
-                      boxShadow: `
-                        inset 0 1px 1px rgba(255,255,255,0.4),
-                        inset 0 -1px 1px rgba(0,0,0,0.3),
-                        inset 0 0 20px rgba(255,255,255,0.05),
-                        0 0 0 1px rgba(255,255,255,0.08)
-                      `,
+                      backgroundColor: "#0b141a",
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M30 20c-.5 0-1 .2-1.3.6l-3.5 3.5c-.4.4-.6.9-.6 1.4v7c0 .5.2 1 .6 1.4l3.5 3.5c.4.4.9.6 1.4.6h7c.5 0 1-.2 1.4-.6l3.5-3.5c.4-.4.6-.9.6-1.4v-7c0-.5-.2-1-.6-1.4l-3.5-3.5c-.4-.4-.9-.6-1.4-.6h-7z'/%3E%3Cpath d='M110 55c3 0 5-2 5-5s-2-5-5-5-5 2-5 5 2 5 5 5zm0 4c-4 0-7 2-9 4l2 2c2-2 4-3 7-3s5 1 7 3l2-2c-2-2-5-4-9-4z'/%3E%3Cpath d='M60 120l-3 6 6-3 6 3-3-6 5-5h-6l-2-6-2 6h-6z'/%3E%3Ccircle cx='150' cy='90' r='4'/%3E%3Cpath d='M155 130c-5 0-9 4-9 9h3c0-3 3-6 6-6s6 3 6 6h3c0-5-4-9-9-9z'/%3E%3Cpath d='M25 150c-2 0-3-1-3-3V140h-2v7c0 3 2 5 5 5h7v-2h-7zm130-140h-7v2h7c2 0 3 1 3 3v7h2v-7c0-3-2-5-5-5z'/%3E%3Cpath d='M90 160a3 3 0 100-6 3 3 0 000 6zm-5-12l-4 2 1 4 4-1 2-4-3-1z'/%3E%3C/g%3E%3C/svg%3E")`,
                     }}
                   >
-                    {/* Double ring bevel effect */}
-                    <div className="absolute inset-[1px] rounded-[2.45rem] sm:rounded-[2.95rem] pointer-events-none"
-                      style={{
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2)",
-                      }}
-                    />
+                    <div className="flex-1 space-y-[4px] overflow-hidden">
+                      {/* Date separator */}
+                      <div className="flex justify-center py-[4px]">
+                        <span className="bg-[#182229]/95 text-[#8696a0] text-[11.5px] px-[10px] py-[3px] rounded-md shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
+                          HOY
+                        </span>
+                      </div>
 
-                    {/* Glass Glare / Shine Effect */}
-                    <div className="absolute inset-0 z-50 rounded-[2.5rem] sm:rounded-[3rem] pointer-events-none overflow-hidden">
-                      {/* Diagonal reflection */}
-                      <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent transform -rotate-45 translate-x-1/2 -translate-y-1/2 blur-sm" />
-                      {/* Top highlight - curved */}
-                      <div className="absolute top-0 left-[10%] right-[10%] h-[20%] bg-gradient-to-b from-white/[0.06] to-transparent rounded-t-[2.5rem] sm:rounded-t-[3rem] blur-[1px]" />
-                      {/* Specular corner highlight */}
-                      <div className="absolute top-[5%] right-[8%] w-[15%] h-[8%] bg-gradient-to-bl from-white/[0.08] to-transparent rounded-full blur-[2px]" />
-                      {/* Border highlight ring */}
-                      <div className="absolute inset-0 rounded-[2.5rem] sm:rounded-[3rem] ring-1 ring-inset ring-white/[0.07]" />
-                    </div>
+                      {/* Encryption notice */}
+                      <div className="flex justify-center pb-[4px]">
+                        <div className="bg-[#182229]/95 text-[#ffd279] text-[10.5px] px-[12px] py-[4px] rounded-md max-w-[88%] text-center leading-snug shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
+                          Los mensajes están cifrados de extremo a extremo.
+                        </div>
+                      </div>
 
-                    {/* Screen */}
-                    <div
-                      className="bg-[#0b141a] rounded-[2rem] sm:rounded-[2.4rem] overflow-hidden relative"
-                      style={{
-                        boxShadow: "inset 0 0 15px rgba(0,0,0,0.9), inset 0 0 3px rgba(0,0,0,1), 0 0 0 1px rgba(0,0,0,0.8)",
-                      }}
-                    >
-                      {/* Status Bar */}
-                      <div className="flex justify-between items-center px-4 sm:px-6 py-1.5 sm:py-2 text-[9px] sm:text-[10px] text-white/70 bg-[#202c33]">
-                        <span className="font-semibold text-white/80">9:41</span>
-                        <div className="flex items-center gap-1 sm:gap-1.5">
-                          {/* Signal Bars */}
-                          <div className="flex items-end gap-[1px] sm:gap-[1.5px]">
-                            <div className="w-[2px] sm:w-[3px] h-[3px] sm:h-[4px] bg-white/90 rounded-[0.5px]" />
-                            <div className="w-[2px] sm:w-[3px] h-[5px] sm:h-[6px] bg-white/90 rounded-[0.5px]" />
-                            <div className="w-[2px] sm:w-[3px] h-[7px] sm:h-[8px] bg-white/90 rounded-[0.5px]" />
-                            <div className="w-[2px] sm:w-[3px] h-[9px] sm:h-[10px] bg-white/90 rounded-[0.5px]" />
-                          </div>
-                          {/* 5G Label */}
-                          <span className="text-[7px] sm:text-[8px] font-bold text-white/70 tracking-tight">5G</span>
-                          {/* WiFi — viewBox cropped to content (y:9–23) */}
+                      {/* Bot: greeting */}
+                      <div className="flex justify-start">
+                        <div className="relative bg-[#1f2c34] rounded-[7px] rounded-tl-none max-w-[78%] px-[9px] pt-[6px] pb-[18px] shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
                           <svg
-                            className="w-[10px] sm:w-[11px] h-[8px] sm:h-[9px] text-white/90"
-                            viewBox="0 9 24 14"
+                            className="absolute -left-[7px] top-0 w-[8px] h-[13px] text-[#1f2c34]"
+                            viewBox="0 0 8 13"
                             fill="currentColor"
                           >
-                            <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4.9-2.3l1.4 1.4C9.4 16.4 10.6 16 12 16s2.6.4 3.5 1.1l1.4-1.4C15.6 14.6 13.9 14 12 14s-3.6.6-4.9 1.7zm-2.8-2.8l1.4 1.4C7.3 13 9.5 12 12 12s4.7 1 6.3 2.3l1.4-1.4C17.7 11.1 15 10 12 10s-5.7 1.1-7.7 2.9z" />
+                            <path d="M1.533 3.568L8 12.193V1H2.812C1.042 1 .474 2.156 1.533 3.568z" opacity=".13" />
+                            <path d="M1.533 2.568L8 11.193V0H2.812C1.042 0 .474 1.156 1.533 2.568z" />
                           </svg>
-                          {/* Battery with percentage */}
-                          <div className="flex items-center gap-[2px]">
-                            <span className="text-[7px] sm:text-[8px] font-medium text-white/60">72</span>
-                            <div className="w-5 sm:w-6 h-[8px] sm:h-[10px] border border-white/50 rounded-[2px] p-[1px] relative">
-                              <div className="w-[70%] h-full bg-[#30D158] rounded-[1px]" />
-                            </div>
-                            <div className="w-[2px] sm:w-[2px] h-[3px] sm:h-[4px] bg-white/50 rounded-r-[1px]" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* WhatsApp Header */}
-                      <div className="bg-[#202c33] px-2 sm:px-3 py-2 flex items-center gap-2 sm:gap-3 z-10 relative shadow-[0_1px_3px_rgba(0,0,0,0.4)]">
-                        <div className="flex items-center gap-1 cursor-pointer">
-                          <svg className="w-5 h-5 text-[#aebac1] -ml-1" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 4l1.4 1.4L7.8 11H20v2H7.8l5.6 5.6L12 20l-8-8 8-8z" />
-                          </svg>
-                          {/* Profile pic with border and shadow */}
-                          <div className="relative">
-                            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#25D366] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.3)] ring-1 ring-white/10">
-                              <span className="text-white font-bold text-sm">T</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex-1 cursor-pointer">
-                          <div className="text-[#e9edef] font-medium text-[13px] sm:text-[15px] leading-tight">
-                            Tresqu IA
-                          </div>
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <div className="w-[5px] h-[5px] rounded-full bg-[#25D366] shadow-[0_0_3px_rgba(37,211,102,0.5)]" />
-                            <span className="text-[10px] sm:text-[11px] text-[#25D366] leading-tight">en línea</span>
-                          </div>
-                        </div>
-                        <div className="flex gap-4 sm:gap-5 text-[#aebac1]">
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
-                          </svg>
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                          </svg>
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* Chat Background */}
-                      <div
-                        className="h-[280px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[380px] xl:h-[400px] px-2 sm:px-3 py-3 overflow-y-auto relative flex flex-col scrollbar-hide"
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-                          backgroundColor: "#0b141a",
-                        }}
-                      >
-                        <div className="flex-1 space-y-2">
-                          {/* Date Badge */}
-                          <div className="flex justify-center mb-3 mt-1">
-                            <span className="bg-[#182229] text-[11px] text-[#8696a0] px-3 py-1 rounded-lg shadow-sm">
-                              HOY
-                            </span>
-                          </div>
-
-                          {/* Bot: greeting */}
-                          <div className="flex justify-start mb-2">
-                            <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
-                              <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
-                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
-                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
-                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
-                                </svg>
-                              </div>
-                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
-                                👋 ¡Hola! Soy <span className="font-semibold">Tresqu</span>, tu agente financiero con IA.
-                              </p>
-                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4] mt-[3px]">
-                                Escríbeme tus gastos o ingresos 📊
-                                <span className="inline-block w-[44px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                              </p>
-                              <div className="absolute bottom-[5px] right-[7px]">
-                                <span className="text-[11px] text-[#8696a0]">10:30</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* User: expense */}
-                          <div className="flex justify-end mb-2">
-                            <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
-                              <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
-                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
-                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
-                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
-                                </svg>
-                              </div>
-                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
-                                Gasté 45 mil en almuerzo
-                                <span className="inline-block w-[52px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                              </p>
-                              <div className="absolute bottom-[5px] right-[7px] flex items-center gap-[3px]">
-                                <span className="text-[11px] text-[#8696a0]">10:31</span>
-                                <CheckCheck className="w-[14px] h-[14px] text-[#53bdeb]" />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Bot: registered confirmation */}
-                          <div className="flex justify-start mb-2">
-                            <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
-                              <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
-                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
-                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
-                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
-                                </svg>
-                              </div>
-                              <div className="bg-[#1b252a] rounded-[5px] px-[9px] py-[7px] mb-[6px] border-l-[3px] border-[#25D366]">
-                                <div className="text-[#25D366] text-[11px] sm:text-[12px] font-semibold leading-tight mb-[3px]">
-                                  Gasto registrado ✅
-                                </div>
-                                <div className="text-[#e9edef] text-[13px] sm:text-[14px] font-bold leading-tight">
-                                  $45.000
-                                </div>
-                                <div className="text-[#8696a0] text-[11px] sm:text-[12px] mt-[2px]">
-                                  🍽️ Alimentación
-                                </div>
-                              </div>
-                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
-                                ¡Listo! Lo he guardado.
-                                <span className="inline-block w-[44px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                              </p>
-                              <div className="absolute bottom-[5px] right-[7px]">
-                                <span className="text-[11px] text-[#8696a0]">10:31</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* User: summary request */}
-                          <div className="flex justify-end mb-2">
-                            <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
-                              <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
-                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
-                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
-                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
-                                </svg>
-                              </div>
-                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4]">
-                                ¿Mi resumen?
-                                <span className="inline-block w-[52px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                              </p>
-                              <div className="absolute bottom-[5px] right-[7px] flex items-center gap-[3px]">
-                                <span className="text-[11px] text-[#8696a0]">10:32</span>
-                                <CheckCheck className="w-[14px] h-[14px] text-[#53bdeb]" />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Bot: daily stats */}
-                          <div className="flex justify-start mb-2">
-                            <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[9px] pt-[6px] pb-[20px] max-w-[85%] sm:max-w-[80%] shadow-[0_1px_0.5px_rgba(0,0,0,0.15)]">
-                              <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
-                                <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
-                                  <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
-                                  <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
-                                </svg>
-                              </div>
-                              <p className="text-[12.5px] sm:text-[14px] text-[#e9edef] leading-[1.4] font-semibold mb-[6px]">
-                                📊 Resumen del día
-                              </p>
-                              <div className="space-y-[5px] mb-[4px]">
-                                <div className="flex items-center justify-between text-[11px] sm:text-[12px] bg-[#1b252a] px-[8px] py-[5px] rounded-[5px]">
-                                  <div className="flex items-center gap-[6px]">
-                                    <div className="w-[18px] h-[18px] rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
-                                      <span className="text-red-400 text-[9px] leading-none">↓</span>
-                                    </div>
-                                    <span className="text-[#e9edef]">Gastos</span>
-                                  </div>
-                                  <span className="text-red-400 font-semibold">$45.000</span>
-                                </div>
-                                <div className="flex items-center justify-between text-[11px] sm:text-[12px] bg-[#1b252a] px-[8px] py-[5px] rounded-[5px]">
-                                  <div className="flex items-center gap-[6px]">
-                                    <div className="w-[18px] h-[18px] rounded-full bg-[#00FF7F]/10 flex items-center justify-center flex-shrink-0">
-                                      <span className="text-[#00FF7F] text-[9px] leading-none">↑</span>
-                                    </div>
-                                    <span className="text-[#e9edef]">Ingresos</span>
-                                  </div>
-                                  <span className="text-[#00FF7F] font-semibold">$0</span>
-                                </div>
-                              </div>
-                              <div className="absolute bottom-[5px] right-[7px]">
-                                <span className="text-[11px] text-[#8696a0]">10:32</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Input Bar - More realistic */}
-                      <div className="bg-[#202c33] px-1.5 sm:px-2 py-1.5 sm:py-2 flex items-center gap-1 sm:gap-1.5 z-10 relative">
-                        {/* Emoji icon */}
-                        <div className="flex pl-0.5 text-[#8696a0]">
-                          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.298 1.011 0 6.31 0 12.813s5.298 11.803 11.804 11.803 11.804-5.298 11.804-11.803S18.31 1.011 11.804 1.011zM12 21.564c-5.246 0-9.5-4.253-9.5-9.5s4.254-9.5 9.5-9.5 9.5 4.254 9.5 9.5-4.254 9.5-9.5 9.5zm3.063-9.402c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 bg-[#2a3942] rounded-3xl min-h-[36px] sm:min-h-[40px] px-3 sm:px-4 py-2 flex items-center shadow-sm">
-                          <span className="text-[#8696a0] text-[13px] sm:text-[14px]">
-                            Mensaje
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.35]">
+                            👋 ¡Hola! Soy <span className="font-semibold">Tresqu</span>, tu asistente financiero con IA.
+                          </p>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.35] mt-[4px]">
+                            Cuéntame tus gastos o ingresos en texto o audio 🎙️
+                          </p>
+                          <span className="absolute bottom-[3px] right-[8px] text-[10.5px] text-[#8696a0] tabular-nums">
+                            10:30
                           </span>
                         </div>
-                        <div className="flex items-center gap-1 pr-0.5 text-[#8696a0]">
-                          {/* Camera icon */}
-                          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M21.317 4.381H10.971L9.078 2.45c-.246-.251-.736-.457-1.089-.457H4.905c-.352 0-.837.211-1.078.468L2.515 4.381H2.683C1.198 4.381 0 5.58 0 7.065v12.27c0 1.485 1.199 2.684 2.683 2.684h18.634c1.485 0 2.683-1.199 2.683-2.684V7.065c0-1.485-1.198-2.684-2.683-2.684zM12 18.27c-3.088 0-5.592-2.504-5.592-5.592 0-3.088 2.504-5.592 5.592-5.592s5.592 2.504 5.592 5.592c0 3.088-2.504 5.592-5.592 5.592zm0-9.056c-1.91 0-3.464 1.553-3.464 3.464 0 1.91 1.553 3.464 3.464 3.464s3.464-1.554 3.464-3.464S13.91 9.214 12 9.214z"/>
+                      </div>
+
+                      {/* User: expense */}
+                      <div className="flex justify-end">
+                        <div className="relative bg-[#005c4b] rounded-[7px] rounded-tr-none max-w-[78%] px-[9px] pt-[6px] pb-[18px] shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
+                          <svg
+                            className="absolute -right-[7px] top-0 w-[8px] h-[13px] text-[#005c4b]"
+                            viewBox="0 0 8 13"
+                            fill="currentColor"
+                          >
+                            <path d="M6.467 3.568L0 12.193V1h5.188c1.77 0 2.338 1.156 1.279 2.568z" opacity=".13" />
+                            <path d="M6.467 2.568L0 11.193V0h5.188c1.77 0 2.338 1.156 1.279 2.568z" />
                           </svg>
-                          {/* Mic button */}
-                          <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#00a884] flex items-center justify-center ml-0.5">
-                            <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.349 8.469 4.35v7.061c0 2.001 1.53 3.531 3.53 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.884h2.354v-3.884c3.884-.588 7.061-3.884 7.061-7.885h-2.002z"/>
-                            </svg>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.35]">
+                            Gasté 45 mil en almuerzo
+                          </p>
+                          <div className="absolute bottom-[3px] right-[8px] flex items-center gap-[3px]">
+                            <span className="text-[10.5px] text-[#8696a0] tabular-nums">10:31</span>
+                            <CheckCheck className="w-[15px] h-[15px] text-[#53bdeb]" strokeWidth={2.4} />
                           </div>
                         </div>
                       </div>
 
-                      {/* Home indicator bar */}
-                      <div className="bg-[#0b141a] flex justify-center py-2">
-                        <div className="w-[100px] sm:w-[120px] h-[4px] bg-white/20 rounded-full" />
+                      {/* Bot: confirmation (WhatsApp-native formatting) */}
+                      <div className="flex justify-start">
+                        <div className="relative bg-[#1f2c34] rounded-[7px] rounded-tl-none max-w-[78%] px-[9px] pt-[6px] pb-[18px] shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
+                          <svg
+                            className="absolute -left-[7px] top-0 w-[8px] h-[13px] text-[#1f2c34]"
+                            viewBox="0 0 8 13"
+                            fill="currentColor"
+                          >
+                            <path d="M1.533 3.568L8 12.193V1H2.812C1.042 1 .474 2.156 1.533 3.568z" opacity=".13" />
+                            <path d="M1.533 2.568L8 11.193V0H2.812C1.042 0 .474 1.156 1.533 2.568z" />
+                          </svg>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.4]">
+                            <span className="font-semibold">✅ Gasto registrado</span>
+                          </p>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.4] mt-[2px]">
+                            🍽️ Alimentación
+                            <br />
+                            💵 $45.000
+                          </p>
+                          <span className="absolute bottom-[3px] right-[8px] text-[10.5px] text-[#8696a0] tabular-nums">
+                            10:31
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* User: summary */}
+                      <div className="flex justify-end">
+                        <div className="relative bg-[#005c4b] rounded-[7px] rounded-tr-none max-w-[78%] px-[9px] pt-[6px] pb-[18px] shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
+                          <svg
+                            className="absolute -right-[7px] top-0 w-[8px] h-[13px] text-[#005c4b]"
+                            viewBox="0 0 8 13"
+                            fill="currentColor"
+                          >
+                            <path d="M6.467 3.568L0 12.193V1h5.188c1.77 0 2.338 1.156 1.279 2.568z" opacity=".13" />
+                            <path d="M6.467 2.568L0 11.193V0h5.188c1.77 0 2.338 1.156 1.279 2.568z" />
+                          </svg>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.35]">
+                            resumen del día
+                          </p>
+                          <div className="absolute bottom-[3px] right-[8px] flex items-center gap-[3px]">
+                            <span className="text-[10.5px] text-[#8696a0] tabular-nums">10:32</span>
+                            <CheckCheck className="w-[15px] h-[15px] text-[#53bdeb]" strokeWidth={2.4} />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bot: summary reply */}
+                      <div className="flex justify-start">
+                        <div className="relative bg-[#1f2c34] rounded-[7px] rounded-tl-none max-w-[80%] px-[9px] pt-[6px] pb-[18px] shadow-[0_1px_0.5px_rgba(0,0,0,0.2)]">
+                          <svg
+                            className="absolute -left-[7px] top-0 w-[8px] h-[13px] text-[#1f2c34]"
+                            viewBox="0 0 8 13"
+                            fill="currentColor"
+                          >
+                            <path d="M1.533 3.568L8 12.193V1H2.812C1.042 1 .474 2.156 1.533 3.568z" opacity=".13" />
+                            <path d="M1.533 2.568L8 11.193V0H2.812C1.042 0 .474 1.156 1.533 2.568z" />
+                          </svg>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.4]">
+                            <span className="font-semibold">📊 Tu resumen de hoy</span>
+                          </p>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.4] mt-[4px]">
+                            💸 Gastos: <span className="font-semibold">$45.000</span>
+                            <br />
+                            💰 Ingresos: <span className="font-semibold">$0</span>
+                          </p>
+                          <p className="text-[12px] text-[#8696a0] leading-[1.4] mt-[3px]">
+                            ───────────
+                          </p>
+                          <p className="text-[13.5px] text-[#e9edef] leading-[1.4]">
+                            📉 Balance: <span className="font-semibold text-[#ff6b6b]">-$45.000</span>
+                          </p>
+                          <span className="absolute bottom-[3px] right-[8px] text-[10.5px] text-[#8696a0] tabular-nums">
+                            10:32
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Dynamic Island - Enhanced */}
-                  <div
-                    className="absolute top-[12px] sm:top-[16px] left-1/2 -translate-x-1/2 w-[75px] xs:w-[85px] sm:w-[95px] h-[22px] xs:h-[26px] sm:h-[28px] bg-black rounded-full flex items-center justify-between px-2 sm:px-3 z-50"
-                    style={{
-                      boxShadow: "0 0 10px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.04), inset 0 0 4px rgba(255,255,255,0.02)",
-                      border: "0.5px solid rgba(255,255,255,0.06)",
-                    }}
-                  >
-                    {/* Face ID sensor - dot projector */}
-                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#080808] border border-white/[0.06] relative">
-                      <div className="absolute inset-[1px] rounded-full bg-gradient-to-br from-[#1a1a2e]/50 to-transparent" />
+                  {/* Input bar */}
+                  <div className="bg-[#1f2c34] px-[6px] py-[6px] flex items-end gap-[6px]">
+                    <div className="flex-1 bg-[#2a3942] rounded-[22px] min-h-[38px] px-[12px] py-[8px] flex items-center gap-[10px]">
+                      {/* Emoji */}
+                      <svg className="w-[22px] h-[22px] text-[#8696a0] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm0-18c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8zm-3.5 6c.83 0 1.5-.67 1.5-1.5S9.33 7 8.5 7 7 7.67 7 8.5 7.67 10 8.5 10zm7 0c.83 0 1.5-.67 1.5-1.5S16.33 7 15.5 7 14 7.67 14 8.5s.67 1.5 1.5 1.5zm-3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                      </svg>
+                      <span className="flex-1 text-[#8696a0] text-[15px]">Mensaje</span>
+                      {/* Attach */}
+                      <svg className="w-[22px] h-[22px] text-[#8696a0] flex-shrink-0 rotate-[-45deg]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16.5 6v11.5a4 4 0 01-8 0V5a2.5 2.5 0 015 0v10.5a1 1 0 01-2 0V6H10v9.5a2.5 2.5 0 005 0V5a4 4 0 00-8 0v12.5a5.5 5.5 0 0011 0V6h-1.5z"/>
+                      </svg>
+                      {/* Camera */}
+                      <svg className="w-[22px] h-[22px] text-[#8696a0] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 5h-3.17L15 3H9L7.17 5H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2zm-8 13a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+                      </svg>
                     </div>
-                    {/* Camera lens with iris rings */}
-                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full relative">
-                      {/* Outer ring */}
-                      <div className="absolute inset-0 rounded-full bg-[#0c0c14] border border-[#1a1a2e]/60" />
-                      {/* Middle iris ring */}
-                      <div className="absolute inset-[1.5px] rounded-full bg-gradient-to-br from-[#0f1028] to-[#080812] border border-[#1e1e3a]/40" />
-                      {/* Inner lens */}
-                      <div className="absolute inset-[3px] rounded-full bg-[#06060e]" />
-                      {/* Light reflection dot */}
-                      <div className="absolute top-[2px] right-[2px] w-[2px] h-[2px] rounded-full bg-blue-400/40" />
-                    </div>
+                    {/* Mic button */}
+                    <button
+                      className="w-[38px] h-[38px] rounded-full bg-[#00a884] flex items-center justify-center flex-shrink-0 shadow-sm"
+                      aria-label="Grabar nota de voz"
+                    >
+                      <svg className="w-[20px] h-[20px] text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 15a3 3 0 003-3V5a3 3 0 10-6 0v7a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V22h2v-3.08A7 7 0 0019 12h-2z"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Home indicator */}
+                  <div className="flex justify-center py-[6px] bg-[#1f2c34]">
+                    <div className="w-[110px] h-[4px] bg-white/75 rounded-full" />
                   </div>
                 </div>
-              </div>
 
-              {/* Secondary Phone - Only visible on xl screens */}
-              <div className="absolute -left-20 -top-4 z-0 opacity-60 scale-[0.65] hidden xl:block rotate-[-8deg] transition-transform duration-1000 ease-out hover:[transform:rotate(-8deg)_rotateY(-15deg)_rotateX(5deg)]" style={{ perspective: "1500px" }}>
-                <div className="relative w-[240px]">
-                  {/* Layered Shadows */}
-                  <div
-                    className="absolute inset-0 rounded-[2.5rem]"
-                    style={{
-                      boxShadow: `
-                        0 2px 6px rgba(0,0,0,0.5),
-                        0 10px 25px rgba(0,0,0,0.4),
-                        0 30px 50px rgba(0,0,0,0.3)
-                      `,
-                    }}
-                  />
-
-                  {/* 3D Depth - Titanium */}
-                  <div
-                    className="absolute inset-0 rounded-[2.7rem] translate-y-1"
-                    style={{
-                      background: "linear-gradient(135deg, #2a2a2e, #1a1a1e 30%, #3a3a3e 50%, #1a1a1e 70%, #2a2a2e)",
-                      boxShadow: "inset 0 -2px 4px rgba(255,255,255,0.08), 0 10px 20px rgba(0,0,0,0.8)",
-                    }}
-                  />
-
-                  {/* Frame - Titanium */}
-                  <div
-                    className="relative rounded-[2.5rem] p-[8px] border border-zinc-500/30"
-                    style={{
-                      background: "linear-gradient(145deg, #8e8e93 0%, #636366 8%, #48484a 15%, #3a3a3c 25%, #58585a 40%, #48484a 55%, #3a3a3c 70%, #636366 85%, #8e8e93 92%, #48484a 100%)",
-                      boxShadow: `
-                        inset 0 1px 1px rgba(255,255,255,0.4),
-                        inset 0 -1px 1px rgba(0,0,0,0.3),
-                        inset 0 0 20px rgba(255,255,255,0.05),
-                        0 0 0 1px rgba(255,255,255,0.08)
-                      `,
-                    }}
-                  >
-                    {/* Double ring bevel */}
-                    <div className="absolute inset-[1px] rounded-[2.45rem] pointer-events-none"
-                      style={{
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2)",
-                      }}
-                    />
-
-                    {/* Glass Glare */}
-                    <div className="absolute inset-0 z-50 rounded-[2.5rem] pointer-events-none overflow-hidden">
-                      <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent transform -rotate-45 translate-x-1/2 -translate-y-1/2 blur-sm" />
-                      <div className="absolute top-0 left-[10%] right-[10%] h-[20%] bg-gradient-to-b from-white/[0.06] to-transparent rounded-t-[2.5rem] blur-[1px]" />
-                      <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/[0.07]" />
-                    </div>
-
-                    <div
-                      className="bg-[#0b141a] rounded-[2rem] overflow-hidden relative"
-                      style={{
-                        boxShadow: "inset 0 0 15px rgba(0,0,0,0.9), inset 0 0 3px rgba(0,0,0,1), 0 0 0 1px rgba(0,0,0,0.8)",
-                      }}
-                    >
-                    {/* Status Bar Secondary */}
-                    <div className="flex justify-between items-center px-3 py-1.5 bg-[#202c33]">
-                      <span className="text-[9px] font-semibold text-white/80">9:41</span>
-                      <div className="flex items-center gap-1">
-                        <div className="flex items-end gap-px">
-                          <div className="w-[2px] h-[3px] bg-white/80 rounded-[0.5px]" />
-                          <div className="w-[2px] h-[5px] bg-white/80 rounded-[0.5px]" />
-                          <div className="w-[2px] h-[7px] bg-white/80 rounded-[0.5px]" />
-                          <div className="w-[2px] h-[9px] bg-white/80 rounded-[0.5px]" />
-                        </div>
-                        <div className="w-[14px] h-[7px] border border-white/50 rounded-[1.5px] p-px relative">
-                          <div className="w-[65%] h-full bg-[#30D158] rounded-[0.5px]" />
-                          <div className="absolute -right-[2px] top-[2px] w-[1.5px] h-[3px] bg-white/50 rounded-r" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* WhatsApp Header Secondary */}
-                    <div className="bg-[#202c33] px-3 py-2 flex items-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,0.4)] z-10 relative">
-                      <svg className="w-4 h-4 text-[#aebac1] -ml-1" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 4l1.4 1.4L7.8 11H20v2H7.8l5.6 5.6L12 20l-8-8 8-8z" />
-                      </svg>
-                      <div className="w-7 h-7 rounded-full bg-[#25D366] flex items-center justify-center shadow-[0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-white/10">
-                        <span className="text-white font-bold text-[11px]">T</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-[#e9edef] font-semibold text-[11px] leading-tight">
-                          Tresqu IA
-                        </div>
-                        <div className="flex items-center gap-0.5 mt-0.5">
-                          <div className="w-[4px] h-[4px] rounded-full bg-[#25D366]" />
-                          <span className="text-[8px] text-[#25D366] leading-tight">en línea</span>
-                        </div>
-                      </div>
-                      <svg className="w-4 h-4 text-[#aebac1]" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z" />
-                      </svg>
-                    </div>
-
-                    {/* Chat Background Secondary */}
-                    <div
-                      className="h-[310px] px-2 py-2 flex flex-col gap-2 scrollbar-hide overflow-y-auto"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2H0v-2h20v.5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-                        backgroundColor: "#0b141a",
-                      }}
-                    >
-                      {/* Date badge */}
-                      <div className="flex justify-center mt-1 mb-0.5">
-                        <span className="bg-[#182229] text-[9px] text-[#8696a0] px-2.5 py-0.5 rounded-md">HOY</span>
-                      </div>
-
-                      {/* User: salary */}
-                      <div className="flex justify-end">
-                        <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
-                          <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
-                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
-                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
-                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
-                            </svg>
-                          </div>
-                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
-                            Recibí mi salario 3.500.000
-                            <span className="inline-block w-[48px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                          </p>
-                          <div className="absolute bottom-[4px] right-[6px] flex items-center gap-[3px]">
-                            <span className="text-[10px] text-[#8696a0]">9:15</span>
-                            <CheckCheck className="w-[13px] h-[13px] text-[#53bdeb]" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bot: salary confirmed */}
-                      <div className="flex justify-start">
-                        <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
-                          <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
-                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
-                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
-                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
-                            </svg>
-                          </div>
-                          <div className="bg-[#1b252a] rounded-[4px] px-[7px] py-[5px] mb-[5px] border-l-[3px] border-[#25D366]">
-                            <div className="text-[11px] sm:text-[12px] text-[#25D366] font-semibold leading-tight">+$3.500.000</div>
-                            <div className="text-[10px] text-[#8696a0] mt-[1px]">💰 Salario</div>
-                          </div>
-                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
-                            ¡Ingreso registrado! 🎉
-                            <span className="inline-block w-[40px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                          </p>
-                          <div className="absolute bottom-[4px] right-[6px]">
-                            <span className="text-[10px] text-[#8696a0]">9:15</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* User: Uber */}
-                      <div className="flex justify-end">
-                        <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
-                          <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
-                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
-                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
-                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
-                            </svg>
-                          </div>
-                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
-                            Uber 15.000
-                            <span className="inline-block w-[48px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                          </p>
-                          <div className="absolute bottom-[4px] right-[6px] flex items-center gap-[3px]">
-                            <span className="text-[10px] text-[#8696a0]">10:45</span>
-                            <CheckCheck className="w-[13px] h-[13px] text-[#53bdeb]" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bot: Uber registered */}
-                      <div className="flex justify-start">
-                        <div className="relative bg-[#202c33] rounded-[7.5px] rounded-tl-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
-                          <div className="absolute top-0 -left-2 w-2 h-3 overflow-hidden">
-                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#202c33] fill-current">
-                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" />
-                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" />
-                            </svg>
-                          </div>
-                          <div className="bg-[#1b252a] rounded-[4px] px-[7px] py-[5px] mb-[5px] border-l-[3px] border-orange-400">
-                            <div className="text-[11px] sm:text-[12px] text-orange-400 font-semibold leading-tight">-$15.000</div>
-                            <div className="text-[10px] text-[#8696a0] mt-[1px]">🚗 Transporte</div>
-                          </div>
-                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
-                            ✅ Registrado
-                            <span className="inline-block w-[40px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                          </p>
-                          <div className="absolute bottom-[4px] right-[6px]">
-                            <span className="text-[10px] text-[#8696a0]">10:45</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* User: monthly balance */}
-                      <div className="flex justify-end">
-                        <div className="relative bg-[#005c4b] rounded-[7.5px] rounded-tr-none px-[8px] pt-[5px] pb-[18px] max-w-[85%] shadow-[0_1px_0.5px_rgba(0,0,0,0.13)]">
-                          <div className="absolute top-0 -right-2 w-2 h-3 overflow-hidden">
-                            <svg viewBox="0 0 8 13" width="8" height="13" className="text-[#005c4b] fill-current">
-                              <path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" transform="scale(-1 1) translate(-8 0)" />
-                              <path d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z" transform="scale(-1 1) translate(-8 0)" />
-                            </svg>
-                          </div>
-                          <p className="text-[11px] sm:text-[13px] text-[#e9edef] leading-[1.4]">
-                            ¿Mi balance del mes?
-                            <span className="inline-block w-[36px]" aria-hidden="true" style={{lineHeight: 0, fontSize: 0}} />
-                          </p>
-                          <div className="absolute bottom-[4px] right-[6px] flex items-center gap-[3px]">
-                            <span className="text-[10px] text-[#8696a0]">11:00</span>
-                            <Check className="w-[13px] h-[13px] text-[#8696a0]" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Dynamic Island - Secondary */}
-                    <div
-                      className="absolute top-[8px] left-1/2 -translate-x-1/2 w-[75px] h-[22px] bg-black rounded-full flex items-center justify-between px-2 z-50"
-                      style={{
-                        boxShadow: "0 0 8px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.04)",
-                        border: "0.5px solid rgba(255,255,255,0.06)",
-                      }}
-                    >
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#080808] border border-white/[0.06]" />
-                      <div className="w-2 h-2 rounded-full relative">
-                        <div className="absolute inset-0 rounded-full bg-[#0c0c14] border border-[#1a1a2e]/60" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#06060e]" />
-                        <div className="absolute top-[1px] right-[1px] w-[1.5px] h-[1.5px] rounded-full bg-blue-400/40" />
-                      </div>
-                    </div>
+                {/* Dynamic Island — sits over the screen */}
+                <div
+                  className="absolute top-[10px] left-1/2 -translate-x-1/2 w-[96px] h-[30px] bg-black rounded-full z-30"
+                  style={{
+                    boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.05), 0 0 16px rgba(0,0,0,0.8)",
+                  }}
+                >
+                  {/* Face ID / camera cluster */}
+                  <div className="absolute top-1/2 right-[8px] -translate-y-1/2 w-[14px] h-[14px] rounded-full">
+                    <div className="absolute inset-0 rounded-full bg-[#0a0a12]" />
+                    <div className="absolute inset-[2px] rounded-full bg-[#05050a] ring-[0.5px] ring-white/5" />
+                    <div className="absolute top-[2px] right-[2px] w-[3px] h-[3px] rounded-full bg-sky-400/30 blur-[0.5px]" />
+                  </div>
+                  {/* Sensor dot */}
+                  <div className="absolute top-1/2 left-[12px] -translate-y-1/2 w-[6px] h-[6px] rounded-full bg-[#0a0a12]">
+                    <div className="absolute inset-[1px] rounded-full bg-[#05050a]" />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
 
         {/* Bottom Section - Quick Access */}
