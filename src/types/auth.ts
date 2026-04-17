@@ -36,6 +36,7 @@ export interface User {
   username: string;
   phone_number: string;
   default_currency: string;
+  timezone: string;
   subscription_active: boolean;
   subscription_start_date: string;
   subscription_end_date: string;

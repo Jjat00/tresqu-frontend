@@ -1,6 +1,7 @@
 /**
  * Utilidades para manejar fechas en zona horaria local
  */
+import { useAuthStore } from "@/store/authStore";
 
 // Obtener la fecha actual en la zona horaria local
 export const getLocalToday = (): Date => {
@@ -43,12 +44,14 @@ export const toLocalISODate = (date: Date): string => {
   )}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
-// Obtener la zona horaria del usuario
+// Obtener la zona horaria del usuario (preferir la guardada en la DB)
 export const getUserTimezone = (): string => {
+  const stored = useAuthStore.getState().user?.timezone;
+  if (stored) return stored;
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   } catch (error) {
     console.warn("No se pudo determinar la zona horaria del usuario:", error);
-    return "America/Bogota"; // Valor por defecto para la aplicación
+    return "America/Bogota";
   }
 };
