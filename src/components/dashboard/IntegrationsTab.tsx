@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { useGmailStatus, useProcessedEmails } from "@/hooks/useGmailStatus";
 import { useWallbitStatus } from "@/hooks/useWallbitStatus";
-import WallbitCard from "./WallbitCard";
 
 const IntegrationsTab = () => {
   const navigate = useNavigate();
@@ -177,8 +176,6 @@ const IntegrationsTab = () => {
       </div>
 
       <Separator className="opacity-30" />
-
-      <WallbitCard />
 
       {/* Recent imports table */}
       <Card
