@@ -20,13 +20,26 @@ import {
   Loader2,
 } from "lucide-react";
 import { useGmailStatus, useProcessedEmails } from "@/hooks/useGmailStatus";
+import { useWallbitStatus } from "@/hooks/useWallbitStatus";
+import WallbitCard from "./WallbitCard";
 
 const IntegrationsTab = () => {
   const navigate = useNavigate();
   const { data: status, isLoading: statusLoading } = useGmailStatus();
   const { data: emailsData, isLoading: emailsLoading } = useProcessedEmails();
+  const { data: wallbitStatus } = useWallbitStatus();
 
-  const connectedCount = status?.connected ? 1 : 0;
+  const connectedCount =
+    (status?.connected ? 1 : 0) + (wallbitStatus?.connected ? 1 : 0);
+  const connectedLabel =
+    connectedCount === 0
+      ? "Ninguno conectado"
+      : [
+          status?.connected ? "Gmail" : null,
+          wallbitStatus?.connected ? "Wallbit" : null,
+        ]
+          .filter(Boolean)
+          .join(" · ");
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "-";
@@ -91,7 +104,7 @@ const IntegrationsTab = () => {
               <>
                 <p className="text-2xl font-bold">{connectedCount}</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {status?.connected ? "Gmail conectado" : "Ninguno conectado"}
+                  {connectedLabel}
                 </p>
               </>
             )}
@@ -164,6 +177,8 @@ const IntegrationsTab = () => {
       </div>
 
       <Separator className="opacity-30" />
+
+      <WallbitCard />
 
       {/* Recent imports table */}
       <Card
