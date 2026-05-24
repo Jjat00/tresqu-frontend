@@ -2,6 +2,7 @@ import {
   WalletIcon,
   TrendingUpIcon,
   TagIcon,
+  LineChartIcon,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -46,6 +47,14 @@ const navItems: NavItem[] = [
     icon: TagIcon,
     color: "text-muted-foreground",
     activeColor: "text-purple bg-purple/10",
+  },
+  {
+    id: "investments",
+    label: "Inversiones",
+    path: "/dashboard/investments",
+    icon: LineChartIcon,
+    color: "text-muted-foreground",
+    activeColor: "text-indigo-400 bg-indigo-500/10",
   },
 ];
 

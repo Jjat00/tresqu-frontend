@@ -5,6 +5,7 @@ import ExpensesTab from "@/components/dashboard/ExpensesTab";
 import IncomeTab from "@/components/dashboard/IncomeTab";
 import CategoriesTab from "@/components/dashboard/CategoriesTab";
 import IntegrationsTab from "@/components/dashboard/IntegrationsTab";
+import InvestmentsTab from "@/components/dashboard/investments/InvestmentsTab";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isAuthenticated } from "@/services/authService";
@@ -94,6 +95,8 @@ const Dashboard = () => {
         );
       case "categories":
         return <CategoriesTab />;
+      case "investments":
+        return <InvestmentsTab />;
       case "integrations":
         return <IntegrationsTab />;
       default:
