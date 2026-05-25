@@ -86,3 +86,13 @@ export interface InvestmentFilters {
   page?: number;
   page_size?: number;
 }
+
+export interface WallbitSyncResult {
+  ok: boolean;
+  upserted?: number;
+  embeddings_made?: number;
+  investments_created?: number;
+  account_id?: number;
+  error?: string;
+  last_sync_at: string | null;
+}

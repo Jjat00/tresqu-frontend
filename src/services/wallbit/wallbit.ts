@@ -1,5 +1,9 @@
 import { apiClient } from "../api";
-import type { WallbitConnectPayload, WallbitStatus } from "@/types/wallbit";
+import type {
+  WallbitConnectPayload,
+  WallbitStatus,
+  WallbitSyncResult,
+} from "@/types/wallbit";
 
 export class WallbitService {
   private baseUrl: string;
@@ -24,6 +28,13 @@ export class WallbitService {
   async disconnect(): Promise<WallbitStatus> {
     const response = await apiClient.post<WallbitStatus>(
       `${this.baseUrl}/disconnect/`,
+    );
+    return response.data;
+  }
+
+  async sync(): Promise<WallbitSyncResult> {
+    const response = await apiClient.post<WallbitSyncResult>(
+      `${this.baseUrl}/sync/`,
     );
     return response.data;
   }

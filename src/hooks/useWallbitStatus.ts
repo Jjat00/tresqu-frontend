@@ -34,3 +34,21 @@ export const useWallbitDisconnect = () => {
     },
   });
 };
+
+export const useWallbitSync = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => wallbitService.sync(),
+    onSuccess: (data) => {
+      const status = queryClient.getQueryData<WallbitStatus>(STATUS_KEY);
+      if (status && data.last_sync_at) {
+        queryClient.setQueryData(STATUS_KEY, {
+          ...status,
+          last_sync_at: data.last_sync_at,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["wallbit"] });
+      queryClient.invalidateQueries({ queryKey: STATUS_KEY });
+    },
+  });
+};
