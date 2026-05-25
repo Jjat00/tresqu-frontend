@@ -6,6 +6,7 @@ import IncomeTab from "@/components/dashboard/IncomeTab";
 import CategoriesTab from "@/components/dashboard/CategoriesTab";
 import IntegrationsTab from "@/components/dashboard/IntegrationsTab";
 import InvestmentsTab from "@/components/dashboard/investments/InvestmentsTab";
+import HomeTab from "@/components/dashboard/home/HomeTab";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isAuthenticated } from "@/services/authService";
@@ -13,7 +14,6 @@ import DateRangePicker, {
   DateRange,
 } from "@/components/dashboard/DateRangePicker";
 import { getCurrentWeekRange } from "@/components/dashboard/dateRangePicker/dateRangeUtils";
-import DashboardSummary from "@/components/dashboard/DashboardSummary";
 
 const MONTHS = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -21,7 +21,7 @@ const MONTHS = [
 ] as const;
 
 const Dashboard = () => {
-  const { section = "expenses" } = useParams<{ section: string }>();
+  const { section = "home" } = useParams<{ section: string }>();
   const [dateRange, setDateRange] = useState<DateRange>(getCurrentWeekRange());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">(
     "week"
@@ -75,6 +75,8 @@ const Dashboard = () => {
 
   const renderSection = () => {
     switch (section) {
+      case "home":
+        return <HomeTab dateRange={dateRange} />;
       case "expenses":
         return (
           <ExpensesTab
@@ -147,8 +149,6 @@ const Dashboard = () => {
             </Button>
           </div>
         </div>
-
-        <DashboardSummary dateRange={dateRange} />
 
         <div className="min-h-[60vh] animate-fade-up">
           {renderSection()}

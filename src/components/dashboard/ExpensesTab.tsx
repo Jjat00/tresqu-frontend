@@ -4,16 +4,7 @@ import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
 import ChartJSPieChart from "./charts/ChartJSPieChart";
 import ChartJSBarChart from "./charts/ChartJSBarChart";
-import ComparativeLineChart from "./charts/ComparativeLineChart";
-import { MonthlyComparisonChart } from "./expenses/MonthlyComparisonChart";
-import CumulativeBalanceChart from "./CumulativeBalanceChart";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  TrendingUpIcon,
-  WalletIcon,
-  CalendarIcon,
-  TagIcon,
-} from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { useCategoryPieChartData } from "@/hooks/useCategoryPieChartData";
 
 interface ExpensesTabProps {
@@ -195,30 +186,6 @@ const ExpensesTab = ({
           />
         </div>
       </div>
-
-      {/* Gráfico comparativo */}
-      <div
-        className="h-[280px] xs:h-[320px] sm:h-[350px] glass-card animate-fade-up"
-        style={{ animationDelay: "0.6s" }}
-      >
-        <ComparativeLineChart
-          viewMode={localViewMode}
-          selectedMonth={localSelectedMonth}
-          activeTab={activeTab || "expenses"}
-          dateRange={dateRange}
-        />
-      </div>
-
-      {/* Gráfico de comparación mensual: Ingresos vs Gastos */}
-      <div
-        className="glass-card animate-fade-up"
-        style={{ animationDelay: "0.65s" }}
-      >
-        <MonthlyComparisonChart />
-      </div>
-
-      {/* Balance acumulado mes a mes */}
-      <CumulativeBalanceChart />
 
       <Card
         className="glass-card animate-fade-up"

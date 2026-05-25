@@ -1,4 +1,5 @@
 import {
+  HomeIcon,
   WalletIcon,
   TrendingUpIcon,
   TagIcon,
@@ -25,6 +26,14 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
+    id: "home",
+    label: "Inicio",
+    path: "/dashboard/home",
+    icon: HomeIcon,
+    color: "text-muted-foreground",
+    activeColor: "text-sky-400 bg-sky-500/10",
+  },
+  {
     id: "expenses",
     label: "Gastos",
     path: "/dashboard/expenses",
@@ -41,20 +50,20 @@ const navItems: NavItem[] = [
     activeColor: "text-highlight bg-highlight/10",
   },
   {
-    id: "categories",
-    label: "Categorías",
-    path: "/dashboard/categories",
-    icon: TagIcon,
-    color: "text-muted-foreground",
-    activeColor: "text-purple bg-purple/10",
-  },
-  {
     id: "investments",
     label: "Inversiones",
     path: "/dashboard/investments",
     icon: LineChartIcon,
     color: "text-muted-foreground",
     activeColor: "text-indigo-400 bg-indigo-500/10",
+  },
+  {
+    id: "categories",
+    label: "Categorías",
+    path: "/dashboard/categories",
+    icon: TagIcon,
+    color: "text-muted-foreground",
+    activeColor: "text-purple bg-purple/10",
   },
 ];
 

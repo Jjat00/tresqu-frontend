@@ -34,7 +34,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Navigate to="/dashboard/expenses" replace />} />
+            <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
             <Route path="/dashboard/profile" element={<Profile />} />
             <Route path="/dashboard/:section" element={<Dashboard />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
