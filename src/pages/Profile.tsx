@@ -635,8 +635,8 @@ const Profile = () => {
           key={`prefs-${user.id}-${user.updated_at}`}
           user={user}
         />
-        <ConnectionsCard />
         <WallbitCard />
+        <ConnectionsCard />
       </div>
     </DashboardLayout>
   );
