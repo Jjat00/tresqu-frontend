@@ -32,6 +32,20 @@ const apiClientConfig: AxiosRequestConfig = {
  */
 export const apiClient = axios.create(apiClientConfig);
 
+let isRedirectingToLogin = false;
+
+const forceLogout = () => {
+  useAuthStore.getState().clearAuth();
+  if (
+    typeof window !== "undefined" &&
+    !isRedirectingToLogin &&
+    window.location.pathname !== "/login"
+  ) {
+    isRedirectingToLogin = true;
+    window.location.href = "/login";
+  }
+};
+
 /**
  * Interceptor para añadir el token de autenticación a las peticiones
  */
@@ -72,43 +86,28 @@ apiClient.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
+      const refreshToken = useAuthStore.getState().refreshToken;
+
+      if (!refreshToken) {
+        forceLogout();
+        return Promise.reject(error);
+      }
+
       try {
-        // Intentar renovar el token usando el refreshToken
-        const refreshToken = useAuthStore.getState().refreshToken;
+        const newAccessToken = await refreshTokenService();
 
-        if (!refreshToken) {
-          // Si no hay refresh token, forzar logout y rechazar el error
-          useAuthStore.getState().clearAuth();
-          return Promise.reject(error);
+        if (newAccessToken) {
+          useAuthStore.getState().setTokens(newAccessToken, refreshToken);
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return apiClient(originalRequest);
         }
 
-        try {
-          // Intentar obtener un nuevo token
-          const newAccessToken = await refreshTokenService();
-
-          if (newAccessToken) {
-            // Actualizar el token en el store
-            useAuthStore.getState().setTokens(newAccessToken, refreshToken);
-
-            // Reintentar la petición original con el nuevo token
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            return apiClient(originalRequest);
-          } else {
-            // Si no hay nuevo token, cerrar sesión
-            useAuthStore.getState().clearAuth();
-            return Promise.reject(error);
-          }
-        } catch (refreshError) {
-          // Error al refrescar el token, cerrar sesión
-          console.error("Error al refrescar token:", refreshError);
-          useAuthStore.getState().clearAuth();
-          return Promise.reject(error);
-        }
+        forceLogout();
+        return Promise.reject(error);
       } catch (refreshError) {
-        // Si falla la renovación, cerrar sesión
-        console.error("Token refresh failed:", refreshError);
-        useAuthStore.getState().clearAuth();
-        return Promise.reject(refreshError);
+        console.error("Error al refrescar token:", refreshError);
+        forceLogout();
+        return Promise.reject(error);
       }
     }
 
@@ -117,7 +116,7 @@ apiClient.interceptors.response.use(
       status === 401 &&
       (originalRequest.skipAuthRefresh || originalRequest._retry)
     ) {
-      useAuthStore.getState().clearAuth();
+      forceLogout();
     }
 
     // Manejar diferentes códigos de error

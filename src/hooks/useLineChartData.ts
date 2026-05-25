@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { toast } from "sonner";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
 import {
   getExpensesLineChartData,
@@ -78,7 +77,7 @@ export const useLineChartData = (
       try {
         return await getExpensesLineChartData(queryParams);
       } catch (error) {
-        toast.error("No se pudieron cargar los datos del gráfico");
+        console.error("Error loading line chart:", error);
         throw error;
       }
     },

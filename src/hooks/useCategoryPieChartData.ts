@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
 import pieChartService from "@/services/expenses/PieChart";
 import { DonutChartData, DateFilterType } from "@/types/expenses";
@@ -111,10 +110,8 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
     }
   }, [data]);
 
-  // Show error toast if the fetch fails
   useEffect(() => {
     if (error) {
-      toast.error("No se pudieron cargar los datos de las categorías");
       console.error("Error loading categories:", error);
     }
   }, [error]);
