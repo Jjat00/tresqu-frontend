@@ -53,7 +53,7 @@ const Footer = () => {
                     aria-label={link.label}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-2xl bg-zinc-900/50 backdrop-blur-md border border-white/5 flex items-center justify-center text-zinc-400 hover:text-[#00FF7F] hover:bg-zinc-800 hover:border-[#00FF7F]/30 hover:shadow-[0_0_15px_-5px_rgba(0,255,127,0.4)] hover:-translate-y-1 transition-all duration-300"
+                    className="w-10 h-10 rounded-md bg-white/[0.02] border border-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-[#00FF7F] hover:border-[#00FF7F]/30 transition-colors duration-200"
                   >
                     {link.icon}
                   </a>

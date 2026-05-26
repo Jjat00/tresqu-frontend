@@ -41,10 +41,10 @@ const Bubble = ({ side, visible, children }: BubbleProps) => (
     }}
   >
     <div
-      className={`text-white text-[11px] leading-relaxed rounded-[10px] px-3 py-2 max-w-[82%] backdrop-blur-md border ${
+      className={`text-white text-[11px] leading-relaxed rounded-md px-3 py-2 max-w-[82%] border ${
         side === "right"
-          ? "bg-[#00FF7F]/10 border-[#00FF7F]/25 rounded-tr-[2px]"
-          : "bg-white/[0.06] border-white/10 rounded-tl-[2px]"
+          ? "bg-[#00FF7F]/[0.08] border-[#00FF7F]/20"
+          : "bg-white/[0.04] border-white/10"
       }`}
     >
       {children}
@@ -57,7 +57,7 @@ const BotTyping = ({ visible }: { visible: boolean }) => (
     className="flex justify-start"
     style={{ opacity: visible ? 1 : 0, transition: "opacity 0.3s ease" }}
   >
-    <div className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-[10px] rounded-tl-[2px] px-3 py-2">
+    <div className="bg-white/[0.04] border border-white/10 rounded-md px-3 py-2">
       <TypingDots />
     </div>
   </div>
@@ -168,7 +168,7 @@ const VoiceAnimation = () => {
         className="flex justify-end"
         style={{ opacity: phase === 1 ? 1 : 0, transition: "opacity 0.3s ease" }}
       >
-        <div className="flex items-center gap-1.5 bg-red-500/15 border border-red-500/30 rounded-full px-3 py-1.5">
+        <div className="flex items-center gap-1.5 bg-red-500/10 border border-red-500/25 rounded-md px-3 py-1.5">
           <span
             className="w-1.5 h-1.5 rounded-full bg-red-500"
             style={{ animation: "wa-pulse 0.9s ease-in-out infinite" }}
@@ -181,7 +181,7 @@ const VoiceAnimation = () => {
       {/* Voice bubble */}
       <Bubble side="right" visible={phase >= 2}>
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#00FF7F]/15 border border-[#00FF7F]/30 flex items-center justify-center flex-shrink-0">
+          <div className="w-7 h-7 rounded-sm bg-[#00FF7F]/10 border border-[#00FF7F]/25 flex items-center justify-center flex-shrink-0">
             <Mic className="w-3.5 h-3.5 text-[#00FF7F]" />
           </div>
           <div>
@@ -209,7 +209,7 @@ const VoiceAnimation = () => {
 
 // ── IMAGE animation ──────────────────────────────────────────────────────────
 const Receipt = ({ scanning }: { scanning: boolean }) => (
-  <div className="relative w-[108px] h-[76px] rounded-lg overflow-hidden border border-white/10 shadow-inner flex-shrink-0">
+  <div className="relative w-[108px] h-[76px] rounded-sm overflow-hidden border border-white/10 flex-shrink-0">
     <div className="absolute inset-0 bg-neutral-100 text-zinc-700 px-2 py-1.5">
       <p className="text-[6px] font-bold text-center text-zinc-600 mb-0.5 uppercase tracking-wide">
         Tienda Nube
@@ -303,14 +303,14 @@ const ImageAnimation = () => {
         className="flex justify-end"
         style={{ opacity: phase === 1 ? 1 : 0, transition: "opacity 0.3s ease" }}
       >
-        <div className="bg-[#00FF7F]/10 backdrop-blur-md border border-[#00FF7F]/25 rounded-[10px] px-3 py-2 min-w-[118px]">
+        <div className="bg-[#00FF7F]/[0.08] border border-[#00FF7F]/20 rounded-md px-3 py-2 min-w-[118px]">
           <div className="flex items-center gap-1.5 mb-1.5">
             <Camera className="w-3 h-3 text-[#00FF7F]" />
             <span className="text-[10px] text-zinc-300">Enviando foto…</span>
           </div>
-          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+          <div className="h-1 bg-white/10 rounded-sm overflow-hidden">
             <div
-              className="h-full bg-[#00FF7F] rounded-full transition-all duration-75"
+              className="h-full bg-[#00FF7F] transition-all duration-75"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -334,7 +334,7 @@ const ImageAnimation = () => {
         className="flex justify-start"
         style={{ opacity: phase === 3 ? 1 : 0, transition: "opacity 0.3s ease" }}
       >
-        <div className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-[10px] rounded-tl-[2px] px-3 py-2">
+        <div className="bg-white/[0.04] border border-white/10 rounded-md px-3 py-2">
           <div className="flex items-center gap-1.5">
             <Zap
               className="w-3 h-3 text-[#00FF7F]"
@@ -425,19 +425,18 @@ const features: {
 // ── Main section ─────────────────────────────────────────────────────────────
 const WhatsAppFeatures = () => {
   return (
-    <section className="relative section-padding overflow-hidden bg-[#0a0a0a]">
+    <section className="relative section-padding bg-[#0a0a0a]">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-[#00FF7F]/[0.04] rounded-full blur-[160px]" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-20 md:mb-28">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
-            <WhatsAppIcon className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-2 px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
+            <WhatsAppIcon className="w-3 h-3" />
             Disponible en WhatsApp
           </span>
           <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
@@ -445,7 +444,7 @@ const WhatsAppFeatures = () => {
             <br />
             <span className="text-[#00FF7F] italic">PREFIERAS</span>
           </h2>
-          <p className="text-zinc-400 text-lg max-w-xl mx-auto">
+          <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
             Texto, voz o foto — Tresqu entiende todo directamente desde WhatsApp
           </p>
         </div>
@@ -486,39 +485,37 @@ const WhatsAppFeatures = () => {
                     }`}
                   >
                     {/* Eyebrow */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full mb-6">
+                    <div className="inline-flex items-center gap-2 mb-5">
                       <Icon className="w-3.5 h-3.5 text-[#00FF7F]" />
-                      <span className="text-[11px] uppercase tracking-[0.18em] text-[#00FF7F] font-semibold">
+                      <span className="text-[11px] uppercase tracking-[0.18em] text-[#00FF7F] font-medium">
                         {eyebrow}
                       </span>
                     </div>
 
                     {/* Big title */}
-                    <h3 className="font-display font-bold text-white tracking-tight leading-[0.95] text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] mb-6">
+                    <h3 className="font-display font-bold text-white tracking-tight leading-[1.05] text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] mb-5">
                       {title}{" "}
                       <span className="text-[#00FF7F] italic">{highlight}</span>
                     </h3>
 
                     {/* Tagline */}
-                    <p className="text-2xl md:text-3xl text-white/90 font-light mb-5 leading-tight">
+                    <p className="text-xl md:text-2xl text-white/90 font-light mb-4 leading-tight">
                       {tagline}
                     </p>
 
                     {/* Description */}
-                    <p className="text-zinc-400 text-lg leading-relaxed mb-8">
+                    <p className="text-zinc-400 text-base leading-relaxed mb-6">
                       {description}
                     </p>
 
                     {/* Bullets */}
-                    <ul className="space-y-3">
+                    <ul className="space-y-2.5">
                       {bullets.map((bullet) => (
                         <li
                           key={bullet}
-                          className="flex items-center gap-3 text-zinc-300 text-base"
+                          className="flex items-center gap-3 text-zinc-300 text-sm"
                         >
-                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#00FF7F]/15 border border-[#00FF7F]/30 flex-shrink-0">
-                            <CheckCheck className="w-3 h-3 text-[#00FF7F]" />
-                          </span>
+                          <CheckCheck className="w-4 h-4 text-[#00FF7F] flex-shrink-0" />
                           {bullet}
                         </li>
                       ))}
@@ -542,7 +539,7 @@ const WhatsAppFeatures = () => {
                 "_blank"
               )
             }
-            className="inline-flex items-center gap-2.5 px-8 py-4 bg-[#00FF7F] text-black font-semibold rounded-full hover:bg-white transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,255,127,0.4)] active:scale-95"
+            className="inline-flex items-center gap-2.5 px-7 py-3 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white transition-colors duration-200"
           >
             <WhatsAppIcon className="w-4 h-4" />
             Probar en WhatsApp

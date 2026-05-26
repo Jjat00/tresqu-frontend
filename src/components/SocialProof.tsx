@@ -88,7 +88,7 @@ const SocialProof = () => {
               ref={counters[i].ref}
               className="text-center glass-card p-4 sm:p-6"
             >
-              <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-success/10 mb-3">
+              <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-success/10 mb-3">
                 <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
               </div>
               <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight font-display">

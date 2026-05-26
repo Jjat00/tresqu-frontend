@@ -37,7 +37,7 @@
   --color-input: hsl(0 0% 12%);
   --color-ring: hsl(152 100% 50%);
 
-  --radius: 1rem;
+  --radius: 0.5rem;
 
   /* Colores para sidebar */
   --color-sidebar-background: hsl(0 0% 5%);
@@ -111,15 +111,7 @@
   }
 
   .trii-title-accent::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: var(--color-trii-green);
-    opacity: 0.3;
-    transform: skewX(-12deg);
+    content: none;
   }
 
   .trii-subtitle {
@@ -182,56 +174,20 @@
   .glass-card,
   .trii-card {
     position: relative;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.04) 0%,
-      rgba(255, 255, 255, 0.01) 50%,
-      rgba(255, 255, 255, 0.03) 100%
-    );
-    backdrop-filter: blur(40px) saturate(1.5);
-    -webkit-backdrop-filter: blur(40px) saturate(1.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: calc(var(--radius) + 4px);
-    box-shadow:
-      0 0 0 0.5px rgba(255, 255, 255, 0.04) inset,
-      0 2px 8px -2px rgba(0, 0, 0, 0.3),
-      0 0 40px -10px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius);
     overflow: hidden;
-  }
-
-  /* Liquid light refraction effect */
-  .glass-card::before,
-  .trii-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 30%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.1) 70%,
-      transparent 100%
-    );
-    pointer-events: none;
   }
 
   .glass-card-hover,
   .trii-card-hover {
-    transition: all var(--duration-normal) var(--ease-out);
+    transition: border-color var(--duration-normal) var(--ease-out);
   }
 
   .glass-card-hover:hover,
   .trii-card-hover:hover {
     border-color: rgba(255, 255, 255, 0.12);
-    box-shadow:
-      0 0 0 0.5px rgba(255, 255, 255, 0.06) inset,
-      0 8px 24px -6px rgba(0, 0, 0, 0.4),
-      0 0 60px -15px rgba(0, 255, 127, 0.08);
-    transform: translateY(-2px);
   }
 
   .text-shadow-sm {
@@ -474,14 +430,13 @@
     gap: 12px;
     padding: 12px 24px;
     background: #000000;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
   }
 
   .store-badge:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   /* Indicador de característica destacada */

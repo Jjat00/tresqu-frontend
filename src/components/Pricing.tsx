@@ -121,15 +121,14 @@ const Pricing = () => {
       className="relative section-padding overflow-hidden bg-[#0a0a0a]"
     >
       {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00FF7F]/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="inline-block px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
+          <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
             Precios
           </span>
           <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
@@ -163,7 +162,7 @@ const Pricing = () => {
               Anual
             </span>
             {isAnnual && (
-              <span className="text-xs font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-sm">
                 -17%
               </span>
             )}
@@ -178,27 +177,19 @@ const Pricing = () => {
             return (
               <div
                 key={index}
-                className={`relative flex flex-col rounded-[2.5rem] transition-all duration-700 ease-out group ${
+                className={`relative flex flex-col rounded-md transition-colors duration-200 group ${
                   isFeatured
-                    ? "bg-zinc-900/40 backdrop-blur-2xl border border-[#00FF7F]/40 scale-105 shadow-[0_0_80px_-20px_rgba(0,255,127,0.25)] hover:shadow-[0_0_100px_-15px_rgba(0,255,127,0.35)] hover:-translate-y-2 z-20"
-                    : "bg-zinc-900/20 backdrop-blur-xl border border-white/5 hover:border-white/10 hover:bg-zinc-900/30 hover:-translate-y-1 z-10"
+                    ? "bg-white/[0.03] border border-[#00FF7F]/40 z-20"
+                    : "bg-white/[0.02] border border-white/[0.06] hover:border-white/10 z-10"
                 }`}
               >
-                {/* Glass Glare Effect */}
-                <div className="absolute inset-0 z-0 rounded-[2.5rem] pointer-events-none overflow-hidden">
-                  <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white-[0.03] to-transparent transform -rotate-45 translate-x-1/2 -translate-y-1/2 blur-sm group-hover:via-white-[0.06] transition-colors duration-700" />
-                </div>
-
                 {/* Popular Badge (Floating) */}
                 {plan.badge && (
-                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-30">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-[#00FF7F] rounded-full blur-[8px] opacity-60" />
-                      <span className="relative flex items-center gap-1.5 px-5 py-2 bg-zinc-900 border border-[#00FF7F]/50 text-[#00FF7F] text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-full shadow-xl">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        {plan.badge}
-                      </span>
-                    </div>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30">
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-[#00FF7F] text-black text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-sm">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      {plan.badge}
+                    </span>
                   </div>
                 )}
 
@@ -207,10 +198,10 @@ const Pricing = () => {
                   <div className="mb-8 relative">
                     <div className="flex items-center gap-4 mb-4">
                       <div
-                        className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 shadow-lg ${
+                        className={`w-11 h-11 rounded-md flex items-center justify-center ${
                           isFeatured
-                            ? "bg-[#00FF7F] text-black shadow-[#00FF7F]/30"
-                            : "bg-zinc-800 border border-white/5 text-white"
+                            ? "bg-[#00FF7F] text-black"
+                            : "bg-white/[0.04] border border-white/10 text-white"
                         }`}
                       >
                         {plan.icon}
@@ -226,17 +217,8 @@ const Pricing = () => {
 
                   {/* Price Block */}
                   <div className="mb-8 pb-8 border-b border-white/10 relative">
-                    {/* Subtle Glow Behind Price */}
-                    {isFeatured && (
-                      <div className="absolute top-1/2 left-0 w-32 h-16 bg-[#00FF7F]/20 rounded-[100%] blur-[30px] -translate-y-1/2 pointer-events-none" />
-                    )}
-                    
                     <div className="flex items-baseline gap-1.5 relative z-10">
-                      <span
-                        className={`text-5xl lg:text-6xl font-bold font-display tracking-tighter ${
-                          isFeatured ? "text-white" : "text-white"
-                        }`}
-                      >
+                      <span className="text-5xl lg:text-6xl font-bold font-display tracking-tighter text-white">
                         {plan.price}
                       </span>
                       <span className="text-zinc-500 font-medium tracking-wide">
@@ -244,7 +226,7 @@ const Pricing = () => {
                       </span>
                     </div>
                     {isAnnual && plan.price !== "Gratis" && (
-                      <div className="mt-3 inline-flex items-center gap-2 bg-[#00FF7F]/10 border border-[#00FF7F]/20 px-3 py-1 rounded-full">
+                      <div className="mt-3 inline-flex items-center gap-2 border border-[#00FF7F]/25 px-2.5 py-1 rounded-sm">
                         <span className="text-[11px] font-semibold text-[#00FF7F] uppercase tracking-wider">
                           Ahorra 2 meses gratis
                         </span>
@@ -257,19 +239,19 @@ const Pricing = () => {
                     {plan.features.map((feature, i) => (
                       <div key={i} className="flex items-start gap-3.5 group/feature">
                         {feature.included ? (
-                          <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors duration-300 ${
-                            isFeatured ? "bg-[#00FF7F]/20" : "bg-zinc-800 border border-white/5"
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                            isFeatured ? "bg-[#00FF7F]/15" : "bg-white/[0.04] border border-white/10"
                           }`}>
                             <Check className={`w-3 h-3 ${isFeatured ? "text-[#00FF7F]" : "text-zinc-300"}`} />
                           </div>
                         ) : (
                           <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <X className="w-3.5 h-3.5 text-zinc-700 group-hover/feature:text-zinc-600 transition-colors" />
+                            <X className="w-3.5 h-3.5 text-zinc-700" />
                           </div>
                         )}
                         <span
-                          className={`text-[14px] leading-snug transition-colors duration-300 ${
-                            feature.included ? "text-zinc-300 group-hover/feature:text-white" : "text-zinc-600"
+                          className={`text-[14px] leading-snug ${
+                            feature.included ? "text-zinc-300" : "text-zinc-600"
                           }`}
                         >
                           {feature.text}
@@ -278,13 +260,13 @@ const Pricing = () => {
                     ))}
                   </div>
 
-                  {/* Modern CTA Button */}
+                  {/* CTA Button */}
                   <button
                     onClick={plan.onClick}
-                    className={`w-full py-4 rounded-2xl font-bold text-[15px] tracking-wide transition-all duration-500 relative overflow-hidden ${
+                    className={`w-full py-3.5 rounded-md font-semibold text-[15px] tracking-wide transition-colors duration-200 relative overflow-hidden ${
                       isFeatured
-                        ? "bg-[#00FF7F] text-black hover:bg-white shadow-[0_10px_20px_-10px_rgba(0,255,127,0.5)] hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.5)]"
-                        : "bg-zinc-800 text-white hover:bg-zinc-700 border border-white/5"
+                        ? "bg-[#00FF7F] text-black hover:bg-white"
+                        : "bg-white/[0.04] text-white hover:bg-white/[0.08] border border-white/10"
                     }`}
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">

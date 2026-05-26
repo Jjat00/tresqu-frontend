@@ -14,20 +14,6 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px)`,
-            backgroundSize: "40px 40px",
-          }}
-        />
-      </div>
-
-      {/* Gradient Orbs - hidden on small screens for performance */}
-      <div className="hidden sm:block absolute top-20 left-10 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-[#00FF7F]/10 rounded-full blur-[100px] md:blur-[150px] pointer-events-none" />
-      <div className="hidden sm:block absolute bottom-20 right-10 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-[#00FF7F]/5 rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 sm:py-24 lg:py-28">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
@@ -35,19 +21,16 @@ const Hero = () => {
           <div className="space-y-6 md:space-y-8 w-full">
             {/* Main Title */}
             <div className="space-y-2 md:space-y-4">
-              <h1 className="trii-title text-[2.25rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] text-white leading-[1.05]">
+              <h1 className="trii-title text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1]">
                 CONTROLAR TUS FINANZAS
                 <br />
                 NUNCA FUE TAN{" "}
-                <span className="text-[#00FF7F] italic relative inline-block">
-                  FÁCIL
-                  <span className="absolute bottom-0 md:bottom-1 left-0 right-0 h-1 md:h-2 bg-[#00FF7F]/30 -skew-x-12" />
-                </span>
+                <span className="text-[#00FF7F] italic">FÁCIL</span>
               </h1>
             </div>
 
             {/* Subtitle */}
-            <p className="trii-subtitle text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl mx-auto">
+            <p className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
               Tu agente de inteligencia artificial para registrar tus gastos e ingresos en Colombia y el mundo, fácil, rápido, seguro y desde tu celular.
             </p>
 
@@ -116,7 +99,7 @@ const Hero = () => {
               className="group trii-card p-4 sm:p-6 text-left hover:border-[#00FF7F]/20 transition-all duration-300"
             >
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#00FF7F]/10 flex items-center justify-center group-hover:bg-[#00FF7F]/20 transition-colors flex-shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-[#00FF7F]/10 flex items-center justify-center group-hover:bg-[#00FF7F]/20 transition-colors flex-shrink-0">
                   <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#00FF7F]" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -141,7 +124,7 @@ const Hero = () => {
               className="group trii-card p-4 sm:p-6 text-left hover:border-[#25D366]/20 transition-all duration-300"
             >
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#25D366]/10 flex items-center justify-center group-hover:bg-[#25D366]/20 transition-colors flex-shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-[#25D366]/10 flex items-center justify-center group-hover:bg-[#25D366]/20 transition-colors flex-shrink-0">
                   <Send className="w-5 h-5 sm:w-6 sm:h-6 text-[#25D366]" />
                 </div>
                 <div className="flex-1 min-w-0">

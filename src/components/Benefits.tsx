@@ -60,15 +60,11 @@ const Benefits = () => {
           "linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 50%, #0a0a0a 100%)",
       }}
     >
-      {/* Decorative Elements */}
-      <div className="absolute top-1/4 -left-32 w-64 h-64 bg-[#00FF7F]/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-[#00FF7F]/5 rounded-full blur-[100px]" />
-
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Section Header */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
-            <span className="inline-block px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
+            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
               Beneficios
             </span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
@@ -96,26 +92,19 @@ const Benefits = () => {
             return (
               <div
                 key={index}
-                className={`group relative overflow-hidden rounded-[2rem] bg-zinc-900/40 border border-white/5 p-6 lg:p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,255,127,0.1)] ${gridClass}`}
-                style={{ animationDelay: `${index * 100}ms` }}
+                className={`group relative overflow-hidden rounded-md bg-white/[0.02] border border-white/[0.06] p-6 lg:p-8 transition-colors duration-200 hover:border-white/10 ${gridClass}`}
               >
-                {/* Glass reflection */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Glow behind icon */}
-                <div className="absolute top-8 left-8 w-24 h-24 bg-[#00FF7F]/20 rounded-full blur-[40px] group-hover:bg-[#00FF7F]/30 transition-colors duration-500" />
-
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-6">
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-2xl bg-zinc-800/80 backdrop-blur-md border border-white/10 flex items-center justify-center text-[#00FF7F] group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                    <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F]">
                       {benefit.icon}
                     </div>
 
                     {/* Highlight Badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900/80 backdrop-blur-md rounded-full border border-white/5 shadow-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F] shadow-[0_0_8px_#00FF7F]" />
-                      <span className="text-[11px] font-medium text-zinc-300 uppercase tracking-wide">
+                    <div className="inline-flex items-center gap-2 px-2.5 py-1 border border-white/10 rounded-sm">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F]" />
+                      <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">
                         {benefit.highlight}
                       </span>
                     </div>
