@@ -27,13 +27,19 @@ export const useGmailDisconnect = () => {
   });
 };
 
-export const useGmailSync = () => {
+/**
+ * Reintento del trigger Gmail cuando quedó en estado `failed`.
+ *
+ * Reemplaza al antiguo `useGmailSync` (sincronización manual). El
+ * polling de correos corre automáticamente cada 15 min; este hook
+ * solo aplica si el provisioning inicial del trigger falló.
+ */
+export const useGmailRetryTrigger = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => gmailService.manualSync(),
+    mutationFn: () => gmailService.retryTrigger(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gmail-status"] });
-      queryClient.invalidateQueries({ queryKey: ["gmail-processed-emails"] });
     },
   });
 };

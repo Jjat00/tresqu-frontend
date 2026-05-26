@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +28,7 @@ import { useAllCurrencies, useCommonCurrencies } from "@/hooks/currencies";
 import {
   useGmailStatus,
   useGmailDisconnect,
-  useGmailSync,
+  useGmailRetryTrigger,
 } from "@/hooks/useGmailStatus";
 import RiskProfileCard from "@/components/dashboard/RiskProfileCard";
 import WallbitCard from "@/components/dashboard/WallbitCard";
@@ -315,9 +316,10 @@ const PreferencesForm = ({ user }: PreferencesFormProps) => {
 /* ---------------- Connections (Gmail) section ---------------- */
 
 const ConnectionsCard = () => {
+  const queryClient = useQueryClient();
   const { data: gmailStatus, isLoading: gmailLoading } = useGmailStatus();
   const disconnectMutation = useGmailDisconnect();
-  const syncMutation = useGmailSync();
+  const retryTriggerMutation = useGmailRetryTrigger();
 
   const [connectingGmail, setConnectingGmail] = useState(false);
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
@@ -326,6 +328,13 @@ const ConnectionsCard = () => {
     setConnectingGmail(true);
     try {
       const response = await gmailService.getOAuthUrl();
+      if (response.already_connected) {
+        // Composio ya tiene la cuenta activa; refrescar UI sin OAuth.
+        toast.success("Gmail ya estaba conectado");
+        queryClient.invalidateQueries({ queryKey: ["gmail-status"] });
+        setConnectingGmail(false);
+        return;
+      }
       window.location.href = response.auth_url;
     } catch {
       toast.error("Error al obtener URL de autorización", {
@@ -345,15 +354,15 @@ const ConnectionsCard = () => {
     });
   };
 
-  const handleSync = () => {
-    syncMutation.mutate(undefined, {
+  const handleRetryTrigger = () => {
+    retryTriggerMutation.mutate(undefined, {
       onSuccess: () =>
-        toast.success("Sincronización iniciada", {
-          description: "Los correos nuevos serán procesados en unos momentos.",
+        toast.success("Reintentando activación del monitoreo", {
+          description: "Vas a verlo activo en unos segundos.",
         }),
       onError: () =>
-        toast.error("Error al sincronizar", {
-          description: "No se pudo iniciar la sincronización.",
+        toast.error("No se pudo reintentar", {
+          description: "Intenta de nuevo en unos minutos.",
         }),
     });
   };
@@ -402,37 +411,15 @@ const ConnectionsCard = () => {
                 <span className="text-sm text-muted-foreground">
                   Monitoreo en tiempo real
                 </span>
-                {gmailStatus.watch_active ? (
+                {gmailStatus.trigger_active ? (
                   <Badge className="border-green-500/30 bg-green-500/20 text-xs text-green-400">
                     Activo
                   </Badge>
                 ) : (
                   <Badge variant="secondary" className="text-xs">
-                    Inactivo
+                    Activando…
                   </Badge>
                 )}
-              </div>
-              {gmailStatus.watch_expires && (
-                <>
-                  <Separator className="opacity-30" />
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      Monitoreo expira
-                    </span>
-                    <span className="text-sm">
-                      {formatDate(gmailStatus.watch_expires)}
-                    </span>
-                  </div>
-                </>
-              )}
-              <Separator className="opacity-30" />
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Última sincronización
-                </span>
-                <span className="text-sm">
-                  {formatDate(gmailStatus.last_sync)}
-                </span>
               </div>
             </div>
 
@@ -468,20 +455,22 @@ const ConnectionsCard = () => {
             </div>
 
             <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                className="glass"
-                onClick={handleSync}
-                disabled={syncMutation.isPending}
-              >
-                {syncMutation.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                )}
-                Sincronizar
-              </Button>
+              {!gmailStatus.trigger_active && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="glass"
+                  onClick={handleRetryTrigger}
+                  disabled={retryTriggerMutation.isPending}
+                >
+                  {retryTriggerMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                  )}
+                  Reintentar
+                </Button>
+              )}
               {showDisconnectConfirm ? (
                 <div className="flex items-center gap-2">
                   <Button
