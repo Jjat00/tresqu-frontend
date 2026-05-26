@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     question: "¿Cómo funciona el reconocimiento de fotos de recibos?",
-    answer: "Simplemente toma una foto del recibo y envíala por WhatsApp o Telegram. Nuestra IA extrae automáticamente el monto, categoría, fecha y descripción del gasto.",
+    answer: "Simplemente toma una foto del recibo y envíala por WhatsApp o Telegram. Tresqu extrae automáticamente el monto, categoría, fecha y descripción del gasto.",
   },
   {
     question: "¿Puedo usar Tresqu sin WhatsApp?",
@@ -53,7 +53,7 @@ const Pricing = () => {
       period: "para siempre",
       features: [
         { text: "40 movimientos/mes (20 gastos + 20 ingresos)", included: true },
-        { text: "Asistente IA (solo texto)", included: true },
+        { text: "Asistente conversacional (solo texto)", included: true },
         { text: "Estadísticas mensuales simples", included: true },
         { text: "Categorías predefinidas", included: true },
         { text: "WhatsApp + Telegram", included: true },
@@ -69,7 +69,7 @@ const Pricing = () => {
     {
       name: "Premium",
       icon: <Sparkles className="w-5 h-5" />,
-      description: "Control financiero completo con IA avanzada",
+      description: "Control financiero completo con el agente avanzado",
       price: isAnnual ? "$50" : "$5",
       period: isAnnual ? "/año" : "/mes",
       badge: "MÁS POPULAR",
@@ -77,7 +77,7 @@ const Pricing = () => {
       features: [
         { text: "Registros ilimitados", included: true },
         { text: "Metas de ahorro completas", included: true },
-        { text: "Mensajes de voz con IA", included: true },
+        { text: "Mensajes de voz", included: true },
         { text: "Fotos de recibos y facturas", included: true },
         { text: "Extracción automática de datos", included: true },
         { text: "Analytics avanzados", included: true },
@@ -137,7 +137,7 @@ const Pricing = () => {
             <span className="text-[#00FF7F] italic">NECESIDAD</span>
           </h2>
           <p className="text-zinc-400 text-lg">
-            Control financiero inteligente con IA avanzada. Elige el plan que
+            Control financiero inteligente desde un chat. Elige el plan que
             mejor se adapte a ti.
           </p>
 

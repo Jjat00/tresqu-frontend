@@ -1,17 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import {
-  MessageCircle,
-  Send,
-  ArrowRight,
-} from "lucide-react";
-
 const Hero = () => {
-  const navigate = useNavigate();
-
-  const navigateToLogin = () => {
-    navigate("/login");
-  };
-
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
 
@@ -19,19 +6,25 @@ const Hero = () => {
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           {/* Text Content */}
           <div className="space-y-6 md:space-y-8 w-full">
+            {/* Eyebrow */}
+            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium">
+              Agente financiero conversacional
+            </span>
+
             {/* Main Title */}
             <div className="space-y-2 md:space-y-4">
               <h1 className="trii-title text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1]">
-                CONTROLAR TUS FINANZAS
+                TU <span className="text-[#00FF7F] italic">AGENTE</span>{" "}
+                FINANCIERO,
                 <br />
-                NUNCA FUE TAN{" "}
-                <span className="text-[#00FF7F] italic">FÁCIL</span>
+                EN UN CHAT.
               </h1>
             </div>
 
             {/* Subtitle */}
             <p className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-              Tu agente de inteligencia artificial para registrar tus gastos e ingresos en Colombia y el mundo, fácil, rápido, seguro y desde tu celular.
+              Habla como en WhatsApp. Tresqu registra tus gastos, busca lo que
+              necesites, analiza tus hábitos e invierte tu dinero por ti.
             </p>
 
             {/* CTA Buttons - Store Style */}
@@ -89,61 +82,6 @@ const Hero = () => {
             </div>
           </div>
 
-        </div>
-
-        {/* Bottom Section - Quick Access */}
-        <div className="mt-10 sm:mt-14 lg:mt-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl mx-auto">
-            <button
-              onClick={navigateToLogin}
-              className="group trii-card p-4 sm:p-6 text-left hover:border-[#00FF7F]/20 transition-all duration-300"
-            >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-[#00FF7F]/10 flex items-center justify-center group-hover:bg-[#00FF7F]/20 transition-colors flex-shrink-0">
-                  <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#00FF7F]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-semibold text-sm sm:text-base">
-                    Ver Dashboard
-                  </h3>
-                  <p className="text-zinc-500 text-xs sm:text-sm truncate">
-                    Accede a tus estadísticas
-                  </p>
-                </div>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-[#00FF7F] transition-colors flex-shrink-0" />
-              </div>
-            </button>
-
-            <button
-              onClick={() =>
-                window.open(
-                  "https://wa.me/573116534337?text=Hola%20Tresqu",
-                  "_blank"
-                )
-              }
-              className="group trii-card p-4 sm:p-6 text-left hover:border-[#25D366]/20 transition-all duration-300"
-            >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-[#25D366]/10 flex items-center justify-center group-hover:bg-[#25D366]/20 transition-colors flex-shrink-0">
-                  <Send className="w-5 h-5 sm:w-6 sm:h-6 text-[#25D366]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-semibold text-sm sm:text-base">
-                    Comenzar Ahora
-                  </h3>
-                  <p className="text-zinc-500 text-xs sm:text-sm truncate flex items-center gap-1.5">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]"></span>
-                    </span>
-                    Respuesta en &lt;10 seg
-                  </p>
-                </div>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-[#25D366] transition-colors flex-shrink-0" />
-              </div>
-            </button>
-
-          </div>
         </div>
       </div>
     </section>

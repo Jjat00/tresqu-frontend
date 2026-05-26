@@ -395,7 +395,7 @@ const features: {
     highlight: "voz",
     tagline: "Habla, no escribas.",
     description:
-      "Manda un audio de WhatsApp y nuestra IA transcribe y registra el movimiento en segundos.",
+      "Manda un audio de WhatsApp y Tresqu transcribe y registra el movimiento en segundos.",
     bullets: [
       "Transcripción automática",
       "Ideal cuando estás de afán",

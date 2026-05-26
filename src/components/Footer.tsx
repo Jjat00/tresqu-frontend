@@ -40,7 +40,7 @@ const Footer = () => {
                 <Logo size="md" />
               </Link>
               <p className="text-zinc-500 text-sm leading-relaxed max-w-sm mb-6">
-                Tu agente de IA financiero que vive en WhatsApp y Telegram.
+                Tu agente financiero que vive en WhatsApp y Telegram.
                 Registra gastos, analiza tendencias y toma el control de tus
                 finanzas.
               </p>

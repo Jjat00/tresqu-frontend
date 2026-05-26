@@ -1,25 +1,25 @@
-import { TrendingUp, CreditCard, Target, ArrowRight } from "lucide-react";
+import { Target, Banknote, Users, ArrowRight } from "lucide-react";
 
 const futureFeatures = [
-  {
-    icon: <TrendingUp className="w-6 h-6" />,
-    title: "Inversión inteligente",
-    description:
-      "Recibe recomendaciones personalizadas según tu perfil. Desde CDTs hasta ETFs.",
-    status: "Próximamente",
-  },
-  {
-    icon: <CreditCard className="w-6 h-6" />,
-    title: "Pagos integrados",
-    description:
-      "Conecta con Stripe, PayPal, Nequi y más. Paga directo desde el chat.",
-    status: "En desarrollo",
-  },
   {
     icon: <Target className="w-6 h-6" />,
     title: "Simulador de metas",
     description:
-      "Planea viajes, compras o ahorro con simulaciones basadas en tu comportamiento real.",
+      "Planea viajes, compras o ahorro con proyecciones basadas en tu comportamiento real.",
+    status: "Próximamente",
+  },
+  {
+    icon: <Banknote className="w-6 h-6" />,
+    title: "Pagos por chat",
+    description:
+      "Transferencias bancarias y pagos a terceros directo desde la conversación, sin abrir otra app.",
+    status: "En desarrollo",
+  },
+  {
+    icon: <Users className="w-6 h-6" />,
+    title: "Cuentas compartidas",
+    description:
+      "Gastos de pareja, familia o equipo en un solo agente. Quién pagó, quién debe, cuánto falta.",
     status: "Próximamente",
   },
 ];
@@ -50,7 +50,7 @@ const FutureVision = () => {
               <span className="text-[#00FF7F] italic">TUS FINANZAS</span>
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-              Esto apenas comienza. Estamos construyendo el agente de IA financiero
+              Esto apenas comienza. Estamos construyendo el agente financiero
               más completo, todo desde tu app de mensajería favorita.
             </p>
 

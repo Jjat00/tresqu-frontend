@@ -1,52 +1,54 @@
 import {
   Smartphone,
   MessageSquare,
-  BarChart3,
-  Zap,
+  Settings,
+  Sparkles,
   Shield,
   Globe,
 } from "lucide-react";
 
 const benefits = [
   {
+    icon: <MessageSquare className="w-6 h-6" />,
+    title: "Sin formularios",
+    description:
+      "Le escribes al agente como a una persona. No hay campos que llenar ni dropdowns que aprender.",
+    highlight: "vs apps tradicionales",
+  },
+  {
     icon: <Smartphone className="w-6 h-6" />,
     title: "Sin descargas",
-    description: "Usa las apps que ya tienes. WhatsApp y Telegram, nada más.",
+    description:
+      "WhatsApp, Telegram, Gmail o web. Tresqu vive en los canales que ya usas.",
     highlight: "0 apps nuevas",
   },
   {
-    icon: <MessageSquare className="w-6 h-6" />,
-    title: "100% conversacional",
-    description: "Escribe como hablas. Sin formularios, sin menús complicados.",
-    highlight: "Lenguaje natural",
+    icon: <Settings className="w-6 h-6" />,
+    title: "Sin configuración",
+    description:
+      "El agente aprende de tus mensajes. No tienes que armar categorías, reglas ni dashboards.",
+    highlight: "Cero setup",
   },
   {
-    icon: <Zap className="w-6 h-6" />,
-    title: "Registro instantáneo",
+    icon: <Sparkles className="w-6 h-6" />,
+    title: "Sin curva de aprendizaje",
     description:
-      "La IA procesa tu mensaje en segundos y categoriza automáticamente.",
-    highlight: "< 3 segundos",
-  },
-  {
-    icon: <BarChart3 className="w-6 h-6" />,
-    title: "Estadísticas claras",
-    description:
-      "Dashboard visual con gráficos, tendencias y análisis de tus hábitos.",
-    highlight: "Insights en tiempo real",
+      "Si sabes mandar un audio o una foto, ya sabes usar Tresqu. El agente hace el resto.",
+    highlight: "Plug & talk",
   },
   {
     icon: <Shield className="w-6 h-6" />,
     title: "Datos seguros",
     description:
-      "Tu información está protegida con encriptación de grado bancario.",
-    highlight: "Encriptación AES-256",
+      "Tus tokens están cifrados con encriptación militar Fernet en cada integración con bancos y plataformas externas.",
+    highlight: "Encriptación Fernet",
   },
   {
     icon: <Globe className="w-6 h-6" />,
     title: "Multi-moneda",
     description:
-      "Registra en COP, USD o cualquier moneda. Conversión automática.",
-    highlight: "150+ monedas",
+      "Maneja COP, USD, EUR y otras monedas principales. Conversiones y saldos en vivo.",
+    highlight: "10+ monedas",
   },
 ];
 
@@ -68,16 +70,16 @@ const Benefits = () => {
               Beneficios
             </span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
-              GESTIONA TUS FINANZAS
+              POR QUÉ UN <span className="text-[#00FF7F] italic">AGENTE</span>,
               <br />
-              <span className="text-[#00FF7F] italic">DE FORMA NATURAL</span>
+              NO UNA APP.
             </h2>
           </div>
           <div className="lg:pt-16">
             <p className="text-zinc-400 text-lg leading-relaxed">
-              Tresqu se adapta a ti, no al revés. Olvídate de aprender nuevas
-              interfaces o perder tiempo en configuraciones. Solo escribe y
-              listo.
+              Las apps de finanzas te piden cargar bancos, llenar formularios y
+              aprender menús. Un agente te entiende, ejecuta y aprende — sin
+              que tú hagas nada extra.
             </p>
           </div>
         </div>
