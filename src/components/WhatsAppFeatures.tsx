@@ -41,10 +41,10 @@ const Bubble = ({ side, visible, children }: BubbleProps) => (
     }}
   >
     <div
-      className={`text-white text-[11px] leading-relaxed rounded-[14px] px-3 py-2 max-w-[88%] shadow-sm ${
+      className={`text-white text-[11px] leading-relaxed rounded-[10px] px-3 py-2 max-w-[82%] backdrop-blur-md border ${
         side === "right"
-          ? "bg-[#005C4B] rounded-tr-[4px]"
-          : "bg-[#1F2C34] rounded-tl-[4px]"
+          ? "bg-[#00FF7F]/10 border-[#00FF7F]/25 rounded-tr-[2px]"
+          : "bg-white/[0.06] border-white/10 rounded-tl-[2px]"
       }`}
     >
       {children}
@@ -57,7 +57,7 @@ const BotTyping = ({ visible }: { visible: boolean }) => (
     className="flex justify-start"
     style={{ opacity: visible ? 1 : 0, transition: "opacity 0.3s ease" }}
   >
-    <div className="bg-[#1F2C34] rounded-[14px] rounded-tl-[4px] px-3 py-2 shadow-sm">
+    <div className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-[10px] rounded-tl-[2px] px-3 py-2">
       <TypingDots />
     </div>
   </div>
@@ -303,12 +303,12 @@ const ImageAnimation = () => {
         className="flex justify-end"
         style={{ opacity: phase === 1 ? 1 : 0, transition: "opacity 0.3s ease" }}
       >
-        <div className="bg-[#005C4B] rounded-xl px-3 py-2 min-w-[118px]">
+        <div className="bg-[#00FF7F]/10 backdrop-blur-md border border-[#00FF7F]/25 rounded-[10px] px-3 py-2 min-w-[118px]">
           <div className="flex items-center gap-1.5 mb-1.5">
             <Camera className="w-3 h-3 text-[#00FF7F]" />
             <span className="text-[10px] text-zinc-300">Enviando foto…</span>
           </div>
-          <div className="h-1 bg-black/30 rounded-full overflow-hidden">
+          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div
               className="h-full bg-[#00FF7F] rounded-full transition-all duration-75"
               style={{ width: `${progress}%` }}
@@ -334,7 +334,7 @@ const ImageAnimation = () => {
         className="flex justify-start"
         style={{ opacity: phase === 3 ? 1 : 0, transition: "opacity 0.3s ease" }}
       >
-        <div className="bg-[#1F2C34] rounded-[14px] rounded-tl-[4px] px-3 py-2 shadow-sm">
+        <div className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-[10px] rounded-tl-[2px] px-3 py-2">
           <div className="flex items-center gap-1.5">
             <Zap
               className="w-3 h-3 text-[#00FF7F]"
@@ -355,72 +355,70 @@ const ImageAnimation = () => {
   );
 };
 
-// ── Chat window wrapper (WhatsApp UI) ────────────────────────────────────────
+// ── Conversation container — no frame, just bubbles floating ──────────────
 const ChatWindow = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-2xl overflow-hidden border border-white/8 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-    {/* Header */}
-    <div className="bg-[#1F2C34] px-3 py-2.5 flex items-center gap-2.5">
-      <div className="relative">
-        <div className="w-7 h-7 rounded-full bg-[#00FF7F]/20 border border-[#00FF7F]/30 flex items-center justify-center">
-          <span className="text-[11px] font-black text-[#00FF7F]">T</span>
-        </div>
-        <span className="absolute -bottom-px -right-px w-2.5 h-2.5 bg-[#25D366] rounded-full border border-[#1F2C34]" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[11px] font-semibold text-white leading-tight">Tresqu</p>
-        <p className="text-[9px] text-[#00FF7F] leading-tight">en línea</p>
-      </div>
-      <WhatsAppIcon className="w-4 h-4 text-[#25D366] opacity-80" />
-    </div>
-
-    {/* Messages area */}
-    <div className="h-52 overflow-hidden relative" style={{ background: "#0B141A" }}>
-      {children}
-    </div>
-
-    {/* Fake input */}
-    <div className="bg-[#1F2C34] px-3 py-2 flex items-center gap-2">
-      <div className="flex-1 bg-[#2A3942] rounded-full px-3 py-1.5">
-        <span className="text-[10px] text-zinc-600 select-none">Escribe un mensaje</span>
-      </div>
-      <div className="w-7 h-7 rounded-full bg-[#00A884] flex items-center justify-center flex-shrink-0">
-        <Mic className="w-3.5 h-3.5 text-white" />
-      </div>
-    </div>
-  </div>
+  <div className="h-56 relative">{children}</div>
 );
 
 // ── Feature definitions ──────────────────────────────────────────────────────
 const features: {
   Icon: typeof MessageSquare;
-  label: string;
+  eyebrow: string;
   title: string;
+  highlight: string;
+  tagline: string;
   description: string;
+  bullets: string[];
   Animation: () => React.JSX.Element;
+  chatSide: "left" | "right";
 }[] = [
   {
     Icon: MessageSquare,
-    label: "Texto",
-    title: "Escribe como hablas",
+    eyebrow: "Modo texto",
+    title: "Registra por",
+    highlight: "texto",
+    tagline: "Escribe como hablas.",
     description:
       "Sin formatos ni comandos. Escribe en lenguaje natural y Tresqu entiende al instante qué registrar.",
+    bullets: [
+      "Lenguaje natural en español",
+      "Categoriza automáticamente",
+      "Confirmación en segundos",
+    ],
     Animation: TextAnimation,
+    chatSide: "left",
   },
   {
     Icon: Mic,
-    label: "Voz",
-    title: "Habla, no escribas",
+    eyebrow: "Modo voz",
+    title: "Registra por",
+    highlight: "voz",
+    tagline: "Habla, no escribas.",
     description:
       "Manda un audio de WhatsApp y nuestra IA transcribe y registra el movimiento en segundos.",
+    bullets: [
+      "Transcripción automática",
+      "Ideal cuando estás de afán",
+      "Soporta varios acentos",
+    ],
     Animation: VoiceAnimation,
+    chatSide: "right",
   },
   {
     Icon: Camera,
-    label: "Foto",
-    title: "Foto y listo",
+    eyebrow: "Modo foto",
+    title: "Registra por",
+    highlight: "fotos",
+    tagline: "Foto y listo.",
     description:
       "Toma una foto de tu recibo o factura y deja que Tresqu extraiga todos los datos automáticamente.",
+    bullets: [
+      "Lee recibos y facturas",
+      "Detecta monto y comercio",
+      "Adiós a escribir todo a mano",
+    ],
     Animation: ImageAnimation,
+    chatSide: "left",
   },
 ];
 
@@ -432,12 +430,12 @@ const WhatsAppFeatures = () => {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#00FF7F]/[0.04] rounded-full blur-[130px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-[#00FF7F]/[0.04] rounded-full blur-[160px]" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
+        <div className="max-w-3xl mx-auto text-center mb-20 md:mb-28">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full text-[#00FF7F] text-sm font-medium mb-6">
             <WhatsAppIcon className="w-3.5 h-3.5" />
             Disponible en WhatsApp
@@ -452,45 +450,79 @@ const WhatsAppFeatures = () => {
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        {/* Vertical zig-zag feature rows */}
+        <div className="space-y-28 md:space-y-40">
           {features.map((feature, index) => {
-            const { Icon, label, title, description, Animation } = feature;
+            const { Icon, eyebrow, title, highlight, tagline, description, bullets, Animation, chatSide } = feature;
+            const chatLeft = chatSide === "left";
+
             return (
               <div
                 key={index}
-                className="group relative"
+                className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center"
               >
-                <div className="bg-zinc-900/30 backdrop-blur-xl border border-white/5 hover:border-[#00FF7F]/30 p-6 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(0,255,127,0.15)] relative overflow-hidden h-full flex flex-col">
-                  {/* Inner glow */}
-                  <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#00FF7F]/5 rounded-full blur-[70px] group-hover:bg-[#00FF7F]/12 transition-all duration-700 pointer-events-none" />
-
-                  {/* Mode header */}
-                  <div className="flex items-center gap-3 mb-5 relative z-10">
-                    <div className="w-11 h-11 rounded-2xl bg-[#00FF7F]/10 border border-[#00FF7F]/20 flex items-center justify-center text-[#00FF7F] flex-shrink-0">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-[9px] uppercase tracking-[0.12em] text-zinc-600 font-semibold block">
-                        Modo
-                      </span>
-                      <p className="text-white font-bold leading-tight font-display">{label}</p>
-                    </div>
-                  </div>
-
-                  {/* Animated chat window */}
-                  <div className="relative z-10 mb-5">
+                {/* Chat side */}
+                <div
+                  className={`lg:col-span-5 ${
+                    chatLeft ? "lg:order-1" : "lg:order-2"
+                  }`}
+                >
+                  <div className="relative max-w-[340px] mx-auto">
                     <ChatWindow>
                       <Animation />
                     </ChatWindow>
                   </div>
+                </div>
 
-                  {/* Description */}
-                  <div className="relative z-10 mt-auto">
-                    <h3 className="text-white font-bold text-[17px] mb-2 font-display tracking-tight">
-                      {title}
+                {/* Text side */}
+                <div
+                  className={`lg:col-span-7 ${
+                    chatLeft ? "lg:order-2" : "lg:order-1"
+                  }`}
+                >
+                  <div
+                    className={`max-w-xl ${
+                      chatLeft ? "lg:ml-0" : "lg:ml-auto"
+                    }`}
+                  >
+                    {/* Eyebrow */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00FF7F]/10 border border-[#00FF7F]/20 rounded-full mb-6">
+                      <Icon className="w-3.5 h-3.5 text-[#00FF7F]" />
+                      <span className="text-[11px] uppercase tracking-[0.18em] text-[#00FF7F] font-semibold">
+                        {eyebrow}
+                      </span>
+                    </div>
+
+                    {/* Big title */}
+                    <h3 className="font-display font-bold text-white tracking-tight leading-[0.95] text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] mb-6">
+                      {title}{" "}
+                      <span className="text-[#00FF7F] italic">{highlight}</span>
                     </h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
+
+                    {/* Tagline */}
+                    <p className="text-2xl md:text-3xl text-white/90 font-light mb-5 leading-tight">
+                      {tagline}
+                    </p>
+
+                    {/* Description */}
+                    <p className="text-zinc-400 text-lg leading-relaxed mb-8">
+                      {description}
+                    </p>
+
+                    {/* Bullets */}
+                    <ul className="space-y-3">
+                      {bullets.map((bullet) => (
+                        <li
+                          key={bullet}
+                          className="flex items-center gap-3 text-zinc-300 text-base"
+                        >
+                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#00FF7F]/15 border border-[#00FF7F]/30 flex-shrink-0">
+                            <CheckCheck className="w-3 h-3 text-[#00FF7F]" />
+                          </span>
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -499,7 +531,7 @@ const WhatsAppFeatures = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 text-center">
+        <div className="mt-24 md:mt-32 text-center">
           <p className="text-zinc-600 mb-6 text-sm">
             Sin descargas · Sin configuraciones · Empieza en 30 segundos
           </p>
