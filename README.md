@@ -218,19 +218,20 @@ Disponible como widget flotante en todo el dashboard.
 
 ### Integración Gmail
 
-Desde **Perfil → Conexiones**:
+Desde **Perfil → Conexiones**, "Conectar Gmail" lanza el flujo OAuth de Composio:
 
-- Conectar cuenta vía OAuth2
-- Ver compras detectadas y pendientes de categorizar
-- Sincronizar manualmente
-- Ver estadísticas de la integración
+1. Backend devuelve un `redirect_url` al Connect Link alojado por Composio (o `already_connected: true` si el lado de Composio ya tiene una conexión activa y solo había que resincronizar el row local).
+2. El usuario autoriza en Google → callback en el backend → redirect a `/dashboard/profile?gmail=connected`.
+3. La tarjeta muestra estado, correo conectado, contador de correos procesados y de compras detectadas pendientes de categorizar.
+4. Si el trigger de Composio queda en `failed`, se expone un botón "Reintentar" que pega a `/retry-trigger/`.
 
 | Archivo | Función |
 |---------|---------|
-| `src/types/gmail.ts` | Interfaces TypeScript |
-| `src/services/gmail/gmail.ts` | Llamadas a `/api/gmail/*` |
-| `src/hooks/useGmailStatus.ts` | Hooks Query (status, disconnect, sync) |
-| `src/components/dashboard/IntegrationsTab.tsx` | Tab del dashboard |
+| `src/types/gmail.ts` | Interfaces TypeScript (`GmailConnectionStatus`, `GmailOAuthUrlResponse` con `already_connected`) |
+| `src/services/gmail/gmail.ts` | Cliente HTTP a `/api/integrations/gmail/*` (connect-url, status, disconnect, retry-trigger) + listado `/api/gmail/processed-emails/` |
+| `src/hooks/useGmailStatus.ts` | Hook TanStack Query con polling para refrescar status mientras el trigger se activa |
+| `src/pages/Profile.tsx` | UI principal: maneja el caso `already_connected` invalidando la query sin redirigir |
+| `src/components/dashboard/IntegrationsTab.tsx` | Tab del dashboard que renderiza la tarjeta |
 
 ### Integración Wallbit (nuevo)
 
