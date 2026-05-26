@@ -1,5 +1,7 @@
 import { apiClient } from "../api";
 import type {
+  AgentLimits,
+  AgentLimitsPayload,
   WallbitConnectPayload,
   WallbitStatus,
   WallbitSyncResult,
@@ -35,6 +37,19 @@ export class WallbitService {
   async sync(): Promise<WallbitSyncResult> {
     const response = await apiClient.post<WallbitSyncResult>(
       `${this.baseUrl}/sync/`,
+    );
+    return response.data;
+  }
+
+  async getLimits(): Promise<AgentLimits> {
+    const response = await apiClient.get<AgentLimits>(`${this.baseUrl}/limits/`);
+    return response.data;
+  }
+
+  async updateLimits(payload: AgentLimitsPayload): Promise<AgentLimits> {
+    const response = await apiClient.post<AgentLimits>(
+      `${this.baseUrl}/limits/`,
+      payload,
     );
     return response.data;
   }

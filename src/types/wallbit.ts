@@ -96,3 +96,19 @@ export interface WallbitSyncResult {
   error?: string;
   last_sync_at: string | null;
 }
+
+export interface AgentLimits {
+  max_trade_usd: string;
+  max_daily_move_usd: string;
+  require_2step_above_usd: string;
+  allowed_symbols: string[];
+  blocked_symbols: string[];
+}
+
+export type AgentLimitsPayload = Partial<{
+  max_trade_usd: string | number;
+  max_daily_move_usd: string | number;
+  require_2step_above_usd: string | number;
+  allowed_symbols: string[];
+  blocked_symbols: string[];
+}>;

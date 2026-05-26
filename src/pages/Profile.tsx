@@ -30,6 +30,7 @@ import {
   useGmailSync,
 } from "@/hooks/useGmailStatus";
 import WallbitCard from "@/components/dashboard/WallbitCard";
+import WallbitLimitsCard from "@/components/dashboard/WallbitLimitsCard";
 import { gmailService } from "@/services/gmail/gmail";
 import { User } from "@/types/auth";
 import {
@@ -636,6 +637,7 @@ const Profile = () => {
           user={user}
         />
         <WallbitCard />
+        <WallbitLimitsCard />
         <ConnectionsCard />
       </div>
     </DashboardLayout>
