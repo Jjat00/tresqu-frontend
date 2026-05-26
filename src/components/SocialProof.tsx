@@ -71,27 +71,6 @@ const stats = [
   },
 ];
 
-const testimonials = [
-  {
-    quote:
-      "Lo que más me gusta es que no tengo que abrir ninguna app. Le escribo a Tresqu por WhatsApp como si fuera un amigo y listo, queda registrado.",
-    name: "María G.",
-    role: "Freelancer",
-  },
-  {
-    quote:
-      "Siempre me decía 'voy a anotar mis gastos' y nunca lo hacía. Con Tresqu es tan fácil que ya llevo 3 meses seguidos sin fallar.",
-    name: "Carlos R.",
-    role: "Emprendedor",
-  },
-  {
-    quote:
-      "Me di cuenta de que no tenía idea de cuánto gastaba en comida a domicilio hasta que vi las estadísticas. Ahora cocino más y me rinde mejor la plata.",
-    name: "Ana P.",
-    role: "Diseñadora",
-  },
-];
-
 const SocialProof = () => {
   const counters = stats.map((stat) => useCountUp(stat.value));
 
@@ -120,43 +99,6 @@ const SocialProof = () => {
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 {stat.label}
               </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Testimonios */}
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="trii-title text-2xl sm:text-3xl md:text-4xl mb-3">
-            Lo que dicen nuestros{" "}
-            <span className="trii-title-accent">usuarios</span>
-          </h2>
-          <p className="trii-subtitle text-sm sm:text-base">
-            Historias reales de personas que transformaron su relación con el
-            dinero
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-          {testimonials.map((testimonial, i) => (
-            <div
-              key={testimonial.name}
-              className="glass-card p-5 sm:p-6 flex flex-col"
-            >
-              {/* Comillas decorativas */}
-              <span className="text-success/30 text-4xl font-display leading-none mb-2">
-                &ldquo;
-              </span>
-              <p className="text-sm sm:text-base text-foreground/80 leading-relaxed flex-1">
-                {testimonial.quote}
-              </p>
-              <div className="mt-4 pt-4 border-t border-border/50">
-                <p className="font-medium text-sm text-foreground">
-                  {testimonial.name}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {testimonial.role}
-                </p>
-              </div>
             </div>
           ))}
         </div>
