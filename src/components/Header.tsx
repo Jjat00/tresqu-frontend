@@ -23,7 +23,6 @@ const Header = () => {
   }, [location]);
 
   const navLinks = [
-    { href: "#como-funciona", label: "Cómo funciona" },
     { href: "#beneficios", label: "Beneficios" },
     { href: "#pricing", label: "Precios" },
     { href: "#futuro", label: "Roadmap" },

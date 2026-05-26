@@ -110,7 +110,7 @@ const Hero = () => {
 
         {/* Bottom Section - Quick Access */}
         <div className="mt-10 sm:mt-14 lg:mt-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl mx-auto">
             <button
               onClick={navigateToLogin}
               className="group trii-card p-4 sm:p-6 text-left hover:border-[#00FF7F]/20 transition-all duration-300"
@@ -160,29 +160,6 @@ const Hero = () => {
               </div>
             </button>
 
-            <button
-              onClick={() =>
-                document
-                  .getElementById("como-funciona")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="group trii-card p-4 sm:p-6 text-left hover:border-zinc-700 transition-all duration-300 sm:col-span-2 lg:col-span-1"
-            >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-zinc-800 flex items-center justify-center group-hover:bg-zinc-700 transition-colors flex-shrink-0">
-                  <span className="text-xl sm:text-2xl">📖</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-semibold text-sm sm:text-base">
-                    Cómo Funciona
-                  </h3>
-                  <p className="text-zinc-500 text-xs sm:text-sm truncate">
-                    Aprende en 3 pasos
-                  </p>
-                </div>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-white transition-colors flex-shrink-0" />
-              </div>
-            </button>
           </div>
         </div>
       </div>

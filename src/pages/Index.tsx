@@ -6,7 +6,6 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 
 // Lazy load secciones below-the-fold
 const WhatsAppFeatures = lazy(() => import("@/components/WhatsAppFeatures"));
-const HowItWorks = lazy(() => import("@/components/HowItWorks"));
 const Benefits = lazy(() => import("@/components/Benefits"));
 const Pricing = lazy(() => import("@/components/Pricing"));
 const FutureVision = lazy(() => import("@/components/FutureVision"));
@@ -28,9 +27,6 @@ const Index = () => {
       <Suspense fallback={<SectionFallback />}>
         <AnimateOnScroll>
           <WhatsAppFeatures />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <HowItWorks />
         </AnimateOnScroll>
         <AnimateOnScroll>
           <Benefits />

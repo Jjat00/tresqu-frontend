@@ -66,7 +66,6 @@ const Footer = () => {
               <h4 className="text-white font-semibold mb-4">Producto</h4>
               <ul className="space-y-3">
                 {[
-                  { label: "Cómo funciona", href: "#como-funciona" },
                   { label: "Beneficios", href: "#beneficios" },
                   { label: "Precios", href: "#pricing" },
                   { label: "Roadmap", href: "#futuro" },
