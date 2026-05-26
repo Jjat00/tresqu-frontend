@@ -7,7 +7,7 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 // Lazy load secciones below-the-fold
 const WhatsAppFeatures = lazy(() => import("@/components/WhatsAppFeatures"));
 const PassiveCapture = lazy(() => import("@/components/PassiveCapture"));
-const Investments = lazy(() => import("@/components/Investments"));
+const WallbitSection = lazy(() => import("@/components/WallbitSection"));
 const AgentCapabilities = lazy(() => import("@/components/AgentCapabilities"));
 const Benefits = lazy(() => import("@/components/Benefits"));
 const Pricing = lazy(() => import("@/components/Pricing"));
@@ -35,7 +35,7 @@ const Index = () => {
           <PassiveCapture />
         </AnimateOnScroll>
         <AnimateOnScroll>
-          <Investments />
+          <WallbitSection />
         </AnimateOnScroll>
         <AnimateOnScroll>
           <AgentCapabilities />

@@ -8,23 +8,24 @@ const Hero = () => {
           <div className="space-y-6 md:space-y-8 w-full">
             {/* Eyebrow */}
             <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium">
-              Agente financiero conversacional
+              Agente contextual de inversiones
             </span>
 
             {/* Main Title */}
             <div className="space-y-2 md:space-y-4">
               <h1 className="trii-title text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1]">
-                TU <span className="text-[#00FF7F] italic">AGENTE</span>{" "}
-                FINANCIERO,
+                TU VIDA ES EL{" "}
+                <span className="text-[#00FF7F] italic">CONTEXTO</span>.
                 <br />
-                EN UN CHAT.
+                TUS INVERSIONES, LA ACCIÓN.
               </h1>
             </div>
 
             {/* Subtitle */}
             <p className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-              Habla como en WhatsApp. Tresqu registra tus gastos, busca lo que
-              necesites, analiza tus hábitos e invierte tu dinero por ti.
+              Tresqu aprende cómo gastas, ganas y ahorras — y con Wallbit usa
+              ese contexto para invertir contigo desde un chat. Sin formularios,
+              sin perfiles genéricos.
             </p>
 
             {/* CTA Buttons - Store Style */}

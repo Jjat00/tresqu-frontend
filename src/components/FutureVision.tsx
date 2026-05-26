@@ -1,25 +1,32 @@
-import { Target, Banknote, Users, ArrowRight } from "lucide-react";
+import { ShieldCheck, Bot, LineChart, Sliders, ArrowRight } from "lucide-react";
 
 const futureFeatures = [
   {
-    icon: <Target className="w-6 h-6" />,
-    title: "Simulador de metas",
+    icon: <ShieldCheck className="w-6 h-6" />,
+    title: "Perfil de riesgo desde tu vida",
     description:
-      "Planea viajes, compras o ahorro con proyecciones basadas en tu comportamiento real.",
-    status: "Próximamente",
-  },
-  {
-    icon: <Banknote className="w-6 h-6" />,
-    title: "Pagos por chat",
-    description:
-      "Transferencias bancarias y pagos a terceros directo desde la conversación, sin abrir otra app.",
+      "Tresqu armará tu perfil de inversor usando tu historial real — ingresos, hábitos y ahorro — no un cuestionario de 5 preguntas.",
     status: "En desarrollo",
   },
   {
-    icon: <Users className="w-6 h-6" />,
-    title: "Cuentas compartidas",
+    icon: <Bot className="w-6 h-6" />,
+    title: "Agente que invierte por ti",
     description:
-      "Gastos de pareja, familia o equipo en un solo agente. Quién pagó, quién debe, cuánto falta.",
+      "Le delegas el aporte mensual y el agente decide qué comprar dentro de los límites que tú definas. Tú confirmas, él ejecuta.",
+    status: "En desarrollo",
+  },
+  {
+    icon: <LineChart className="w-6 h-6" />,
+    title: "Analista de mercado contextual",
+    description:
+      "Un agente que sigue el mercado y te avisa solo cuando algo aplica a tu portafolio o a tu situación, no a noticias genéricas.",
+    status: "Próximamente",
+  },
+  {
+    icon: <Sliders className="w-6 h-6" />,
+    title: "Optimización de portafolio",
+    description:
+      "Reequilibrios sugeridos cruzando tu portafolio Wallbit con tu colchón de ahorro y tus metas en Tresqu.",
     status: "Próximamente",
   },
 ];
@@ -45,13 +52,14 @@ const FutureVision = () => {
               Roadmap
             </span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
-              EL FUTURO DE
-              <br />
-              <span className="text-[#00FF7F] italic">TUS FINANZAS</span>
+              DE COPILOTO
+              <br />A <span className="text-[#00FF7F] italic">EQUIPO</span> DE
+              AGENTES.
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-              Esto apenas comienza. Estamos construyendo el agente financiero
-              más completo, todo desde tu app de mensajería favorita.
+              Hoy el agente ejecuta lo que tú le pides. Mañana, varios agentes
+              especializados leerán tu contexto, propondrán y se coordinarán
+              entre ellos — y tú sigues confirmando cada acción.
             </p>
 
             {/* CTA */}
@@ -107,7 +115,7 @@ const FutureVision = () => {
         <div className="mt-16 text-center">
           <div className="inline-block px-6 py-4 bg-white/[0.02] border border-white/[0.06] rounded-md">
             <p className="text-zinc-400 text-[15px] font-medium italic tracking-wide">
-              "Todo usando lenguaje natural, desde tu app de mensajería favorita"
+              "El primer agente financiero contextual de LATAM."
             </p>
           </div>
         </div>
