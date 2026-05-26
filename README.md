@@ -15,6 +15,7 @@ Frontend web de Tresqu: dashboard, chatbot de voz, gestión de transacciones e i
   - [Dashboard analítico](#dashboard-analítico)
   - [Integración Gmail](#integración-gmail)
   - [Integración Wallbit (nuevo)](#integración-wallbit-nuevo)
+  - [Perfil de inversión (nuevo)](#perfil-de-inversión-nuevo)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Scripts disponibles](#scripts-disponibles)
 
@@ -28,7 +29,8 @@ Tresqu es un copiloto financiero conversacional. Desde el dashboard puedes:
 - Visualizar todo tu dinero en gráficos: torta por categoría, líneas de tendencia, barras apiladas
 - Crear categorías personalizadas y metas de ahorro
 - Conectar tu **Gmail** para que detecte compras en correos automáticamente
-- **(nuevo)** Conectar tu cuenta de **Wallbit** y operar desde WhatsApp/Telegram con flujo de confirmación
+- Conectar tu cuenta de **Wallbit** y operar desde WhatsApp/Telegram con flujo de confirmación
+- **(nuevo)** Ver tu **perfil de inversión** combinando tu cuestionario con una inferencia automática de tu contexto financiero
 
 ---
 
@@ -85,11 +87,13 @@ flowchart TB
     INC --> HI[useIncomeSummary]
     INT --> HG[useGmailStatus]
     INT --> HW[useWallbitStatus]
+    PROFILE[Profile.tsx] --> HR[useEffectiveProfile]
 
     HE --> RQS[(TanStack Query cache)]
     HI --> RQS
     HG --> RQS
     HW --> RQS
+    HR --> RQS
 
     RQS --> SVC[services/*]
     SVC --> AX[Axios client]
@@ -259,6 +263,50 @@ El usuario interactúa con el agente Wallbit principalmente por **WhatsApp y Tel
 - Desconectar activa un **kill switch** que bloquea cualquier operación durante 365 días
 - Hay **límites por usuario** (monto por trade, tope diario, allow/block lists, umbral two-step) configurables vía API
 
+### Perfil de inversión (nuevo)
+
+Antes de que el agente de Wallbit opere dinero real, Tresqu necesita saber
+**qué tan agresivo puede ser el usuario sin lastimarse**. El backend
+combina un cuestionario (respondido por WhatsApp/Telegram) con una
+inferencia automática del contexto financiero. El frontend lo expone en
+`/profile` a través del **`RiskProfileCard`**.
+
+#### Qué se ve en la card
+
+- **Score 0-100** con `HoverCard` que muestra los rangos (Conservador 0-35 / Moderado 36-65 / Agresivo 66-100)
+- **Badge de la fuente** del resultado: `declarado` · `inferido` · `confirmado por contexto` (agreement) · `ajustado por seguridad` (safety_cap) · `sin evaluar`
+- **Banner condicional** con warning cuando hay discrepancia entre lo declarado y el contexto
+- **Radar de 5 dimensiones** (Recharts): capacidad de ahorro, previsibilidad de ingresos y gastos (downside-only), apetito inversor en holdings actuales, y reserva acumulada
+- **Collapsible "¿Cómo se calculó tu perfil?"** con comparación inferido vs declarado, desglose por dimensión con interpretación textual y resumen del cálculo
+- **Botón Reevaluar** que dispara `?refresh=1` para saltarse el cache de 7 días del backend
+
+#### Cómo se rellena el perfil declarado
+
+El usuario lo responde **por WhatsApp o Telegram** diciéndole al bot algo
+como *"quiero evaluar mi perfil de inversión"*. Hoy **no hay** un chat
+web del cuestionario — el supervisor del chatbot conversacional vive en
+los canales de mensajería. Desde el dashboard sí se puede **editar
+manualmente** (eso prende `user_override=true`, que el backend respeta
+sobre la inferencia).
+
+#### Archivos clave
+
+| Archivo | Función |
+|---------|---------|
+| `src/types/riskProfile.ts` | Interfaces TypeScript (`EffectiveProfile`, `RiskTolerance`, `RiskSource`, `RiskDimensions`) |
+| `src/services/riskProfile/riskProfile.ts` | Llamadas a `/api/agents/risk-profile/effective/` |
+| `src/hooks/useRiskProfile.ts` | `useEffectiveProfile` (Query) + `useRefreshEffectiveProfile` (Mutation) |
+| `src/components/dashboard/RiskProfileCard.tsx` | Card completa con radar, explicaciones y collapsible |
+
+#### Por qué importa
+
+El score y la tolerancia no son cosméticos. La sub-fase siguiente (1.5)
+los va a consumir desde `agent_safety.evaluate_decision()`: cuando el
+agente proponga una operación que choque con el perfil efectivo
+(ej. perfil conservador + compra de stock muy volátil), el flujo de
+confirmación va a mostrar un warning extra y exigir confirmación
+adicional. La card es la ventana del usuario a esa lógica.
+
 ---
 
 ## Estructura del proyecto
@@ -289,7 +337,8 @@ src/
 │   │   ├── SavingsGoalsTab.tsx
 │   │   ├── DebtTab.tsx
 │   │   ├── IntegrationsTab.tsx   # Gmail + Wallbit
-│   │   ├── WallbitCard.tsx       # ← nuevo
+│   │   ├── WallbitCard.tsx
+│   │   ├── RiskProfileCard.tsx   # ← nuevo (perfil de inversión)
 │   │   ├── DashboardSummary.tsx
 │   │   ├── DashboardSidebar.tsx
 │   │   ├── CumulativeBalanceChart.tsx
@@ -306,13 +355,15 @@ src/
 │   ├── currencies/
 │   ├── gmail/
 │   ├── users/
-│   ├── wallbit/                  # ← nuevo (wallbit.ts)
+│   ├── wallbit/
+│   ├── riskProfile/              # ← nuevo (riskProfile.ts)
 │   └── whatsappAuthService.ts
 ├── hooks/
 │   ├── useExpenseCategories.ts
 │   ├── useIncomeSummary.ts
 │   ├── useGmailStatus.ts
-│   ├── useWallbitStatus.ts       # ← nuevo
+│   ├── useWallbitStatus.ts
+│   ├── useRiskProfile.ts         # ← nuevo
 │   ├── useStatsIncome.ts
 │   ├── useCumulativeBalance.ts
 │   └── ...
@@ -320,7 +371,8 @@ src/
 ├── types/
 │   ├── categories.ts
 │   ├── gmail.ts
-│   └── wallbit.ts                # ← nuevo
+│   ├── wallbit.ts
+│   └── riskProfile.ts            # ← nuevo
 ├── utils/                        # date helpers, color utils
 └── lib/                          # shadcn utils
 ```
@@ -345,6 +397,8 @@ npm run preview      # Sirve el build de dist/ para inspección
 - Historial completo de **`AgentDecision`** con filtros
 - Vista de **`WallbitTxMirror`** con búsqueda semántica (RAG)
 - Botones inline de confirmación en el chat web (hoy viven en WhatsApp/Telegram)
+- **Chat web del `RiskProfilerGraph`** — hoy el cuestionario solo corre por WhatsApp/Telegram
+- **Editor manual del perfil** en el dashboard (slider de tolerancia + `user_override`)
 - Predicción de gastos futuros con ML
 - Notificaciones push inteligentes
 
