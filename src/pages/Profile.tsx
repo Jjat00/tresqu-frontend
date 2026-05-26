@@ -29,6 +29,7 @@ import {
   useGmailDisconnect,
   useGmailSync,
 } from "@/hooks/useGmailStatus";
+import RiskProfileCard from "@/components/dashboard/RiskProfileCard";
 import WallbitCard from "@/components/dashboard/WallbitCard";
 import WallbitLimitsCard from "@/components/dashboard/WallbitLimitsCard";
 import { gmailService } from "@/services/gmail/gmail";
@@ -636,6 +637,7 @@ const Profile = () => {
           key={`prefs-${user.id}-${user.updated_at}`}
           user={user}
         />
+        <RiskProfileCard />
         <WallbitCard />
         <WallbitLimitsCard />
         <ConnectionsCard />
