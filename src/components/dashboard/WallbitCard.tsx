@@ -24,12 +24,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import {
   useWallbitConnect,
   useWallbitDisconnect,
+  useWallbitPause,
+  useWallbitResume,
   useWallbitStatus,
 } from "@/hooks/useWallbitStatus";
 
@@ -37,9 +47,19 @@ import {
   AlertTriangle,
   CheckCircle2,
   Loader2,
+  Pause,
+  Play,
   ShieldAlert,
   Wallet,
 } from "lucide-react";
+
+const PAUSE_OPTIONS: Array<{ hours: number; label: string }> = [
+  { hours: 1, label: "1 hora" },
+  { hours: 6, label: "6 horas" },
+  { hours: 24, label: "24 horas" },
+  { hours: 72, label: "3 días" },
+  { hours: 168, label: "1 semana" },
+];
 
 const formatDate = (value?: string | null) => {
   if (!value) return "-";
@@ -75,11 +95,50 @@ const WallbitCard = () => {
   const { data: status, isLoading } = useWallbitStatus();
   const connect = useWallbitConnect();
   const disconnect = useWallbitDisconnect();
+  const pause = useWallbitPause();
+  const resume = useWallbitResume();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [apiKey, setApiKey] = useState("");
 
   const isConnected = status?.connected === true;
+
+  const killSwitchUntil = status?.kill_switch_until ?? null;
+  const pausedUntil = useMemo(() => {
+    if (!killSwitchUntil) return null;
+    const when = new Date(killSwitchUntil);
+    return when > new Date() ? when : null;
+  }, [killSwitchUntil]);
+  const isPaused = pausedUntil !== null;
+
+  const handlePause = async (hours: number) => {
+    try {
+      await pause.mutateAsync(hours);
+      toast.success(
+        `Bot pausado por ${
+          PAUSE_OPTIONS.find((opt) => opt.hours === hours)?.label ?? `${hours}h`
+        }.`,
+      );
+    } catch {
+      toast.error("No se pudo pausar el bot.");
+    }
+  };
+
+  const handleResume = async () => {
+    if (
+      !window.confirm(
+        "¿Reanudar el bot ahora? Volverá a poder ejecutar operaciones de Wallbit propuestas en el chat (cada operación sigue requiriendo tu confirmación).",
+      )
+    ) {
+      return;
+    }
+    try {
+      await resume.mutateAsync();
+      toast.success("Bot reanudado.");
+    } catch {
+      toast.error("No se pudo reanudar el bot.");
+    }
+  };
 
   useEffect(() => {
     if (!dialogOpen) setApiKey("");
@@ -146,20 +205,34 @@ const WallbitCard = () => {
 
       <CardContent className="space-y-4">
         {isConnected ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <div>
-              <p className="text-muted-foreground">Conectada el</p>
-              <p className="font-medium">{formatDate(status?.connected_at)}</p>
+          <>
+            {isPaused && (
+              <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-200">
+                <Pause className="h-4 w-4" />
+                <AlertTitle>Bot pausado</AlertTitle>
+                <AlertDescription>
+                  El asistente no ejecutará operaciones en Wallbit hasta{" "}
+                  <strong>{formatDate(pausedUntil!.toISOString())}</strong>.
+                  Esto no afecta lo que hagas tú directamente desde la app
+                  de Wallbit.
+                </AlertDescription>
+              </Alert>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-muted-foreground">Conectada el</p>
+                <p className="font-medium">{formatDate(status?.connected_at)}</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground">Último sync</p>
+                <p className="font-medium">{formatDate(status?.last_sync_at)}</p>
+              </div>
+              <div className="sm:col-span-2">
+                <p className="text-muted-foreground">Scopes</p>
+                <p className="font-medium">{status?.scope_hint ?? "-"}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted-foreground">Último sync</p>
-              <p className="font-medium">{formatDate(status?.last_sync_at)}</p>
-            </div>
-            <div className="sm:col-span-2">
-              <p className="text-muted-foreground">Scopes</p>
-              <p className="font-medium">{status?.scope_hint ?? "-"}</p>
-            </div>
-          </div>
+          </>
         ) : status?.status === "error" && status?.last_error ? (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
@@ -178,6 +251,50 @@ const WallbitCard = () => {
         <div className="flex flex-wrap gap-2">
           {isConnected ? (
             <>
+              {isPaused ? (
+                <Button
+                  variant="default"
+                  onClick={handleResume}
+                  disabled={resume.isPending}
+                >
+                  {resume.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <Play className="h-4 w-4 mr-2" />
+                  )}
+                  Reanudar bot
+                </Button>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      disabled={pause.isPending}
+                    >
+                      {pause.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <Pause className="h-4 w-4 mr-2" />
+                      )}
+                      Pausar bot
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuLabel>
+                      Pausa el bot por...
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {PAUSE_OPTIONS.map((opt) => (
+                      <DropdownMenuItem
+                        key={opt.hours}
+                        onSelect={() => handlePause(opt.hours)}
+                      >
+                        {opt.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
               <Button
                 variant="outline"
                 onClick={() => setDialogOpen(true)}

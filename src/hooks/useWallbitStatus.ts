@@ -35,6 +35,29 @@ export const useWallbitDisconnect = () => {
   });
 };
 
+export const useWallbitPause = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (durationHours: number) =>
+      wallbitService.pause(durationHours),
+    onSuccess: (data) => {
+      queryClient.setQueryData(STATUS_KEY, data);
+      queryClient.invalidateQueries({ queryKey: STATUS_KEY });
+    },
+  });
+};
+
+export const useWallbitResume = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => wallbitService.resume(),
+    onSuccess: (data) => {
+      queryClient.setQueryData(STATUS_KEY, data);
+      queryClient.invalidateQueries({ queryKey: STATUS_KEY });
+    },
+  });
+};
+
 export const useWallbitSync = () => {
   const queryClient = useQueryClient();
   return useMutation({

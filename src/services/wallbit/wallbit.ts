@@ -34,6 +34,21 @@ export class WallbitService {
     return response.data;
   }
 
+  async pause(durationHours: number): Promise<WallbitStatus> {
+    const response = await apiClient.post<WallbitStatus>(
+      `${this.baseUrl}/pause/`,
+      { duration_hours: durationHours },
+    );
+    return response.data;
+  }
+
+  async resume(): Promise<WallbitStatus> {
+    const response = await apiClient.post<WallbitStatus>(
+      `${this.baseUrl}/resume/`,
+    );
+    return response.data;
+  }
+
   async sync(): Promise<WallbitSyncResult> {
     const response = await apiClient.post<WallbitSyncResult>(
       `${this.baseUrl}/sync/`,
