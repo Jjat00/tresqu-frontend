@@ -36,6 +36,7 @@ export const useWhatsappAuth = () => {
       const axiosError = err as AxiosError<{
         detail?: string;
         message?: string;
+        code?: string;
       }>;
 
       // Si hay respuesta pero con error (posiblemente el código se envió igual)
@@ -61,6 +62,11 @@ export const useWhatsappAuth = () => {
             numero_registrado: true,
           };
         }
+      }
+
+      // Propagar el caso "no hay cuenta" para que la UI muestre el CTA
+      if (axiosError.response?.data?.code === "account_not_found") {
+        throw err;
       }
 
       const errorMsg =

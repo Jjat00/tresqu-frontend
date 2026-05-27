@@ -18,6 +18,21 @@ import VerificationCodeForm from "./VerificationCodeForm";
 import { requestTelegramCode, saveAuthTokens } from "@/services/authService";
 import { AuthResponse } from "@/types/auth";
 import { useWhatsappAuth } from "@/hooks/useWhatsappAuth";
+import { AxiosError } from "axios";
+
+const SIGNUP_WHATSAPP_URL =
+  "https://wa.me/573116534337?text=" +
+  encodeURIComponent(
+    "Hola Tresqu quiero crear mi cuenta y tener control de mis finanzas e inversiones"
+  );
+
+const isAccountNotFoundError = (err: unknown): boolean => {
+  const axiosError = err as AxiosError<{ code?: string }> | undefined;
+  return (
+    axiosError?.response?.status === 404 &&
+    axiosError?.response?.data?.code === "account_not_found"
+  );
+};
 
 // Array of common country codes with flag emojis
 const countryCodes = [
@@ -190,6 +205,7 @@ const WaitlistForm = () => {
   );
 
   const [phoneHistory, setPhoneHistory] = useState<PhoneHistory>(emptyHistory);
+  const [accountNotFound, setAccountNotFound] = useState<string | null>(null);
 
   useEffect(() => {
     const history = loadPhoneHistory();
@@ -232,11 +248,10 @@ const WaitlistForm = () => {
         setIsSubmitting(false);
         return;
       }
+      const formattedPhoneNumber = telegramCountryCode.startsWith("+")
+        ? `${telegramCountryCode}${telegramPhone}`
+        : `+${telegramCountryCode}${telegramPhone}`;
       try {
-        // Formatear el número de teléfono con el código de país
-        const formattedPhoneNumber = telegramCountryCode.startsWith("+")
-          ? `${telegramCountryCode}${telegramPhone}`
-          : `+${telegramCountryCode}${telegramPhone}`;
         setFullPhoneNumber(formattedPhoneNumber);
         setAuthMethod("telegram");
         console.log("Enviando solicitud para:", formattedPhoneNumber);
@@ -256,9 +271,13 @@ const WaitlistForm = () => {
         }
       } catch (error) {
         console.error("Error al solicitar código:", error);
-        toast.error(
-          "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
-        );
+        if (isAccountNotFoundError(error)) {
+          setAccountNotFound(formattedPhoneNumber);
+        } else {
+          toast.error(
+            "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
+          );
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -269,11 +288,10 @@ const WaitlistForm = () => {
         setIsSubmitting(false);
         return;
       }
+      const formattedPhoneNumber = countryCode.startsWith("+")
+        ? `${countryCode}${phoneNumber}`
+        : `+${countryCode}${phoneNumber}`;
       try {
-        // Formatear el número de teléfono con el código de país
-        const formattedPhoneNumber = countryCode.startsWith("+")
-          ? `${countryCode}${phoneNumber}`
-          : `+${countryCode}${phoneNumber}`;
         setFullPhoneNumber(formattedPhoneNumber);
         setAuthMethod("whatsapp");
         console.log("Enviando solicitud WhatsApp para:", formattedPhoneNumber);
@@ -305,9 +323,13 @@ const WaitlistForm = () => {
         }
       } catch (error) {
         console.error("Error al solicitar código WhatsApp:", error);
-        toast.error(
-          "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
-        );
+        if (isAccountNotFoundError(error)) {
+          setAccountNotFound(formattedPhoneNumber);
+        } else {
+          toast.error(
+            "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
+          );
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -387,10 +409,7 @@ const WaitlistForm = () => {
                       position: "relative",
                     }}
                     onClick={() => {
-                      window.open(
-                        "https://wa.me/573116534337?text=Hola%20Tresqu",
-                        "_blank"
-                      );
+                      window.open(SIGNUP_WHATSAPP_URL, "_blank");
                     }}
                   >
                     <div className="relative z-10 flex items-center justify-center">
@@ -466,7 +485,37 @@ const WaitlistForm = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-3 sm:pt-4 pb-4 sm:pb-6 px-3 sm:px-4 md:px-6">
-              {verificationStep ? (
+              {accountNotFound ? (
+                <div className="flex flex-col items-center text-center gap-3 sm:gap-4 py-2">
+                  <p className="text-sm sm:text-base text-foreground">
+                    No encontramos una cuenta asociada a{" "}
+                    <span className="font-semibold">{accountNotFound}</span>.
+                  </p>
+                  <p className="text-xs sm:text-sm text-foreground/80">
+                    Para crear tu cuenta, escríbenos por WhatsApp y empezamos de
+                    inmediato.
+                  </p>
+                  <Button
+                    type="button"
+                    className="w-full text-white font-medium hover:cursor-pointer rounded-lg h-9 sm:h-10 text-xs sm:text-sm"
+                    style={{
+                      background: "linear-gradient(135deg, #25D366, #128C7E)",
+                    }}
+                    onClick={() => {
+                      window.open(SIGNUP_WHATSAPP_URL, "_blank");
+                    }}
+                  >
+                    Crear cuenta por WhatsApp
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => setAccountNotFound(null)}
+                    className="text-xs text-foreground/70 underline hover:text-foreground"
+                  >
+                    Usar otro número
+                  </button>
+                </div>
+              ) : verificationStep ? (
                 <VerificationCodeForm
                   phoneNumber={fullPhoneNumber}
                   onVerificationSuccess={handleVerificationSuccess}
@@ -476,7 +525,10 @@ const WaitlistForm = () => {
               ) : (
                 <Tabs
                   value={activeTab}
-                  onValueChange={setActiveTab}
+                  onValueChange={(value) => {
+                    setActiveTab(value);
+                    setAccountNotFound(null);
+                  }}
                   className="w-full"
                 >
                   <TabsList className="grid grid-cols-2 mb-4 sm:mb-6 bg-background/50 backdrop-blur-sm">
@@ -544,9 +596,10 @@ const WaitlistForm = () => {
                               list="whatsapp-number-history"
                               placeholder="Número sin código"
                               value={phoneNumber}
-                              onChange={(e) =>
-                                setPhoneNumber(onlyDigits(e.target.value))
-                              }
+                              onChange={(e) => {
+                                setPhoneNumber(onlyDigits(e.target.value));
+                                if (accountNotFound) setAccountNotFound(null);
+                              }}
                               required
                               className="bg-background/60 backdrop-blur-sm border-white/10 text-foreground placeholder:text-foreground/60 h-8 sm:h-9 text-xs sm:text-sm"
                             />
@@ -628,9 +681,10 @@ const WaitlistForm = () => {
                               list="telegram-number-history"
                               placeholder="Número sin código"
                               value={telegramPhone}
-                              onChange={(e) =>
-                                setTelegramPhone(onlyDigits(e.target.value))
-                              }
+                              onChange={(e) => {
+                                setTelegramPhone(onlyDigits(e.target.value));
+                                if (accountNotFound) setAccountNotFound(null);
+                              }}
                               required
                               className="bg-background/60 backdrop-blur-sm border-white/10 text-foreground placeholder:text-foreground/60 h-8 sm:h-9 text-xs sm:text-sm"
                             />
