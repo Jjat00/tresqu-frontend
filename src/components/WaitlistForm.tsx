@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -131,6 +131,50 @@ const countryCodes = [
     country: "🇩🇴",
   }, // República Dominicana
 ];
+
+type AuthChannel = "whatsapp" | "telegram";
+type PhoneEntry = { countryCode: string; phone: string };
+type PhoneHistory = Record<AuthChannel, PhoneEntry[]>;
+
+const PHONE_HISTORY_KEY = "tresqu.phoneHistory";
+const PHONE_HISTORY_LIMIT = 5;
+
+const emptyHistory: PhoneHistory = { whatsapp: [], telegram: [] };
+
+const loadPhoneHistory = (): PhoneHistory => {
+  if (typeof window === "undefined") return emptyHistory;
+  try {
+    const raw = window.localStorage.getItem(PHONE_HISTORY_KEY);
+    if (!raw) return emptyHistory;
+    const parsed = JSON.parse(raw) as Partial<PhoneHistory>;
+    return {
+      whatsapp: Array.isArray(parsed.whatsapp) ? parsed.whatsapp : [],
+      telegram: Array.isArray(parsed.telegram) ? parsed.telegram : [],
+    };
+  } catch {
+    return emptyHistory;
+  }
+};
+
+const savePhoneEntry = (channel: AuthChannel, entry: PhoneEntry) => {
+  if (typeof window === "undefined") return;
+  const current = loadPhoneHistory();
+  const filtered = current[channel].filter(
+    (e) => !(e.countryCode === entry.countryCode && e.phone === entry.phone)
+  );
+  const next: PhoneHistory = {
+    ...current,
+    [channel]: [entry, ...filtered].slice(0, PHONE_HISTORY_LIMIT),
+  };
+  try {
+    window.localStorage.setItem(PHONE_HISTORY_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore quota errors */
+  }
+};
+
+const onlyDigits = (value: string) => value.replace(/\D/g, "");
+
 const WaitlistForm = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("whatsapp");
@@ -143,6 +187,32 @@ const WaitlistForm = () => {
   const [fullPhoneNumber, setFullPhoneNumber] = useState("");
   const [authMethod, setAuthMethod] = useState<"telegram" | "whatsapp">(
     "whatsapp"
+  );
+
+  const [phoneHistory, setPhoneHistory] = useState<PhoneHistory>(emptyHistory);
+
+  useEffect(() => {
+    const history = loadPhoneHistory();
+    setPhoneHistory(history);
+    const lastWhatsapp = history.whatsapp[0];
+    if (lastWhatsapp) {
+      setPhoneNumber(lastWhatsapp.phone);
+      setCountryCode(lastWhatsapp.countryCode);
+    }
+    const lastTelegram = history.telegram[0];
+    if (lastTelegram) {
+      setTelegramPhone(lastTelegram.phone);
+      setTelegramCountryCode(lastTelegram.countryCode);
+    }
+  }, []);
+
+  const whatsappSuggestions = useMemo(
+    () => phoneHistory.whatsapp.map((e) => e.phone),
+    [phoneHistory.whatsapp]
+  );
+  const telegramSuggestions = useMemo(
+    () => phoneHistory.telegram.map((e) => e.phone),
+    [phoneHistory.telegram]
   );
 
   // Hook para la autenticación con WhatsApp
@@ -175,6 +245,11 @@ const WaitlistForm = () => {
         const response = await requestTelegramCode(formattedPhoneNumber);
         if (response.success) {
           toast.success(response.message);
+          savePhoneEntry("telegram", {
+            countryCode: telegramCountryCode,
+            phone: telegramPhone,
+          });
+          setPhoneHistory(loadPhoneHistory());
           setVerificationStep(true);
         } else {
           toast.error("Error al solicitar el código de verificación");
@@ -218,6 +293,11 @@ const WaitlistForm = () => {
             toast.success("Código enviado a tu WhatsApp");
           }
 
+          savePhoneEntry("whatsapp", {
+            countryCode,
+            phone: phoneNumber,
+          });
+          setPhoneHistory(loadPhoneHistory());
           // Avanzar al paso de verificación
           setVerificationStep(true);
         } else {
@@ -458,12 +538,25 @@ const WaitlistForm = () => {
                             <Input
                               id="whatsapp-number"
                               type="tel"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              autoComplete="tel-national"
+                              list="whatsapp-number-history"
                               placeholder="Número sin código"
                               value={phoneNumber}
-                              onChange={(e) => setPhoneNumber(e.target.value)}
+                              onChange={(e) =>
+                                setPhoneNumber(onlyDigits(e.target.value))
+                              }
                               required
                               className="bg-background/60 backdrop-blur-sm border-white/10 text-foreground placeholder:text-foreground/60 h-8 sm:h-9 text-xs sm:text-sm"
                             />
+                            {whatsappSuggestions.length > 0 && (
+                              <datalist id="whatsapp-number-history">
+                                {whatsappSuggestions.map((p) => (
+                                  <option key={p} value={p} />
+                                ))}
+                              </datalist>
+                            )}
                           </div>
                         </div>
                         <p className="text-xs text-foreground/80">
@@ -529,12 +622,25 @@ const WaitlistForm = () => {
                             <Input
                               id="telegram-phone"
                               type="tel"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              autoComplete="tel-national"
+                              list="telegram-number-history"
                               placeholder="Número sin código"
                               value={telegramPhone}
-                              onChange={(e) => setTelegramPhone(e.target.value)}
+                              onChange={(e) =>
+                                setTelegramPhone(onlyDigits(e.target.value))
+                              }
                               required
                               className="bg-background/60 backdrop-blur-sm border-white/10 text-foreground placeholder:text-foreground/60 h-8 sm:h-9 text-xs sm:text-sm"
                             />
+                            {telegramSuggestions.length > 0 && (
+                              <datalist id="telegram-number-history">
+                                {telegramSuggestions.map((p) => (
+                                  <option key={p} value={p} />
+                                ))}
+                              </datalist>
+                            )}
                           </div>
                         </div>
                         <p className="text-xs text-foreground/80">
