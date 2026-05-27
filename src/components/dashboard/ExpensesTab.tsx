@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ExpensesTable from "./expenses/ExpensesTable";
 import SubcategoryView from "./SubcategoryView";
 import { DateRange } from "./DateRangePicker";
@@ -6,6 +6,10 @@ import ChartJSPieChart from "./charts/ChartJSPieChart";
 import ChartJSBarChart from "./charts/ChartJSBarChart";
 import { Card } from "@/components/ui/card";
 import { useCategoryPieChartData } from "@/hooks/useCategoryPieChartData";
+import {
+  useExpensesMonthSummary,
+  computeExpensesTotalCOP,
+} from "@/hooks/useExpensesMonthSummary";
 
 interface ExpensesTabProps {
   selectedMonth?: string;
@@ -27,6 +31,11 @@ const ExpensesTab = ({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [localSelectedMonth, setLocalSelectedMonth] = useState(selectedMonth);
 
+  // Selector mes/año compartido entre el KPI total y el Historial
+  const today = new Date();
+  const [tableMonth, setTableMonth] = useState<number>(today.getMonth() + 1);
+  const [tableYear, setTableYear] = useState<number>(today.getFullYear());
+
   // Usar los hooks para obtener datos reales
   const {
     chartData: pieChartData,
@@ -34,6 +43,14 @@ const ExpensesTab = ({
     isLoading: isPieLoading,
     recentExpenses,
   } = useCategoryPieChartData(dateRange);
+
+  // Mismo dato que el Historial — usado para el KPI "Total gastado"
+  const { data: monthSummary, isLoading: isMonthSummaryLoading } =
+    useExpensesMonthSummary(tableMonth, tableYear);
+  const tableTotalCOP = useMemo(
+    () => computeExpensesTotalCOP(monthSummary?.recent_expenses ?? []),
+    [monthSummary]
+  );
 
   // Calcular el gasto promedio diario
   const calculateDailyAverage = () => {
@@ -125,13 +142,15 @@ const ExpensesTab = ({
           </div>
           <div className="text-lg sm:text-2xl md:text-3xl font-semibold text-rose-400 tracking-tight font-display">
             $
-            {(totalAmount ?? 0).toLocaleString("es-ES", {
+            {tableTotalCOP.toLocaleString("es-ES", {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
-            {isPieLoading ? "Cargando..." : "En el período seleccionado"}
+            {isMonthSummaryLoading
+              ? "Cargando..."
+              : "Mismo total que el Historial"}
           </p>
         </div>
 
@@ -218,6 +237,10 @@ const ExpensesTab = ({
           onCategoryClick={setSelectedCategory}
           onShare={handleShare}
           dateRange={dateRange}
+          selectedMonth={tableMonth}
+          selectedYear={tableYear}
+          onMonthChange={setTableMonth}
+          onYearChange={setTableYear}
         />
       </Card>
     </div>

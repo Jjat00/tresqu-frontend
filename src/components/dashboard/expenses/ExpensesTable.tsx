@@ -20,13 +20,14 @@ import {
   ArrowUp,
   ArrowDown,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getAccessToken } from "@/services/authService";
 import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
-import { env } from "@/config";
 import * as XLSX from "xlsx";
 import { useDeleteExpense } from "@/hooks/expenses";
+import {
+  useExpensesMonthSummary,
+  computeExpensesTotalCOP,
+} from "@/hooks/useExpensesMonthSummary";
 import {
   Dialog,
   DialogContent,
@@ -52,6 +53,10 @@ interface ExpensesTableProps {
   onCategoryClick: (category: string) => void;
   onShare: () => void;
   dateRange?: DateRange;
+  selectedMonth: number;
+  selectedYear: number;
+  onMonthChange: (month: number) => void;
+  onYearChange: (year: number) => void;
 }
 
 interface Expense {
@@ -107,6 +112,10 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   onCategoryClick,
   onShare,
   dateRange,
+  selectedMonth,
+  selectedYear,
+  onMonthChange,
+  onYearChange,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
@@ -119,17 +128,8 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const deleteExpense = useDeleteExpense();
 
-  // Estado para mes y año seleccionados
-  const currentDate = new Date();
-  const [selectedMonth, setSelectedMonth] = useState<number>(
-    currentDate.getMonth() + 1
-  );
-  const [selectedYear, setSelectedYear] = useState<number>(
-    currentDate.getFullYear()
-  );
-
   // Generar lista de años (últimos 5 años hasta el año actual)
-  const currentYear = currentDate.getFullYear();
+  const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
   // Nombres de meses en español
@@ -148,33 +148,10 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     "Diciembre",
   ];
 
-  const fetchExpenses = async (): Promise<ExpensesData> => {
-    const token = getAccessToken();
-    if (!token) {
-      throw new Error("No auth token available");
-    }
-
-    // Construir URL con month y year
-    const url = `${env.apiUrl}/api/expenses/summary/?month=${selectedMonth}&year=${selectedYear}`;
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching expenses: ${response.status}`);
-    }
-
-    return await response.json();
-  };
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["expensesData", selectedMonth, selectedYear],
-    queryFn: fetchExpenses,
-    retry: 1,
-  });
+  const { data, isLoading, error } = useExpensesMonthSummary(
+    selectedMonth,
+    selectedYear
+  );
 
   // Show error toast if the fetch fails
   React.useEffect(() => {
@@ -250,15 +227,10 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     return filtered;
   }, [data, categoryFilter, searchQuery, sortField, sortOrder]);
 
-  const totalAmount = React.useMemo(() => {
-    if (!filteredExpenses?.length) return 0;
-
-    return filteredExpenses.reduce((total, expense) => {
-      const amount = parseFloat(expense.amount);
-      const multiplier = expense.currency === "USD" ? 4000 : 1;
-      return total + amount * multiplier;
-    }, 0);
-  }, [filteredExpenses]);
+  const totalAmount = React.useMemo(
+    () => computeExpensesTotalCOP(filteredExpenses),
+    [filteredExpenses]
+  );
 
   const formatDate = (dateString: string) => {
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
@@ -458,7 +430,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
               <div className="flex items-center gap-2">
                 <Select
                   value={selectedMonth.toString()}
-                  onValueChange={(value) => setSelectedMonth(parseInt(value))}
+                  onValueChange={(value) => onMonthChange(parseInt(value))}
                 >
                   <SelectTrigger className="w-[140px] h-8 text-xs">
                     <SelectValue placeholder="Mes" />
@@ -473,7 +445,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                 </Select>
                 <Select
                   value={selectedYear.toString()}
-                  onValueChange={(value) => setSelectedYear(parseInt(value))}
+                  onValueChange={(value) => onYearChange(parseInt(value))}
                 >
                   <SelectTrigger className="w-[100px] h-8 text-xs">
                     <SelectValue placeholder="Año" />
