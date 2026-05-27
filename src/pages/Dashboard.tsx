@@ -13,7 +13,7 @@ import { isAuthenticated } from "@/services/authService";
 import DateRangePicker, {
   DateRange,
 } from "@/components/dashboard/DateRangePicker";
-import { getCurrentWeekRange } from "@/components/dashboard/dateRangePicker/dateRangeUtils";
+import { getCurrentMonthRange } from "@/components/dashboard/dateRangePicker/dateRangeUtils";
 
 const MONTHS = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -22,9 +22,9 @@ const MONTHS = [
 
 const Dashboard = () => {
   const { section = "home" } = useParams<{ section: string }>();
-  const [dateRange, setDateRange] = useState<DateRange>(getCurrentWeekRange());
+  const [dateRange, setDateRange] = useState<DateRange>(getCurrentMonthRange());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">(
-    "week"
+    "month"
   );
 
   const navigate = useNavigate();
@@ -132,12 +132,14 @@ const Dashboard = () => {
             Dashboard Financiero
           </h1>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <DateRangePicker
-              date={dateRange}
-              onDateChange={handleDateRangeChange}
-              viewMode={viewMode}
-              onViewModeChange={setViewMode}
-            />
+            {section !== "investments" && (
+              <DateRangePicker
+                date={dateRange}
+                onDateChange={handleDateRangeChange}
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+              />
+            )}
             <Button
               variant="ghost"
               className="flex items-center gap-1 glass"
