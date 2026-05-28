@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWallbitStatus, useWallbitSync } from "@/hooks/useWallbitStatus";
 
+import AssetExplorer from "./AssetExplorer";
 import HoldingsTable from "./HoldingsTable";
 import PortfolioDonut from "./PortfolioDonut";
 import PortfolioHeroMetrics from "./PortfolioHeroMetrics";
@@ -103,6 +104,8 @@ const InvestmentsTab = () => {
       </div>
 
       <HoldingsTable />
+
+      <AssetExplorer />
 
       <TradeHistory />
     </div>

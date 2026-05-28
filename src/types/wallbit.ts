@@ -112,3 +112,53 @@ export type AgentLimitsPayload = Partial<{
   allowed_symbols: string[];
   blocked_symbols: string[];
 }>;
+
+// --- Market data: per-asset price history ---
+
+export type PriceRange = "1d" | "1w" | "1m" | "3m" | "1y" | "5y" | "max";
+
+export type PriceTrend = "alcista" | "bajista" | "lateral";
+
+export interface PricePoint {
+  /** ISO timestamp for intraday ranges (1d/1w) or YYYY-MM-DD for longer ranges */
+  t: string;
+  price: number;
+}
+
+export interface PriceSummary {
+  current: number;
+  change_abs: number;
+  change_pct: number;
+  high: number;
+  low: number;
+  trend: PriceTrend;
+  points_count: number;
+}
+
+export interface PriceHistoryResponse {
+  symbol: string;
+  range: PriceRange;
+  points: PricePoint[];
+  summary: PriceSummary;
+  /** true when the data is a cached fallback (proveedor no disponible) */
+  stale: boolean;
+  source: string;
+}
+
+// --- Asset explorer: search the Wallbit catalog ---
+
+/** A single asset returned by the catalog search endpoint. */
+export interface AssetSearchResult {
+  symbol: string;
+  name: string;
+  asset_type: string;
+  sector: string;
+  /** May arrive as a number, a numeric string, or null — render gracefully. */
+  price: number | string | null;
+  logo_url: string;
+  country: string;
+}
+
+export interface AssetSearchResponse {
+  assets: AssetSearchResult[];
+}
