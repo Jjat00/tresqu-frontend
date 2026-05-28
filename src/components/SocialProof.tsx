@@ -1,128 +1,33 @@
-import { useEffect, useRef, useState } from "react";
-import { MessageSquare, Users, Zap, Shield } from "lucide-react";
-
-// Hook para animar contadores cuando son visibles
-const useCountUp = (target: number, duration = 2000) => {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started) {
-          setStarted(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [started]);
-
-  useEffect(() => {
-    if (!started) return;
-
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    const interval = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setCount(target);
-        clearInterval(interval);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-
-    return () => clearInterval(interval);
-  }, [started, target, duration]);
-
-  return { count, ref };
-};
-
-const stats = [
-  {
-    icon: Users,
-    value: 500,
-    suffix: "+",
-    label: "Usuarios activos",
-  },
-  {
-    icon: MessageSquare,
-    value: 15000,
-    suffix: "+",
-    label: "Transacciones registradas",
-  },
-  {
-    icon: Zap,
-    value: 10,
-    suffix: "seg",
-    label: "Tiempo promedio de respuesta",
-    prefix: "<",
-  },
-  {
-    icon: Shield,
-    value: 99,
-    suffix: "%",
-    label: "Uptime del servicio",
-  },
+const platforms = [
+  { name: "WhatsApp", color: "#25D366" },
+  { name: "Telegram", color: "#0088cc" },
+  { name: "Gmail", color: "#EA4335" },
 ];
 
 const SocialProof = () => {
-  const counters = stats.map((stat) => useCountUp(stat.value));
-
   return (
     <section className="relative section-padding overflow-hidden bg-[#0a0a0a]">
       {/* Separador superior */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        {/* Contadores */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-16 sm:mb-20">
-          {stats.map((stat, i) => (
-            <div
-              key={stat.label}
-              ref={counters[i].ref}
-              className="text-center glass-card p-4 sm:p-6"
-            >
-              <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-success/10 mb-3">
-                <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
-              </div>
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight font-display">
-                {stat.prefix || ""}
-                {counters[i].count.toLocaleString("es-ES")}
-                {stat.suffix}
-              </div>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
-
         {/* Integraciones */}
-        <div className="mt-16 sm:mt-20 text-center">
-          <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mb-6">
+        <div className="text-center">
+          <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mb-8 sm:mb-10">
             Integrado con las plataformas que ya usas
           </p>
-          <div className="flex items-center justify-center gap-8 sm:gap-12 flex-wrap">
-            {[
-              { name: "WhatsApp", color: "#25D366" },
-              { name: "Telegram", color: "#0088cc" },
-              { name: "Gmail", color: "#EA4335" },
-            ].map((platform) => (
+          <div className="flex items-center justify-center gap-4 sm:gap-6 flex-wrap">
+            {platforms.map((platform) => (
               <div
                 key={platform.name}
-                className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity"
+                className="flex items-center gap-2.5 px-5 sm:px-6 py-3 sm:py-3.5 rounded-lg border bg-white/[0.02] transition-transform duration-200 hover:-translate-y-0.5"
+                style={{ borderColor: `${platform.color}33` }}
               >
-                <div
-                  className="w-3 h-3 rounded-full"
+                <span
+                  className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: platform.color }}
                 />
-                <span className="text-sm sm:text-base font-medium text-foreground/70">
+                <span className="text-base sm:text-lg font-semibold text-foreground">
                   {platform.name}
                 </span>
               </div>
