@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import {
@@ -17,6 +18,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useHoldings } from "@/hooks/useInvestments";
+import type { Holding } from "@/types/wallbit";
+
+import HoldingDetailModal from "./HoldingDetailModal";
 
 const fmt = (value: string | number, opts: Intl.NumberFormatOptions = {}) => {
   const n = typeof value === "string" ? parseFloat(value) : value;
@@ -37,6 +41,7 @@ const fmtShares = (value: string | number) => {
 
 const HoldingsTable = () => {
   const { data, isLoading, error } = useHoldings();
+  const [selected, setSelected] = useState<Holding | null>(null);
 
   return (
     <Card className="glass-card">
@@ -76,7 +81,20 @@ const HoldingsTable = () => {
                   const pnl = parseFloat(h.pnl_usd || "0");
                   const isUp = pnl >= 0;
                   return (
-                    <TableRow key={h.symbol}>
+                    <TableRow
+                      key={h.symbol}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Ver detalle de ${h.symbol}`}
+                      onClick={() => setSelected(h)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelected(h);
+                        }
+                      }}
+                      className="cursor-pointer transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                    >
                       <TableCell>
                         <div className="flex flex-col">
                           <span className="font-semibold">{h.symbol}</span>
@@ -127,6 +145,8 @@ const HoldingsTable = () => {
           </div>
         )}
       </CardContent>
+
+      <HoldingDetailModal holding={selected} onClose={() => setSelected(null)} />
     </Card>
   );
 };
