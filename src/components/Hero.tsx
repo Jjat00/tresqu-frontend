@@ -1,6 +1,23 @@
+import { lazy, Suspense } from "react";
+
+const WireframeTerrain = lazy(() => import("./WireframeTerrain"));
+
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
+      {/* Animated 3D wireframe terrain (lazy — Three.js loads in its own chunk) */}
+      <Suspense fallback={null}>
+        <WireframeTerrain />
+      </Suspense>
+
+      {/* Readability vignette + top fade to black */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 50% at 50% 42%, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.45) 45%, transparent 75%), linear-gradient(to bottom, #0a0a0a 0%, transparent 22%)",
+        }}
+      />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 sm:py-24 lg:py-28">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
