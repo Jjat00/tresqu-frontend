@@ -3,7 +3,21 @@ import ChatBody from "./ChatBody";
 import ChatInput from "./ChatInput";
 import { useChatBot } from "./useChatBot";
 import { AgentIcon } from "./agentIcons";
+import { useEffectiveProfile } from "@/hooks/useRiskProfile";
 import type { AgentInfo } from "@/types/chat";
+
+const TOLERANCE_ES: Record<string, string> = {
+  conservative: "Conservador",
+  moderate: "Moderado",
+  aggressive: "Agresivo",
+};
+
+const SOURCE_ES: Record<string, string> = {
+  inferred: "inferido de tus registros",
+  declared: "definido por ti",
+  agreement: "confirmado por tus registros",
+  safety_cap: "ajustado por prudencia",
+};
 
 const GREETINGS: Record<string, string> = {
   tresqu:
@@ -46,18 +60,34 @@ const RiskIntro = ({
   note?: string;
   onStart: () => void;
   disabled: boolean;
-}) => (
-  <div className="mb-2 rounded-lg border border-border/70 bg-muted/20 p-2.5 text-xs">
-    {note && <p className="text-muted-foreground">{note}</p>}
-    <button
-      onClick={onStart}
-      disabled={disabled}
-      className="mt-2 inline-flex items-center gap-1 rounded-md bg-success px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-success/90 disabled:opacity-50"
-    >
-      <Sparkles className="h-3.5 w-3.5" /> Iniciar evaluación
-    </button>
-  </div>
-);
+}) => {
+  const { data } = useEffectiveProfile();
+
+  let status: string | null = null;
+  if (data) {
+    if (data.source === "default") {
+      status = "Aún no tienes un perfil definido.";
+    } else {
+      const label = TOLERANCE_ES[data.tolerance] ?? data.tolerance;
+      const source = SOURCE_ES[data.source] ?? "según tu evaluación";
+      status = `Perfil actual: ${label} · ${source}`;
+    }
+  }
+
+  return (
+    <div className="mb-2 rounded-lg border border-border/70 bg-muted/20 p-2.5 text-xs">
+      {status && <p className="font-medium text-foreground">{status}</p>}
+      {note && <p className="mt-1 text-muted-foreground">{note}</p>}
+      <button
+        onClick={onStart}
+        disabled={disabled}
+        className="mt-2 inline-flex items-center gap-1 rounded-md bg-success px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-success/90 disabled:opacity-50"
+      >
+        <Sparkles className="h-3.5 w-3.5" /> Iniciar evaluación
+      </button>
+    </div>
+  );
+};
 
 interface AgentChatProps {
   agent: AgentInfo;
