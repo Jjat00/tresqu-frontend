@@ -7,6 +7,7 @@ import {
   Globe,
   Tag,
   BarChart3,
+  Gauge,
 } from "lucide-react";
 
 const capabilities = [
@@ -49,6 +50,12 @@ const capabilities = [
     Icon: BarChart3,
     title: "Detecta tus patrones",
     description: "Identifica picos, categorías dominantes y hábitos en tu historial.",
+  },
+  {
+    Icon: Gauge,
+    title: "Perfil de riesgo real",
+    description:
+      "Arma tu perfil de inversor desde tu historial real, no un cuestionario de 5 preguntas.",
   },
 ];
 

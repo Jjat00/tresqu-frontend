@@ -1,13 +1,6 @@
-import { ShieldCheck, Bot, LineChart, Sliders, ArrowRight } from "lucide-react";
+import { Bot, LineChart, Sliders, ArrowRight } from "lucide-react";
 
 const futureFeatures = [
-  {
-    icon: <ShieldCheck className="w-6 h-6" />,
-    title: "Perfil de riesgo desde tu vida",
-    description:
-      "Tresqu armará tu perfil de inversor usando tu historial real — ingresos, hábitos y ahorro — no un cuestionario de 5 preguntas.",
-    status: "En desarrollo",
-  },
   {
     icon: <Bot className="w-6 h-6" />,
     title: "Agente que invierte por ti",
