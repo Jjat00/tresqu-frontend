@@ -58,17 +58,6 @@ const fmtUsd = (value: number | string | null) => {
   });
 };
 
-/**
- * Formats a market cap given in MILLIONS of USD into a compact $1.2T / $845.6B /
- * $430.5M style string. Returns "—" when the value is unknown.
- */
-const fmtMarketCap = (millions: number | null): string => {
-  if (millions === null || !Number.isFinite(millions)) return "—";
-  if (millions >= 1_000_000) return `$${(millions / 1_000_000).toFixed(1)}T`;
-  if (millions >= 1_000) return `$${(millions / 1_000).toFixed(1)}B`;
-  return `$${millions.toFixed(1)}M`;
-};
-
 const resolveErrorMessage = (error: unknown): string => {
   const status = (error as AxiosError | undefined)?.response?.status;
   if (status === 424)
@@ -230,10 +219,7 @@ const AssetExplorer = () => {
                     <TableHead>Símbolo</TableHead>
                     <TableHead className="hidden sm:table-cell">Nombre</TableHead>
                     <TableHead className="text-right">Precio</TableHead>
-                    <TableHead className="text-right">Hoy</TableHead>
-                    <TableHead className="hidden text-right md:table-cell">
-                      Market Cap
-                    </TableHead>
+                    <TableHead className="text-right">24h</TableHead>
                     <TableHead className="hidden lg:table-cell">Sector</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -284,9 +270,6 @@ const AssetExplorer = () => {
                         </TableCell>
                         <TableCell className="text-right text-sm font-medium">
                           <ChangeCell spark={spark} isLoading={sparksLoading} />
-                        </TableCell>
-                        <TableCell className="hidden text-right tabular-nums text-muted-foreground md:table-cell">
-                          {fmtMarketCap(asset.market_cap_m)}
                         </TableCell>
                         <TableCell className="hidden text-muted-foreground lg:table-cell">
                           {asset.sector || "—"}

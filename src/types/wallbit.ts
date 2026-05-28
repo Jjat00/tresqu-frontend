@@ -157,8 +157,6 @@ export interface AssetSearchResult {
   price: number | string | null;
   logo_url: string;
   country: string;
-  /** Market cap in MILLIONS of USD. May be null when the provider has no data. */
-  market_cap_m: number | null;
 }
 
 export interface AssetSearchResponse {
