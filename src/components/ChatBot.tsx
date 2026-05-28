@@ -18,25 +18,33 @@ const ChatBot = () => {
     isProcessing,
     isRecording,
     isListening,
+    voiceEnabled,
+    toggleVoice,
     messageEndRef,
     chatBodyRef,
     handleSendMessage,
-    toggleRecording
+    toggleRecording,
+    onConfirm,
+    onCancel
   } = useChatBot();
 
   return (
     <div className="fixed bottom-16 md:bottom-16 right-6 z-50">
       {showChat && (
         <div className={`absolute ${isMobile ? 'bottom-16 right-0 left-0 mx-2' : 'bottom-16 right-0'} ${isMobile ? 'w-auto' : 'w-full sm:w-96'} h-[30rem] bg-card rounded-lg shadow-lg border border-border p-3 sm:p-4 mb-4 flex flex-col animate-fade-in`}>
-          <ChatHeader 
-            onMinimize={() => setShowChat(false)} 
-            onClose={() => setShowChat(false)} 
+          <ChatHeader
+            onMinimize={() => setShowChat(false)}
+            onClose={() => setShowChat(false)}
+            voiceEnabled={voiceEnabled}
+            onToggleVoice={toggleVoice}
           />
-          
-          <ChatBody 
-            messages={messages} 
-            isProcessing={isProcessing} 
-            messageEndRef={messageEndRef} 
+
+          <ChatBody
+            messages={messages}
+            isProcessing={isProcessing}
+            messageEndRef={messageEndRef}
+            onConfirm={onConfirm}
+            onCancel={onCancel}
           />
           
           <ChatInput 

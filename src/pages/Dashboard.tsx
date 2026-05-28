@@ -7,6 +7,7 @@ import CategoriesTab from "@/components/dashboard/CategoriesTab";
 import IntegrationsTab from "@/components/dashboard/IntegrationsTab";
 import InvestmentsTab from "@/components/dashboard/investments/InvestmentsTab";
 import HomeTab from "@/components/dashboard/home/HomeTab";
+import ChatBot from "@/components/ChatBot";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isAuthenticated } from "@/services/authService";
@@ -156,6 +157,8 @@ const Dashboard = () => {
           {renderSection()}
         </div>
       </div>
+
+      <ChatBot />
     </DashboardLayout>
   );
 };

@@ -1,15 +1,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MessageSquare, ChevronDown, Volume2, X } from "lucide-react";
+import { ChevronDown, Volume2, VolumeX, X } from "lucide-react";
 import Logo from "@/components/Logo";
 
 interface ChatHeaderProps {
   onMinimize: () => void;
   onClose: () => void;
+  voiceEnabled: boolean;
+  onToggleVoice: () => void;
 }
 
-const ChatHeader = ({ onMinimize, onClose }: ChatHeaderProps) => {
+const ChatHeader = ({ onMinimize, onClose, voiceEnabled, onToggleVoice }: ChatHeaderProps) => {
   return (
     <div className="flex justify-between items-center border-b pb-2 mb-2">
       <div className="flex items-center">
@@ -36,13 +38,17 @@ const ChatHeader = ({ onMinimize, onClose }: ChatHeaderProps) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-7 w-7 sm:h-8 sm:w-8 p-0">
-                <Volume2 className="h-3 w-3 sm:h-4 sm:w-4" />
+              <Button variant="ghost" size="sm" className="h-7 w-7 sm:h-8 sm:w-8 p-0" onClick={onToggleVoice}>
+                {voiceEnabled ? (
+                  <Volume2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                ) : (
+                  <VolumeX className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
+                )}
                 <span className="sr-only">Activar/desactivar voz</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p className="text-xs">Activar/desactivar voz</p>
+              <p className="text-xs">{voiceEnabled ? "Desactivar voz" : "Activar voz"}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

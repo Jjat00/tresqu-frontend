@@ -1,151 +1,154 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useSpeechRecognition } from "./useSpeechRecognition";
 import { useTextToSpeech } from "./useTextToSpeech";
+import { streamChat, type HistoryTurn } from "@/services/agents/chatStream";
+import { agentDecisionsService } from "@/services/wallbit";
+import type {
+  ChatMsg,
+  PendingConfirmation,
+  RawPendingConfirmation,
+} from "@/types/chat";
 
-interface Message {
-  type: "assistant" | "user";
-  content: string;
+const GREETING =
+  "¡Hola! Soy Tresqu, tu asistente financiero. Puedo registrar gastos e ingresos, consultar tu Wallbit, analizar acciones y más. ¿En qué te ayudo?";
+
+const newId = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random()}`;
+
+function normalizePending(
+  raw: RawPendingConfirmation | null,
+): PendingConfirmation | null {
+  if (!raw || !raw.requires_confirmation) return null;
+  if (typeof raw.confirmation_id !== "number") return null;
+  return {
+    confirmation_id: raw.confirmation_id,
+    summary: raw.preview?.summary ?? "Operación pendiente",
+    risk_warning: raw.preview?.risk_warning,
+    extra_two_step: raw.extra_two_step,
+  };
 }
 
 export const useChatBot = () => {
   const [showChat, setShowChat] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      type: "assistant",
-      content:
-        "¡Hola! Soy Tresqu, tu asistente financiero. ¿En qué puedo ayudarte hoy?",
-    },
+  const [messages, setMessages] = useState<ChatMsg[]>([
+    { id: newId(), role: "assistant", content: GREETING },
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+
   const messageEndRef = useRef<HTMLDivElement>(null);
   const chatBodyRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
   const { toast } = useToast();
   const { speakText } = useTextToSpeech();
 
-  // Handle sending a message
-  const handleSendMessage = (message = inputMessage) => {
-    if (message.trim() === "") return;
+  // Update a single message in place by id.
+  const patchMessage = (id: string, patch: Partial<ChatMsg>) =>
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, ...patch } : m)),
+    );
 
-    // Add user message
-    setMessages((prev) => [...prev, { type: "user", content: message }]);
+  const handleSendMessage = (message = inputMessage) => {
+    const text = message.trim();
+    if (text === "" || isProcessing) return;
+
+    const history: HistoryTurn[] = messages
+      .filter((m) => m.content.trim() !== "")
+      .map((m) => ({ role: m.role, content: m.content }));
+
+    const assistantId = newId();
+    setMessages((prev) => [
+      ...prev,
+      { id: newId(), role: "user", content: text },
+      { id: assistantId, role: "assistant", content: "", steps: [] },
+    ]);
     setInputMessage("");
     setIsProcessing(true);
 
-    // Simulate bot response
-    simulateBotResponse(message);
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    streamChat(
+      text,
+      history,
+      {
+        onStep: (step) =>
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId
+                ? { ...m, steps: [...(m.steps ?? []), step] }
+                : m,
+            ),
+          ),
+        onFinal: (final) => {
+          patchMessage(assistantId, {
+            content: final.text,
+            pending: normalizePending(final.pending_confirmation),
+          });
+          setIsProcessing(false);
+          if (voiceEnabled && final.text) speakText(final.text);
+        },
+        onError: (errText) => {
+          patchMessage(assistantId, { content: errText, error: true });
+          setIsProcessing(false);
+        },
+      },
+      controller.signal,
+    );
   };
 
-  // Speech recognition hook
   const { isRecording, isListening, toggleRecording } = useSpeechRecognition({
     onTranscript: setInputMessage,
     handleSendMessage,
   });
 
-  // Simulate bot response based on message content
-  const simulateBotResponse = (message: string) => {
-    setTimeout(() => {
-      let botResponse;
-      const lowerCaseMessage = message.toLowerCase();
-
-      // Simulate bot intelligence with pattern matching
-      if (
-        lowerCaseMessage.includes("gasté") ||
-        lowerCaseMessage.includes("gaste") ||
-        lowerCaseMessage.includes("compré")
-      ) {
-        const amountMatch = message.match(/\d+(\.\d+)?/);
-        const amount = amountMatch ? amountMatch[0] : "una cantidad";
-
-        let category = "compra";
-        if (
-          lowerCaseMessage.includes("comida") ||
-          lowerCaseMessage.includes("restaurante") ||
-          lowerCaseMessage.includes("supermercado")
-        ) {
-          category = "alimentación";
-        } else if (
-          lowerCaseMessage.includes("uber") ||
-          lowerCaseMessage.includes("taxi") ||
-          lowerCaseMessage.includes("bus")
-        ) {
-          category = "transporte";
-        } else if (
-          lowerCaseMessage.includes("netflix") ||
-          lowerCaseMessage.includes("cine") ||
-          lowerCaseMessage.includes("juego")
-        ) {
-          category = "entretenimiento";
-        } else if (
-          lowerCaseMessage.includes("luz") ||
-          lowerCaseMessage.includes("agua") ||
-          lowerCaseMessage.includes("internet")
-        ) {
-          category = "servicios";
-        }
-
-        botResponse = `¡Registrado! He añadido un gasto de $${amount} en la categoría "${category}". ¿Quieres añadir algún detalle adicional?`;
-      } else if (
-        lowerCaseMessage.includes("ingres") ||
-        lowerCaseMessage.includes("recib") ||
-        lowerCaseMessage.includes("cobr")
-      ) {
-        const amountMatch = message.match(/\d+(\.\d+)?/);
-        botResponse = amountMatch
-          ? `¡Excelente! He registrado un ingreso de $${amountMatch[0]}. Tu balance mensual ha sido actualizado.`
-          : `¡Excelente! He registrado este ingreso. Tu balance mensual ha sido actualizado. ¿Puedes indicarme el monto exacto?`;
-      } else if (
-        lowerCaseMessage.includes("deuda") ||
-        lowerCaseMessage.includes("préstamo") ||
-        lowerCaseMessage.includes("prestamo")
-      ) {
-        botResponse =
-          "He registrado esta deuda. ¿Te gustaría que creara un plan de pagos optimizado para ella?";
-      } else if (
-        (lowerCaseMessage.includes("gast") ||
-          lowerCaseMessage.includes("cuánto gasté")) &&
-        lowerCaseMessage.includes("mes")
-      ) {
-        botResponse =
-          "En este mes has gastado $7,850. Tus categorías principales son: Alimentación (45%), Transporte (25%) y Entretenimiento (15%).";
-      } else if (
-        lowerCaseMessage.includes("ahorro") ||
-        lowerCaseMessage.includes("meta") ||
-        lowerCaseMessage.includes("ahorrar")
-      ) {
-        botResponse =
-          "Basado en tus ingresos y gastos actuales, podrías ahorrar aproximadamente $3,200 cada mes. ¿Te gustaría crear una meta de ahorro?";
-      } else if (
-        lowerCaseMessage.includes("compara") ||
-        lowerCaseMessage.includes("comparación")
-      ) {
-        botResponse =
-          "Comparado con el mes anterior, has gastado un 12% menos en Alimentación, pero un 15% más en Entretenimiento. Tu ahorro total ha mejorado un 5%.";
-      } else if (
-        lowerCaseMessage.includes("consejos") ||
-        lowerCaseMessage.includes("recomendación") ||
-        lowerCaseMessage.includes("sugerencia")
-      ) {
-        botResponse =
-          "Te recomiendo aumentar tus pagos a la Tarjeta de Crédito para reducir los intereses. También podrías reducir tus gastos en restaurantes, que representan un 30% de tu presupuesto de alimentación.";
-      } else {
-        botResponse =
-          "Entiendo. ¿Hay algo específico en lo que pueda ayudarte con tus finanzas? Puedo registrar gastos, ingresos, crear planes de pago o analizar tus hábitos financieros.";
+  const resolveConfirmation = async (
+    messageId: string,
+    decisionId: number,
+    action: "confirm" | "cancel",
+  ) => {
+    patchMessage(messageId, { resolved: true });
+    try {
+      if (action === "cancel") {
+        const res = await agentDecisionsService.cancel(decisionId);
+        setMessages((prev) => [
+          ...prev,
+          { id: newId(), role: "assistant", content: res.detail },
+        ]);
+        return;
       }
-
-      setMessages((prev) => [...prev, { type: "assistant", content: botResponse }]);
-      setIsProcessing(false);
-
-      // Speak the response (text-to-speech)
-      speakText(botResponse);
-    }, 1500);
+      const res = await agentDecisionsService.confirm(decisionId);
+      const ok = res.result?.ok;
+      const tx = res.result?.wallbit_tx_uuid;
+      const content = ok
+        ? `✅ Operación ejecutada en Wallbit.${tx ? `\n\n🧾 Tx: \`${tx}\`` : ""}`
+        : `❌ Wallbit rechazó la operación: ${res.result?.error ?? "error desconocido"}`;
+      setMessages((prev) => [
+        ...prev,
+        { id: newId(), role: "assistant", content, error: !ok },
+      ]);
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "No se pudo completar la operación",
+        description: "Inténtalo de nuevo en unos momentos.",
+      });
+      patchMessage(messageId, { resolved: false });
+    }
   };
 
-  // Scroll to bottom when messages change
+  // Scroll to bottom when messages or steps change.
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Abort any in-flight stream on unmount.
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   return {
     showChat,
@@ -156,9 +159,15 @@ export const useChatBot = () => {
     isProcessing,
     isRecording,
     isListening,
+    voiceEnabled,
+    toggleVoice: () => setVoiceEnabled((v) => !v),
     messageEndRef,
     chatBodyRef,
     handleSendMessage,
     toggleRecording,
+    onConfirm: (messageId: string, decisionId: number) =>
+      resolveConfirmation(messageId, decisionId, "confirm"),
+    onCancel: (messageId: string, decisionId: number) =>
+      resolveConfirmation(messageId, decisionId, "cancel"),
   };
 };
