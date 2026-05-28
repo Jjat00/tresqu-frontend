@@ -144,3 +144,21 @@ export interface PriceHistoryResponse {
   stale: boolean;
   source: string;
 }
+
+// --- Asset explorer: search the Wallbit catalog ---
+
+/** A single asset returned by the catalog search endpoint. */
+export interface AssetSearchResult {
+  symbol: string;
+  name: string;
+  asset_type: string;
+  sector: string;
+  /** May arrive as a number, a numeric string, or null — render gracefully. */
+  price: number | string | null;
+  logo_url: string;
+  country: string;
+}
+
+export interface AssetSearchResponse {
+  assets: AssetSearchResult[];
+}
