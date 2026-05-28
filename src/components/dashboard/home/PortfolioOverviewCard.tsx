@@ -30,8 +30,8 @@ const PortfolioOverviewCard = () => {
     return (
       <div className="glass-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-up">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-indigo-500/15 flex items-center justify-center">
-            <LineChart className="h-4 w-4 text-indigo-400" />
+          <div className="h-9 w-9 rounded-lg bg-wallbit/15 flex items-center justify-center">
+            <LineChart className="h-4 w-4 text-wallbit" />
           </div>
           <div>
             <p className="text-sm font-medium">Conectá Wallbit</p>
@@ -68,7 +68,7 @@ const PortfolioOverviewCard = () => {
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+          <div className="w-1.5 h-1.5 rounded-full bg-wallbit" />
           <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
             Portfolio Wallbit
           </span>

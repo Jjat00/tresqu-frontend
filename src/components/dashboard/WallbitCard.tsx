@@ -185,11 +185,13 @@ const WallbitCard = () => {
     <Card className="glass-card">
       <CardHeader className="flex flex-row items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="rounded-md bg-indigo-500/10 p-2">
-            <Wallet className="h-5 w-5 text-indigo-400" />
-          </div>
           <div>
-            <CardTitle className="text-lg">Wallbit</CardTitle>
+            <img
+              src="/wallbit_logo.png"
+              alt="Wallbit"
+              className="h-6 w-auto mb-1.5"
+            />
+            <CardTitle className="sr-only">Wallbit</CardTitle>
             <CardDescription>
               Conecta tu cuenta para consultar saldos, transacciones y
               operar desde el chat.
@@ -324,7 +326,7 @@ const WallbitCard = () => {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-indigo-400" />
+              <Wallet className="h-5 w-5 text-wallbit" />
               Conectar Wallbit
             </DialogTitle>
             <DialogDescription>

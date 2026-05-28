@@ -85,16 +85,22 @@ const WallbitSection = () => {
         {/* Header */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
-            <div className="flex items-center gap-2 mb-6 flex-wrap">
-              <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium">
-                Wallbit × Tresqu
+            <div className="flex items-center gap-3 mb-6 flex-wrap">
+              <img
+                src="/wallbit_logo.png"
+                alt="Wallbit"
+                className="h-6 sm:h-7 w-auto"
+              />
+              <span className="text-zinc-600 text-lg">×</span>
+              <span className="trii-title text-lg sm:text-xl text-[#00FF7F]">
+                Tresqu
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-1 border border-[#00FF7F]/40 rounded-sm">
+              <span className="inline-flex items-center gap-1.5 px-2 py-1 border border-[#0D99FF]/40 rounded-sm">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF7F] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00FF7F]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0D99FF] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0D99FF]" />
                 </span>
-                <span className="text-[10px] uppercase tracking-wider text-[#00FF7F] font-semibold">
+                <span className="text-[10px] uppercase tracking-wider text-[#0D99FF] font-semibold">
                   En vivo
                 </span>
               </span>
@@ -103,7 +109,7 @@ const WallbitSection = () => {
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
               TU COPILOTO,
               <br />
-              NO TU <span className="text-[#00FF7F] italic">CUADERNO</span>.
+              NO TU <span className="text-[#0D99FF] italic">CUADERNO</span>.
             </h2>
             <p className="text-zinc-400 text-base sm:text-lg leading-relaxed">
               Antes, Tresqu te ayudaba a entender en qué gastabas. Con Wallbit
@@ -120,7 +126,7 @@ const WallbitSection = () => {
                 key={title}
                 className="bg-white/[0.02] border border-white/[0.06] p-5 rounded-md transition-colors duration-200 hover:border-white/10"
               >
-                <div className="w-10 h-10 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] mb-4">
+                <div className="w-10 h-10 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#0D99FF] mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
                 <h3 className="text-white font-bold text-base mb-2 font-display tracking-tight">
@@ -147,7 +153,7 @@ const WallbitSection = () => {
           </div>
           <Link
             to="/dashboard/profile"
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-[#00FF7F]/90 transition-colors text-sm whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0D99FF] text-black font-semibold rounded-md hover:bg-[#0D99FF]/90 transition-colors text-sm whitespace-nowrap"
           >
             Conectar en mi perfil
           </Link>

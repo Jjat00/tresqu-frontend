@@ -167,7 +167,7 @@ const WallbitLimitsCard = () => {
     <Card>
       <CardHeader>
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-md bg-[#00FF7F]/10 border border-[#00FF7F]/30 flex items-center justify-center text-[#00FF7F] flex-shrink-0">
+          <div className="w-10 h-10 rounded-md bg-wallbit/10 border border-wallbit/30 flex items-center justify-center text-wallbit flex-shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div className="flex-1">

@@ -62,6 +62,10 @@
   --color-trii-dark: #0a0a0a;
   --color-trii-card: #111111;
 
+  /* Marca Wallbit (azul eléctrico de su identidad) */
+  --color-wallbit: #0D99FF;
+  --color-wallbit-dark: #0A7FD6;
+
   /* Timing tokens */
   --duration-fast: 150ms;
   --duration-normal: 300ms;

@@ -23,9 +23,10 @@ const Hero = () => {
 
             {/* Subtitle */}
             <p className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-              Tresqu aprende cómo gastas, ganas y ahorras — y con Wallbit usa
-              ese contexto para invertir contigo desde un chat. Sin formularios,
-              sin perfiles genéricos.
+              Tresqu aprende cómo gastas, ganas y ahorras — y con{" "}
+              <span className="text-wallbit font-medium">Wallbit</span> usa ese
+              contexto para invertir contigo desde un chat. Sin formularios, sin
+              perfiles genéricos.
             </p>
 
             {/* CTA Buttons - Store Style */}

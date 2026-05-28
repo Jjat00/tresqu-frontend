@@ -111,8 +111,8 @@ const InvestmentsMockup = () => (
 
     <div className="bg-white/[0.04] border border-white/10 rounded-md px-3 py-2.5">
       <div className="flex items-center gap-2 mb-2.5">
-        <LineChart className="w-3.5 h-3.5 text-[#00FF7F]" />
-        <p className="text-[#00FF7F] text-[11px] font-semibold">
+        <LineChart className="w-3.5 h-3.5 text-wallbit" />
+        <p className="text-wallbit text-[11px] font-semibold">
           Tu cuenta Wallbit
         </p>
       </div>
@@ -164,6 +164,7 @@ type Feature = {
   description: string;
   highlight: string;
   Mockup: () => React.JSX.Element;
+  brand?: "wallbit";
 };
 
 const features: Feature[] = [
@@ -174,6 +175,7 @@ const features: Feature[] = [
       "Pregúntale a Tresqu por tu cuenta Wallbit: cuánto tienes libre, tus acciones y cómo van. Y cuando quieras, compra, vende o mueve fondos desde el chat.",
     highlight: "Inversiones",
     Mockup: InvestmentsMockup,
+    brand: "wallbit",
   },
   {
     Icon: MessageSquare,
@@ -238,11 +240,13 @@ const WhatsAppFeatures = () => {
         {/* Bento Grid — patrón de Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 lg:gap-6">
           {features.map((feature, index) => {
-            const { Icon, title, description, highlight, Mockup } = feature;
+            const { Icon, title, description, highlight, Mockup, brand } =
+              feature;
             const isLarge = index === 0;
             const gridClass = isLarge
               ? "md:col-span-2 md:row-span-2"
               : "md:col-span-2";
+            const accent = brand === "wallbit" ? "#0D99FF" : "#00FF7F";
 
             return (
               <div
@@ -251,11 +255,17 @@ const WhatsAppFeatures = () => {
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-6">
-                    <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F]">
+                    <div
+                      className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center"
+                      style={{ color: accent }}
+                    >
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="inline-flex items-center gap-2 px-2.5 py-1 border border-white/10 rounded-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F]" />
+                      <div
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: accent }}
+                      />
                       <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">
                         {highlight}
                       </span>

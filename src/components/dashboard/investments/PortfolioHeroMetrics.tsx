@@ -53,7 +53,7 @@ const PortfolioHeroMetrics = () => {
             <p className="text-xs text-muted-foreground uppercase tracking-wider">
               Capital invertido
             </p>
-            <Wallet className="h-4 w-4 text-indigo-400" />
+            <Wallet className="h-4 w-4 text-wallbit" />
           </div>
           <p className="text-2xl font-bold">
             {formatUsd(data.net_invested_usd)}
