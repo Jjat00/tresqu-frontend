@@ -45,8 +45,12 @@ const CATEGORY_TABS: Array<{ value: string; label: string }> = [
 
 const DEFAULT_CATEGORY = "MOST_POPULAR";
 const DEBOUNCE_MS = 350;
-/** Backend caps a sparkline batch at ~30 symbols; keep the table within that. */
-const MAX_SPARKLINE_SYMBOLS = 30;
+/**
+ * Rows shown per table. Kept small on purpose: each row's sparkline costs one
+ * Twelve Data credit and they're requested in a burst, so a larger table can
+ * blow past the provider's per-minute limit (8/min on the free tier).
+ */
+const TABLE_SIZE = 6;
 
 const fmtUsd = (value: number | string | null) => {
   const n = typeof value === "string" ? parseFloat(value) : value;
@@ -132,15 +136,13 @@ const AssetExplorer = () => {
   const { data, isLoading, isFetching, error } = useAssetSearch(
     trimmed,
     isSearching ? undefined : category,
+    TABLE_SIZE,
   );
 
   const assets = useMemo(() => data?.assets ?? [], [data]);
 
   // Batch sparklines for the CURRENTLY DISPLAYED rows in a single request.
-  const symbols = useMemo(
-    () => assets.slice(0, MAX_SPARKLINE_SYMBOLS).map((a) => a.symbol),
-    [assets],
-  );
+  const symbols = useMemo(() => assets.map((a) => a.symbol), [assets]);
   const { data: sparkData, isLoading: sparksLoading } = useSparklines(symbols);
   const sparklines = sparkData?.sparklines;
 

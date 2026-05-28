@@ -14,14 +14,14 @@ const MIN_QUERY_LENGTH = 2;
  * request per keystroke. The query is `enabled` only when there's something
  * meaningful to search: a free-text term of length >= 2, OR a selected category.
  */
-export const useAssetSearch = (query: string, category?: string) => {
+export const useAssetSearch = (query: string, category?: string, limit?: number) => {
   const trimmed = query.trim();
   const hasQuery = trimmed.length >= MIN_QUERY_LENGTH;
   const hasCategory = Boolean(category);
 
   return useQuery<AssetSearchResponse>({
-    queryKey: ["wallbit", "assets", "search", trimmed, category],
-    queryFn: () => assetsService.search(trimmed, category),
+    queryKey: ["wallbit", "assets", "search", trimmed, category, limit],
+    queryFn: () => assetsService.search(trimmed, category, limit),
     enabled: hasQuery || hasCategory,
     retry: false,
     // Catalog + prices change slowly relative to a search session.
