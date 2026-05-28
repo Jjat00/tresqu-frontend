@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useSpeechRecognition } from "./useSpeechRecognition";
-import { useTextToSpeech } from "./useTextToSpeech";
 import { streamChat, type HistoryTurn } from "@/services/agents/chatStream";
 import { agentDecisionsService } from "@/services/wallbit";
 import type {
@@ -32,20 +30,16 @@ function normalizePending(
 }
 
 export const useChatBot = () => {
-  const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([
     { id: newId(), role: "assistant", content: GREETING },
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
-  const chatBodyRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const { toast } = useToast();
-  const { speakText } = useTextToSpeech();
 
   // Update a single message in place by id.
   const patchMessage = (id: string, patch: Partial<ChatMsg>) =>
@@ -91,7 +85,6 @@ export const useChatBot = () => {
             pending: normalizePending(final.pending_confirmation),
           });
           setIsProcessing(false);
-          if (voiceEnabled && final.text) speakText(final.text);
         },
         onError: (errText) => {
           patchMessage(assistantId, { content: errText, error: true });
@@ -101,11 +94,6 @@ export const useChatBot = () => {
       controller.signal,
     );
   };
-
-  const { isRecording, isListening, toggleRecording } = useSpeechRecognition({
-    onTranscript: setInputMessage,
-    handleSendMessage,
-  });
 
   const resolveConfirmation = async (
     messageId: string,
@@ -151,20 +139,12 @@ export const useChatBot = () => {
   useEffect(() => () => abortRef.current?.abort(), []);
 
   return {
-    showChat,
-    setShowChat,
     messages,
     inputMessage,
     setInputMessage,
     isProcessing,
-    isRecording,
-    isListening,
-    voiceEnabled,
-    toggleVoice: () => setVoiceEnabled((v) => !v),
     messageEndRef,
-    chatBodyRef,
     handleSendMessage,
-    toggleRecording,
     onConfirm: (messageId: string, decisionId: number) =>
       resolveConfirmation(messageId, decisionId, "confirm"),
     onCancel: (messageId: string, decisionId: number) =>

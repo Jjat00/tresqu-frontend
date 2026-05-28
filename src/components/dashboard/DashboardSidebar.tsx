@@ -4,6 +4,7 @@ import {
   TrendingUpIcon,
   TagIcon,
   LineChartIcon,
+  Bot,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -32,6 +33,14 @@ const navItems: NavItem[] = [
     icon: HomeIcon,
     color: "text-muted-foreground",
     activeColor: "text-sky-400 bg-sky-500/10",
+  },
+  {
+    id: "agents",
+    label: "Agentes",
+    path: "/dashboard/agents",
+    icon: Bot,
+    color: "text-muted-foreground",
+    activeColor: "text-teal-400 bg-teal-500/10",
   },
   {
     id: "expenses",

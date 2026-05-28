@@ -21,7 +21,7 @@ const ChatBody = ({
   onCancel,
 }: ChatBodyProps) => {
   return (
-    <div className="flex-1 overflow-auto mb-2 bg-muted/20 rounded-lg p-2 sm:p-3 space-y-1.5 sm:space-y-2">
+    <div className="flex-1 min-h-0 overflow-auto mb-2 bg-muted/20 rounded-lg p-2 sm:p-3 space-y-1.5 sm:space-y-2">
       {messages.map((msg) => {
         // In-flight assistant turn: show the live agent graph instead of a bubble.
         if (msg.role === "assistant" && msg.content === "" && isProcessing) {
