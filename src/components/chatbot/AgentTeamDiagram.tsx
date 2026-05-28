@@ -1,15 +1,22 @@
-import { Sparkles } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import { AgentIcon } from "./agentIcons";
 import type { AgentInfo } from "@/types/chat";
 
 interface AgentTeamDiagramProps {
   agents: AgentInfo[];
+  wallbitConnected: boolean;
   onSelect: (id: string) => void;
+  onConnectWallbit: () => void;
 }
 
 // Honest hub-and-spoke: Tresqu coordinates; specialists never talk to each
 // other. The Analyst only READS shared data (shown as a dotted input).
-const AgentTeamDiagram = ({ agents, onSelect }: AgentTeamDiagramProps) => {
+const AgentTeamDiagram = ({
+  agents,
+  wallbitConnected,
+  onSelect,
+  onConnectWallbit,
+}: AgentTeamDiagramProps) => {
   const supervisor = agents.find((a) => a.kind === "supervisor");
   const specialists = agents.filter((a) => a.kind !== "supervisor");
   const analyst = agents.find((a) => a.id === "analyst");
@@ -32,18 +39,31 @@ const AgentTeamDiagram = ({ agents, onSelect }: AgentTeamDiagramProps) => {
         <div className="my-2 h-3 w-px bg-border" />
 
         <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4">
-          {specialists.map((a) => (
-            <button
-              key={a.id}
-              onClick={() => onSelect(a.id)}
-              className="flex flex-col items-center gap-1 rounded-lg border border-border/60 bg-muted/20 px-1 py-2 text-center transition-all hover:border-success/40 hover:bg-success/5"
-            >
-              <AgentIcon id={a.id} className="h-4 w-4 text-foreground" />
-              <span className="text-[10px] leading-tight text-muted-foreground">
-                {a.label}
-              </span>
-            </button>
-          ))}
+          {specialists.map((a) => {
+            const locked = !!a.requires_wallbit && !wallbitConnected;
+            return (
+              <button
+                key={a.id}
+                onClick={() => (locked ? onConnectWallbit() : onSelect(a.id))}
+                title={locked ? "Conecta Wallbit para usar este agente" : undefined}
+                className={`flex flex-col items-center gap-1 rounded-lg border px-1 py-2 text-center transition-all ${
+                  locked
+                    ? "border-dashed border-border/60 bg-muted/10 opacity-60 hover:opacity-100"
+                    : "border-border/60 bg-muted/20 hover:border-success/40 hover:bg-success/5"
+                }`}
+              >
+                <div className="relative">
+                  <AgentIcon id={a.id} className="h-4 w-4 text-foreground" />
+                  {locked && (
+                    <Lock className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 text-muted-foreground" />
+                  )}
+                </div>
+                <span className="text-[10px] leading-tight text-muted-foreground">
+                  {a.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 

@@ -46,6 +46,8 @@ import {
 import {
   AlertTriangle,
   CheckCircle2,
+  ExternalLink,
+  KeyRound,
   Loader2,
   Pause,
   Play,
@@ -336,13 +338,47 @@ const WallbitCard = () => {
           </DialogHeader>
 
           <div className="space-y-4">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-3 text-xs">
+              <p className="flex items-center gap-1.5 font-medium text-foreground">
+                <KeyRound className="h-3.5 w-3.5" /> ¿De dónde saco la API key?
+              </p>
+              <ol className="mt-1.5 list-decimal space-y-0.5 pl-4 text-muted-foreground">
+                <li>
+                  Entra al{" "}
+                  <a
+                    href="https://developer.wallbit.io/dashboard"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-foreground underline underline-offset-2"
+                  >
+                    panel de Wallbit
+                  </a>{" "}
+                  e inicia sesión.
+                </li>
+                <li>
+                  Ve a <strong>Agents</strong> y pulsa <strong>Create agent</strong>.
+                </li>
+                <li>
+                  Marca los permisos <strong>read</strong> y <strong>trade</strong>.
+                </li>
+                <li>Copia la key y pégala aquí — Wallbit solo la muestra una vez.</li>
+              </ol>
+              <a
+                href="https://developer.wallbit.io/docs/quickstart#create-an-api-key"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-1 font-medium text-wallbit underline underline-offset-2"
+              >
+                Ver la guía oficial <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+
             <Alert>
               <ShieldAlert className="h-4 w-4" />
-              <AlertTitle>Permisos recomendados</AlertTitle>
+              <AlertTitle>Antes de generarla</AlertTitle>
               <AlertDescription>
-                Genera la key con scopes <strong>read</strong> y{" "}
-                <strong>trade</strong>. Sin IP whitelist (o agrega la IP de
-                tu servidor Tresqu) para evitar 401 silenciosos.
+                Sin IP whitelist (o agrega la IP de tu servidor Tresqu) para
+                evitar 401 silenciosos.
               </AlertDescription>
             </Alert>
 

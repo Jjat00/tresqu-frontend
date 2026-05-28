@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowRight, Loader2, ShieldAlert } from "lucide-react";
+import { AlertCircle, ArrowRight, Loader2, Lock, ShieldAlert, Wallet } from "lucide-react";
 import AgentTeamDiagram from "./AgentTeamDiagram";
 import { AgentIcon } from "./agentIcons";
 import type { AgentInfo } from "@/types/chat";
@@ -7,40 +7,52 @@ interface AgentRosterProps {
   agents: AgentInfo[];
   loading: boolean;
   error: boolean;
+  wallbitConnected: boolean;
   onSelect: (id: string) => void;
+  onConnectWallbit: () => void;
 }
 
 const AgentCard = ({
   agent,
+  wallbitConnected,
   onSelect,
+  onConnectWallbit,
 }: {
   agent: AgentInfo;
+  wallbitConnected: boolean;
   onSelect: (id: string) => void;
+  onConnectWallbit: () => void;
 }) => {
+  const locked = !!agent.requires_wallbit && !wallbitConnected;
+  const prefersHint = !!agent.prefers_wallbit && !wallbitConnected;
   const cta = agent.kind === "profiler" ? "Evaluar perfil" : "Hablar";
 
-  return (
-    <button
-      onClick={() => onSelect(agent.id)}
-      className="group flex flex-col rounded-xl border border-border/70 bg-card/60 p-3 text-left transition-all hover:border-success/40 hover:bg-success/5"
-    >
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/15">
-          <AgentIcon id={agent.id} className="h-4 w-4 text-success" />
-        </div>
-        <span className="font-medium">{agent.label}</span>
-        {agent.kind === "supervisor" && (
-          <span className="rounded-full border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
-            Orquestador
-          </span>
-        )}
-        {agent.real_money && (
-          <span className="flex items-center gap-0.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-600 dark:text-amber-400">
-            <ShieldAlert className="h-2.5 w-2.5" /> Dinero real
-          </span>
-        )}
+  const header = (
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/15">
+        <AgentIcon id={agent.id} className="h-4 w-4 text-success" />
       </div>
+      <span className="font-medium">{agent.label}</span>
+      {agent.kind === "supervisor" && (
+        <span className="rounded-full border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          Orquestador
+        </span>
+      )}
+      {agent.real_money && (
+        <span className="flex items-center gap-0.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-600 dark:text-amber-400">
+          <ShieldAlert className="h-2.5 w-2.5" /> Dinero real
+        </span>
+      )}
+      {locked && (
+        <span className="flex items-center gap-0.5 rounded-full border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          <Lock className="h-2.5 w-2.5" /> Requiere Wallbit
+        </span>
+      )}
+    </div>
+  );
 
+  const body = (
+    <>
       <p className="mt-1.5 text-xs text-muted-foreground">{agent.specialty}</p>
 
       <ul className="mt-2 space-y-0.5">
@@ -61,6 +73,45 @@ const AgentCard = ({
         </p>
       )}
 
+      {prefersHint && (
+        <p className="mt-2 flex items-start gap-1.5 rounded-md border border-dashed border-border/60 bg-muted/30 p-1.5 text-[11px] leading-snug text-muted-foreground">
+          <Wallet className="mt-0.5 h-3 w-3 shrink-0" />
+          Funciona sin Wallbit, pero conectándolo el análisis puede considerar tu
+          portafolio real.
+        </p>
+      )}
+    </>
+  );
+
+  if (locked) {
+    return (
+      <div className="flex flex-col rounded-xl border border-dashed border-border/70 bg-card/40 p-3">
+        <div className="opacity-60">
+          {header}
+          {body}
+        </div>
+        <p className="mt-2 rounded-md bg-muted/40 p-1.5 text-[11px] leading-snug text-muted-foreground">
+          Conecta tu cuenta Wallbit para hablar con este agente: necesita leer tu
+          saldo y movimientos para responderte.
+        </p>
+        <button
+          onClick={onConnectWallbit}
+          className="mt-2 inline-flex items-center justify-center gap-1.5 rounded-md bg-wallbit px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-wallbit/90"
+        >
+          <Wallet className="h-3.5 w-3.5" /> Conectar Wallbit
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => onSelect(agent.id)}
+      className="group flex flex-col rounded-xl border border-border/70 bg-card/60 p-3 text-left transition-all hover:border-success/40 hover:bg-success/5"
+    >
+      {header}
+      {body}
+
       <div className="mt-2 flex items-center gap-1 text-xs font-medium text-success">
         {cta}
         <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -69,7 +120,14 @@ const AgentCard = ({
   );
 };
 
-const AgentRoster = ({ agents, loading, error, onSelect }: AgentRosterProps) => {
+const AgentRoster = ({
+  agents,
+  loading,
+  error,
+  wallbitConnected,
+  onSelect,
+  onConnectWallbit,
+}: AgentRosterProps) => {
   if (loading) {
     return (
       <div className="flex h-40 items-center justify-center text-muted-foreground">
@@ -100,11 +158,22 @@ const AgentRoster = ({ agents, loading, error, onSelect }: AgentRosterProps) => 
         </p>
       </header>
 
-      <AgentTeamDiagram agents={agents} onSelect={onSelect} />
+      <AgentTeamDiagram
+        agents={agents}
+        wallbitConnected={wallbitConnected}
+        onSelect={onSelect}
+        onConnectWallbit={onConnectWallbit}
+      />
 
       <div className="grid gap-3 sm:grid-cols-2">
         {agents.map((a) => (
-          <AgentCard key={a.id} agent={a} onSelect={onSelect} />
+          <AgentCard
+            key={a.id}
+            agent={a}
+            wallbitConnected={wallbitConnected}
+            onSelect={onSelect}
+            onConnectWallbit={onConnectWallbit}
+          />
         ))}
       </div>
     </div>

@@ -20,6 +20,12 @@ export interface AgentInfo {
   specialty: string;
   capabilities: string[];
   real_money?: boolean;
+  // Hard dependency: locked behind a "Conectar Wallbit" CTA when Wallbit isn't
+  // connected (e.g. the Wallbit agent).
+  requires_wallbit?: boolean;
+  // Soft dependency: usable without Wallbit, but better connected (the Analyst
+  // can weigh your portfolio). Shows a non-blocking hint when disconnected.
+  prefers_wallbit?: boolean;
   // Data the agent only READS (e.g. the Analyst). Shown as dotted inputs, not
   // as agent-to-agent communication.
   data_sources?: string[];

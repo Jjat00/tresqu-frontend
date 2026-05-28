@@ -68,11 +68,20 @@ export async function streamChat(
   }
 
   if (!response.ok || !response.body) {
-    callbacks.onError(
-      response.status === 401
-        ? "Tu sesión expiró. Vuelve a iniciar sesión."
-        : GENERIC_ERROR,
-    );
+    if (response.status === 401) {
+      callbacks.onError("Tu sesión expiró. Vuelve a iniciar sesión.");
+      return;
+    }
+    // Non-stream error responses (e.g. 409 wallbit_not_connected) carry a
+    // human-readable ``detail`` — surface it instead of the generic message.
+    let detail = GENERIC_ERROR;
+    try {
+      const data = (await response.json()) as { detail?: string };
+      if (data?.detail) detail = data.detail;
+    } catch {
+      // keep the generic message
+    }
+    callbacks.onError(detail);
     return;
   }
 

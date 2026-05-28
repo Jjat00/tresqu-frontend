@@ -1,4 +1,4 @@
-import { ArrowLeft, Database, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowLeft, Database, ShieldAlert, Sparkles, Wallet } from "lucide-react";
 import ChatBody from "./ChatBody";
 import ChatInput from "./ChatInput";
 import { useChatBot } from "./useChatBot";
@@ -123,10 +123,20 @@ const RiskIntro = ({
 
 interface AgentChatProps {
   agent: AgentInfo;
+  wallbitConnected: boolean;
+  onConnectWallbit: () => void;
   onBack: () => void;
 }
 
-const AgentChat = ({ agent, onBack }: AgentChatProps) => {
+const AgentChat = ({
+  agent,
+  wallbitConnected,
+  onConnectWallbit,
+  onBack,
+}: AgentChatProps) => {
+  const lockedByWallbit = !!agent.requires_wallbit && !wallbitConnected;
+  const prefersWallbitHint = !!agent.prefers_wallbit && !wallbitConnected;
+
   const {
     messages,
     inputMessage,
@@ -140,6 +150,43 @@ const AgentChat = ({ agent, onBack }: AgentChatProps) => {
     agentId: agent.id,
     greeting: GREETINGS[agent.id] ?? agent.specialty,
   });
+
+  // Defense-in-depth: the roster already blocks opening this agent while
+  // Wallbit is disconnected, but guard the chat view too.
+  if (lockedByWallbit) {
+    return (
+      <div className="mx-auto flex h-[calc(100dvh-9.5rem)] w-full max-w-3xl flex-col lg:h-[calc(100dvh-6.5rem)]">
+        <div className="mb-3 flex items-center gap-2.5 animate-fade-up">
+          <button
+            onClick={onBack}
+            aria-label="Volver al equipo"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <h1 className="text-base font-semibold leading-tight">{agent.label}</h1>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-wallbit/15">
+            <Wallet className="h-6 w-6 text-wallbit" />
+          </div>
+          <div className="max-w-sm space-y-1">
+            <p className="font-medium">Conecta Wallbit para usar este agente</p>
+            <p className="text-sm text-muted-foreground">
+              {agent.label} necesita leer tu saldo y movimientos para responderte.
+              Conéctalo y vuelve aquí.
+            </p>
+          </div>
+          <button
+            onClick={onConnectWallbit}
+            className="inline-flex items-center gap-1.5 rounded-md bg-wallbit px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-wallbit/90"
+          >
+            <Wallet className="h-4 w-4" /> Conectar Wallbit
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex h-[calc(100dvh-9.5rem)] w-full max-w-3xl flex-col lg:h-[calc(100dvh-6.5rem)]">
@@ -184,6 +231,19 @@ const AgentChat = ({ agent, onBack }: AgentChatProps) => {
           <Database className="h-3 w-3" /> Lee: {agent.data_sources.join(", ")}
         </div>
       ) : null}
+
+      {prefersWallbitHint && (
+        <button
+          onClick={onConnectWallbit}
+          className="mb-2 flex w-full items-center gap-1.5 rounded-md border border-dashed border-border/60 bg-muted/30 p-1.5 text-left text-[11px] leading-snug text-muted-foreground transition-colors hover:border-wallbit/40 hover:text-foreground"
+        >
+          <Wallet className="h-3.5 w-3.5 shrink-0 text-wallbit" />
+          <span>
+            Funciona sin Wallbit, pero <span className="font-medium">conectándolo</span>{" "}
+            el análisis considera tu portafolio real. Toca para conectar.
+          </span>
+        </button>
+      )}
 
       <ChatBody
         messages={messages}
