@@ -29,7 +29,7 @@ const GREETINGS: Record<string, string> = {
   analyst:
     "Soy el Analista. Pregúntame por el precio o el análisis de una acción o ETF. Solo lectura y educativo: no recomiendo comprar ni vender.",
   risk:
-    "Soy tu Perfil de riesgo. Puedo evaluarte con un cuestionario corto cuando quieras.",
+    "Soy tu agente de Perfil de riesgo. Puedo decirte tu perfil actual (por cuestionario e inferido de tus registros), explicarte qué lo afecta y ayudarte a que sea más fiel. ¿Lo revisamos?",
 };
 
 const SUGGESTIONS: Record<string, string[]> = {
@@ -52,6 +52,8 @@ const SUGGESTIONS: Record<string, string[]> = {
   risk: [],
 };
 
+const tolLabel = (t?: string) => (t ? TOLERANCE_ES[t] ?? t : "");
+
 const RiskIntro = ({
   note,
   onStart,
@@ -63,27 +65,57 @@ const RiskIntro = ({
 }) => {
   const { data } = useEffectiveProfile();
 
-  let status: string | null = null;
-  if (data) {
-    if (data.source === "default") {
-      status = "Aún no tienes un perfil definido.";
-    } else {
-      const label = TOLERANCE_ES[data.tolerance] ?? data.tolerance;
-      const source = SOURCE_ES[data.source] ?? "según tu evaluación";
-      status = `Perfil actual: ${label} · ${source}`;
-    }
-  }
+  const hasDeclared = !!data?.declared;
+  const hasInferred = !!data?.inferred;
+  const hasAny = !!data && data.source !== "default" && (hasDeclared || hasInferred);
 
   return (
     <div className="mb-2 rounded-lg border border-border/70 bg-muted/20 p-2.5 text-xs">
-      {status && <p className="font-medium text-foreground">{status}</p>}
-      {note && <p className="mt-1 text-muted-foreground">{note}</p>}
+      {data && !hasAny && (
+        <p className="font-medium text-foreground">
+          Aún no tienes un perfil definido.
+        </p>
+      )}
+
+      {hasAny && (
+        <div className="space-y-0.5">
+          {hasDeclared && (
+            <p>
+              <span className="text-muted-foreground">Por cuestionario:</span>{" "}
+              <span className="font-medium text-foreground">
+                {tolLabel(data!.declared!.tolerance)}
+              </span>
+            </p>
+          )}
+          {hasInferred && (
+            <p>
+              <span className="text-muted-foreground">Inferido de tus registros:</span>{" "}
+              <span className="font-medium text-foreground">
+                {tolLabel(data!.inferred!.tolerance)}
+              </span>
+            </p>
+          )}
+          <p>
+            <span className="text-muted-foreground">En uso:</span>{" "}
+            <span className="font-medium text-foreground">
+              {tolLabel(data!.tolerance)}
+            </span>{" "}
+            <span className="text-muted-foreground">
+              ({SOURCE_ES[data!.source] ?? "según tu evaluación"})
+            </span>
+          </p>
+        </div>
+      )}
+
+      {note && <p className="mt-1.5 text-muted-foreground">{note}</p>}
+
       <button
         onClick={onStart}
         disabled={disabled}
         className="mt-2 inline-flex items-center gap-1 rounded-md bg-success px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-success/90 disabled:opacity-50"
       >
-        <Sparkles className="h-3.5 w-3.5" /> Iniciar evaluación
+        <Sparkles className="h-3.5 w-3.5" />
+        {hasDeclared ? "Actualizar perfil" : "Iniciar evaluación"}
       </button>
     </div>
   );
