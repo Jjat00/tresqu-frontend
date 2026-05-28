@@ -16,6 +16,7 @@ Frontend web de Tresqu: dashboard, chatbot de voz, gestión de transacciones e i
   - [Integración Gmail](#integración-gmail)
   - [Integración Wallbit (nuevo)](#integración-wallbit-nuevo)
   - [Perfil de inversión (nuevo)](#perfil-de-inversión-nuevo)
+  - [Mercado: gráfico de precios y explorador de activos (nuevo)](#mercado-gráfico-de-precios-y-explorador-de-activos-nuevo)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Scripts disponibles](#scripts-disponibles)
 
@@ -307,6 +308,39 @@ agente proponga una operación que choque con el perfil efectivo
 (ej. perfil conservador + compra de stock muy volátil), el flujo de
 confirmación va a mostrar un warning extra y exigir confirmación
 adicional. La card es la ventana del usuario a esa lógica.
+
+---
+
+### Mercado: gráfico de precios y explorador de activos (nuevo)
+
+En la pestaña **Inversiones** del dashboard el usuario puede ver la
+evolución del precio de cualquier activo y explorar el catálogo de Wallbit.
+
+- **Gráfico de precios por rangos** (`StockPriceChart`): área (Recharts) con
+  selector **1D · 1S · 1M · 3M · 1A · 5A · Máx**, precio actual, cambio %
+  coloreado y máx/mín. Se abre en un modal al hacer clic en una posición
+  (`HoldingDetailModal`) o en un activo del catálogo (`AssetDetailModal`).
+- **Explorar activos** (`AssetExplorer`): tabla con **tabs de categoría**
+  (Populares por defecto) y buscador. Lista cualquier acción/ETF **invertible
+  en Wallbit** (símbolo, nombre, precio, sector); el precio en el tiempo se
+  carga **bajo demanda** al abrir el detalle.
+
+La serie histórica la sirve el backend (`/api/market/assets/{symbol}/history/`,
+proveedor Twelve Data) porque Wallbit no expone histórico. El listado/catálogo
+sale de Wallbit (`/api/wallbit/assets/search/`) y **no** consume cuota de datos
+de mercado.
+
+#### Archivos clave
+
+| Archivo | Función |
+|---------|---------|
+| `src/types/wallbit.ts` | Tipos `PriceRange`, `PricePoint`, `PriceSummary`, `PriceHistoryResponse`, `AssetSearchResult` |
+| `src/services/wallbit/marketData.ts` | `getPriceHistory(symbol, range)` |
+| `src/services/wallbit/assets.ts` | `assetsService.search(q, category, limit)` |
+| `src/hooks/useMarketData.ts` · `useAssetSearch.ts` | Hooks TanStack Query |
+| `src/components/dashboard/investments/StockPriceChart.tsx` | Gráfico por rangos |
+| `src/components/dashboard/investments/AssetExplorer.tsx` | Tabla con tabs + búsqueda |
+| `src/components/dashboard/investments/{Holding,Asset}DetailModal.tsx` | Modales de detalle |
 
 ---
 
