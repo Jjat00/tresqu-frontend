@@ -10,6 +10,23 @@ export type AgentId =
   | "analyst"
   | "risk";
 
+export type AgentKind = "supervisor" | "specialist" | "profiler";
+
+// One agent in the roster returned by GET /api/agents/roster/.
+export interface AgentInfo {
+  id: string;
+  label: string;
+  kind: AgentKind;
+  specialty: string;
+  capabilities: string[];
+  real_money?: boolean;
+  // Data the agent only READS (e.g. the Analyst). Shown as dotted inputs, not
+  // as agent-to-agent communication.
+  data_sources?: string[];
+  start_command?: string;
+  note?: string;
+}
+
 export type StepPhase = "delegate" | "result";
 
 export interface AgentStep {

@@ -8,8 +8,10 @@ import type {
   RawPendingConfirmation,
 } from "@/types/chat";
 
-const GREETING =
-  "¡Hola! Soy Tresqu, tu asistente financiero. Puedo registrar gastos e ingresos, consultar tu Wallbit, analizar acciones y más. ¿En qué te ayudo?";
+interface UseChatBotOptions {
+  agentId: string;
+  greeting: string;
+}
 
 const newId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -29,9 +31,9 @@ function normalizePending(
   };
 }
 
-export const useChatBot = () => {
+export const useChatBot = ({ agentId, greeting }: UseChatBotOptions) => {
   const [messages, setMessages] = useState<ChatMsg[]>([
-    { id: newId(), role: "assistant", content: GREETING },
+    { id: newId(), role: "assistant", content: greeting },
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -68,6 +70,7 @@ export const useChatBot = () => {
     abortRef.current = controller;
 
     streamChat(
+      agentId,
       text,
       history,
       {

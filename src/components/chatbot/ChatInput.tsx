@@ -6,9 +6,10 @@ interface ChatInputProps {
   setInputMessage: (message: string) => void;
   handleSendMessage: () => void;
   isProcessing: boolean;
+  suggestions?: string[];
 }
 
-const SUGGESTIONS = [
+const DEFAULT_SUGGESTIONS = [
   "¿Cuánto gasté este mes?",
   "¿Cuánto tengo en Wallbit?",
   "¿Cómo va NVDA este mes?",
@@ -19,6 +20,7 @@ const ChatInput = ({
   setInputMessage,
   handleSendMessage,
   isProcessing,
+  suggestions = DEFAULT_SUGGESTIONS,
 }: ChatInputProps) => {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -52,7 +54,7 @@ const ChatInput = ({
       </div>
 
       <div className="mt-2 flex flex-wrap gap-1.5">
-        {SUGGESTIONS.map((suggestion) => (
+        {suggestions.map((suggestion) => (
           <button
             key={suggestion}
             onClick={() => setInputMessage(suggestion)}

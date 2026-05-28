@@ -7,7 +7,7 @@ import type {
   StepEvent,
 } from "@/types/chat";
 
-const STREAM_PATH = "/api/agents/chat/stream/";
+const streamPath = (agentId: string) => `/api/agents/${agentId}/chat/stream/`;
 
 export interface HistoryTurn {
   role: ChatRole;
@@ -24,20 +24,22 @@ const GENERIC_ERROR =
   "Lo siento, hubo un problema de conexión. Inténtalo de nuevo.";
 
 /**
- * POST a message to the supervisor and consume the Server-Sent Events stream,
- * dispatching each agent step and the final answer via callbacks.
+ * POST a message to a specific agent and consume the Server-Sent Events stream,
+ * dispatching each step and the final answer via callbacks. ``agentId`` is
+ * "tresqu" for the orchestrator or a specialist id for a direct 1:1 chat.
  *
  * Uses native fetch (Axios can't read a streaming body). The Axios JWT
  * interceptor doesn't apply here, so we attach the token manually and retry
  * once after a transparent refresh on 401.
  */
 export async function streamChat(
+  agentId: string,
   message: string,
   history: HistoryTurn[],
   callbacks: StreamCallbacks,
   signal?: AbortSignal,
 ): Promise<void> {
-  const url = `${env.apiUrl}${STREAM_PATH}`;
+  const url = `${env.apiUrl}${streamPath(agentId)}`;
   const body = JSON.stringify({ message, history });
 
   const send = (token: string | null) =>
