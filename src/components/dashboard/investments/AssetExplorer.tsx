@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AxiosError } from "axios";
-import { AlertCircle, ArrowDownRight, ArrowUpRight, Minus, Search } from "lucide-react";
+import { AlertCircle, Search } from "lucide-react";
 
 import {
   Card,
@@ -21,11 +21,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAssetSearch } from "@/hooks/useAssetSearch";
-import { useSparklines } from "@/hooks/useMarketData";
-import type { AssetSearchResult, Sparkline as SparklineData } from "@/types/wallbit";
+import type { AssetSearchResult } from "@/types/wallbit";
 
 import AssetDetailModal from "./AssetDetailModal";
-import Sparkline from "./Sparkline";
 
 /** The category buckets shown as tabs. The first one loads by default on mount. */
 const CATEGORY_TABS: Array<{ value: string; label: string }> = [
@@ -45,11 +43,7 @@ const CATEGORY_TABS: Array<{ value: string; label: string }> = [
 
 const DEFAULT_CATEGORY = "MOST_POPULAR";
 const DEBOUNCE_MS = 350;
-/**
- * Rows shown per table. Kept small on purpose: each row's sparkline costs one
- * Twelve Data credit and they're requested in a burst, so a larger table can
- * blow past the provider's per-minute limit (8/min on the free tier).
- */
+/** Rows shown per table view (Wallbit catalog only — no market-data cost). */
 const TABLE_SIZE = 6;
 
 const fmtUsd = (value: number | string | null) => {
@@ -69,49 +63,6 @@ const resolveErrorMessage = (error: unknown): string => {
   if (status === 502)
     return "El catálogo de Wallbit no está disponible por ahora. Probá de nuevo en unos minutos.";
   return "No pudimos buscar activos. Intentá de nuevo.";
-};
-
-/** The "Hoy" (today) cell: change % colored with an arrow, plus the sparkline. */
-const ChangeCell = ({
-  spark,
-  isLoading,
-}: {
-  spark: SparklineData | null | undefined;
-  isLoading: boolean;
-}) => {
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-end gap-2">
-        <Skeleton className="h-3.5 w-10" />
-        <Skeleton className="h-6 w-[80px] rounded-sm" />
-      </div>
-    );
-  }
-
-  if (!spark) {
-    return <span className="text-muted-foreground tabular-nums">—</span>;
-  }
-
-  const { change_pct, trend, prices } = spark;
-  const isUp = change_pct > 0;
-  const isDown = change_pct < 0;
-  const tone = isUp
-    ? "text-emerald-400"
-    : isDown
-      ? "text-red-400"
-      : "text-muted-foreground";
-  const TrendIcon = isUp ? ArrowUpRight : isDown ? ArrowDownRight : Minus;
-
-  return (
-    <div className="flex items-center justify-end gap-2">
-      <span className={`flex items-center gap-0.5 tabular-nums ${tone}`}>
-        <TrendIcon className="h-3 w-3" />
-        {isUp ? "+" : ""}
-        {change_pct.toFixed(2)}%
-      </span>
-      <Sparkline prices={prices} trend={trend} />
-    </div>
-  );
 };
 
 const AssetExplorer = () => {
@@ -140,11 +91,6 @@ const AssetExplorer = () => {
   );
 
   const assets = useMemo(() => data?.assets ?? [], [data]);
-
-  // Batch sparklines for the CURRENTLY DISPLAYED rows in a single request.
-  const symbols = useMemo(() => assets.map((a) => a.symbol), [assets]);
-  const { data: sparkData, isLoading: sparksLoading } = useSparklines(symbols);
-  const sparklines = sparkData?.sparklines;
 
   const showSkeletons =
     isLoading || (isFetching && assets.length === 0 && !error);
@@ -221,13 +167,11 @@ const AssetExplorer = () => {
                     <TableHead>Símbolo</TableHead>
                     <TableHead className="hidden sm:table-cell">Nombre</TableHead>
                     <TableHead className="text-right">Precio</TableHead>
-                    <TableHead className="text-right">24h</TableHead>
                     <TableHead className="hidden lg:table-cell">Sector</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {assets.map((asset) => {
-                    const spark = sparklines?.[asset.symbol];
                     return (
                       <TableRow
                         key={asset.symbol}
@@ -269,9 +213,6 @@ const AssetExplorer = () => {
                         </TableCell>
                         <TableCell className="text-right font-medium tabular-nums">
                           {fmtUsd(asset.price)}
-                        </TableCell>
-                        <TableCell className="text-right text-sm font-medium">
-                          <ChangeCell spark={spark} isLoading={sparksLoading} />
                         </TableCell>
                         <TableCell className="hidden text-muted-foreground lg:table-cell">
                           {asset.sector || "—"}
