@@ -157,8 +157,26 @@ export interface AssetSearchResult {
   price: number | string | null;
   logo_url: string;
   country: string;
+  /** Market cap in MILLIONS of USD. May be null when the provider has no data. */
+  market_cap_m: number | null;
 }
 
 export interface AssetSearchResponse {
   assets: AssetSearchResult[];
+}
+
+// --- Market data: batch sparklines (mini charts + change %) ---
+
+/** A downsampled intraday series plus the day's change for one symbol. */
+export interface Sparkline {
+  /** Chronological, downsampled prices (≤24 floats). */
+  prices: number[];
+  /** Day change in percent; can be positive or negative. */
+  change_pct: number;
+  trend: PriceTrend;
+}
+
+/** Batch response keyed by symbol; a symbol maps to null when no data exists. */
+export interface SparklinesResponse {
+  sparklines: Record<string, Sparkline | null>;
 }
