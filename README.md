@@ -1,6 +1,6 @@
 # Tresqu — Asistente Financiero Inteligente
 
-Frontend web de Tresqu: dashboard, chatbot de voz, gestión de transacciones e integraciones (Gmail + **Wallbit**). Construido con React 19 + TypeScript + Vite y desplegado en Cloudflare Pages en [tresqu.com](https://tresqu.com).
+Frontend web de Tresqu: landing, dashboard financiero, **chat web con el equipo de agentes**, gestión de transacciones e integraciones (Gmail + **Wallbit**). Construido con React 19 + TypeScript + Vite y desplegado en Cloudflare Pages en [tresqu.com](https://tresqu.com).
 
 ---
 
@@ -11,7 +11,7 @@ Frontend web de Tresqu: dashboard, chatbot de voz, gestión de transacciones e i
 - [Stack tecnológico](#stack-tecnológico)
 - [Setup local paso a paso](#setup-local-paso-a-paso)
 - [Features](#features)
-  - [Chatbot inteligente](#chatbot-inteligente)
+  - [Equipo de agentes (chat web)](#equipo-de-agentes-chat-web)
   - [Dashboard analítico](#dashboard-analítico)
   - [Integración Gmail](#integración-gmail)
   - [Integración Wallbit (nuevo)](#integración-wallbit-nuevo)
@@ -26,12 +26,12 @@ Frontend web de Tresqu: dashboard, chatbot de voz, gestión de transacciones e i
 
 Tresqu es un copiloto financiero conversacional. Desde el dashboard puedes:
 
-- Hablar (literal, con micrófono) o escribirle al chatbot para registrar gastos/ingresos
+- Chatear con el **equipo de agentes** (un agente por especialidad) para registrar gastos/ingresos, consultar tu dinero y operar en Wallbit — con **tarjetas de confirmación inline** para las acciones con dinero real
 - Visualizar todo tu dinero en gráficos: torta por categoría, líneas de tendencia, barras apiladas
 - Crear categorías personalizadas y metas de ahorro
 - Conectar tu **Gmail** para que detecte compras en correos automáticamente
-- Conectar tu cuenta de **Wallbit** y operar desde WhatsApp/Telegram con flujo de confirmación
-- **(nuevo)** Ver tu **perfil de inversión** combinando tu cuestionario con una inferencia automática de tu contexto financiero
+- Conectar tu cuenta de **Wallbit**, configurar **límites del agente** y confirmar operaciones tanto en el chat web como en WhatsApp/Telegram
+- Ver tu **perfil de inversión** combinando tu cuestionario con una inferencia automática de tu contexto financiero
 
 ---
 
@@ -43,7 +43,6 @@ Tresqu es un copiloto financiero conversacional. Desde el dashboard puedes:
 flowchart LR
     subgraph User["Usuario"]
         BROWSER[Navegador]
-        MIC[Micrófono]
     end
 
     subgraph Frontend["Frontend (este repo)"]
@@ -63,7 +62,6 @@ flowchart LR
     end
 
     BROWSER --> SPA
-    MIC -->|Web Speech API| SPA
     SPA <--> ZS
     SPA <--> RQ
     RQ --> AX
@@ -76,25 +74,28 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    PAGE[Dashboard.tsx] --> TAB{Tab activo}
-    TAB --> EXP[ExpensesTab]
-    TAB --> INC[IncomeTab]
-    TAB --> CAT[CategoriesTab]
-    TAB --> SAV[SavingsGoalsTab]
-    TAB --> DEB[DebtTab]
-    TAB --> INT[IntegrationsTab<br/>Gmail + Wallbit]
+    PAGE[Dashboard.tsx] --> TAB{Sección activa}
+    TAB --> HOME[Inicio]
+    TAB --> EXP[Gastos]
+    TAB --> INC[Ingresos]
+    TAB --> INVST[Inversiones<br/>charts + explorador]
+    TAB --> CAT[Categorías]
+    AGENTS[Agents.tsx<br/>/dashboard/agents] --> CHAT[ChatView<br/>roster + chat por agente]
+    ACCOUNT[Profile.tsx<br/>/dashboard/account] --> INT[Integraciones<br/>Gmail + Wallbit + Límites]
+    ACCOUNT --> HR[useEffectiveProfile]
 
     EXP --> HE[useExpenseCategories]
     INC --> HI[useIncomeSummary]
     INT --> HG[useGmailStatus]
     INT --> HW[useWallbitStatus]
-    PROFILE[Profile.tsx] --> HR[useEffectiveProfile]
+    CHAT --> HRO[useAgentRoster]
 
     HE --> RQS[(TanStack Query cache)]
     HI --> RQS
     HG --> RQS
     HW --> RQS
     HR --> RQS
+    HRO --> RQS
 
     RQS --> SVC[services/*]
     SVC --> AX[Axios client]
@@ -148,7 +149,7 @@ sequenceDiagram
 | Routing | React Router DOM 6 |
 | Formularios | React Hook Form + Zod |
 | Charts | Chart.js (react-chartjs-2) y Recharts |
-| Voz | Web Speech API (STT) + Web Audio API (TTS) |
+| Chat de agentes | Respuestas en streaming (`services/agents/chatStream.ts`) |
 | Despliegue | Cloudflare Pages — autodeploy en push a `main` |
 
 ---
@@ -197,16 +198,28 @@ npm run preview
 
 ## Features
 
-### Chatbot inteligente
+### Equipo de agentes (chat web)
 
-Disponible como widget flotante en todo el dashboard.
+La sección **Agentes** (`/dashboard/agents`) expone el sistema multi-agente del backend como chat web: un **roster** con cada especialista y una ruta de chat por agente (`/dashboard/agents/:agentId`). `ChatView` decide qué mostrar según la URL.
 
-- **Reconocimiento de voz** vía Web Speech API
-- **Síntesis de voz** vía Web Audio API
-- **Registro natural**: "Gasté $500 en almuerzo" → categoriza y guarda
-- **Consultas analíticas**: "¿En qué gasté más este mes?", "¿Cuánto puedo ahorrar?"
-- **Comparativas** mes vs mes
-- **Sugerencias personalizadas** de reducción de gasto y planes de pago
+- **Un agente por especialidad** (gastos e ingresos, Wallbit, analista de mercado, perfil de riesgo) coordinados por el supervisor Tresqu
+- **Registro y consultas en lenguaje natural**: "Gasté $500 en almuerzo", "¿En qué gasté más este mes?"
+- **Respuestas en streaming** (`services/agents/chatStream.ts`)
+- **Confirmación inline**: cuando un agente propone una operación con dinero real, el chat renderiza una **`ConfirmationCard`** con botones Confirmar / Cancelar — ya no hace falta salir a WhatsApp/Telegram
+- **Diagrama y traza del equipo** (`AgentTeamDiagram`, `AgentTrace`): se ve cómo Tresqu enruta a cada especialista
+- **`ContextChatDock`**: dock de chat contextual disponible dentro del dashboard
+
+> El chat web es **efímero** (vive en memoria de la sesión); la persistencia de hilos quedó como follow-up. El cuestionario guiado de perfil de riesgo sigue corriendo solo por WhatsApp/Telegram.
+
+| Archivo | Función |
+|---------|---------|
+| `src/pages/Agents.tsx` | Página de la sección, sirve roster y chat por agente |
+| `src/components/chatbot/ChatView.tsx` | Conmuta entre roster y chat según la URL |
+| `src/components/chatbot/AgentRoster.tsx` | Lista de agentes del equipo |
+| `src/components/chatbot/{AgentChat,AgentChatPanel,ChatBody,ChatInput,ChatMessage}.tsx` | Chat y mensajes |
+| `src/components/chatbot/ConfirmationCard.tsx` | Tarjeta de confirmación de operaciones con dinero |
+| `src/components/chatbot/{AgentTeamDiagram,AgentGraph,AgentTrace}.tsx` | Visualización de la orquestación |
+| `src/services/agents/{chatStream,roster}.ts` · `src/hooks/useAgentRoster.ts` | Streaming + roster |
 
 ### Dashboard analítico
 
@@ -222,7 +235,7 @@ Disponible como widget flotante en todo el dashboard.
 Desde **Perfil → Conexiones**, "Conectar Gmail" lanza el flujo OAuth de Composio:
 
 1. Backend devuelve un `redirect_url` al Connect Link alojado por Composio (o `already_connected: true` si el lado de Composio ya tiene una conexión activa y solo había que resincronizar el row local).
-2. El usuario autoriza en Google → callback en el backend → redirect a `/dashboard/profile?gmail=connected`.
+2. El usuario autoriza en Google → callback en el backend → redirect a `/dashboard/account?gmail=connected`.
 3. La tarjeta muestra estado, correo conectado, contador de correos procesados y de compras detectadas pendientes de categorizar.
 4. Si el trigger de Composio queda en `failed`, se expone un botón "Reintentar" que pega a `/retry-trigger/`.
 
@@ -241,6 +254,7 @@ Tresqu se conecta a la cuenta Wallbit del usuario para consultar saldos y transa
 #### Lo que ya está en la UI
 
 - **`WallbitCard`** (en Integraciones): conectar/desconectar, ver scope, fecha de conexión y último sync.
+- **`WallbitLimitsCard`** (en Cuenta → Integraciones): configura los **límites del agente** (monto por trade, tope diario, allow/block lists, umbral two-step) vía `useUpdateAgentLimits`.
 - **Inputs seguros**: la API key se envía cifrada por HTTPS, **nunca queda en el cliente**.
 - **Mensajes de error inline**: 401 / 403 / IP whitelist se muestran claros.
 
@@ -255,7 +269,7 @@ Tresqu se conecta a la cuenta Wallbit del usuario para consultar saldos y transa
 
 #### Flujo de confirmación (donde ocurre)
 
-El usuario interactúa con el agente Wallbit principalmente por **WhatsApp y Telegram**. Cuando propone una operación con dinero, el backend persiste una `AgentDecision(requires_confirmation=True)` y manda al canal un preview con botón "Confirmar". El frontend web hoy es el panel de control (conectar, ver estado); el panel de **límites** y el **historial de decisiones** quedan como follow-up de UI (los endpoints ya existen: `/api/wallbit/limits/` y `/api/wallbit/agent/decisions/`).
+Cuando un agente propone una operación con dinero, el backend persiste una `AgentDecision(requires_confirmation=True)` y devuelve un preview con `confirmation_id`. La confirmación ya ocurre en **dos lugares**: en **WhatsApp/Telegram** (botón "Confirmar") y en el **chat web de Agentes** (la `ConfirmationCard` inline). El panel de **límites del agente** tiene UI propia (`WallbitLimitsCard`, sobre `/api/wallbit/limits/`); el **historial de decisiones** (`/api/wallbit/agent/decisions/`) queda como follow-up de UI.
 
 #### Seguridad — por qué importa
 
@@ -286,10 +300,11 @@ inferencia automática del contexto financiero. El frontend lo expone en
 
 El usuario lo responde **por WhatsApp o Telegram** diciéndole al bot algo
 como *"quiero evaluar mi perfil de inversión"*. Hoy **no hay** un chat
-web del cuestionario — el supervisor del chatbot conversacional vive en
-los canales de mensajería. Desde el dashboard sí se puede **editar
-manualmente** (eso prende `user_override=true`, que el backend respeta
-sobre la inferencia).
+web del cuestionario — corre solo por los canales de mensajería. Desde el
+dashboard se puede **Reevaluar** (recomputar la inferencia saltándose el
+cache de 7 días); el backend respeta `user_override=true` cuando el perfil
+se fija manualmente, pero el **editor manual en la web** todavía es
+follow-up.
 
 #### Archivos clave
 
@@ -302,12 +317,11 @@ sobre la inferencia).
 
 #### Por qué importa
 
-El score y la tolerancia no son cosméticos. La sub-fase siguiente (1.5)
-los va a consumir desde `agent_safety.evaluate_decision()`: cuando el
-agente proponga una operación que choque con el perfil efectivo
-(ej. perfil conservador + compra de stock muy volátil), el flujo de
-confirmación va a mostrar un warning extra y exigir confirmación
-adicional. La card es la ventana del usuario a esa lógica.
+El score y la tolerancia no son cosméticos: el backend ya los consume en
+`wallbit/agent_safety.evaluate_risk_profile_gate`. Cuando el agente propone
+una compra que no encaja con el perfil efectivo (ej. perfil conservador +
+stock muy volátil), el flujo de confirmación muestra un warning extra y
+exige doble confirmación. La card es la ventana del usuario a esa lógica.
 
 ---
 
@@ -351,65 +365,54 @@ src/
 ├── App.tsx                       # Rutas con react-router-dom
 ├── main.tsx                      # Entrypoint + QueryClientProvider
 ├── pages/
-│   ├── Index.tsx                 # Landing
-│   ├── Dashboard.tsx             # Dashboard con tabs
-│   ├── Login.tsx
-│   └── Profile.tsx               # Perfil + conexiones
-├── layouts/                      # Wrappers de página
+│   ├── Index.tsx                 # Landing (Hero, equipo de agentes, Wallbit, ...)
+│   ├── Dashboard.tsx             # Dashboard por secciones (/dashboard/:section)
+│   ├── Agents.tsx                # ← nuevo — Equipo de agentes (chat web)
+│   ├── Login.tsx                 # Login en dos pasos (crear cuenta → ingresar)
+│   ├── Profile.tsx               # Cuenta + conexiones (/dashboard/account)
+│   └── {PrivacyPolicy,LegalNotice,...}.tsx
+├── layouts/                      # Wrappers de página (DashboardLayout)
 ├── components/
-│   ├── chatbot/                  # Widget de chat con voz
-│   │   ├── useChatBot.tsx
-│   │   ├── useSpeechRecognition.tsx
-│   │   ├── useTextToSpeech.tsx
-│   │   ├── ChatBody.tsx
-│   │   ├── ChatHeader.tsx
-│   │   ├── ChatInput.tsx
-│   │   └── ChatMessage.tsx
+│   ├── chatbot/                  # ← Equipo de agentes (chat web)
+│   │   ├── ChatView.tsx          #   conmuta roster ↔ chat por agente
+│   │   ├── AgentRoster.tsx
+│   │   ├── AgentChat.tsx · AgentChatPanel.tsx
+│   │   ├── ChatBody.tsx · ChatInput.tsx · ChatMessage.tsx
+│   │   ├── ConfirmationCard.tsx  #   confirmación inline de operaciones
+│   │   ├── AgentTeamDiagram.tsx · AgentGraph.tsx · AgentTrace.tsx
+│   │   ├── ContextChatDock.tsx · agentIcons.ts
+│   │   └── useChatBot.tsx
 │   ├── dashboard/
-│   │   ├── ExpensesTab.tsx
-│   │   ├── IncomeTab.tsx
-│   │   ├── CategoriesTab.tsx
-│   │   ├── SavingsGoalsTab.tsx
-│   │   ├── DebtTab.tsx
+│   │   ├── ExpensesTab.tsx · IncomeTab.tsx · CategoriesTab.tsx
 │   │   ├── IntegrationsTab.tsx   # Gmail + Wallbit
 │   │   ├── WallbitCard.tsx
-│   │   ├── RiskProfileCard.tsx   # ← nuevo (perfil de inversión)
-│   │   ├── DashboardSummary.tsx
-│   │   ├── DashboardSidebar.tsx
+│   │   ├── WallbitLimitsCard.tsx # ← nuevo — límites del agente
+│   │   ├── RiskProfileCard.tsx   # perfil de inversión (radar + explicación)
+│   │   ├── DashboardSummary.tsx · DashboardSidebar.tsx
 │   │   ├── CumulativeBalanceChart.tsx
-│   │   ├── charts/
-│   │   ├── data/
-│   │   └── dateRangePicker/
+│   │   ├── investments/          # ← nuevo — charts + explorador de activos
+│   │   ├── home/ · charts/ · data/ · dateRangePicker/
 │   └── ui/                       # shadcn/ui primitives
 ├── services/
 │   ├── api.ts                    # Axios + interceptores JWT
-│   ├── authService.ts
-│   ├── expenses/
-│   ├── incomes/
-│   ├── categories/
-│   ├── currencies/
-│   ├── gmail/
-│   ├── users/
-│   ├── wallbit/
-│   ├── riskProfile/              # ← nuevo (riskProfile.ts)
-│   └── whatsappAuthService.ts
+│   ├── authService.ts · whatsappAuthService.ts
+│   ├── agents/                   # ← nuevo — chatStream.ts, roster.ts
+│   ├── expenses/ · incomes/ · categories/ · currencies/
+│   ├── gmail/ · users/ · wallbit/
+│   └── riskProfile/              # riskProfile.ts
 ├── hooks/
-│   ├── useExpenseCategories.ts
-│   ├── useIncomeSummary.ts
-│   ├── useGmailStatus.ts
-│   ├── useWallbitStatus.ts
-│   ├── useRiskProfile.ts         # ← nuevo
-│   ├── useStatsIncome.ts
-│   ├── useCumulativeBalance.ts
+│   ├── useExpenseCategories.ts · useIncomeSummary.ts
+│   ├── useGmailStatus.ts · useWallbitStatus.ts
+│   ├── useAgentRoster.ts         # ← nuevo
+│   ├── useAgentLimits.ts         # ← nuevo (límites del agente)
+│   ├── useRiskProfile.ts · useMarketData.ts · useAssetSearch.ts
 │   └── ...
-├── store/                        # Zustand stores
+├── store/                        # Zustand stores (authStore)
 ├── types/
-│   ├── categories.ts
-│   ├── gmail.ts
-│   ├── wallbit.ts
-│   └── riskProfile.ts            # ← nuevo
+│   ├── categories.ts · gmail.ts · wallbit.ts
+│   └── riskProfile.ts
 ├── utils/                        # date helpers, color utils
-└── lib/                          # shadcn utils
+└── lib/                          # shadcn utils, chartColors
 ```
 
 ---
@@ -428,10 +431,9 @@ npm run preview      # Sirve el build de dist/ para inspección
 
 ## Próximas características
 
-- Panel web para gestionar **`AgentLimits`** (montos, allow/block lists)
-- Historial completo de **`AgentDecision`** con filtros
+- **Persistencia del chat web** de Agentes (hoy es efímero: vive en memoria de la sesión)
+- Historial completo de **`AgentDecision`** con filtros en la UI web
 - Vista de **`WallbitTxMirror`** con búsqueda semántica (RAG)
-- Botones inline de confirmación en el chat web (hoy viven en WhatsApp/Telegram)
 - **Chat web del `RiskProfilerGraph`** — hoy el cuestionario solo corre por WhatsApp/Telegram
 - **Editor manual del perfil** en el dashboard (slider de tolerancia + `user_override`)
 - Predicción de gastos futuros con ML
