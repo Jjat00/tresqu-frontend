@@ -73,19 +73,19 @@ const TOLERANCE_STYLES: Record<
     fg: "text-sky-300",
     bg: "bg-sky-500/15",
     border: "border-sky-500/30",
-    radar: "#38bdf8",
+    radar: "#22d3ee",
   },
   moderate: {
     fg: "text-amber-300",
     bg: "bg-amber-500/15",
     border: "border-amber-500/30",
-    radar: "#f59e0b",
+    radar: "#FFD60A",
   },
   aggressive: {
     fg: "text-rose-300",
     bg: "bg-rose-500/15",
     border: "border-rose-500/30",
-    radar: "#f43f5e",
+    radar: "#FF3B6B",
   },
 };
 

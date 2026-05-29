@@ -41,14 +41,6 @@ const navItems: NavItem[] = [
     activeColor: "text-sky-400 bg-sky-500/10",
   },
   {
-    id: "agents",
-    label: "Agentes",
-    path: "/dashboard/agents",
-    icon: Bot,
-    color: "text-muted-foreground",
-    activeColor: "text-teal-400 bg-teal-500/10",
-  },
-  {
     id: "expenses",
     label: "Gastos",
     path: "/dashboard/expenses",
@@ -71,6 +63,14 @@ const navItems: NavItem[] = [
     icon: LineChartIcon,
     color: "text-muted-foreground",
     activeColor: "text-indigo-400 bg-indigo-500/10",
+  },
+  {
+    id: "agents",
+    label: "Agentes",
+    path: "/dashboard/agents",
+    icon: Bot,
+    color: "text-muted-foreground",
+    activeColor: "text-teal-400 bg-teal-500/10",
   },
   {
     id: "categories",

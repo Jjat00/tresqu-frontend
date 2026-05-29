@@ -1,30 +1,52 @@
+import { useId } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
 import { useCumulativeBalance } from "@/hooks/useCumulativeBalance";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
-  ComposedChart,
   Area,
   Bar,
-  Line,
+  CartesianGrid,
+  ComposedChart,
+  ReferenceLine,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+
+const formatCurrency = (value: number) => {
+  const sign = value < 0 ? "-" : "";
+  const abs = Math.abs(value);
+  if (abs >= 1000000) return `${sign}$${(abs / 1000000).toFixed(1)}M`;
+  if (abs >= 1000) return `${sign}$${(abs / 1000).toFixed(0)}K`;
+  return `${sign}$${abs}`;
+};
+
+const chartConfig: ChartConfig = {
+  income: { label: "Ingresos", color: "#34d399" },
+  expenses: { label: "Gastos", color: "#fb7185" },
+  cumulativeBalance: { label: "Balance acumulado", color: "#22d3ee" },
+};
 
 const CumulativeBalanceChart = () => {
   const { data, isLoading, isError } = useCumulativeBalance(6);
   const isMobile = useIsMobile();
+  const rawId = useId().replace(/:/g, "");
+  const strokeId = `cumBalStroke-${rawId}`;
+  const fillId = `cumBalFill-${rawId}`;
 
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
+  const lastBalance =
+    data.length > 0 ? data[data.length - 1].cumulativeBalance : 0;
+  // Trazo verde→cyan en superávit, tonos rojos en déficit.
+  const [strokeFrom, strokeTo] =
+    lastBalance >= 0 ? ["#00FF7F", "#22d3ee"] : ["#ef4444", "#fb7185"];
 
   return (
     <div className="glass-card p-4 sm:p-5 animate-fade-up">
@@ -41,12 +63,10 @@ const CumulativeBalanceChart = () => {
           <div className="text-right">
             <div
               className={`text-sm sm:text-lg font-semibold font-display tracking-tight ${
-                data[data.length - 1].cumulativeBalance >= 0
-                  ? "text-emerald-400"
-                  : "text-rose-400"
+                lastBalance >= 0 ? "text-emerald-400" : "text-rose-400"
               }`}
             >
-              {formatCurrency(data[data.length - 1].cumulativeBalance)}
+              {formatCurrency(lastBalance)}
             </div>
             <p className="text-[10px] text-muted-foreground">Acumulado actual</p>
           </div>
@@ -73,93 +93,87 @@ const CumulativeBalanceChart = () => {
             </p>
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
+          <ChartContainer config={chartConfig} className="h-full w-full">
             <ComposedChart
               data={data}
-              margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+              margin={{ top: 12, right: 8, left: 0, bottom: 0 }}
             >
               <defs>
-                <linearGradient id="gradientPositive" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#34d399" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+                <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor={strokeFrom} />
+                  <stop offset="100%" stopColor={strokeTo} />
                 </linearGradient>
-                <linearGradient id="gradientNegative" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#fb7185" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#fb7185" stopOpacity={0} />
+                <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={strokeTo} stopOpacity={0.18} />
+                  <stop offset="100%" stopColor={strokeFrom} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid
+                vertical={false}
+                stroke="hsl(0 0% 100% / 0.05)"
                 strokeDasharray="3 3"
-                stroke="rgba(255,255,255,0.04)"
               />
               <XAxis
                 dataKey="month"
                 tick={{ fontSize: isMobile ? 10 : 12, fill: "hsl(0 0% 63%)" }}
                 axisLine={false}
                 tickLine={false}
+                tickMargin={8}
               />
               <YAxis
-                tickFormatter={(v) => formatCurrency(v)}
+                width={52}
+                tickFormatter={(v: number) => formatCurrency(v)}
                 tick={{ fontSize: isMobile ? 9 : 11, fill: "hsl(0 0% 63%)" }}
                 axisLine={false}
                 tickLine={false}
+                padding={{ top: 12, bottom: 8 }}
               />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "rgba(10, 10, 10, 0.95)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: "12px",
-                  backdropFilter: "blur(20px)",
-                  fontSize: "12px",
-                  padding: "10px 14px",
-                }}
-                formatter={(value: number, name: string) => {
-                  const labels: Record<string, string> = {
-                    income: "Ingresos",
-                    expenses: "Gastos",
-                    cumulativeBalance: "Acumulado",
-                  };
-                  return [formatCurrency(value), labels[name] || name];
-                }}
+              <ChartTooltip
+                cursor={{ fill: "hsl(0 0% 100% / 0.04)" }}
+                content={
+                  <ChartTooltipContent
+                    formatter={(value, name) => (
+                      <div className="flex w-full items-center justify-between gap-3">
+                        <span className="text-muted-foreground">
+                          {chartConfig[name as keyof typeof chartConfig]
+                            ?.label ?? name}
+                        </span>
+                        <span className="font-mono font-medium tabular-nums text-foreground">
+                          {formatCurrency(Number(value))}
+                        </span>
+                      </div>
+                    )}
+                  />
+                }
               />
-              <Legend
-                wrapperStyle={{ fontSize: "11px", paddingTop: "8px" }}
-                iconSize={8}
-                formatter={(value: string) => {
-                  const labels: Record<string, string> = {
-                    income: "Ingresos",
-                    expenses: "Gastos",
-                    cumulativeBalance: "Balance acumulado",
-                  };
-                  return labels[value] || value;
-                }}
-              />
-              <ReferenceLine y={0} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" />
+              <ChartLegend content={<ChartLegendContent />} />
+              <ReferenceLine y={0} stroke="hsl(0 0% 100% / 0.1)" strokeDasharray="3 3" />
               <Bar
                 dataKey="income"
-                fill="#34d399"
-                fillOpacity={0.5}
+                fill="var(--color-income)"
+                fillOpacity={0.45}
                 radius={[3, 3, 0, 0]}
                 barSize={isMobile ? 12 : 20}
               />
               <Bar
                 dataKey="expenses"
-                fill="#fb7185"
-                fillOpacity={0.5}
+                fill="var(--color-expenses)"
+                fillOpacity={0.45}
                 radius={[3, 3, 0, 0]}
                 barSize={isMobile ? 12 : 20}
               />
               <Area
-                type="monotone"
+                type="natural"
                 dataKey="cumulativeBalance"
-                stroke="#a78bfa"
-                strokeWidth={2}
-                fill="url(#gradientPositive)"
-                dot={{ fill: "#a78bfa", r: 4, strokeWidth: 2, stroke: "rgba(10,10,10,0.8)" }}
-                activeDot={{ r: 6, fill: "#a78bfa" }}
+                stroke={`url(#${strokeId})`}
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                fill={`url(#${fillId})`}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0, fill: strokeTo }}
               />
             </ComposedChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         )}
       </div>
     </div>

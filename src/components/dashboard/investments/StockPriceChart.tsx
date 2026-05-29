@@ -1,20 +1,12 @@
 import { useMemo, useState } from "react";
 import { AxiosError } from "axios";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, Clock, Minus } from "lucide-react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { usePriceHistory } from "@/hooks/useMarketData";
 import type { PriceRange } from "@/types/wallbit";
+import TrendAreaChart from "@/components/dashboard/charts/TrendAreaChart";
 
 interface StockPriceChartProps {
   symbol: string;
@@ -90,8 +82,10 @@ const StockPriceChart = ({ symbol }: StockPriceChartProps) => {
 
   const summary = data?.summary;
   const isUp = (summary?.change_pct ?? 0) >= 0;
-  const accent = isUp ? "#4ade80" : "#f87171";
-  const gradientId = `stockPrice-${symbol}`;
+  // Gradiente del trazo según la tendencia: verde para alza, rojo para baja.
+  const trendColors: [string, string] = isUp
+    ? ["#22c55e", "#4ade80"]
+    : ["#ef4444", "#f87171"];
 
   const TrendIcon = isUp ? ArrowUpRight : ArrowDownRight;
 
@@ -180,54 +174,22 @@ const StockPriceChart = ({ symbol }: StockPriceChartProps) => {
             Sin datos de precio para el rango seleccionado.
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={chartData}
-              margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={accent} stopOpacity={0.35} />
-                  <stop offset="95%" stopColor={accent} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: 10, fill: "hsl(0 0% 63%)" }}
-                axisLine={false}
-                tickLine={false}
-                minTickGap={24}
-              />
-              <YAxis
-                domain={["auto", "auto"]}
-                tickFormatter={(v: number) => formatUsd(v)}
-                tick={{ fontSize: 10, fill: "hsl(0 0% 63%)" }}
-                axisLine={false}
-                tickLine={false}
-                width={64}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(0 0% 7%)",
-                  border: "1px solid hsl(0 0% 14%)",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                }}
-                labelStyle={{ color: "hsl(0 0% 63%)" }}
-                formatter={(value: number) => [formatUsd(value), "Precio"]}
-              />
-              <Area
-                type="monotone"
-                dataKey="price"
-                stroke={accent}
-                strokeWidth={2}
-                fill={`url(#${gradientId})`}
-                dot={false}
-                activeDot={{ r: 4, fill: accent }}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <TrendAreaChart
+            data={chartData}
+            dataKey="price"
+            xKey="label"
+            seriesLabel="Precio"
+            colors={trendColors}
+            valueFormatter={formatUsd}
+            yTickFormatter={(v) =>
+              v.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: v >= 1000 ? 0 : 2,
+              })
+            }
+            yWidth={60}
+          />
         )}
       </div>
     </div>

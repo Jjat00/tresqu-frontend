@@ -1,13 +1,4 @@
 import { useMemo, useState } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 import {
   Card,
@@ -20,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { usePortfolioTimeline } from "@/hooks/useInvestments";
 import type { TimelinePeriod } from "@/types/wallbit";
+import TrendAreaChart from "@/components/dashboard/charts/TrendAreaChart";
 
 const PERIODS: Array<{ value: TimelinePeriod; label: string }> = [
   { value: "1m", label: "1M" },
@@ -78,45 +70,16 @@ const PortfolioTimeline = () => {
             Sin actividad en el período seleccionado.
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorInvested" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 10, fill: "hsl(0 0% 63%)" }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
-                tick={{ fontSize: 10, fill: "hsl(0 0% 63%)" }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(0 0% 7%)",
-                  border: "1px solid hsl(0 0% 14%)",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                }}
-                formatter={(value: number) => [formatUsd(value), "Invertido"]}
-              />
-              <Area
-                type="monotone"
-                dataKey="invested"
-                stroke="#6366f1"
-                strokeWidth={2}
-                fill="url(#colorInvested)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <TrendAreaChart
+            data={chartData}
+            dataKey="invested"
+            xKey="date"
+            seriesLabel="Invertido"
+            valueFormatter={formatUsd}
+            yTickFormatter={(v) =>
+              `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`
+            }
+          />
         )}
       </CardContent>
     </Card>

@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip } from "recharts";
 import { Plus, ArrowLeft, Download, Save } from "lucide-react";
+import { neonize } from "@/lib/chartColors";
 interface SubcategoryViewProps {
   category: string;
   onBack: () => void;
@@ -223,7 +224,7 @@ const SubcategoryView = ({
                 name,
                 percent
               }) => `${name}: ${(percent * 100).toFixed(0)}%`} labelLine={false}>
-                  {subcategories.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                  {subcategories.map((entry, index) => <Cell key={`cell-${index}`} fill={neonize(entry.color, index)} />)}
                 </Pie>
                 <Tooltip formatter={value => [`$${value.toLocaleString()}`, 'Monto']} />
               </PieChart>
@@ -253,7 +254,7 @@ const SubcategoryView = ({
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip formatter={value => [`$${value.toLocaleString()}`, 'Monto']} />
-                  {subcategories.map(subcategory => <Bar key={subcategory.name} dataKey={subcategory.name} stackId="a" fill={subcategory.color} />)}
+                  {subcategories.map((subcategory, index) => <Bar key={subcategory.name} dataKey={subcategory.name} stackId="a" fill={neonize(subcategory.color, index)} />)}
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>

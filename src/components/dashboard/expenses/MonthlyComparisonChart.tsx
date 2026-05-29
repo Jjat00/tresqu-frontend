@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import React, { useId, useMemo, useState } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from "chart.js";
+  Area,
+  AreaChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,24 +14,40 @@ import {
   AlertTriangleIcon,
   WalletIcon,
 } from "lucide-react";
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 import { useMonthlyComparisonChartData } from "@/services/expenses/MonthlyComparisonChart";
 import { MonthlyComparisonChartParams } from "@/types/expenses";
-
-// Registrar los componentes de Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+import { NEON } from "@/lib/chartColors";
 
 interface MonthlyComparisonChartProps {
   className?: string;
 }
+
+const chartConfig: ChartConfig = {
+  ingresos: { label: "Ingresos", color: NEON.green },
+  gastos: { label: "Gastos", color: NEON.pink },
+};
+
+const formatCop = (value: number) =>
+  new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+
+const formatShort = (value: number) => {
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+  return `${value}`;
+};
 
 export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
   className,
@@ -49,17 +60,22 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
   });
 
   const { data, isLoading, error } = useMonthlyComparisonChartData(params);
+  const rawId = useId().replace(/:/g, "");
 
-  // Ancho de viewport reactivo: las opciones de Chart.js dependen del
-  // breakpoint y deben recalcularse al rotar/redimensionar el dispositivo.
-  const [vw, setVw] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1024,
-  );
-  useEffect(() => {
-    const onResize = () => setVw(window.innerWidth);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  const chartRows = useMemo(() => {
+    if (!data?.labels) return [];
+    const incomeDs = data.datasets.find((d) =>
+      d.label?.toLowerCase().includes("ingresos"),
+    );
+    const expenseDs = data.datasets.find((d) =>
+      d.label?.toLowerCase().includes("gastos"),
+    );
+    return data.labels.map((label, i) => ({
+      day: label,
+      ingresos: incomeDs?.data[i] ?? 0,
+      gastos: expenseDs?.data[i] ?? 0,
+    }));
+  }, [data]);
 
   const handlePreviousMonth = () => {
     const newMonth = params.month === 1 ? 12 : (params.month || 1) - 1;
@@ -189,181 +205,6 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
 
   const financialStatus = getFinancialStatusDisplay();
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      mode: "index" as const,
-      intersect: false,
-    },
-    plugins: {
-      legend: {
-        position: "top" as const,
-        labels: {
-          usePointStyle: true,
-          padding: vw < 768 ? 10 : 20,
-          font: {
-            size: vw < 768 ? 11 : 12,
-          },
-          boxWidth: vw < 768 ? 8 : 12,
-        },
-      },
-      tooltip: {
-        mode: "index" as const,
-        intersect: false,
-        titleFont: {
-          size: vw < 768 ? 12 : 14,
-        },
-        bodyFont: {
-          size: vw < 768 ? 11 : 13,
-        },
-        callbacks: {
-          label: function (context: {
-            dataset: { label?: string };
-            parsed: { y: number };
-          }) {
-            const label = context.dataset.label || "";
-            const value = new Intl.NumberFormat("es-CO", {
-              style: "currency",
-              currency: "COP",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: vw < 768 ? 0 : 2,
-            }).format(context.parsed.y);
-            return `${label}: ${value}`;
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: vw >= 640,
-          text: `Días del mes (${data.month_info.month_name} ${data.month_info.year})`,
-          font: {
-            size: vw < 768 ? 10 : 12,
-          },
-        },
-        ticks: {
-          font: {
-            size: vw < 768 ? 9 : 11,
-          },
-          maxTicksLimit: vw < 768 ? 8 : 15,
-        },
-        grid: {
-          display: vw >= 640,
-        },
-      },
-      y: {
-        display: true,
-        beginAtZero: true,
-        max:
-          data.financial_summary.total_monthly_income > 0
-            ? data.financial_summary.total_monthly_income * 1.2
-            : Math.max(...data.datasets.flatMap((d) => d.data)) * 1.2, // Si no hay ingresos, usar el máximo de gastos
-        title: {
-          display: vw >= 640,
-          text: "Monto",
-          font: {
-            size: vw < 768 ? 10 : 12,
-          },
-        },
-        ticks: {
-          font: {
-            size: vw < 768 ? 9 : 11,
-          },
-          maxTicksLimit: vw < 768 ? 5 : 8,
-          callback: function (value: string | number) {
-            const numValue = Number(value);
-            if (vw < 768) {
-              if (numValue >= 1000000) {
-                return `${(numValue / 1000000).toFixed(1)}M`;
-              } else if (numValue >= 1000) {
-                return `${(numValue / 1000).toFixed(0)}K`;
-              }
-              return new Intl.NumberFormat("es-CO", {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }).format(numValue);
-            }
-            return new Intl.NumberFormat("es-CO").format(numValue);
-          },
-        },
-        grid: {
-          display: vw >= 640,
-        },
-      },
-    },
-  };
-
-  const chartData = {
-    labels: data.labels,
-    datasets: data.datasets.map((dataset, index) => {
-      // Para gastos acumulados, solo mostrar puntos donde hay cambios
-      let pointRadius: number[] = [];
-
-      if (dataset.label?.toLowerCase().includes("gastos")) {
-        // Para gastos acumulados, mostrar punto solo cuando hay un cambio
-        pointRadius = dataset.data.map((value, i) => {
-          if (i === 0) return value > 0 ? 4 : 0; // Primer día
-          const prevValue = dataset.data[i - 1];
-          return value > prevValue ? 4 : 0; // Solo si hay incremento
-        });
-      } else if (dataset.label?.toLowerCase().includes("ingresos")) {
-        // Para ingresos, manejar el caso especial cuando todos son cero
-        const hasIncome = dataset.data.some((value) => value > 0);
-
-        if (!hasIncome) {
-          // Si no hay ingresos, mostrar solo algunos puntos de referencia en cero
-          pointRadius = dataset.data.map((value, i) => {
-            if (
-              i === 0 ||
-              i === Math.floor(dataset.data.length / 2) ||
-              i === dataset.data.length - 1
-            ) {
-              return 3; // Puntos más pequeños para indicar línea en cero
-            }
-            return 0;
-          });
-        } else {
-          // Si hay ingresos, comportamiento normal
-          pointRadius = dataset.data.map((value, i) => {
-            if (value > 0) {
-              if (i === 0 || i === dataset.data.length - 1) {
-                return 4;
-              }
-              return 0;
-            }
-            return 0;
-          });
-        }
-      } else {
-        // Para otros datasets, comportamiento normal
-        pointRadius = dataset.data.map(() => 4);
-      }
-
-      return {
-        ...dataset,
-        type: undefined,
-        tension: 0, // Líneas completamente rectas
-        pointRadius: pointRadius, // Array de radios personalizados
-        pointHoverRadius: pointRadius.map((r) => (r > 0 ? 6 : 0)), // Hover solo donde hay puntos
-        pointBackgroundColor: dataset.borderColor,
-        pointBorderColor: dataset.borderColor,
-        pointBorderWidth: 2,
-        // Agregar relleno verde para la línea de ingresos
-        fill: dataset.label?.toLowerCase().includes("ingresos")
-          ? "origin"
-          : dataset.fill,
-        backgroundColor: dataset.label?.toLowerCase().includes("ingresos")
-          ? "rgba(76, 175, 80, 0.1)" // Verde suave para ingresos
-          : dataset.backgroundColor,
-        // Asegurar que la línea de gastos esté encima
-        order: dataset.label?.toLowerCase().includes("gastos") ? 1 : 2, // Gastos = 1 (encima), Ingresos = 2 (debajo)
-      };
-    }),
-  };
-
   return (
     <Card className={className}>
       <CardHeader>
@@ -400,7 +241,99 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
       </CardHeader>
       <CardContent>
         <div className="h-64 sm:h-80 mb-4 sm:mb-6">
-          <Line data={chartData} options={chartOptions} />
+          <ChartContainer config={chartConfig} className="h-full w-full">
+            <AreaChart
+              data={chartRows}
+              margin={{ top: 12, right: 12, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient
+                  id={`fillIngresos-${rawId}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor={NEON.green} stopOpacity={0.25} />
+                  <stop offset="100%" stopColor={NEON.green} stopOpacity={0} />
+                </linearGradient>
+                <linearGradient
+                  id={`fillGastos-${rawId}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor={NEON.pink} stopOpacity={0.25} />
+                  <stop offset="100%" stopColor={NEON.pink} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                vertical={false}
+                stroke="hsl(0 0% 100% / 0.05)"
+                strokeDasharray="3 3"
+              />
+              <XAxis
+                dataKey="day"
+                tick={{ fontSize: 10, fill: "hsl(0 0% 63%)" }}
+                axisLine={false}
+                tickLine={false}
+                tickMargin={8}
+                minTickGap={20}
+                interval="preserveStartEnd"
+              />
+              <YAxis
+                width={48}
+                tickFormatter={formatShort}
+                tick={{ fontSize: 10, fill: "hsl(0 0% 63%)" }}
+                axisLine={false}
+                tickLine={false}
+                padding={{ top: 12, bottom: 4 }}
+              />
+              <ChartTooltip
+                cursor={{
+                  stroke: "hsl(0 0% 45%)",
+                  strokeWidth: 1,
+                  strokeDasharray: "4 4",
+                }}
+                content={
+                  <ChartTooltipContent
+                    indicator="dot"
+                    formatter={(value, name) => (
+                      <div className="flex w-full items-center justify-between gap-3">
+                        <span className="text-muted-foreground">
+                          {chartConfig[name as keyof typeof chartConfig]
+                            ?.label ?? name}
+                        </span>
+                        <span className="font-mono font-medium tabular-nums text-foreground">
+                          {formatCop(Number(value))}
+                        </span>
+                      </div>
+                    )}
+                  />
+                }
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Area
+                type="monotone"
+                dataKey="ingresos"
+                stroke={NEON.green}
+                strokeWidth={2.5}
+                fill={`url(#fillIngresos-${rawId})`}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0, fill: NEON.green }}
+              />
+              <Area
+                type="monotone"
+                dataKey="gastos"
+                stroke={NEON.pink}
+                strokeWidth={2.5}
+                fill={`url(#fillGastos-${rawId})`}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0, fill: NEON.pink }}
+              />
+            </AreaChart>
+          </ChartContainer>
         </div>
 
         {/* Resumen financiero */}

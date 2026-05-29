@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useIncomeBarData } from "@/hooks/useIncomeBarData";
 import { DateRange } from "../DateRangePicker";
 import { BarStackedChartParams } from "@/types/incomes";
+import { neonize } from "@/lib/chartColors";
 import {
   BarChart,
   Bar,
@@ -134,8 +135,8 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
                     key={dataset.label}
                     dataKey={dataset.label}
                     stackId="stack"
-                    fill={dataset.backgroundColor}
-                    fillOpacity={0.7}
+                    fill={neonize(dataset.backgroundColor, i)}
+                    fillOpacity={0.85}
                     radius={i === (data.datasets.length - 1) ? [2, 2, 0, 0] : [0, 0, 0, 0]}
                   />
                 ))}

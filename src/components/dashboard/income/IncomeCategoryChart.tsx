@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useIncomePieChart } from "@/hooks/useIncomePieChart";
 import { DateRange } from "../DateRangePicker";
 import { DonutChartParams } from "@/types/incomes";
+import { neonize } from "@/lib/chartColors";
 import {
   PieChart,
   Pie,
@@ -94,7 +95,11 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                   style={{ cursor: onSelectCategory ? "pointer" : "default" }}
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.7} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={neonize(entry.color, index)}
+                      fillOpacity={0.85}
+                    />
                   ))}
                 </Pie>
                 <Tooltip

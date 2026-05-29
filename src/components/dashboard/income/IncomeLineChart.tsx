@@ -5,16 +5,7 @@ import { AlertCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DateRange } from "../DateRangePicker";
 import { isLocalToday, isLocalYesterday } from "@/utils/dateUtils";
-import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import TrendAreaChart from "@/components/dashboard/charts/TrendAreaChart";
 
 interface IncomeLineChartProps {
   viewMode: "day" | "week" | "month" | "year";
@@ -28,7 +19,6 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
   dateRange = { from: new Date(), to: new Date() },
 }) => {
   const { data, isLoading, error } = useIncomeLineData(dateRange, viewMode);
-  const isMobile = useIsMobile();
 
   const isToday = dateRange.from && dateRange.to && isLocalToday(dateRange.from) && isLocalToday(dateRange.to);
   const isYesterday = dateRange.from && dateRange.to && isLocalYesterday(dateRange.from) && isLocalYesterday(dateRange.to);
@@ -55,12 +45,6 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
     if (isCustomDateRange) return "Ingresos por día";
     if (viewMode === "week") return "Ingresos por día de la semana";
     return "Ingresos por período";
-  };
-
-  const formatYAxis = (value: number) => {
-    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
-    return `${value}`;
   };
 
   return (
@@ -91,47 +75,20 @@ const IncomeLineChart: React.FC<IncomeLineChartProps> = ({
               <span className="font-semibold">Total: </span>
               <span>{formatCurrency(data?.total_amount || 0)}</span>
             </div>
-            <ResponsiveContainer width="100%" height="85%">
-              <AreaChart data={rechartsData} margin={{ top: 5, right: 15, left: -10, bottom: 5 }}>
-                <defs>
-                  <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4ade80" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#4ade80" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  tickFormatter={formatYAxis}
-                  tick={{ fontSize: isMobile ? 9 : 12, fill: "hsl(0 0% 63%)" }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(0 0% 7%)",
-                    border: "1px solid hsl(0 0% 14%)",
-                    borderRadius: "8px",
-                    fontSize: "12px",
-                  }}
-                  formatter={(value: number) => [formatCurrency(value), "Ingresos"]}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="ingresos"
-                  stroke="#4ade80"
-                  strokeWidth={2}
-                  fill="url(#colorIngresos)"
-                  dot={{ fill: "#4ade80", r: 3 }}
-                  activeDot={{ r: 5, fill: "#4ade80" }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="h-[85%] w-full">
+              <TrendAreaChart
+                data={rechartsData}
+                dataKey="ingresos"
+                xKey="name"
+                seriesLabel="Ingresos"
+                valueFormatter={formatCurrency}
+                yTickFormatter={(v) => {
+                  if (v >= 1000000) return `${(v / 1000000).toFixed(1)}M`;
+                  if (v >= 1000) return `${(v / 1000).toFixed(0)}K`;
+                  return `${v}`;
+                }}
+              />
+            </div>
           </div>
         )}
       </CardContent>

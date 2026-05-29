@@ -2,6 +2,7 @@ import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DonutChartDataItem } from "@/hooks/useCategoryPieChartData";
+import { neonize } from "@/lib/chartColors";
 
 interface PieChartDisplayProps {
   data: DonutChartDataItem[];
@@ -60,17 +61,10 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
           <defs>
             {data.map((entry, i) => (
               <linearGradient key={`grad-${i}`} id={`pieGrad-${i}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor={entry.color} stopOpacity={0.9} />
-                <stop offset="100%" stopColor={entry.color} stopOpacity={0.5} />
+                <stop offset="0%" stopColor={neonize(entry.color, i)} stopOpacity={0.95} />
+                <stop offset="100%" stopColor={neonize(entry.color, i)} stopOpacity={0.55} />
               </linearGradient>
             ))}
-            <filter id="pieGlow">
-              <feGaussianBlur stdDeviation="3" result="glow" />
-              <feMerge>
-                <feMergeNode in="glow" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
           </defs>
           <Pie
             data={data}
@@ -84,7 +78,6 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
             cornerRadius={4}
             stroke="none"
             onClick={(d) => onCategoryClick(d.name)}
-            filter="url(#pieGlow)"
           >
             {data.map((_, index) => (
               <Cell
@@ -101,16 +94,15 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
                 const name = payload[0].name as string;
                 const pct = total > 0 ? ((value / total) * 100).toFixed(1) : "0";
                 const formatted = new Intl.NumberFormat("es-CO").format(value);
-                const color = data.find((d) => d.name === name)?.color || "#fff";
+                const idx = data.findIndex((d) => d.name === name);
+                const color = idx >= 0 ? neonize(data[idx].color, idx) : "#fff";
 
                 return (
                   <div
                     className="px-3 py-2.5 rounded-xl text-xs"
                     style={{
-                      background: "rgba(10, 10, 10, 0.9)",
-                      backdropFilter: "blur(20px)",
+                      background: "hsl(0 0% 4%)",
                       border: "1px solid rgba(255,255,255,0.08)",
-                      boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
                     }}
                   >
                     <div className="flex items-center gap-2 mb-1">

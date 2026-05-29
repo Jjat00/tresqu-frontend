@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
+import { neonize } from "@/lib/chartColors";
 
 interface ChartJSBarChartProps {
   viewMode: "month" | "year";
@@ -143,8 +144,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                 <defs>
                   {data?.datasets.map((dataset, i) => (
                     <linearGradient key={`barGrad-${i}`} id={`barGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={dataset.backgroundColor} stopOpacity={0.85} />
-                      <stop offset="100%" stopColor={dataset.backgroundColor} stopOpacity={0.35} />
+                      <stop offset="0%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.9} />
+                      <stop offset="100%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.4} />
                     </linearGradient>
                   ))}
                 </defs>
@@ -165,18 +166,18 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                 <Tooltip
                   cursor={{ fill: "rgba(255,255,255,0.03)", radius: 6 }}
                   contentStyle={{
-                    background: "rgba(10, 10, 10, 0.9)",
-                    backdropFilter: "blur(20px)",
+                    background: "hsl(0 0% 4%)",
                     border: "1px solid rgba(255,255,255,0.08)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
                     padding: "8px 12px",
                   }}
                   formatter={(value: number, name: string) => {
-                    const color = data?.datasets.find((d) => d.label === name)?.backgroundColor;
+                    const idx = data?.datasets.findIndex((d) => d.label === name) ?? -1;
+                    const color =
+                      idx >= 0 ? neonize(data!.datasets[idx].backgroundColor, idx) : "#fff";
                     return [
-                      <span key={name} style={{ color: color || "#fff" }}>
+                      <span key={name} style={{ color }}>
                         ${value.toLocaleString("es-CO")}
                       </span>,
                       name,
