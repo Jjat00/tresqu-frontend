@@ -2,6 +2,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Banknote,
+  Coins,
   PiggyBank,
   TrendingUp,
   Wallet,
@@ -52,11 +53,13 @@ const PortfolioHeroMetrics = () => {
   const pnl = parseFloat(data.pnl_usd || "0");
   const isPositive = pnl >= 0;
 
-  const freeCashUsd = (data.cash ?? [])
+  const mainAccountUsd = (data.cash ?? [])
     .filter((c) => c.currency === "USD")
     .reduce((sum, c) => sum + parseFloat(c.amount || "0"), 0);
+  const investmentFreeUsd = parseFloat(data.investment_cash_usd || "0");
   const roboNet = parseFloat(data.robo_net_contributed_usd || "0");
-  const showSecondary = freeCashUsd > 0 || roboNet > 0;
+  const showSecondary =
+    investmentFreeUsd > 0 || mainAccountUsd > 0 || roboNet > 0;
 
   return (
     <div className="space-y-3">
@@ -133,18 +136,35 @@ const PortfolioHeroMetrics = () => {
       </div>
 
       {showSecondary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Card className="glass-card">
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center justify-between">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                  Efectivo libre
+                  Libre para invertir
                 </p>
-                <Banknote className="h-4 w-4 text-wallbit" />
+                <Coins className="h-4 w-4 text-wallbit" />
               </div>
-              <p className="text-2xl font-bold">{formatUsd(freeCashUsd)}</p>
+              <p className="text-2xl font-bold">
+                {formatUsd(investmentFreeUsd)}
+              </p>
               <p className="text-xs text-muted-foreground">
-                Disponible en tu cuenta, sin invertir
+                Efectivo sin invertir en tu cuenta de inversiones
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card">
+            <CardContent className="p-4 space-y-1">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                  Cuenta principal
+                </p>
+                <Banknote className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <p className="text-2xl font-bold">{formatUsd(mainAccountUsd)}</p>
+              <p className="text-xs text-muted-foreground">
+                Efectivo fuera de la cuenta de inversiones
               </p>
             </CardContent>
           </Card>

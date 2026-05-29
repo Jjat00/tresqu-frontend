@@ -56,6 +56,11 @@ export interface PortfolioSummary {
    * valor actual ni su P&L, así que es solo lo aportado — nunca ganancia/pérdida.
    */
   robo_net_contributed_usd: string;
+  /**
+   * Efectivo SIN invertir dentro de la cuenta de inversiones ("libre para
+   * invertir"). Distinto de `cash` (cuenta principal, fuera de inversiones).
+   */
+  investment_cash_usd: string;
   last_sync_at: string | null;
 }
 
