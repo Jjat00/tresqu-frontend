@@ -42,11 +42,13 @@ const DateRangePickerCalendar: React.FC<DateRangePickerCalendarProps> = ({
 
   // Actualizar el estado interno cuando cambien las props de fecha
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync intencional de prop a estado local editable
     setInternalDateRange([date.from || null, date.to || null]);
   }, [date.from, date.to]);
 
   // Actualizar el estado de selección cuando cambie la fecha
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync intencional de prop a estado local editable
     setIsSelecting(!!date.from && !date.to);
   }, [date.from, date.to]);
 

@@ -31,6 +31,7 @@ const DashboardLayout = ({
       }
       const user = getUser();
       if (user) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- bootstrap del nombre tras validar la sesión
         setUserName(user.first_name || "Usuario");
       }
     } catch (error) {

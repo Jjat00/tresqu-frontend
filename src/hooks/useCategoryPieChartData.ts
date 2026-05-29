@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { DateRange } from "@/components/dashboard/DateRangePicker";
 import pieChartService from "@/services/expenses/PieChart";
@@ -22,8 +22,6 @@ export interface DonutChartDataItem {
 // Eliminamos las constantes de colores predefinidas ya que usaremos los colores de la API
 
 export const useCategoryPieChartData = (dateRange?: DateRange) => {
-  const [filterSummary, setFilterSummary] = useState("");
-
   // Obtener mapa de colores personalizados del usuario
   const { data: userColorsMap } = useExpenseCategoryColorsMap();
 
@@ -103,12 +101,8 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
       })
     : [];
 
-  // Actualizar el resumen del filtro cuando cambian los datos
-  useEffect(() => {
-    if (data?.filter_summary) {
-      setFilterSummary(data.filter_summary);
-    }
-  }, [data]);
+  // Resumen del filtro derivado directamente de los datos
+  const filterSummary = data?.filter_summary ?? "";
 
   useEffect(() => {
     if (error) {

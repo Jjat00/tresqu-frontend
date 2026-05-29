@@ -18,6 +18,11 @@ import {
   CategoryExportParams,
 } from "@/types/categories";
 
+// Forma de los errores de la API (Axios) que consumimos en los onError.
+type ApiError = {
+  response?: { data?: { detail?: string; name?: string[] } };
+};
+
 // ===== SERVICIOS BASE =====
 const expenseCategoriesService = new ExpenseCategoriesService();
 
@@ -181,7 +186,7 @@ export const useCreateExpenseCategory = () => {
     },
     onError: (error: unknown) => {
       const message =
-        (error as any)?.response?.data?.name?.[0] ||
+        (error as ApiError)?.response?.data?.name?.[0] ||
         "Error al crear la categoría";
       toast.error(message);
       throw error;
@@ -212,7 +217,7 @@ export const useUpdateExpenseCategory = () => {
     },
     onError: (error: unknown) => {
       const message =
-        (error as any)?.response?.data?.name?.[0] ||
+        (error as ApiError)?.response?.data?.name?.[0] ||
         "Error al actualizar la categoría";
       toast.error(message);
       throw error;
@@ -241,7 +246,7 @@ export const useDeleteExpenseCategory = () => {
     },
     onError: (error: unknown) => {
       const message =
-        (error as any)?.response?.data?.detail ||
+        (error as ApiError)?.response?.data?.detail ||
         "Error al eliminar la categoría";
       toast.error(message);
       throw error;
@@ -264,7 +269,7 @@ export const useCreateBulkExpenseCategories = () => {
     },
     onError: (error: unknown) => {
       const message =
-        (error as any)?.response?.data?.detail ||
+        (error as ApiError)?.response?.data?.detail ||
         "Error al crear las categorías";
       toast.error(message);
       throw error;
@@ -289,7 +294,7 @@ export const useUpdateBulkExpenseCategories = () => {
     },
     onError: (error: unknown) => {
       const message =
-        (error as any)?.response?.data?.detail ||
+        (error as ApiError)?.response?.data?.detail ||
         "Error al actualizar las categorías";
       toast.error(message);
       throw error;
@@ -315,9 +320,9 @@ export const useDeleteBulkExpenseCategories = () => {
       queryClient.invalidateQueries({ queryKey: expenseCategoryKeys.all });
       toast.success(`${ids.length} categorías eliminadas exitosamente`);
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message =
-        error?.response?.data?.detail || "Error al eliminar las categorías";
+        (error as ApiError)?.response?.data?.detail || "Error al eliminar las categorías";
       toast.error(message);
       throw error;
     },
@@ -340,9 +345,9 @@ export const useImportExpenseCategories = () => {
         `Importación completada: ${imported.expense_categories} creadas, ${skipped.duplicates} omitidas`
       );
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message =
-        error?.response?.data?.detail || "Error al importar las categorías";
+        (error as ApiError)?.response?.data?.detail || "Error al importar las categorías";
       toast.error(message);
       throw error;
     },
@@ -366,9 +371,9 @@ export const useImportExpenseCategoriesFromData = () => {
         `Importación completada: ${imported.expense_categories} creadas, ${skipped.duplicates} omitidas`
       );
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message =
-        error?.response?.data?.detail || "Error al importar las categorías";
+        (error as ApiError)?.response?.data?.detail || "Error al importar las categorías";
       toast.error(message);
       throw error;
     },
@@ -389,9 +394,9 @@ export const useResetExpenseCategoriesToDefaults = () => {
         `${defaultCategories.length} categorías predefinidas restauradas`
       );
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message =
-        error?.response?.data?.detail || "Error al restaurar las categorías";
+        (error as ApiError)?.response?.data?.detail || "Error al restaurar las categorías";
       toast.error(message);
       throw error;
     },
@@ -436,9 +441,9 @@ export const useExportExpenseCategories = () => {
     onSuccess: (_, { format }) => {
       toast.success(`Categorías exportadas en formato ${format.toUpperCase()}`);
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const message =
-        error?.response?.data?.detail || "Error al exportar las categorías";
+        (error as ApiError)?.response?.data?.detail || "Error al exportar las categorías";
       toast.error(message);
       throw error;
     },

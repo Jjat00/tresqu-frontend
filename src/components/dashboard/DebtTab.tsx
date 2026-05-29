@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -91,7 +91,6 @@ const paymentPlans = [
 ];
 const DebtTab = () => {
   const [timeFilter, setTimeFilter] = useState("all");
-  const [filteredDebts, setFilteredDebts] = useState(debtsData);
   const [newDebtOpen, setNewDebtOpen] = useState(false);
   const [simulatorOpen, setSimulatorOpen] = useState(false);
   const [simulatorValues, setSimulatorValues] = useState({
@@ -108,35 +107,27 @@ const DebtTab = () => {
     monthlyPayment: "",
     nextPaymentDate: new Date().toISOString().split("T")[0],
   });
-  const [simulationResults, setSimulationResults] = useState({
-    monthsToPayoff: 12,
-    totalInterest: 3500,
-    totalPaid: 33500,
-  });
-
-  // Apply filters in real-time
-  useEffect(() => {
-    if (timeFilter === "all") {
-      setFilteredDebts(debtsData);
-    } else if (timeFilter === "upcoming") {
+  // Filtrado derivado en tiempo real según el filtro de tiempo
+  const filteredDebts = useMemo(() => {
+    if (timeFilter === "upcoming") {
       // Filter debts with payments due in the next 7 days
       const today = new Date();
       const sevenDaysLater = new Date();
       sevenDaysLater.setDate(today.getDate() + 7);
-      setFilteredDebts(
-        debtsData.filter((debt) => {
-          const paymentDate = new Date(debt.nextPaymentDate);
-          return paymentDate >= today && paymentDate <= sevenDaysLater;
-        })
-      );
-    } else if (timeFilter === "high-interest") {
-      // Filter debts with high interest rates (> 15%)
-      setFilteredDebts(debtsData.filter((debt) => debt.interestRate > 15));
+      return debtsData.filter((debt) => {
+        const paymentDate = new Date(debt.nextPaymentDate);
+        return paymentDate >= today && paymentDate <= sevenDaysLater;
+      });
     }
+    if (timeFilter === "high-interest") {
+      // Filter debts with high interest rates (> 15%)
+      return debtsData.filter((debt) => debt.interestRate > 15);
+    }
+    return debtsData;
   }, [timeFilter]);
 
-  // Update simulation results when inputs change
-  useEffect(() => {
+  // Resultados de la simulación derivados de los valores del simulador
+  const simulationResults = useMemo(() => {
     // Simple simulation calculation
     if (simulatorValues.debtAmount > 0 && simulatorValues.monthlyPayment > 0) {
       const totalPayment =
@@ -155,13 +146,15 @@ const DebtTab = () => {
         balance = balance + interestThisMonth - totalPayment;
         if (balance <= 0) break;
       }
-      setSimulationResults({
+      return {
         monthsToPayoff: months,
         totalInterest: Math.round(totalInterest),
         totalPaid: Math.round(simulatorValues.debtAmount + totalInterest),
-      });
+      };
     }
+    return { monthsToPayoff: 12, totalInterest: 3500, totalPaid: 33500 };
   }, [simulatorValues]);
+
   const handleAddDebt = () => {
     console.log("Adding new debt:", newDebt);
     // Here you would add logic to add the debt

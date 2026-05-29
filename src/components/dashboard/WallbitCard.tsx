@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -141,10 +141,6 @@ const WallbitCard = () => {
       toast.error("No se pudo reanudar el bot.");
     }
   };
-
-  useEffect(() => {
-    if (!dialogOpen) setApiKey("");
-  }, [dialogOpen]);
 
   const connectError = useMemo(() => {
     if (!connect.error) return null;
@@ -324,7 +320,13 @@ const WallbitCard = () => {
         </div>
       </CardContent>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) setApiKey("");
+        }}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">

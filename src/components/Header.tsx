@@ -16,6 +16,7 @@ const Header = () => {
       setScrolled(window.scrollY > 10);
     };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- estado de sesión leído al montar y al navegar
     setIsLoggedIn(isAuthenticated());
 
     window.addEventListener("scroll", handleScroll);

@@ -69,6 +69,7 @@ const WallbitLimitsCard = () => {
   const [blockedDraft, setBlockedDraft] = useState("");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hidratación del formulario al cargar los límites
     if (limits) setForm(hydrate(limits));
   }, [limits]);
 

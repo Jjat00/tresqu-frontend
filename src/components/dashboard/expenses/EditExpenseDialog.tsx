@@ -105,6 +105,7 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
   };
 
   // Reset form data when expense changes
+  /* eslint-disable react-hooks/set-state-in-effect -- reinicio del formulario al cambiar el gasto seleccionado */
   useEffect(() => {
     if (expense && categoriesData.length > 0) {
       const currentCategoryName = getCurrentCategoryName(expense);
@@ -137,6 +138,7 @@ const EditExpenseDialog: React.FC<EditExpenseDialogProps> = ({
       setFormData({});
     }
   }, [expense, categoriesData]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleSave = async () => {
     if (!expense) return;

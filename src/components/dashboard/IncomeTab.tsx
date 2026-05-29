@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import * as XLSX from "xlsx";
@@ -67,14 +67,10 @@ const IncomeTab = ({
   const { isLoading: isBarLoading } = useIncomeBarData();
   const { data: pieData, isLoading: isPieLoading } = useIncomePieChart();
 
-  // Estado para los datos de la tabla
-  const [tableData, setTableData] = useState<IncomeTableItem[]>([]);
-  const [filteredIncome, setFilteredIncome] = useState<IncomeTableItem[]>([]);
-
-  // Transformar los datos del resumen cuando se reciben
-  useEffect(() => {
+  // Datos de la tabla derivados del resumen de ingresos
+  const tableData = useMemo<IncomeTableItem[]>(() => {
     if (summaryData && summaryData.summary) {
-      const transformedData = summaryData.summary.map(
+      return summaryData.summary.map(
         (item: IncomeSummaryItem, index: number) => ({
           id: index + 1,
           description: `Ingreso por ${item.category__name || "Sin categoría"}`,
@@ -84,15 +80,14 @@ const IncomeTab = ({
           date: new Date().toISOString().split("T")[0],
         })
       );
-      setTableData(transformedData);
     }
+    return [];
   }, [summaryData]);
 
-  // Aplicar filtros a los datos
-  useEffect(() => {
+  // Ingresos filtrados derivados de la tabla y los filtros activos
+  const filteredIncome = useMemo<IncomeTableItem[]>(() => {
     if (!tableData.length) {
-      setFilteredIncome([]);
-      return;
+      return [];
     }
 
     let filtered = [...tableData];
@@ -125,11 +120,12 @@ const IncomeTab = ({
 
     // Ordenar por monto (mayor a menor)
     filtered.sort((a, b) => b.amount - a.amount);
-    setFilteredIncome(filtered);
+    return filtered;
   }, [tableData, categoryFilter, searchQuery]);
 
-  // Update localSelectedMonth when prop changes
+  // Sincroniza el estado local editable cuando cambia la prop selectedMonth.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync intencional de prop a estado local
     setLocalSelectedMonth(selectedMonth);
     // If year is selected, update view mode
     if (selectedMonth === "year") {
