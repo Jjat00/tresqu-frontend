@@ -9,6 +9,9 @@ import {
   DesktopSidebar,
   MobileBottomNav,
 } from "@/components/dashboard/DashboardSidebar";
+import ContextChatDock, {
+  sectionChatConfig,
+} from "@/components/chatbot/ContextChatDock";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -22,6 +25,31 @@ const DashboardLayout = ({
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+
+  // El chat contextual solo aparece en secciones con datos (no en Cuenta,
+  // Integraciones ni la página completa de Agentes).
+  const chatConfig = sectionChatConfig(activeTab);
+
+  // Recuerda si el usuario dejó el dock abierto (arranca cerrado por espacio).
+  useEffect(() => {
+    try {
+      setChatOpen(localStorage.getItem("tresqu_chat_open") === "1");
+    } catch {
+      /* localStorage no disponible: queda cerrado */
+    }
+  }, []);
+
+  const toggleChat = () =>
+    setChatOpen((o) => {
+      const next = !o;
+      try {
+        localStorage.setItem("tresqu_chat_open", next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
 
   useEffect(() => {
     try {
@@ -99,14 +127,26 @@ const DashboardLayout = ({
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
-      {/* Dashboard content with sidebar offset */}
+      {/* Dashboard content with sidebar offset (y dock de chat a la derecha) */}
       <main
-        className={`flex-1 px-3 md:px-6 py-4 md:py-6 pb-20 lg:pb-6 transition-all duration-200 ${
-          sidebarCollapsed ? "lg:ml-14" : "lg:ml-48"
+        className={`flex-1 px-3 md:px-6 py-4 md:py-6 lg:pb-6 transition-all duration-200 ${
+          chatConfig ? "pb-28" : "pb-20"
+        } ${sidebarCollapsed ? "lg:ml-14" : "lg:ml-48"} ${
+          chatConfig ? (chatOpen ? "lg:mr-[22rem]" : "lg:mr-12") : ""
         }`}
       >
         {children}
       </main>
+
+      {/* Chat contextual: cambia de agente/sugerencias según la sección */}
+      {chatConfig && (
+        <ContextChatDock
+          section={activeTab}
+          config={chatConfig}
+          open={chatOpen}
+          onToggle={toggleChat}
+        />
+      )}
 
       {/* Mobile bottom nav */}
       <MobileBottomNav activeTab={activeTab} />

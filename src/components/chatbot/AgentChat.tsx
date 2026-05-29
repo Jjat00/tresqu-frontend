@@ -126,6 +126,13 @@ interface AgentChatProps {
   wallbitConnected: boolean;
   onConnectWallbit: () => void;
   onBack: () => void;
+  // Modo dock/embebido: ocupa la altura del contenedor y oculta el botón
+  // "volver" (en el dock no hay roster al que regresar).
+  embedded?: boolean;
+  // Permiten que el dock contextual personalice el saludo y las sugerencias
+  // según la sección donde está el usuario, manteniendo el mismo agente.
+  greeting?: string;
+  suggestions?: string[];
 }
 
 const AgentChat = ({
@@ -133,9 +140,16 @@ const AgentChat = ({
   wallbitConnected,
   onConnectWallbit,
   onBack,
+  embedded = false,
+  greeting: greetingOverride,
+  suggestions: suggestionsOverride,
 }: AgentChatProps) => {
   const lockedByWallbit = !!agent.requires_wallbit && !wallbitConnected;
   const prefersWallbitHint = !!agent.prefers_wallbit && !wallbitConnected;
+
+  const containerClass = embedded
+    ? "flex h-full w-full flex-col"
+    : "mx-auto flex h-[calc(100dvh-9.5rem)] w-full max-w-3xl flex-col lg:h-[calc(100dvh-6.5rem)]";
 
   const {
     messages,
@@ -148,22 +162,24 @@ const AgentChat = ({
     onCancel,
   } = useChatBot({
     agentId: agent.id,
-    greeting: GREETINGS[agent.id] ?? agent.specialty,
+    greeting: greetingOverride ?? GREETINGS[agent.id] ?? agent.specialty,
   });
 
   // Defense-in-depth: the roster already blocks opening this agent while
   // Wallbit is disconnected, but guard the chat view too.
   if (lockedByWallbit) {
     return (
-      <div className="mx-auto flex h-[calc(100dvh-9.5rem)] w-full max-w-3xl flex-col lg:h-[calc(100dvh-6.5rem)]">
+      <div className={containerClass}>
         <div className="mb-3 flex items-center gap-2.5 animate-fade-up">
-          <button
-            onClick={onBack}
-            aria-label="Volver al equipo"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
+          {!embedded && (
+            <button
+              onClick={onBack}
+              aria-label="Volver al equipo"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+          )}
           <h1 className="text-base font-semibold leading-tight">{agent.label}</h1>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
@@ -189,15 +205,17 @@ const AgentChat = ({
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-9.5rem)] w-full max-w-3xl flex-col lg:h-[calc(100dvh-6.5rem)]">
+    <div className={containerClass}>
       <div className="mb-3 flex items-center gap-2.5 animate-fade-up">
-        <button
-          onClick={onBack}
-          aria-label="Volver al equipo"
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
+        {!embedded && (
+          <button
+            onClick={onBack}
+            aria-label="Volver al equipo"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+        )}
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-success/15">
           <AgentIcon id={agent.id} className="h-4 w-4 text-success" />
         </div>
@@ -259,7 +277,7 @@ const AgentChat = ({
         setInputMessage={setInputMessage}
         handleSendMessage={() => handleSendMessage()}
         isProcessing={isProcessing}
-        suggestions={SUGGESTIONS[agent.id] ?? []}
+        suggestions={suggestionsOverride ?? SUGGESTIONS[agent.id] ?? []}
       />
     </div>
   );

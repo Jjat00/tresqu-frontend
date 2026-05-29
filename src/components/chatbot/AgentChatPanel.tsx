@@ -12,6 +12,11 @@ interface AgentChatPanelProps {
   onBack?: () => void;
   /** Adónde enviar para conectar Wallbit. Por defecto, la pestaña Integraciones. */
   onConnectWallbit?: () => void;
+  /** Modo dock/embebido: altura del contenedor y sin botón "volver". */
+  embedded?: boolean;
+  /** Saludo y sugerencias contextuales (las usa el dock por sección). */
+  greeting?: string;
+  suggestions?: string[];
 }
 
 /**
@@ -23,6 +28,9 @@ const AgentChatPanel = ({
   agentId,
   onBack,
   onConnectWallbit,
+  embedded,
+  greeting,
+  suggestions,
 }: AgentChatPanelProps) => {
   const { data, isLoading, isError } = useAgentRoster();
   const { data: wallbit } = useWallbitStatus();
@@ -69,6 +77,9 @@ const AgentChatPanel = ({
       wallbitConnected={wallbitConnected}
       onConnectWallbit={goConnectWallbit}
       onBack={goBack}
+      embedded={embedded}
+      greeting={greeting}
+      suggestions={suggestions}
     />
   );
 };
