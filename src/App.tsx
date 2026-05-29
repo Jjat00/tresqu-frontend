@@ -35,7 +35,12 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
-            <Route path="/dashboard/profile" element={<Profile />} />
+            <Route path="/dashboard/account" element={<Profile />} />
+            {/* Ruta antigua: el perfil ahora vive bajo "Cuenta" */}
+            <Route
+              path="/dashboard/profile"
+              element={<Navigate to="/dashboard/account" replace />}
+            />
             <Route path="/dashboard/:section" element={<Dashboard />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/legal-notice" element={<LegalNotice />} />

@@ -7,8 +7,9 @@ import {
   Search,
   ChevronDown,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { isAuthenticated } from "@/services/authService";
 
 const capabilities = [
   {
@@ -70,6 +71,17 @@ const faqs = [
 
 const WallbitSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- estado de sesión leído al montar
+    setIsLoggedIn(isAuthenticated());
+  }, []);
+
+  // Logueado: directo a conectar en Integraciones. Anónimo: a login primero.
+  const connectHref = isLoggedIn
+    ? "/dashboard/account?tab=integraciones"
+    : "/login";
 
   return (
     <section
@@ -152,10 +164,10 @@ const WallbitSection = () => {
             </p>
           </div>
           <Link
-            to="/dashboard/profile"
+            to={connectHref}
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0D99FF] text-black font-semibold rounded-md hover:bg-[#0D99FF]/90 transition-colors text-sm whitespace-nowrap"
           >
-            Conectar en mi perfil
+            {isLoggedIn ? "Conectar en mi cuenta" : "Empezar y conectar"}
           </Link>
         </div>
 

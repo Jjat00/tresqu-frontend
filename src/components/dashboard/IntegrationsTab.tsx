@@ -193,7 +193,7 @@ const IntegrationsTab = () => {
             variant="outline"
             size="sm"
             className="glass"
-            onClick={() => navigate("/dashboard/profile?tab=connections")}
+            onClick={() => navigate("/dashboard/account?tab=integraciones")}
           >
             <Settings className="h-4 w-4 mr-1" />
             Gestionar
@@ -216,7 +216,7 @@ const IntegrationsTab = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate("/dashboard/profile?tab=connections")}
+                onClick={() => navigate("/dashboard/account?tab=integraciones")}
               >
                 Conectar Gmail
               </Button>

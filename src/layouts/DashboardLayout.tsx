@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { logout, isAuthenticated, getUser } from "@/services/authService";
 import { toast } from "sonner";
 import Logo from "@/components/Logo";
@@ -59,10 +59,21 @@ const DashboardLayout = ({
 
           <div className="flex items-center gap-3">
             <Link
-              to="/dashboard/profile"
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              to="/dashboard/account"
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity lg:hidden"
+              aria-label="Mi cuenta"
             >
-              <User className="h-4 w-4 text-muted-foreground" />
+              <span
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                style={{
+                  background:
+                    "linear-gradient(135deg, hsl(152 100% 50% / 0.25), hsl(152 100% 50% / 0.05))",
+                  color: "var(--color-trii-green)",
+                  border: "1px solid hsl(152 100% 50% / 0.3)",
+                }}
+              >
+                {(userName.trim()[0] || "U").toUpperCase()}
+              </span>
               <span className="text-sm font-medium hidden sm:inline-block">
                 {userName}
               </span>

@@ -14,8 +14,9 @@ const ChatView = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = agents.find((a) => a.id === selectedId) ?? null;
 
-  // Send the user to where Wallbit is connected (the Wallbit card on Profile).
-  const goConnectWallbit = () => navigate("/dashboard/profile");
+  // Send the user to where Wallbit is connected (Integraciones tab on Cuenta).
+  const goConnectWallbit = () =>
+    navigate("/dashboard/account?tab=integraciones");
 
   // Agents that require Wallbit can't be opened while disconnected; the roster
   // shows a connect CTA instead, but guard selection too.

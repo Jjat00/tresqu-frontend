@@ -44,7 +44,7 @@ const PortfolioOverviewCard = () => {
           size="sm"
           variant="outline"
           className="glass"
-          onClick={() => navigate("/dashboard/integrations")}
+          onClick={() => navigate("/dashboard/account?tab=integraciones")}
         >
           Conectar
         </Button>

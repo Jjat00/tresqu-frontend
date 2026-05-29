@@ -15,6 +15,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/store/authStore";
+
+const getInitial = (name: string | undefined) => {
+  const trimmed = name?.trim();
+  return trimmed ? trimmed[0].toUpperCase() : "U";
+};
 
 interface NavItem {
   id: string;
@@ -89,6 +95,41 @@ export const DesktopSidebar = ({
   onToggleCollapse,
 }: DashboardSidebarProps) => {
   const navigate = useNavigate();
+  const user = useUser();
+  const accountActive = activeTab === "account";
+  const accountName = user?.first_name || user?.username || "Cuenta";
+
+  const accountButton = (
+    <button
+      onClick={() => navigate("/dashboard/account")}
+      className={`w-full flex items-center gap-3 rounded-lg text-sm font-medium transition-colors ${
+        collapsed ? "justify-center px-0 py-2" : "px-2.5 py-2"
+      } ${
+        accountActive
+          ? "text-foreground bg-muted/60"
+          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+      }`}
+      aria-label="Cuenta"
+    >
+      <span
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+        style={{
+          background:
+            "linear-gradient(135deg, hsl(152 100% 50% / 0.25), hsl(152 100% 50% / 0.05))",
+          color: "var(--color-trii-green)",
+          border: "1px solid hsl(152 100% 50% / 0.3)",
+        }}
+      >
+        {getInitial(user?.first_name || user?.username)}
+      </span>
+      {!collapsed && (
+        <>
+          <span className="truncate flex-1 text-left">{accountName}</span>
+          <ChevronRight className="h-4 w-4 shrink-0 opacity-40" />
+        </>
+      )}
+    </button>
+  );
 
   return (
     <aside
@@ -157,6 +198,20 @@ export const DesktopSidebar = ({
 
           return btn;
         })}
+      </div>
+
+      {/* Acceso a Cuenta (perfil, preferencias, inversión, integraciones) */}
+      <div className="border-t border-border p-1.5">
+        {collapsed ? (
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>{accountButton}</TooltipTrigger>
+            <TooltipContent side="right" sideOffset={8}>
+              {accountName}
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          accountButton
+        )}
       </div>
     </aside>
   );

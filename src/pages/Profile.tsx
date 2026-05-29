@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useUser } from "@/store/authStore";
 import { useUpdateUser } from "@/hooks/useUpdateUser";
@@ -46,7 +47,29 @@ import {
   Coins,
   UserIcon,
   Sparkles,
+  ShieldCheck,
+  Plug,
 } from "lucide-react";
+
+/** Pestañas de la página de Cuenta. El orden define el render del TabsList. */
+const ACCOUNT_TABS = [
+  { value: "cuenta", label: "Cuenta", icon: UserIcon },
+  { value: "preferencias", label: "Preferencias", icon: Globe },
+  { value: "inversion", label: "Inversión", icon: ShieldCheck },
+  { value: "integraciones", label: "Integraciones", icon: Plug },
+] as const;
+
+type AccountTab = (typeof ACCOUNT_TABS)[number]["value"];
+
+/** Normaliza el query param `tab` a una pestaña válida (con alias legacy). */
+const resolveTab = (raw: string | null, gmailParam: string | null): AccountTab => {
+  // El callback de Gmail vuelve con ?gmail=connected|error → mostrar Integraciones.
+  if (gmailParam === "connected" || gmailParam === "error") return "integraciones";
+  // Alias del antiguo botón "Gestionar" de IntegrationsTab (?tab=connections).
+  if (raw === "connections" || raw === "integrations") return "integraciones";
+  const match = ACCOUNT_TABS.find((t) => t.value === raw);
+  return match ? match.value : "cuenta";
+};
 
 const TIMEZONES: { value: string; label: string }[] = [
   { value: "America/Bogota", label: "América / Bogotá (COT)" },
@@ -549,24 +572,36 @@ const Profile = () => {
   const user = useUser();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const gmailParam = searchParams.get("gmail");
+  const [activeTab, setActiveTab] = useState<AccountTab>(() =>
+    resolveTab(searchParams.get("tab"), gmailParam)
+  );
+
   useEffect(() => {
-    const gmailParam = searchParams.get("gmail");
     if (gmailParam === "connected") {
       toast.success("Gmail conectado exitosamente", {
         description: "Tus correos serán procesados automáticamente.",
       });
+      setActiveTab("integraciones");
       setSearchParams({}, { replace: true });
     } else if (gmailParam === "error") {
       toast.error("Error al conectar Gmail", {
         description: "No se pudo completar la autorización. Intenta de nuevo.",
       });
+      setActiveTab("integraciones");
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+  }, [gmailParam, setSearchParams]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value as AccountTab);
+    // Reflejar la pestaña en la URL para que sea enlazable y sobreviva refresh.
+    setSearchParams(value === "cuenta" ? {} : { tab: value }, { replace: true });
+  };
 
   if (!user) {
     return (
-      <DashboardLayout>
+      <DashboardLayout activeTab="account">
         <div className="flex h-64 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -577,7 +612,7 @@ const Profile = () => {
   const planName = user.subscription_plan_details?.name;
 
   return (
-    <DashboardLayout>
+    <DashboardLayout activeTab="account">
       <div className="mx-auto w-full max-w-4xl space-y-6">
         {/* Hero / Identity */}
         <Card className="glass-card overflow-hidden">
@@ -621,15 +656,44 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        <AccountForm key={`account-${user.id}-${user.updated_at}`} user={user} />
-        <PreferencesForm
-          key={`prefs-${user.id}-${user.updated_at}`}
-          user={user}
-        />
-        <RiskProfileCard />
-        <WallbitCard />
-        <WallbitLimitsCard />
-        <ConnectionsCard />
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+          <TabsList className="grid h-auto w-full grid-cols-2 gap-1 bg-muted/30 p-1 sm:grid-cols-4">
+            {ACCOUNT_TABS.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="flex w-full items-center gap-1.5 py-2 data-[state=active]:bg-background"
+              >
+                <tab.icon className="h-4 w-4 shrink-0" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          <TabsContent value="cuenta" className="mt-0">
+            <AccountForm
+              key={`account-${user.id}-${user.updated_at}`}
+              user={user}
+            />
+          </TabsContent>
+
+          <TabsContent value="preferencias" className="mt-0">
+            <PreferencesForm
+              key={`prefs-${user.id}-${user.updated_at}`}
+              user={user}
+            />
+          </TabsContent>
+
+          <TabsContent value="inversion" className="mt-0 space-y-6">
+            <RiskProfileCard />
+            <WallbitLimitsCard />
+          </TabsContent>
+
+          <TabsContent value="integraciones" className="mt-0 space-y-6">
+            <WallbitCard />
+            <ConnectionsCard />
+          </TabsContent>
+        </Tabs>
       </div>
     </DashboardLayout>
   );
