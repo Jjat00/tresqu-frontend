@@ -7,7 +7,6 @@ import CategoriesTab from "@/components/dashboard/CategoriesTab";
 import IntegrationsTab from "@/components/dashboard/IntegrationsTab";
 import InvestmentsTab from "@/components/dashboard/investments/InvestmentsTab";
 import HomeTab from "@/components/dashboard/home/HomeTab";
-import ChatView from "@/components/chatbot/ChatView";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isAuthenticated } from "@/services/authService";
@@ -106,14 +105,6 @@ const Dashboard = () => {
         return null;
     }
   };
-
-  if (section === "agents") {
-    return (
-      <DashboardLayout activeTab={section}>
-        <ChatView />
-      </DashboardLayout>
-    );
-  }
 
   return (
     <DashboardLayout activeTab={section}>

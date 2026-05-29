@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import LegalNotice from "./pages/LegalNotice";
 import FacebookPrivacyPolicy from "./pages/FacebookPrivacyPolicy";
 import TresquCent from "./pages/TresquCent";
+import Agents from "./pages/Agents";
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
@@ -41,6 +42,9 @@ const App = () => (
               path="/dashboard/profile"
               element={<Navigate to="/dashboard/account" replace />}
             />
+            {/* Equipo de agentes: roster y una ruta propia por agente */}
+            <Route path="/dashboard/agents" element={<Agents />} />
+            <Route path="/dashboard/agents/:agentId" element={<Agents />} />
             <Route path="/dashboard/:section" element={<Dashboard />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/legal-notice" element={<LegalNotice />} />

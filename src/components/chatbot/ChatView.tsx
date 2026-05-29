@@ -1,18 +1,16 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAgentRoster } from "@/hooks/useAgentRoster";
 import { useWallbitStatus } from "@/hooks/useWallbitStatus";
 import AgentRoster from "./AgentRoster";
-import AgentChat from "./AgentChat";
+import AgentChatPanel from "./AgentChatPanel";
 
 const ChatView = () => {
   const { data, isLoading, isError } = useAgentRoster();
   const { data: wallbit } = useWallbitStatus();
   const navigate = useNavigate();
+  const { agentId } = useParams<{ agentId: string }>();
   const agents = data ?? [];
   const wallbitConnected = wallbit?.connected === true;
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = agents.find((a) => a.id === selectedId) ?? null;
 
   // Send the user to where Wallbit is connected (Integraciones tab on Cuenta).
   const goConnectWallbit = () =>
@@ -26,29 +24,28 @@ const ChatView = () => {
       goConnectWallbit();
       return;
     }
-    setSelectedId(id);
+    navigate(`/dashboard/agents/${id}`);
   };
+
+  // The selected agent now lives in the URL: each agent has its own route.
+  if (agentId) {
+    return (
+      <div className="mx-auto w-full max-w-4xl">
+        <AgentChatPanel agentId={agentId} onConnectWallbit={goConnectWallbit} />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-4xl">
-      {selected ? (
-        <AgentChat
-          key={selected.id}
-          agent={selected}
-          wallbitConnected={wallbitConnected}
-          onConnectWallbit={goConnectWallbit}
-          onBack={() => setSelectedId(null)}
-        />
-      ) : (
-        <AgentRoster
-          agents={agents}
-          loading={isLoading}
-          error={isError}
-          wallbitConnected={wallbitConnected}
-          onSelect={handleSelect}
-          onConnectWallbit={goConnectWallbit}
-        />
-      )}
+      <AgentRoster
+        agents={agents}
+        loading={isLoading}
+        error={isError}
+        wallbitConnected={wallbitConnected}
+        onSelect={handleSelect}
+        onConnectWallbit={goConnectWallbit}
+      />
     </div>
   );
 };
