@@ -44,7 +44,7 @@ const ChatInput = ({
         </div>
 
         <Button
-          className="bg-success hover:bg-success/90 h-10 w-10 p-2"
+          className="bg-success text-success-foreground hover:bg-success/90 h-10 w-10 p-2"
           onClick={handleSendMessage}
           disabled={inputMessage.trim() === "" || isProcessing}
           aria-label="Enviar mensaje"

@@ -53,7 +53,7 @@ const ConfirmationCard = ({ pending, onConfirm, onCancel }: ConfirmationCardProp
       <div className="mt-2 flex gap-2">
         <Button
           size="sm"
-          className="h-7 flex-1 bg-success hover:bg-success/90 text-xs"
+          className="h-7 flex-1 bg-success text-success-foreground hover:bg-success/90 text-xs"
           onClick={handleConfirm}
           disabled={busy}
         >

@@ -112,7 +112,7 @@ const RiskIntro = ({
       <button
         onClick={onStart}
         disabled={disabled}
-        className="mt-2 inline-flex items-center gap-1 rounded-md bg-success px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-success/90 disabled:opacity-50"
+        className="mt-2 inline-flex items-center gap-1 rounded-md bg-success px-2.5 py-1 text-xs font-medium text-success-foreground transition-colors hover:bg-success/90 disabled:opacity-50"
       >
         <Sparkles className="h-3.5 w-3.5" />
         {hasDeclared ? "Actualizar perfil" : "Iniciar evaluación"}

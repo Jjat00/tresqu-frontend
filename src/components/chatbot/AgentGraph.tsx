@@ -84,7 +84,7 @@ const AgentGraph = ({ steps, processing }: AgentGraphProps) => {
                 <div className="relative">
                   <Icon className="h-3.5 w-3.5" />
                   {state === "done" && (
-                    <Check className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-success text-white" />
+                    <Check className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-success text-success-foreground" />
                   )}
                 </div>
                 <span className="text-[9px] leading-none">{label}</span>

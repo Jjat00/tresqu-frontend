@@ -52,6 +52,9 @@
   /* Colores específicos - Paleta Tresqu */
   --color-success: #00FF7F;
   --color-success-dark: #00CC66;
+  /* Texto sobre fondo verde brillante: negro para contraste legible
+     (el verde #00FF7F es muy luminoso; blanco encima no se lee). */
+  --color-success-foreground: hsl(0 0% 0%);
   --color-highlight: #60a5fa;
   --color-highlight-dark: #3b82f6;
   --color-purple: #a78bfa;
