@@ -81,11 +81,14 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                   paddingAngle={2}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }) =>
-                    isMobile
+                  label={({ name, percent }) => {
+                    // Oculta labels de sectores muy pequeños: en móvil se
+                    // enciman y se cortan contra el borde del contenedor.
+                    if (percent < (isMobile ? 0.08 : 0.04)) return "";
+                    return isMobile
                       ? `${(percent * 100).toFixed(0)}%`
-                      : `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
+                      : `${name}: ${(percent * 100).toFixed(0)}%`;
+                  }}
                   labelLine={false}
                   onClick={(data) => onSelectCategory?.(data.name)}
                   style={{ cursor: onSelectCategory ? "pointer" : "default" }}

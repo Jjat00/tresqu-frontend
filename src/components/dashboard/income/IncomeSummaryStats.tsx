@@ -49,11 +49,11 @@ const IncomeSummaryStats: React.FC<IncomeSummaryStatsProps> = ({
 
   return (
     <>
-      <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+      <div className="bg-muted/20 p-3 sm:p-4 rounded-lg min-w-0">
         <p className="text-xs sm:text-sm text-muted-foreground mb-1">
           Ingreso mensual promedio
         </p>
-        <p className="text-xl sm:text-2xl font-bold">
+        <p className="text-xl sm:text-2xl font-bold tabular-nums break-words">
           {formatCurrency(statsData.average_monthly_income)}
         </p>
         <p className="text-xs text-muted-foreground mt-1">
@@ -61,13 +61,13 @@ const IncomeSummaryStats: React.FC<IncomeSummaryStatsProps> = ({
         </p>
       </div>
 
-      <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+      <div className="bg-muted/20 p-3 sm:p-4 rounded-lg min-w-0">
         <p className="text-xs sm:text-sm text-muted-foreground mb-1">
           Ingresos vs. mes anterior
         </p>
-        <div className="flex items-end gap-2">
+        <div className="flex flex-wrap items-end gap-x-2 gap-y-0.5 min-w-0">
           <p
-            className={`text-xl sm:text-2xl font-bold ${
+            className={`text-xl sm:text-2xl font-bold tabular-nums break-words ${
               statsData.difference >= 0 ? "text-success" : "text-destructive"
             }`}
           >
@@ -75,7 +75,7 @@ const IncomeSummaryStats: React.FC<IncomeSummaryStatsProps> = ({
             {formatCurrency(statsData.difference)}
           </p>
           <p
-            className={`text-xs sm:text-sm ${
+            className={`text-xs sm:text-sm shrink-0 ${
               statsData.difference >= 0 ? "text-success" : "text-destructive"
             }`}
           >
@@ -83,16 +83,16 @@ const IncomeSummaryStats: React.FC<IncomeSummaryStatsProps> = ({
             {statsData.percentage_change.toFixed(1)}%
           </p>
         </div>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className="text-xs text-muted-foreground mt-1 break-words">
           {formatCurrency(statsData.current_month_income)} este mes
         </p>
       </div>
 
-      <div className="bg-muted/20 p-3 sm:p-4 rounded-lg">
+      <div className="bg-muted/20 p-3 sm:p-4 rounded-lg min-w-0">
         <p className="text-xs sm:text-sm text-muted-foreground mb-1">
           Proyección próximo mes
         </p>
-        <p className="text-lg sm:text-xl font-semibold">
+        <p className="text-lg sm:text-xl font-semibold tabular-nums break-words">
           {formatCurrency(statsData.next_month_projection)}
         </p>
         <p className="text-xs text-muted-foreground mt-1">

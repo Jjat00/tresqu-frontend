@@ -183,9 +183,9 @@ const DebtTab = () => {
   return (
     <div className="space-y-6 py-0 my-[60px]">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
           <Select value={timeFilter} onValueChange={setTimeFilter}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Ver todas" />
             </SelectTrigger>
             <SelectContent>
@@ -197,8 +197,8 @@ const DebtTab = () => {
             </SelectContent>
           </Select>
 
-          <div>
-            <p className="text-sm text-muted-foreground ml-2">
+          <div className="min-w-0">
+            <p className="text-sm text-muted-foreground sm:ml-2 break-words">
               Total: $121,000 | Interés mensual promedio: 15.6% | Pago mensual
               total: $9,800
             </p>
@@ -398,9 +398,9 @@ const DebtTab = () => {
       </div>
 
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <h3 className="text-lg font-semibold">Planes de pago</h3>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={handleExportPDF}>
               <Download className="mr-2 h-4 w-4" />
               PDF

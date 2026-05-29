@@ -426,7 +426,7 @@ const ProfileBody = ({
                 </span>
               </button>
             </HoverCardTrigger>
-            <HoverCardContent className="w-72" align="start">
+            <HoverCardContent className="w-[min(18rem,calc(100vw-2rem))]" align="start">
               <p className="text-xs font-medium text-muted-foreground">
                 Puntaje del perfil (0 – 100)
               </p>
@@ -530,7 +530,7 @@ const ProfileBody = ({
                     <HelpCircle className="h-3.5 w-3.5" />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80" align="start">
+                <PopoverContent className="w-[min(20rem,calc(100vw-2rem))]" align="start">
                   <p className="text-xs font-medium text-muted-foreground">
                     Cada eje refleja una señal calculada sobre los últimos
                     90 días. El puntaje global pondera las 4:

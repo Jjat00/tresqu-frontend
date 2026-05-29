@@ -267,7 +267,7 @@ const SubcategoryView = ({
             <h3 className="text-lg font-semibold">Movimientos por subcategoría</h3>
           </div>
           
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -281,8 +281,8 @@ const SubcategoryView = ({
                 {transactionsData.map(transaction => <TableRow key={transaction.id}>
                     <TableCell>{transaction.description}</TableCell>
                     <TableCell>{transaction.subcategory}</TableCell>
-                    <TableCell>${transaction.amount.toLocaleString()}</TableCell>
-                    <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
+                    <TableCell className="whitespace-nowrap tabular-nums">${transaction.amount.toLocaleString()}</TableCell>
+                    <TableCell className="whitespace-nowrap">{new Date(transaction.date).toLocaleDateString()}</TableCell>
                   </TableRow>)}
               </TableBody>
             </Table>

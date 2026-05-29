@@ -63,7 +63,8 @@ const PortfolioDonut = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 h-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <div className="h-[160px] sm:h-full">
+              <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={slices}
@@ -90,7 +91,8 @@ const PortfolioDonut = () => {
                   ]}
                 />
               </PieChart>
-            </ResponsiveContainer>
+              </ResponsiveContainer>
+            </div>
             <div className="flex flex-col justify-center gap-1.5 text-xs overflow-y-auto">
               {slices.slice(0, 8).map((s) => (
                 <div key={s.name} className="flex items-center justify-between gap-2">

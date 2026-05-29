@@ -261,7 +261,7 @@ const SavingsGoalsTab = () => {
             </div>
           </div>
 
-          <div className="rounded-md border mb-6">
+          <div className="rounded-md border mb-6 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>

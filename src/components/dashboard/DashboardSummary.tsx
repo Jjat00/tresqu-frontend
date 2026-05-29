@@ -38,7 +38,7 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
+      <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
         {[0, 1, 2].map((i) => (
           <div key={i} className="glass-card p-4 sm:p-5">
             <Skeleton className="h-3 w-14 mb-3 rounded-full" />
@@ -80,9 +80,9 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
+    <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
       {cards.map((card) => (
-        <div key={card.label} className="glass-card p-4 sm:p-5">
+        <div key={card.label} className="glass-card p-4 sm:p-5 min-w-0">
           <div className="flex items-center gap-2 mb-3">
             <div className={`w-1.5 h-1.5 rounded-full ${card.dotColor}`} />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">
@@ -90,7 +90,7 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
             </span>
           </div>
           <div
-            className={`text-lg sm:text-2xl md:text-3xl font-semibold ${card.amountColor} tracking-tight font-display`}
+            className={`text-lg sm:text-2xl md:text-3xl font-semibold ${card.amountColor} tracking-tight font-display tabular-nums break-words`}
           >
             {card.prefix === "-" ? "-" : ""}
             {formatAmount(card.amount)}

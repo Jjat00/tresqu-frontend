@@ -78,35 +78,35 @@ const PortfolioOverviewCard = () => {
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <div>
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <div className="min-w-0">
           <p className="text-[10px] text-muted-foreground mb-1">Invertido</p>
-          <p className="text-sm sm:text-base font-semibold tabular-nums">
+          <p className="text-sm sm:text-base font-semibold tabular-nums truncate">
             {fmtUsd(summary.net_invested_usd)}
           </p>
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-[10px] text-muted-foreground mb-1">Valor actual</p>
-          <p className="text-sm sm:text-base font-semibold tabular-nums">
+          <p className="text-sm sm:text-base font-semibold tabular-nums truncate">
             {fmtUsd(summary.current_value_usd)}
           </p>
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-[10px] text-muted-foreground mb-1">P&amp;L</p>
           <div
-            className={`flex items-center gap-1 ${
+            className={`flex items-center gap-1 min-w-0 ${
               isUp ? "text-emerald-400" : "text-rose-400"
             }`}
           >
             {isUp ? (
-              <ArrowUpRight className="h-3 w-3" />
+              <ArrowUpRight className="h-3 w-3 shrink-0" />
             ) : (
-              <ArrowDownRight className="h-3 w-3" />
+              <ArrowDownRight className="h-3 w-3 shrink-0" />
             )}
-            <span className="text-sm sm:text-base font-semibold tabular-nums">
+            <span className="text-sm sm:text-base font-semibold tabular-nums truncate">
               {fmtUsd(pnl)}
             </span>
-            <span className="text-[10px] opacity-70">
+            <span className="text-[10px] opacity-70 shrink-0">
               ({summary.pnl_pct.toFixed(1)}%)
             </span>
           </div>

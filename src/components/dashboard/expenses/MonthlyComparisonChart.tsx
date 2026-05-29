@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -49,6 +49,17 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
   });
 
   const { data, isLoading, error } = useMonthlyComparisonChartData(params);
+
+  // Ancho de viewport reactivo: las opciones de Chart.js dependen del
+  // breakpoint y deben recalcularse al rotar/redimensionar el dispositivo.
+  const [vw, setVw] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024,
+  );
+  useEffect(() => {
+    const onResize = () => setVw(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const handlePreviousMonth = () => {
     const newMonth = params.month === 1 ? 12 : (params.month || 1) - 1;
@@ -190,21 +201,21 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
         position: "top" as const,
         labels: {
           usePointStyle: true,
-          padding: window.innerWidth < 768 ? 10 : 20,
+          padding: vw < 768 ? 10 : 20,
           font: {
-            size: window.innerWidth < 768 ? 11 : 12,
+            size: vw < 768 ? 11 : 12,
           },
-          boxWidth: window.innerWidth < 768 ? 8 : 12,
+          boxWidth: vw < 768 ? 8 : 12,
         },
       },
       tooltip: {
         mode: "index" as const,
         intersect: false,
         titleFont: {
-          size: window.innerWidth < 768 ? 12 : 14,
+          size: vw < 768 ? 12 : 14,
         },
         bodyFont: {
-          size: window.innerWidth < 768 ? 11 : 13,
+          size: vw < 768 ? 11 : 13,
         },
         callbacks: {
           label: function (context: {
@@ -216,7 +227,7 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
               style: "currency",
               currency: "COP",
               minimumFractionDigits: 0,
-              maximumFractionDigits: window.innerWidth < 768 ? 0 : 2,
+              maximumFractionDigits: vw < 768 ? 0 : 2,
             }).format(context.parsed.y);
             return `${label}: ${value}`;
           },
@@ -227,20 +238,20 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
       x: {
         display: true,
         title: {
-          display: window.innerWidth >= 640,
+          display: vw >= 640,
           text: `Días del mes (${data.month_info.month_name} ${data.month_info.year})`,
           font: {
-            size: window.innerWidth < 768 ? 10 : 12,
+            size: vw < 768 ? 10 : 12,
           },
         },
         ticks: {
           font: {
-            size: window.innerWidth < 768 ? 9 : 11,
+            size: vw < 768 ? 9 : 11,
           },
-          maxTicksLimit: window.innerWidth < 768 ? 8 : 15,
+          maxTicksLimit: vw < 768 ? 8 : 15,
         },
         grid: {
-          display: window.innerWidth >= 640,
+          display: vw >= 640,
         },
       },
       y: {
@@ -251,20 +262,20 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
             ? data.financial_summary.total_monthly_income * 1.2
             : Math.max(...data.datasets.flatMap((d) => d.data)) * 1.2, // Si no hay ingresos, usar el máximo de gastos
         title: {
-          display: window.innerWidth >= 640,
+          display: vw >= 640,
           text: "Monto",
           font: {
-            size: window.innerWidth < 768 ? 10 : 12,
+            size: vw < 768 ? 10 : 12,
           },
         },
         ticks: {
           font: {
-            size: window.innerWidth < 768 ? 9 : 11,
+            size: vw < 768 ? 9 : 11,
           },
-          maxTicksLimit: window.innerWidth < 768 ? 5 : 8,
+          maxTicksLimit: vw < 768 ? 5 : 8,
           callback: function (value: string | number) {
             const numValue = Number(value);
-            if (window.innerWidth < 768) {
+            if (vw < 768) {
               if (numValue >= 1000000) {
                 return `${(numValue / 1000000).toFixed(1)}M`;
               } else if (numValue >= 1000) {
@@ -279,7 +290,7 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({
           },
         },
         grid: {
-          display: window.innerWidth >= 640,
+          display: vw >= 640,
         },
       },
     },
