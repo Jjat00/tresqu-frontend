@@ -2,6 +2,7 @@ const platforms = [
   { name: "WhatsApp", color: "#25D366" },
   { name: "Telegram", color: "#0088cc" },
   { name: "Gmail", color: "#EA4335" },
+  { name: "Wallbit", color: "#2563EB" },
 ];
 
 const SocialProof = () => {

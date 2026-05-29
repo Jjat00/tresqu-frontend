@@ -56,7 +56,7 @@ const Benefits = () => {
   return (
     <section
       id="beneficios"
-      className="relative section-padding overflow-hidden"
+      className="relative section-padding overflow-hidden scroll-mt-24"
       style={{
         background:
           "linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 50%, #0a0a0a 100%)",
@@ -124,24 +124,6 @@ const Benefits = () => {
               </div>
             );
           })}
-        </div>
-
-        {/* Bottom Stats */}
-        <div className="mt-20 pt-12 border-t border-zinc-800/50">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
-            {[
-              { value: "5K+", label: "Gastos registrados" },
-              { value: "99.9%", label: "Uptime" },
-              { value: "4.9★", label: "Satisfacción" },
-            ].map((stat, index) => (
-              <div key={index}>
-                <div className="text-3xl md:text-4xl font-bold font-display text-white mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-zinc-500">{stat.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>

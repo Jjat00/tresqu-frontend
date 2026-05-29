@@ -10,7 +10,8 @@ const PassiveCapture = lazy(() => import("@/components/PassiveCapture"));
 const WallbitSection = lazy(() => import("@/components/WallbitSection"));
 const AgentCapabilities = lazy(() => import("@/components/AgentCapabilities"));
 const Benefits = lazy(() => import("@/components/Benefits"));
-const Pricing = lazy(() => import("@/components/Pricing"));
+// Oculto hasta tener los pagos configurados (se mantiene para reactivar después)
+// const Pricing = lazy(() => import("@/components/Pricing"));
 const FutureVision = lazy(() => import("@/components/FutureVision"));
 const Contact = lazy(() => import("@/components/Contact"));
 const Footer = lazy(() => import("@/components/Footer"));
@@ -43,9 +44,11 @@ const Index = () => {
         <AnimateOnScroll>
           <Benefits />
         </AnimateOnScroll>
-        <AnimateOnScroll>
+        {/* Sección de precios oculta hasta tener los pagos configurados.
+            No eliminar: el componente Pricing se mantiene para reactivarlo después. */}
+        {/* <AnimateOnScroll>
           <Pricing />
-        </AnimateOnScroll>
+        </AnimateOnScroll> */}
         <AnimateOnScroll>
           <FutureVision />
         </AnimateOnScroll>

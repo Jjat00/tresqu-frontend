@@ -67,7 +67,8 @@ const Footer = () => {
               <ul className="space-y-3">
                 {[
                   { label: "Beneficios", href: "#beneficios" },
-                  { label: "Precios", href: "#pricing" },
+                  // Oculto hasta tener los pagos configurados (reactivar junto con la sección Pricing)
+                  // { label: "Precios", href: "#pricing" },
                   { label: "Roadmap", href: "#futuro" },
                 ].map((item, index) => (
                   <li key={index}>

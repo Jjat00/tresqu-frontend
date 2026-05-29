@@ -26,7 +26,7 @@ const capabilities = [
 
 const PassiveCapture = () => {
   return (
-    <section className="relative section-padding bg-[#0a0a0a]">
+    <section id="captura" className="relative section-padding bg-[#0a0a0a] scroll-mt-24">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5" />
