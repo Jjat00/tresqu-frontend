@@ -163,7 +163,10 @@ const TradeHistory = () => {
                     </p>
                     {inv.shares && parseFloat(inv.shares) !== 0 && (
                       <p className="text-[11px] text-muted-foreground tabular-nums">
-                        {parseFloat(inv.shares).toFixed(4)} shares
+                        {parseFloat(inv.shares).toLocaleString("en-US", {
+                          maximumFractionDigits: 8,
+                        })}{" "}
+                        shares
                       </p>
                     )}
                   </div>

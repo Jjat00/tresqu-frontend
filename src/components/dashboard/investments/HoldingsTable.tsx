@@ -36,7 +36,9 @@ const fmt = (value: string | number, opts: Intl.NumberFormatOptions = {}) => {
 const fmtShares = (value: string | number) => {
   const n = typeof value === "string" ? parseFloat(value) : value;
   if (!Number.isFinite(n)) return "—";
-  return n.toLocaleString("en-US", { maximumFractionDigits: 4 });
+  // Acciones fraccionadas: cada decimal cuenta (0,02598 NO es 0,026). No
+  // rellenamos con ceros, pero nunca truncamos la precisión que da Wallbit.
+  return n.toLocaleString("en-US", { maximumFractionDigits: 8 });
 };
 
 const HoldingsTable = () => {
