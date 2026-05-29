@@ -82,7 +82,18 @@ export const useChatBot = ({ agentId, greeting }: UseChatBotOptions) => {
                 : m,
             ),
           ),
+        onToken: (token) =>
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId
+                ? { ...m, content: m.content + token.text }
+                : m,
+            ),
+          ),
         onFinal: (final) => {
+          // ``final.text`` is authoritative — it replaces whatever the tokens
+          // accumulated (normally identical), and covers paths that emit no
+          // tokens at all (risk profiler, errors surfaced as a final).
           patchMessage(assistantId, {
             content: final.text,
             pending: normalizePending(final.pending_confirmation),

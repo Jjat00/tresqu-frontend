@@ -5,6 +5,7 @@ import type {
   ChatStreamEvent,
   FinalEvent,
   StepEvent,
+  TokenEvent,
 } from "@/types/chat";
 
 const streamPath = (agentId: string) => `/api/agents/${agentId}/chat/stream/`;
@@ -16,6 +17,7 @@ export interface HistoryTurn {
 
 export interface StreamCallbacks {
   onStep: (step: StepEvent) => void;
+  onToken: (token: TokenEvent) => void;
   onFinal: (final: FinalEvent) => void;
   onError: (message: string) => void;
 }
@@ -92,6 +94,7 @@ export async function streamChat(
 
   const dispatch = (event: ChatStreamEvent) => {
     if (event.type === "step") callbacks.onStep(event);
+    else if (event.type === "token") callbacks.onToken(event);
     else if (event.type === "final") {
       sawFinal = true;
       callbacks.onFinal(event);

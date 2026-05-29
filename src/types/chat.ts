@@ -74,6 +74,12 @@ export interface StepEvent {
   summary?: string;
 }
 
+// A single chunk of the answer text, streamed as the model generates it.
+export interface TokenEvent {
+  type: "token";
+  text: string;
+}
+
 export interface FinalEvent {
   type: "final";
   text: string;
@@ -85,7 +91,11 @@ export interface ErrorEvent {
   text: string;
 }
 
-export type ChatStreamEvent = StepEvent | FinalEvent | ErrorEvent;
+export type ChatStreamEvent =
+  | StepEvent
+  | TokenEvent
+  | FinalEvent
+  | ErrorEvent;
 
 // The backend pending payload nests the preview under ``preview``.
 export interface RawPendingConfirmation {
