@@ -8,6 +8,7 @@ import {
   Tag,
   BarChart3,
   Gauge,
+  LineChart,
 } from "lucide-react";
 
 const capabilities = [
@@ -57,6 +58,12 @@ const capabilities = [
     description:
       "Arma tu perfil de inversor desde tu historial real, no un cuestionario de 5 preguntas.",
   },
+  {
+    Icon: LineChart,
+    title: "Analiza el mercado",
+    description:
+      "Pregunta por una acción o ETF: precio, evolución y si encaja con tu perfil — sin decirte qué comprar.",
+  },
 ];
 
 const AgentCapabilities = () => {
@@ -78,8 +85,8 @@ const AgentCapabilities = () => {
             EN UN <span className="text-[#00FF7F] italic">CHAT</span>.
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
-            Detrás de cada mensaje hay un agente AI que entiende lo que quieres,
-            ejecuta acciones y aprende de tu historial.
+            Detrás de cada mensaje hay un equipo de agentes AI que entiende lo
+            que quieres, ejecuta acciones y aprende de tu historial.
           </p>
         </div>
 

@@ -1,4 +1,4 @@
-import { Bot, LineChart, Sliders, ArrowRight } from "lucide-react";
+import { Bot, BellRing, Sliders, ArrowRight } from "lucide-react";
 
 const futureFeatures = [
   {
@@ -9,10 +9,10 @@ const futureFeatures = [
     status: "En desarrollo",
   },
   {
-    icon: <LineChart className="w-6 h-6" />,
-    title: "Analista de mercado contextual",
+    icon: <BellRing className="w-6 h-6" />,
+    title: "Alertas que te buscan a ti",
     description:
-      "Un agente que sigue el mercado y te avisa solo cuando algo aplica a tu portafolio o a tu situación, no a noticias genéricas.",
+      "El analista ya responde cuando le preguntas por un activo. El siguiente paso: que te avise él solo cuando algo de tu portafolio lo amerite, no por noticias genéricas.",
     status: "Próximamente",
   },
   {
@@ -45,14 +45,15 @@ const FutureVision = () => {
               Roadmap
             </span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
-              DE COPILOTO
-              <br />A <span className="text-[#00FF7F] italic">EQUIPO</span> DE
-              AGENTES.
+              YA NO ES UN AGENTE.
+              <br />
+              ES UN <span className="text-[#00FF7F] italic">EQUIPO</span>.
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-              Hoy el agente ejecuta lo que tú le pides. Mañana, varios agentes
-              especializados leerán tu contexto, propondrán y se coordinarán
-              entre ellos — y tú sigues confirmando cada acción.
+              Un orquestador coordina a cuatro especialistas —gastos e ingresos,
+              Wallbit, analista de mercado y perfil de riesgo— y desde el chat
+              web los ves trabajar en vivo. Lo que sigue: que propongan y se
+              coordinen aún más, contigo confirmando cada acción.
             </p>
 
             {/* CTA */}
