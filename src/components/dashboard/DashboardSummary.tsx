@@ -38,7 +38,7 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
         {[0, 1, 2].map((i) => (
           <div key={i} className="glass-card p-4 sm:p-5">
             <Skeleton className="h-3 w-14 mb-3 rounded-full" />
@@ -80,7 +80,7 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 animate-fade-up">
       {cards.map((card) => (
         <div key={card.label} className="glass-card p-4 sm:p-5 min-w-0">
           <div className="flex items-center gap-2 mb-3">

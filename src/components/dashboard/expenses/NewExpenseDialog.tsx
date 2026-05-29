@@ -103,7 +103,7 @@ const NewExpenseDialog: React.FC<NewExpenseDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-success hover:bg-success/90 h-8 xs:h-9 w-full xs:w-auto whitespace-nowrap text-[10px] xs:text-xs sm:text-sm">
+        <Button className="bg-success hover:bg-success/90 h-8 sm:h-9 w-full sm:w-auto whitespace-nowrap text-xs sm:text-sm">
           <Plus className="mr-1 xs:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           Nuevo gasto
         </Button>
