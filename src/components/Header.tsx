@@ -65,7 +65,7 @@ const Header = () => {
             <div className="hidden lg:block">
               <Link
                 to={isLoggedIn ? "/dashboard" : "/login"}
-                className="inline-flex items-center gap-2 px-5 py-2 bg-[#00FF7F] text-black font-semibold text-sm rounded-md hover:bg-white transition-colors duration-200"
+                className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200"
               >
                 {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
               </Link>
@@ -110,7 +110,7 @@ const Header = () => {
             <div className="pt-4 border-t border-zinc-800">
               <Link
                 to={isLoggedIn ? "/dashboard" : "/login"}
-                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-[#00FF7F] text-black font-semibold text-sm rounded-md hover:bg-white transition-colors duration-200"
+                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
