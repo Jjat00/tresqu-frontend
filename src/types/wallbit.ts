@@ -51,6 +51,11 @@ export interface PortfolioSummary {
   pnl_pct: number;
   holdings_count: number;
   cash: CashBalance[];
+  /**
+   * Neto aportado al Robo Advisor (depósitos − retiros). Wallbit no expone su
+   * valor actual ni su P&L, así que es solo lo aportado — nunca ganancia/pérdida.
+   */
+  robo_net_contributed_usd: string;
   last_sync_at: string | null;
 }
 
