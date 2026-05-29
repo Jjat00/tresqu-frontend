@@ -85,8 +85,8 @@ const AgentCapabilities = () => {
             EN UN <span className="text-[#00FF7F] italic">CHAT</span>.
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
-            Detrás de cada mensaje hay un equipo de agentes AI que entiende lo
-            que quieres, ejecuta acciones y aprende de tu historial.
+            Cada agente del equipo trae sus propias herramientas. Esto es lo que
+            sabe hacer hoy, todo desde el mismo chat.
           </p>
         </div>
 

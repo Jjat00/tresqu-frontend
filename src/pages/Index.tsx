@@ -8,6 +8,7 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 const WhatsAppFeatures = lazy(() => import("@/components/WhatsAppFeatures"));
 const PassiveCapture = lazy(() => import("@/components/PassiveCapture"));
 const WallbitSection = lazy(() => import("@/components/WallbitSection"));
+const AgentTeam = lazy(() => import("@/components/AgentTeam"));
 const AgentCapabilities = lazy(() => import("@/components/AgentCapabilities"));
 const Benefits = lazy(() => import("@/components/Benefits"));
 // Oculto hasta tener los pagos configurados (se mantiene para reactivar después)
@@ -37,6 +38,9 @@ const Index = () => {
         </AnimateOnScroll>
         <AnimateOnScroll>
           <WallbitSection />
+        </AnimateOnScroll>
+        <AnimateOnScroll>
+          <AgentTeam />
         </AnimateOnScroll>
         <AnimateOnScroll>
           <AgentCapabilities />

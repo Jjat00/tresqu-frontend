@@ -24,10 +24,10 @@ const Header = () => {
   }, [location]);
 
   const navLinks = [
-    { href: "#agente", label: "El Agente" },
+    { href: "#equipo", label: "El equipo" },
     { href: "#wallbit", label: "Inversiones" },
+    { href: "#agente", label: "Capacidades" },
     { href: "#captura", label: "Captura automática" },
-    { href: "#beneficios", label: "Beneficios" },
     // Oculto hasta tener los pagos configurados (reactivar junto con la sección Pricing)
     // { href: "#pricing", label: "Precios" },
   ];

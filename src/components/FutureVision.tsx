@@ -45,15 +45,15 @@ const FutureVision = () => {
               Roadmap
             </span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
-              YA NO ES UN AGENTE.
+              ESTO ES SOLO
               <br />
-              ES UN <span className="text-[#00FF7F] italic">EQUIPO</span>.
+              EL <span className="text-[#00FF7F] italic">PRINCIPIO</span>.
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-              Un orquestador coordina a cuatro especialistas —gastos e ingresos,
-              Wallbit, analista de mercado y perfil de riesgo— y desde el chat
-              web los ves trabajar en vivo. Lo que sigue: que propongan y se
-              coordinen aún más, contigo confirmando cada acción.
+              Hoy el equipo registra, analiza e invierte contigo —siempre con tu
+              confirmación—. Lo que viene: que proponga por su cuenta, te avise
+              cuando algo de tu dinero lo amerite y optimice tu portafolio. Tú
+              sigues teniendo la última palabra.
             </p>
 
             {/* CTA */}
