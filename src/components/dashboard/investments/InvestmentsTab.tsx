@@ -98,12 +98,13 @@ const InvestmentsTab = () => {
         </Button>
       </div>
 
+      {/* Gráfica principal: evolución de ganancias/pérdidas en el tiempo.
+          Va de primera, incluso antes de los KPIs. */}
+      <PortfolioPnLChart />
+
       <PortfolioHeroMetrics />
 
       <PendingTransactions />
-
-      {/* Gráfica principal: evolución de ganancias/pérdidas en el tiempo. */}
-      <PortfolioPnLChart />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <PortfolioDonut />
