@@ -3,6 +3,8 @@ import type {
   Holding,
   InvestmentFilters,
   InvestmentListResponse,
+  PnLPeriod,
+  PnLTimelineResponse,
   PortfolioSummary,
   TimelinePeriod,
   TimelineResponse,
@@ -43,6 +45,14 @@ export const investmentsService = {
   async getTimeline(period: TimelinePeriod = "3m"): Promise<TimelineResponse> {
     const response = await apiClient.get<TimelineResponse>(
       `${BASE}/portfolio/timeline/`,
+      { params: { period } },
+    );
+    return response.data;
+  },
+
+  async getPnLTimeline(period: PnLPeriod = "1m"): Promise<PnLTimelineResponse> {
+    const response = await apiClient.get<PnLTimelineResponse>(
+      `${BASE}/portfolio/pnl-timeline/`,
       { params: { period } },
     );
     return response.data;

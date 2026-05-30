@@ -5,6 +5,8 @@ import type {
   Holding,
   InvestmentFilters,
   InvestmentListResponse,
+  PnLPeriod,
+  PnLTimelineResponse,
   PortfolioSummary,
   TimelinePeriod,
   TimelineResponse,
@@ -43,5 +45,15 @@ export const usePortfolioTimeline = (period: TimelinePeriod = "3m") =>
   useQuery<TimelineResponse>({
     queryKey: ["wallbit", "portfolio", "timeline", period],
     queryFn: () => investmentsService.getTimeline(period),
+    retry: false,
+  });
+
+export const usePnLTimeline = (period: PnLPeriod = "1m") =>
+  useQuery<PnLTimelineResponse>({
+    queryKey: ["wallbit", "portfolio", "pnl-timeline", period],
+    queryFn: () => investmentsService.getPnLTimeline(period),
+    // Endpoint anchors its last point to the live summary → refresh like it.
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
     retry: false,
   });
