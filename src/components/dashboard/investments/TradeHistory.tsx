@@ -3,6 +3,7 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Banknote,
+  Clock,
   PiggyBank,
   ShoppingCart,
   TrendingDown,
@@ -146,13 +147,19 @@ const TradeHistory = () => {
                     {ACTION_LABEL[inv.action]}
                   </Badge>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">
+                    <p className="text-sm font-medium truncate flex items-center gap-1.5">
                       {inv.symbol ||
                         inv.chest_category ||
                         inv.kind.replace("_", " ")}
+                      {inv.status === "pending" && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-400">
+                          <Clock className="h-2.5 w-2.5" />
+                          Pendiente
+                        </span>
+                      )}
                     </p>
                     <p className="text-[11px] text-muted-foreground">
-                      {formatDate(inv.created_at)} · {inv.kind}
+                      {formatDate(inv.executed_at || inv.created_at)} · {inv.kind}
                     </p>
                   </div>
                 </div>

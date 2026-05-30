@@ -12,6 +12,7 @@ import { useWallbitStatus, useWallbitSync } from "@/hooks/useWallbitStatus";
 
 import AssetExplorer from "./AssetExplorer";
 import HoldingsTable from "./HoldingsTable";
+import PendingTransactions from "./PendingTransactions";
 import PortfolioDonut from "./PortfolioDonut";
 import PortfolioHeroMetrics from "./PortfolioHeroMetrics";
 import PortfolioTimeline from "./PortfolioTimeline";
@@ -97,6 +98,8 @@ const InvestmentsTab = () => {
       </div>
 
       <PortfolioHeroMetrics />
+
+      <PendingTransactions />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <PortfolioDonut />

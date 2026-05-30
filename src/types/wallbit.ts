@@ -18,6 +18,8 @@ export interface WallbitConnectPayload {
 export type InvestmentKind = "STOCK" | "ETF" | "BOND" | "ROBO" | "CHEST";
 export type InvestmentAction = "BUY" | "SELL" | "DEPOSIT" | "WITHDRAW";
 
+export type InvestmentStatus = "pending" | "executed";
+
 export interface Investment {
   id: number;
   kind: InvestmentKind;
@@ -27,7 +29,20 @@ export interface Investment {
   amount_usd: string;
   shares: string | null;
   wallbit_tx_uuid: string | null;
+  /** "pending" si el trade aún no liquidó en Wallbit; si no, "executed". */
+  status: InvestmentStatus;
+  /** Fecha real de ejecución del trade (de Wallbit). Puede ser null en filas viejas. */
+  executed_at: string | null;
   created_at: string;
+}
+
+export interface PendingTrade {
+  symbol: string;
+  action: InvestmentAction;
+  amount_usd: string;
+  shares: string | null;
+  executed_at: string | null;
+  status: string;
 }
 
 export interface InvestmentListResponse {
@@ -62,6 +77,11 @@ export interface PortfolioSummary {
    */
   investment_cash_usd: string;
   last_sync_at: string | null;
+  /**
+   * Trades colocados pero aún NO liquidados en Wallbit (status PENDING…). Se
+   * muestran aparte y NO cuentan como capital invertido ni en el P&L.
+   */
+  pending_trades: PendingTrade[];
 }
 
 export interface Holding {
