@@ -15,6 +15,7 @@ import HoldingsTable from "./HoldingsTable";
 import PendingTransactions from "./PendingTransactions";
 import PortfolioDonut from "./PortfolioDonut";
 import PortfolioHeroMetrics from "./PortfolioHeroMetrics";
+import PortfolioPnLChart from "./PortfolioPnLChart";
 import PortfolioTimeline from "./PortfolioTimeline";
 import TradeHistory from "./TradeHistory";
 
@@ -100,6 +101,9 @@ const InvestmentsTab = () => {
       <PortfolioHeroMetrics />
 
       <PendingTransactions />
+
+      {/* Gráfica principal: evolución de ganancias/pérdidas en el tiempo. */}
+      <PortfolioPnLChart />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <PortfolioDonut />

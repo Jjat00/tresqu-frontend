@@ -109,6 +109,30 @@ export interface TimelineResponse {
   points: TimelinePoint[];
 }
 
+/** Períodos de la gráfica principal de ganancias/pérdidas. */
+export type PnLPeriod = "1w" | "1m" | "1y" | "ytd" | "all";
+
+export interface PnLTimelinePoint {
+  date: string;
+  /** Ganancia/pérdida en USD a esa fecha (valor − invertido). Cruza 0. */
+  pnl_usd: string;
+  /** % de retorno a esa fecha (pnl / invertido). */
+  pnl_pct: number;
+  market_value_usd: string;
+  invested_total_usd: string;
+}
+
+export interface PnLTimelineResponse {
+  period: PnLPeriod;
+  points: PnLTimelinePoint[];
+  /**
+   * true cuando la serie es aproximada: falta histórico de precio de algún
+   * símbolo o hay filas antiguas sin shares precisas. El punto de HOY siempre
+   * está anclado al valor en vivo (coincide con las tarjetas).
+   */
+  stale: boolean;
+}
+
 export interface InvestmentFilters {
   kind?: InvestmentKind;
   action?: InvestmentAction;
