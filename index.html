@@ -39,6 +39,89 @@
       name="facebook-domain-verification"
       content="3f0gloidm3ok3zabq2x8qxtk8oul45"
     />
+
+    <link rel="canonical" href="https://tresqu.com/" />
+
+    <!-- Datos estructurados (Schema.org) para SEO / AEO / GEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://tresqu.com/#organization",
+          "name": "Tresqu",
+          "url": "https://tresqu.com/",
+          "logo": "https://tresqu.com/logo_teal.png",
+          "description": "Equipo de agentes financieros con los que hablas por chat (WhatsApp, Telegram, Gmail o web): registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit.",
+          "sameAs": ["https://twitter.com/tresqu"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://tresqu.com/#website",
+          "url": "https://tresqu.com/",
+          "name": "Tresqu",
+          "inLanguage": "es",
+          "publisher": { "@id": "https://tresqu.com/#organization" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Tresqu",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Web, WhatsApp, Telegram",
+          "url": "https://tresqu.com/",
+          "inLanguage": "es",
+          "description": "Tresqu es un equipo de agentes que registra tus gastos por texto, voz o foto, entiende tus ingresos e invierte contigo en Wallbit desde el chat, con confirmación del usuario y límites definidos por ti.",
+          "featureList": [
+            "Registro de gastos e ingresos por texto, voz y foto",
+            "Detección automática de compras desde Gmail",
+            "Búsqueda y consultas en lenguaje natural",
+            "Operaciones en Wallbit (comprar, vender, mover fondos) con confirmación",
+            "Analista de mercado contextual (precio, evolución y fundamentales)",
+            "Perfil de riesgo inferido desde el historial real",
+            "Multi-moneda (COP, USD, EUR y otras)"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Tresqu maneja mi dinero?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Tu dinero vive en Wallbit. Tresqu solo propone acciones que tú confirmas, con límites que tú defines."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Mi API key está segura?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí. La ciframos con encriptación Fernet en el backend. Nunca sale al cliente, nunca aparece en logs y puedes revocarla cuando quieras."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cómo conecto mi cuenta de Wallbit?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Entras a tu dashboard de Tresqu, vas a Mi perfil y pegas tu API key. Toma un minuto. Si aún no tienes cuenta Wallbit, abres una y luego la conectas."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Funciona fuera de USD?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wallbit opera principalmente en USD, con saldos en otras monedas según tu cuenta. El catálogo cubre acciones, ETFs y bonos globales."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
 
   <body>
