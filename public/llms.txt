@@ -1,0 +1,56 @@
+# Tresqu
+
+> Tresqu es un equipo de agentes financieros con los que hablas por chat (WhatsApp, Telegram, Gmail o web). Registra tus gastos, entiende tus ingresos y usa todo ese contexto para invertir contigo en Wallbit. Su lema: "Sabe cómo vives. Invierte como eres."
+
+Tresqu (tresqu.com) es una plataforma de finanzas personales conversacional para LATAM. En vez de formularios, dashboards o reglas, le escribes a un agente como a una persona —por texto, voz o foto— y él interpreta, categoriza y actúa. El dinero del usuario nunca vive en Tresqu: las operaciones de inversión se ejecutan en Wallbit y siempre requieren confirmación explícita del usuario.
+
+## Cómo funciona
+
+- **Sin formularios:** le escribes al agente en lenguaje natural. No hay campos que llenar ni dropdowns que aprender.
+- **Sin descargas:** vive en los canales que ya usas (WhatsApp, Telegram, Gmail, web). Cero apps nuevas.
+- **Sin configuración:** el agente aprende de tus mensajes; no tienes que armar categorías, reglas ni dashboards.
+- **Multi-moneda:** maneja COP, USD, EUR y otras monedas principales, con conversiones y saldos en vivo.
+- **Datos seguros:** los tokens y API keys de integraciones (bancos, plataformas externas) se cifran con encriptación Fernet en el backend; nunca salen al cliente ni aparecen en logs, y se pueden revocar cuando quieras.
+
+## El equipo de agentes
+
+- **Gastos e ingresos:** registra y clasifica cada movimiento, arma resúmenes del mes y encuentra patrones en tu historial.
+- **Inversiones (Wallbit):** prepara compras, ventas y movimientos de fondos. Nunca ejecuta sin tu confirmación.
+- **Analista de mercado:** trae precio, evolución y fundamentales de una acción o ETF y los cruza con tu perfil de riesgo y tu portafolio. Da contexto, no consejos: no te dice qué comprar.
+- **Perfil de riesgo:** mide tu tolerancia real a partir de tu historial (no un cuestionario de 5 preguntas) y frena las compras que no encajan contigo.
+
+## Registro de gastos e ingresos
+
+- **Por texto:** escribes como hablas ("anoche pagué 20k de cena") y Tresqu entiende y categoriza al instante.
+- **Por voz:** mandas un audio (p. ej. en WhatsApp) y lo transcribe, entiende y registra en segundos.
+- **Por foto:** tomas una foto al recibo o factura y extrae monto, comercio y categoría sin que tipees nada.
+- **Gmail automático:** conectas tu correo y detecta compras en tus emails sin que escribas nada.
+- **Búsqueda por significado:** preguntas como hablas ("¿cuánto gasté en salidas el mes pasado?") y entiende la intención, sin filtros ni categorías exactas.
+
+## Inversiones con Wallbit
+
+Tresqu se integra con Wallbit (cuenta de inversión del usuario). Desde el chat puedes:
+
+- Comprar y vender acciones, ETFs y bonos. El agente prepara la orden y tú la confirmas antes de ejecutar.
+- Aportar (depositar o retirar USD) a tus Chests / Robo Advisors.
+- Mover fondos entre tu cuenta principal y la de inversión.
+- Activar o suspender tu tarjeta al instante.
+- Consultar saldos y posiciones en vivo: efectivo por moneda y acciones por símbolo.
+- Cruzar datos: el agente combina tus gastos, ingresos y operaciones de Wallbit en una sola respuesta.
+
+Preguntas frecuentes:
+- **¿Tresqu maneja mi dinero?** No. Tu dinero vive en Wallbit. Tresqu solo propone acciones que tú confirmas, con límites que tú defines.
+- **¿Mi API key está segura?** Sí. Se cifra con encriptación Fernet en el backend, nunca sale al cliente ni aparece en logs, y puedes revocarla cuando quieras.
+- **¿Funciona fuera de USD?** Wallbit opera principalmente en USD, con saldos en otras monedas según la cuenta. El catálogo cubre acciones, ETFs y bonos globales.
+
+## En desarrollo
+
+- Agente que invierte por ti: le delegas el aporte mensual y decide qué comprar dentro de los límites que definas (tú confirmas, él ejecuta).
+- Alertas proactivas: que el analista te avise cuando algo de tu portafolio lo amerite, no por noticias genéricas.
+- Optimización de portafolio: reequilibrios sugeridos cruzando tu portafolio Wallbit con tu colchón de ahorro y tus metas.
+
+## Enlaces
+
+- Sitio: https://tresqu.com
+- Política de privacidad: https://tresqu.com/privacy-policy
+- Aviso legal: https://tresqu.com/legal-notice
