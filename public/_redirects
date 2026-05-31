@@ -1,5 +1,8 @@
-# Páginas públicas (/, /privacy-policy, /legal-notice, /facebook-privacy-policy,
-# /tresqu-cent) se sirven desde sus HTML prerenderizados (archivos estáticos,
-# tienen prioridad sobre esta regla). El resto (dashboard, login, rutas SPA) cae
-# al shell ligero 200.html que hidrata la app en cliente.
-/* /200.html 200
+# SPA fallback. Las páginas públicas (/, /privacy-policy, /legal-notice,
+# /facebook-privacy-policy, /tresqu-cent) tienen su HTML prerenderizado como
+# archivo estático y se sirven directo (precedencia sobre esta regla). El resto
+# (dashboard, login, rutas SPA) cae a index.html y la app hidrata en cliente.
+#
+# OJO: el destino DEBE ser /index.html. Apuntar a /200.html hace que Cloudflare
+# lo canonicalice a /200 y emita un 308 → rompe la home.
+/* /index.html 200
