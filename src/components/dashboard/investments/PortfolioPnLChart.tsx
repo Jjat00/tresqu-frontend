@@ -66,6 +66,9 @@ const fmtDate = (s: string) =>
 const fmtTime = (s: string) =>
   new Date(s).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
+const fmtSessionDate = (d: Date) =>
+  d.toLocaleDateString("es-ES", { weekday: "short", day: "2-digit", month: "short" });
+
 const config: ChartConfig = {
   pnl: { label: "Ganancia/pérdida", color: NEON.green },
 };
@@ -115,6 +118,19 @@ const PortfolioPnLChart = () => {
   const todayPositive = todayPnl >= 0;
   const deltaPositive = periodDelta >= 0;
 
+  // En el intradía (1D), el último punto trae el timestamp de la última barra de
+  // la sesión mostrada. Si esa fecha no es hoy (fin de semana/feriado) o la
+  // última cotización ya tiene rato, el mercado está cerrado y la curva queda
+  // congelada en el cierre — lo indicamos para que no parezca un dato roto.
+  const sessionDate = isIntraday && last?.date ? new Date(last.date) : null;
+  const isTodaySession = sessionDate
+    ? sessionDate.toDateString() === new Date().toDateString()
+    : true;
+  const lastTickAgeMin = sessionDate
+    ? (Date.now() - sessionDate.getTime()) / 60000
+    : 0;
+  const marketClosed = isIntraday && (!isTodaySession || lastTickAgeMin > 15);
+
   // Offset del gradiente justo donde la curva cruza 0 (verde arriba, rojo abajo).
   const { max, min } = useMemo(() => {
     const vals = chartData.map((d) => d.pnl);
@@ -138,6 +154,14 @@ const PortfolioPnLChart = () => {
               >
                 <Info className="h-2.5 w-2.5" />
                 aprox.
+              </span>
+            )}
+            {marketClosed && (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
+                title="El mercado de EE. UU. está cerrado; la curva muestra la última sesión bursátil congelada en su cierre."
+              >
+                Mercado cerrado
               </span>
             )}
           </CardTitle>
@@ -164,6 +188,11 @@ const PortfolioPnLChart = () => {
                 {fmtSignedUsd(periodDelta)} {PERIOD_PHRASE[period]}
               </span>
             </div>
+          )}
+          {isIntraday && !isTodaySession && sessionDate && (
+            <p className="text-xs text-muted-foreground">
+              Sesión del {fmtSessionDate(sessionDate)} · última cotización al cierre
+            </p>
           )}
         </div>
         <ToggleGroup
