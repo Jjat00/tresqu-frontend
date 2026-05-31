@@ -1,14 +1,20 @@
 import { lazy, Suspense } from "react";
+import { ClientOnly } from "vite-react-ssg";
 
 const WireframeTerrain = lazy(() => import("./WireframeTerrain"));
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
-      {/* Animated 3D wireframe terrain (lazy — Three.js loads in its own chunk) */}
-      <Suspense fallback={null}>
-        <WireframeTerrain />
-      </Suspense>
+      {/* Fondo 3D animado: client-only (Three.js/WebGL no corre en el SSG) y
+          sin valor SEO. Se carga en su propio chunk solo en el navegador. */}
+      <ClientOnly>
+        {() => (
+          <Suspense fallback={null}>
+            <WireframeTerrain />
+          </Suspense>
+        )}
+      </ClientOnly>
 
       {/* Readability vignette + top fade to black */}
       <div

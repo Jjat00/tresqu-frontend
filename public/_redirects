@@ -1,1 +1,5 @@
-/* /index.html 200 
+# Páginas públicas (/, /privacy-policy, /legal-notice, /facebook-privacy-policy,
+# /tresqu-cent) se sirven desde sus HTML prerenderizados (archivos estáticos,
+# tienen prioridad sobre esta regla). El resto (dashboard, login, rutas SPA) cae
+# al shell ligero 200.html que hidrata la app en cliente.
+/* /200.html 200
