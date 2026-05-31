@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Info } from "lucide-react";
 import {
   Area,
@@ -28,6 +28,7 @@ import { NEON } from "@/lib/chartColors";
 import type { PnLPeriod } from "@/types/wallbit";
 
 const PERIODS: Array<{ value: PnLPeriod; label: string }> = [
+  { value: "1d", label: "1D" },
   { value: "1w", label: "1S" },
   { value: "1m", label: "1M" },
   { value: "1y", label: "1A" },
@@ -36,6 +37,7 @@ const PERIODS: Array<{ value: PnLPeriod; label: string }> = [
 ];
 
 const PERIOD_PHRASE: Record<PnLPeriod, string> = {
+  "1d": "en el día",
   "1w": "vs hace 1 semana",
   "1m": "vs hace 1 mes",
   "1y": "vs hace 1 año",
@@ -61,6 +63,9 @@ const fmtAxisUsd = (v: number) => {
 const fmtDate = (s: string) =>
   new Date(s).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
 
+const fmtTime = (s: string) =>
+  new Date(s).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+
 const config: ChartConfig = {
   pnl: { label: "Ganancia/pérdida", color: NEON.green },
 };
@@ -68,6 +73,20 @@ const config: ChartConfig = {
 const PortfolioPnLChart = () => {
   const [period, setPeriod] = useState<PnLPeriod>("1m");
   const { data, isLoading, error } = usePnLTimeline(period);
+
+  // Default inteligente: si el mes (default) no tiene historial suficiente
+  // (cuenta nueva), saltar al intradía 1D, que muestra el movimiento de hoy.
+  // Solo una vez y nunca por encima de una elección manual del usuario.
+  const autoAdjusted = useRef(false);
+  useEffect(() => {
+    if (autoAdjusted.current) return;
+    if (!isLoading && data && period === "1m") {
+      autoAdjusted.current = true;
+      if ((data.points?.length ?? 0) <= 1) setPeriod("1d");
+    }
+  }, [isLoading, data, period]);
+
+  const isIntraday = period === "1d";
 
   const rawId = useId().replace(/:/g, "");
   const strokeId = `pnl-stroke-${rawId}`;
@@ -150,7 +169,11 @@ const PortfolioPnLChart = () => {
         <ToggleGroup
           type="single"
           value={period}
-          onValueChange={(v) => v && setPeriod(v as PnLPeriod)}
+          onValueChange={(v) => {
+            if (!v) return;
+            autoAdjusted.current = true; // el usuario tomó el control
+            setPeriod(v as PnLPeriod);
+          }}
           size="sm"
         >
           {PERIODS.map((p) => (
@@ -163,11 +186,13 @@ const PortfolioPnLChart = () => {
       <CardContent className="h-[300px]">
         {isLoading ? (
           <Skeleton className="h-full w-full rounded-md" />
-        ) : error || chartData.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-center text-sm text-muted-foreground">
+        ) : error || chartData.length <= 1 ? (
+          <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted-foreground">
             {error
               ? "No se pudo cargar la evolución de ganancias/pérdidas."
-              : "Aún no hay inversiones para mostrar la evolución."}
+              : isIntraday
+                ? "Todavía no hay movimiento intradía para mostrar."
+                : "Llevás poco invirtiendo: aún no hay suficiente historial para este período. Probá 1D para ver el movimiento de hoy."}
           </div>
         ) : (
           <ChartContainer config={config} className="h-full w-full">
@@ -195,7 +220,7 @@ const PortfolioPnLChart = () => {
                 tickMargin={8}
                 minTickGap={28}
                 interval="preserveStartEnd"
-                tickFormatter={(v) => fmtDate(String(v))}
+                tickFormatter={(v) => (isIntraday ? fmtTime(String(v)) : fmtDate(String(v)))}
               />
               <YAxis
                 width={56}
@@ -212,7 +237,9 @@ const PortfolioPnLChart = () => {
                 content={
                   <ChartTooltipContent
                     hideIndicator
-                    labelFormatter={(value) => fmtDate(String(value))}
+                    labelFormatter={(value) =>
+                      isIntraday ? fmtTime(String(value)) : fmtDate(String(value))
+                    }
                     formatter={(value, _name, item) => {
                       const v = Number(value);
                       const pct = Number(item?.payload?.pct ?? 0);

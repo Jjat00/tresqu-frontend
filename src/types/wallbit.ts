@@ -109,8 +109,8 @@ export interface TimelineResponse {
   points: TimelinePoint[];
 }
 
-/** Períodos de la gráfica principal de ganancias/pérdidas. */
-export type PnLPeriod = "1w" | "1m" | "1y" | "ytd" | "all";
+/** Períodos de la gráfica principal de ganancias/pérdidas. "1d" es intradía. */
+export type PnLPeriod = "1d" | "1w" | "1m" | "1y" | "ytd" | "all";
 
 export interface PnLTimelinePoint {
   date: string;
