@@ -1,10 +1,10 @@
-import { ViteReactSSG } from "vite-react-ssg";
-import { routes } from "./routes";
-import "./index.css";
 
-// Entry del SSG: en build prerenderiza las rutas públicas a HTML estático y en
-// el cliente hidrata la misma app (SPA). El routing vive en ./routes.
-export const createRoot = ViteReactSSG({
-  routes,
-  basename: import.meta.env.BASE_URL,
-});
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+const container = document.getElementById("root");
+if (!container) throw new Error('Root element not found');
+const root = createRoot(container);
+root.render(<App />);
