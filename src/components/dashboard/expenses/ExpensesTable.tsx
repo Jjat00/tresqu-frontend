@@ -26,7 +26,8 @@ import * as XLSX from "xlsx";
 import { useDeleteExpense } from "@/hooks/expenses";
 import {
   useExpensesMonthSummary,
-  computeExpensesTotalCOP,
+  computeExpensesTotalsByCurrency,
+  formatCurrencyTotals,
 } from "@/hooks/useExpensesMonthSummary";
 import {
   Dialog,
@@ -227,8 +228,8 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     return filtered;
   }, [data, categoryFilter, searchQuery, sortField, sortOrder]);
 
-  const totalAmount = React.useMemo(
-    () => computeExpensesTotalCOP(filteredExpenses),
+  const totalsByCurrency = React.useMemo(
+    () => computeExpensesTotalsByCurrency(filteredExpenses),
     [filteredExpenses]
   );
 
@@ -721,7 +722,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
               <p className="text-xs sm:text-sm text-muted-foreground">
                 Total:{" "}
                 <span className="font-semibold">
-                  ${totalAmount.toLocaleString("es-CO")} COP
+                  {formatCurrencyTotals(totalsByCurrency)}
                 </span>
               </p>
             </div>

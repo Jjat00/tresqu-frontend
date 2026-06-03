@@ -7,8 +7,8 @@ import ChartJSBarChart from "./charts/ChartJSBarChart";
 import { Card } from "@/components/ui/card";
 import { useCategoryPieChartData } from "@/hooks/useCategoryPieChartData";
 import {
-  useExpensesMonthSummary,
-  computeExpensesTotalCOP,
+  computeExpensesTotalsByCurrency,
+  sortedCurrencyTotals,
 } from "@/hooks/useExpensesMonthSummary";
 
 interface ExpensesTabProps {
@@ -44,12 +44,15 @@ const ExpensesTab = ({
     recentExpenses,
   } = useCategoryPieChartData(dateRange);
 
-  // Mismo dato que el Historial — usado para el KPI "Total gastado"
-  const { data: monthSummary, isLoading: isMonthSummaryLoading } =
-    useExpensesMonthSummary(tableMonth, tableYear);
-  const tableTotalCOP = useMemo(
-    () => computeExpensesTotalCOP(monthSummary?.recent_expenses ?? []),
-    [monthSummary]
+  // KPI "Total gastado" — sigue el picker de fecha global (dateRange),
+  // igual que el resto de KPIs. Se separa por moneda, sin convertir.
+  const totalsByCurrency = useMemo(
+    () => computeExpensesTotalsByCurrency(recentExpenses),
+    [recentExpenses]
+  );
+  const totalEntries = useMemo(
+    () => sortedCurrencyTotals(totalsByCurrency),
+    [totalsByCurrency]
   );
 
   // Calcular el gasto promedio diario
@@ -141,16 +144,27 @@ const ExpensesTab = ({
             </span>
           </div>
           <div className="text-lg sm:text-2xl md:text-3xl font-semibold text-rose-400 tracking-tight font-display">
-            $
-            {tableTotalCOP.toLocaleString("es-ES", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
+            {totalEntries.length === 0 ? (
+              <span>$0</span>
+            ) : (
+              totalEntries.map(([currency, value]) => (
+                <div key={currency} className="leading-tight">
+                  $
+                  {value.toLocaleString("es-ES", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })}
+                  <span className="ml-1 text-xs sm:text-sm text-muted-foreground font-normal">
+                    {currency}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
-            {isMonthSummaryLoading
+            {isPieLoading
               ? "Cargando..."
-              : "Mismo total que el Historial"}
+              : "Según el filtro de fecha"}
           </p>
         </div>
 
