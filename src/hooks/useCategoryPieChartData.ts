@@ -116,6 +116,10 @@ export const useCategoryPieChartData = (dateRange?: DateRange) => {
     error,
     filterSummary,
     totalAmount: data?.total_amount || 0,
+    // Total real del rango separado por moneda y conteo real de transacciones.
+    // Los recent_expenses vienen topados a 10, así que NO sirven para los KPIs.
+    totalsByCurrency: data?.totals_by_currency || {},
+    totalCount: data?.total_count ?? 0,
     recentExpenses: data?.recent_expenses || [],
   };
 };

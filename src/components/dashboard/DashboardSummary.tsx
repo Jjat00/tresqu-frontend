@@ -7,7 +7,6 @@ import {
 import { useCategoryPieChartData } from "@/hooks/useCategoryPieChartData";
 import { useIncomeSummary } from "@/hooks/useIncomeSummary";
 import {
-  computeExpensesTotalsByCurrency,
   sortedCurrencyTotals,
   type CurrencyTotals,
 } from "@/hooks/useExpensesMonthSummary";
@@ -25,17 +24,17 @@ const formatAmount = (amount: number) =>
   });
 
 const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
-  const { recentExpenses, isLoading: isExpensesLoading } =
+  // Gastos: total REAL del rango por moneda (no los 10 recientes).
+  const { totalsByCurrency: expenseTotals, isLoading: isExpensesLoading } =
     useCategoryPieChartData(dateRange);
 
-  const { data: summaryData, isLoading: isIncomeLoading } = useIncomeSummary({
-    period: "month",
-  });
+  // Ingresos: sigue el mismo filtro de fecha global que los gastos.
+  const { data: summaryData, isLoading: isIncomeLoading } = useIncomeSummary(
+    { period: "month" },
+    dateRange
+  );
 
   const isLoading = isExpensesLoading || isIncomeLoading;
-
-  // Totales por moneda, sin convertir entre monedas.
-  const expenseTotals = computeExpensesTotalsByCurrency(recentExpenses);
 
   const incomeTotals: CurrencyTotals = (summaryData?.summary ?? []).reduce<
     CurrencyTotals
@@ -78,7 +77,7 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
       amountColor: "text-emerald-400",
       dotColor: "bg-emerald-400",
       signByValue: false,
-      caption: "Este período",
+      caption: "Según el filtro de fecha",
     },
     {
       label: "Gastos",
@@ -88,7 +87,7 @@ const DashboardSummary = ({ dateRange }: DashboardSummaryProps) => {
       amountColor: "text-rose-400",
       dotColor: "bg-rose-400",
       signByValue: false,
-      caption: "Este período",
+      caption: "Según el filtro de fecha",
     },
     {
       label: "Balance",

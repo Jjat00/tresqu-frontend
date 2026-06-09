@@ -59,10 +59,12 @@ const IncomeTab = ({
     "month"
   );
 
-  // Obtener datos del resumen de ingresos
-  const { data: summaryData, isLoading: isSummaryLoading } = useIncomeSummary({
-    period,
-  });
+  // Resumen de ingresos para los KPIs: sigue el filtro de fecha global
+  // (dateRange). La tabla de ingresos usa su propio filtro por separado.
+  const { data: summaryData, isLoading: isSummaryLoading } = useIncomeSummary(
+    { period },
+    dateRange
+  );
   const { isLoading: isLineLoading } = useIncomeLineData(dateRange, viewMode);
   const { isLoading: isBarLoading } = useIncomeBarData();
   const { data: pieData, isLoading: isPieLoading } = useIncomePieChart();

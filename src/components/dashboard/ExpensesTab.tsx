@@ -6,10 +6,7 @@ import ChartJSPieChart from "./charts/ChartJSPieChart";
 import ChartJSBarChart from "./charts/ChartJSBarChart";
 import { Card } from "@/components/ui/card";
 import { useCategoryPieChartData } from "@/hooks/useCategoryPieChartData";
-import {
-  computeExpensesTotalsByCurrency,
-  sortedCurrencyTotals,
-} from "@/hooks/useExpensesMonthSummary";
+import { sortedCurrencyTotals } from "@/hooks/useExpensesMonthSummary";
 
 interface ExpensesTabProps {
   selectedMonth?: string;
@@ -41,15 +38,13 @@ const ExpensesTab = ({
     chartData: pieChartData,
     totalAmount,
     isLoading: isPieLoading,
-    recentExpenses,
+    totalsByCurrency,
+    totalCount,
   } = useCategoryPieChartData(dateRange);
 
   // KPI "Total gastado" — sigue el picker de fecha global (dateRange),
-  // igual que el resto de KPIs. Se separa por moneda, sin convertir.
-  const totalsByCurrency = useMemo(
-    () => computeExpensesTotalsByCurrency(recentExpenses),
-    [recentExpenses]
-  );
+  // igual que el resto de KPIs. Usa el total REAL del rango separado por
+  // moneda (sin convertir), no la suma de los 10 gastos recientes.
   const totalEntries = useMemo(
     () => sortedCurrencyTotals(totalsByCurrency),
     [totalsByCurrency]
@@ -94,11 +89,8 @@ const ExpensesTab = ({
     return { name: mainCategory.name, percentage: percentage.toFixed(1) };
   };
 
-  // Calcular el número de gastos
-  const getExpensesCount = () => {
-    if (!recentExpenses) return 0;
-    return recentExpenses.length;
-  };
+  // Número real de transacciones del rango (no el slice de 10 recientes)
+  const getExpensesCount = () => totalCount;
 
   // Update localSelectedMonth when prop changes
   useEffect(() => {

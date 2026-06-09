@@ -66,6 +66,10 @@ export interface DonutChartData {
   }[];
   filter_summary: string;
   total_amount: number;
+  // Total real del rango separado por moneda (no solo los recent_expenses).
+  totals_by_currency?: Record<string, number>;
+  // Conteo real de transacciones del rango (recent_expenses viene topado a 10).
+  total_count?: number;
   recent_expenses: Expense[];
 }
 

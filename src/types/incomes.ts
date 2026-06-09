@@ -174,6 +174,10 @@ export interface IncomeStats {
  */
 export interface IncomeSummaryParams {
   period?: "week" | "month" | "year" | "all";
+  // Rango personalizado del calendario global (tiene prioridad sobre period).
+  date_filter?: string;
+  start_date?: string; // formato: YYYY-MM-DD
+  end_date?: string; // formato: YYYY-MM-DD
   timezone?: string;
 }
 
