@@ -5,9 +5,8 @@ export interface GmailConnectionStatus {
   connected_at: string | null;
   trigger_active: boolean;
   last_error?: string | null;
-  total_emails_processed: number;
-  total_purchases_detected: number;
-  pending_categorization: number;
+  total_expenses_detected: number;
+  total_incomes_detected: number;
 }
 
 export interface ProcessedEmail {

@@ -446,34 +446,22 @@ const ConnectionsCard = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-center">
-                <p className="text-xl font-bold">
-                  {gmailStatus.total_emails_processed}
+                <p className="text-xl font-bold text-red-400">
+                  {gmailStatus.total_expenses_detected}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Correos procesados
+                  Gastos detectados
                 </p>
               </div>
               <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-center">
                 <p className="text-xl font-bold text-green-400">
-                  {gmailStatus.total_purchases_detected}
+                  {gmailStatus.total_incomes_detected}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Compras detectadas
+                  Ingresos detectados
                 </p>
-              </div>
-              <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-center">
-                <p
-                  className={`text-xl font-bold ${
-                    gmailStatus.pending_categorization > 0
-                      ? "text-yellow-400"
-                      : ""
-                  }`}
-                >
-                  {gmailStatus.pending_categorization}
-                </p>
-                <p className="text-xs text-muted-foreground">Pendientes</p>
               </div>
             </div>
 

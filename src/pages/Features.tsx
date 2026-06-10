@@ -179,7 +179,7 @@ const sections: FeatureSection[] = [
         Icon: Settings2,
         title: "Bajo tu control",
         description:
-          "Desde el dashboard ves cuántos correos se procesaron y cuántas compras se detectaron, y desconectas Gmail cuando quieras.",
+          "Desde el dashboard ves cuántos gastos e ingresos se han creado desde tu correo, y desconectas Gmail cuando quieras.",
       },
     ],
   },
