@@ -14,7 +14,7 @@ import {
 import {
   Link2,
   ShoppingCart,
-  AlertTriangle,
+  Banknote,
   Mail,
   Settings,
   Loader2,
@@ -116,20 +116,20 @@ const IntegrationsTab = () => {
         >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Compras Detectadas
+              Gastos Detectados
             </CardTitle>
-            <ShoppingCart className="h-4 w-4 text-green-400" />
+            <ShoppingCart className="h-4 w-4 text-red-400" />
           </CardHeader>
           <CardContent>
             {statusLoading ? (
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <p className="text-2xl font-bold">
-                  {status?.total_purchases_detected ?? 0}
+                <p className="text-2xl font-bold text-red-400">
+                  {status?.total_expenses_detected ?? 0}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  De {status?.total_emails_processed ?? 0} correos procesados
+                  Creados desde tu correo
                 </p>
               </>
             )}
@@ -142,32 +142,20 @@ const IntegrationsTab = () => {
         >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Pendientes
+              Ingresos Detectados
             </CardTitle>
-            <AlertTriangle
-              className={`h-4 w-4 ${
-                (status?.pending_categorization ?? 0) > 0
-                  ? "text-yellow-400"
-                  : "text-muted-foreground"
-              }`}
-            />
+            <Banknote className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
             {statusLoading ? (
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <p
-                  className={`text-2xl font-bold ${
-                    (status?.pending_categorization ?? 0) > 0
-                      ? "text-yellow-400"
-                      : ""
-                  }`}
-                >
-                  {status?.pending_categorization ?? 0}
+                <p className="text-2xl font-bold text-green-400">
+                  {status?.total_incomes_detected ?? 0}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Por categorizar
+                  Creados desde tu correo
                 </p>
               </>
             )}
