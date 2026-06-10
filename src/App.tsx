@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import LegalNotice from "./pages/LegalNotice";
 import FacebookPrivacyPolicy from "./pages/FacebookPrivacyPolicy";
 import TresquCent from "./pages/TresquCent";
+import Features from "./pages/Features";
 import Agents from "./pages/Agents";
 
 // Create a new QueryClient instance
@@ -53,6 +54,7 @@ const App = () => (
               element={<FacebookPrivacyPolicy />}
             />
             <Route path="/tresqu-cent" element={<TresquCent />} />
+            <Route path="/funciones" element={<Features />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

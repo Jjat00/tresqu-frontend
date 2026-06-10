@@ -65,6 +65,14 @@ const Footer = () => {
             <div>
               <h4 className="text-white font-semibold mb-4">Producto</h4>
               <ul className="space-y-3">
+                <li>
+                  <Link
+                    to="/funciones"
+                    className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
+                  >
+                    Todas las funciones
+                  </Link>
+                </li>
                 {[
                   { label: "Beneficios", href: "#beneficios" },
                   // Oculto hasta tener los pagos configurados (reactivar junto con la sección Pricing)
