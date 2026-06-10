@@ -5,6 +5,8 @@ import {
   Mic,
   Camera,
   Banknote,
+  ListPlus,
+  CalendarDays,
   Globe,
   Tags,
   Mail,
@@ -13,20 +15,30 @@ import {
   Brain,
   Trash2,
   Search,
+  Filter,
   Sparkles,
-  CalendarDays,
   Pencil,
   Hand,
+  Layers,
   Wallet,
+  Compass,
   ShieldCheck,
   ArrowLeftRight,
   PiggyBank,
   CreditCard,
-  LineChart,
-  BarChart3,
-  Target,
-  Gauge,
+  Pause,
   TrendingUp,
+  LineChart,
+  Gauge,
+  ShieldAlert,
+  BarChart3,
+  Table2,
+  FileSpreadsheet,
+  Palette,
+  MessagesSquare,
+  Radar,
+  Settings2,
+  KeyRound,
   type LucideIcon,
 } from "lucide-react";
 import Header from "@/components/Header";
@@ -69,7 +81,7 @@ const sections: FeatureSection[] = [
         Icon: MessageSquare,
         title: "Texto natural",
         description:
-          "\"Gasté 20k en almuerzo ayer\" — Tresqu entiende el monto, la categoría y hasta la fecha. Escribe como hablas.",
+          "\"Gasté 20k en almuerzo\" — Tresqu entiende el monto, la categoría y la nota. Escribe como hablas, en tu idioma.",
         channels: ["WhatsApp", "Telegram", "Web"],
       },
       {
@@ -90,19 +102,31 @@ const sections: FeatureSection[] = [
         Icon: Banknote,
         title: "Ingresos también",
         description:
-          "\"Me pagaron 2 millones del proyecto\" — los ingresos se registran y categorizan igual que los gastos.",
+          "\"Me pagaron 2 millones del proyecto\" — los ingresos se registran y categorizan igual que los gastos, con sus propias categorías.",
+      },
+      {
+        Icon: ListPlus,
+        title: "Varios en un mensaje",
+        description:
+          "\"Pagué 20k de comida, 5k de café y 10k de transporte\" — Tresqu separa y registra cada movimiento por su lado.",
+      },
+      {
+        Icon: CalendarDays,
+        title: "Fechas como las dices",
+        description:
+          "\"Ayer\", \"el sábado\", \"el 3 de mayo\" — el movimiento queda en la fecha real en que ocurrió, no en la del mensaje. Y respeta tu zona horaria.",
       },
       {
         Icon: Globe,
         title: "Multi-moneda",
         description:
-          "Cada movimiento en su moneda: COP, USD, EUR y más. Defines tu moneda por defecto y la cambias cuando quieras.",
+          "Cada movimiento en su moneda: COP, USD, EUR y más. Defines tu moneda por defecto y, si no especificas, Tresqu usa esa — nunca adivina.",
       },
       {
         Icon: Tags,
         title: "Categoriza solo",
         description:
-          "Tresqu asigna la categoría automáticamente y aprende las tuyas: si creas o corriges categorías, las usa.",
+          "Tresqu asigna la categoría automáticamente. ¿Mencionas una que no existe? La crea al vuelo y queda como categoría tuya, con su color.",
       },
     ],
   },
@@ -116,7 +140,7 @@ const sections: FeatureSection[] = [
       </>
     ),
     intro:
-      "Conecta tu Gmail una vez y Tresqu captura tus compras sin que escribas nada.",
+      "Conecta tu Gmail una vez (desde el dashboard, con un par de clics) y Tresqu captura tus compras sin que escribas nada.",
     accent: "#00FF7F",
     items: [
       {
@@ -151,6 +175,12 @@ const sections: FeatureSection[] = [
           "Responde a la notificación pidiendo eliminarlo y el registro desaparece. Útil para reembolsos o correos duplicados.",
         isNew: true,
       },
+      {
+        Icon: Settings2,
+        title: "Bajo tu control",
+        description:
+          "Desde el dashboard ves cuántos correos se procesaron y cuántas compras se detectaron, y desconectas Gmail cuando quieras.",
+      },
     ],
   },
   {
@@ -163,7 +193,7 @@ const sections: FeatureSection[] = [
       </>
     ),
     intro:
-      "Todo lo que registras se puede preguntar, editar y borrar desde el mismo chat.",
+      "Todo lo que registras se puede preguntar, corregir y borrar desde el mismo chat.",
     accent: "#00FF7F",
     items: [
       {
@@ -173,22 +203,28 @@ const sections: FeatureSection[] = [
           "\"¿Cuánto gasté en salidas el mes pasado?\" — Tresqu entiende la intención, no solo palabras exactas. Encuentra \"la hamburguesa con amigos\" aunque no recuerdes el monto.",
       },
       {
+        Icon: Filter,
+        title: "Búsqueda exacta",
+        description:
+          "También por monto exacto (\"el gasto de 37.500\"), por categoría o por rango de fechas. Como prefieras preguntar.",
+      },
+      {
         Icon: Sparkles,
         title: "Resúmenes e insights",
         description:
-          "Pide tu resumen del mes y recibe totales por categoría, balance y patrones que Tresqu detecta en tu historial.",
-      },
-      {
-        Icon: CalendarDays,
-        title: "Fechas como las dices",
-        description:
-          "\"Ayer\", \"el viernes\", \"el 3 de mayo\" — los movimientos quedan en la fecha real, no en la del mensaje.",
+          "Pide tu resumen del mes: totales por categoría, promedio diario, tus gastos recurrentes y los movimientos fuera de lo normal que Tresqu detecta solo.",
       },
       {
         Icon: Pencil,
-        title: "Edita y elimina por chat",
+        title: "Edita cualquier registro",
         description:
-          "\"Elimina el gasto de 37.500 de la hamburguesa\" o \"ese fue de transporte\" — Tresqu encuentra el registro y lo corrige o lo borra.",
+          "Cambia monto, categoría, fecha o nota por chat: \"ese gasto era de 45k\", \"ponlo en transporte\", \"fue el martes\". Tresqu encuentra el registro y lo actualiza.",
+      },
+      {
+        Icon: Trash2,
+        title: "Elimina por chat",
+        description:
+          "\"Elimina el gasto de la hamburguesa\" — Tresqu lo localiza por monto, descripción o contexto de la conversación, te confirma y lo borra.",
       },
       {
         Icon: Hand,
@@ -197,6 +233,12 @@ const sections: FeatureSection[] = [
           "Cita el mensaje de confirmación de Tresqu (desliza para responder) y di \"elimínalo\" o \"cámbiale la categoría\": Tresqu sabe exactamente de qué registros hablas, sin ambigüedad.",
         channels: ["WhatsApp"],
         isNew: true,
+      },
+      {
+        Icon: Layers,
+        title: "Todo tu historial, cruzado",
+        description:
+          "Una sola pregunta puede combinar gastos, ingresos y movimientos de tu cuenta Wallbit. Tu vida financiera completa en una respuesta.",
       },
     ],
   },
@@ -217,7 +259,13 @@ const sections: FeatureSection[] = [
         Icon: Wallet,
         title: "Saldos y posiciones en vivo",
         description:
-          "\"¿Cuánto tengo libre?\", \"¿cómo van mis acciones?\" — efectivo por moneda y posiciones por símbolo, al momento.",
+          "\"¿Cuánto tengo libre?\", \"¿cómo van mis acciones?\" — efectivo por cuenta y posiciones por símbolo con su ganancia/pérdida, al momento.",
+      },
+      {
+        Icon: Compass,
+        title: "Explora el catálogo",
+        description:
+          "Busca acciones, ETFs y bonos por nombre, símbolo o categoría, y pide la ficha completa: precio, sector, dividendos y descripción.",
       },
       {
         Icon: ShieldCheck,
@@ -229,7 +277,13 @@ const sections: FeatureSection[] = [
         Icon: ArrowLeftRight,
         title: "Mueve fondos",
         description:
-          "Transfiere entre tu cuenta principal y la de inversión, o aporta y retira de tus Chests / Robo Advisor.",
+          "Transfiere entre tu cuenta principal y la de inversión con la misma confirmación explícita.",
+      },
+      {
+        Icon: PiggyBank,
+        title: "Robo Advisor (Chests)",
+        description:
+          "Aporta o retira de tus Chests desde el chat. Tresqu te reporta el neto aportado con total transparencia.",
       },
       {
         Icon: CreditCard,
@@ -238,16 +292,60 @@ const sections: FeatureSection[] = [
           "Activa o suspende tu tarjeta Wallbit al instante desde el chat.",
       },
       {
-        Icon: Gauge,
-        title: "Perfil de riesgo que te cuida",
+        Icon: Pause,
+        title: "Pausa el agente cuando quieras",
         description:
-          "Tresqu mide tu tolerancia real —con preguntas o desde tu propio historial— y te frena con una advertencia extra cuando una compra no encaja contigo.",
+          "¿Prefieres que Tresqu no opere por un tiempo? Páusalo desde el chat o el dashboard (1 hora a 1 semana) y reanúdalo cuando tú decidas.",
       },
       {
-        Icon: TrendingUp,
-        title: "Analista de mercado",
+        Icon: Table2,
+        title: "Historial y pendientes",
         description:
-          "Precio, evolución histórica y fundamentales de una acción o ETF, cruzados con tu perfil y tu portafolio. Contexto, no consejos: no te dice qué comprar.",
+          "Consulta tus transacciones Wallbit (compras, ventas, depósitos, pagos con tarjeta) por tipo y fecha, y revisa o cancela operaciones pendientes desde el dashboard.",
+      },
+    ],
+  },
+  {
+    id: "analisis",
+    badge: "Analista y riesgo",
+    title: (
+      <>
+        CONTEXTO, NO <span className="text-[#0D99FF] italic">CONSEJOS</span>.
+      </>
+    ),
+    intro:
+      "Un analista que te explica el mercado y un perfil de riesgo que te conoce. Ninguno te dice qué comprar.",
+    accent: "#0D99FF",
+    items: [
+      {
+        Icon: TrendingUp,
+        title: "Ficha de cualquier activo",
+        description:
+          "Precio actual, cambio del día, rango de 52 semanas, sector y dividendos de una acción o ETF — aunque no tengas cuenta Wallbit.",
+      },
+      {
+        Icon: LineChart,
+        title: "Evolución histórica",
+        description:
+          "\"¿Cómo le ha ido a NVDA este año?\" — la evolución del precio en el rango que pidas: desde 1 día hasta el histórico completo.",
+      },
+      {
+        Icon: Gauge,
+        title: "Perfil de riesgo real",
+        description:
+          "Un cuestionario guiado por chat que puedes pausar y retomar, más una inferencia automática desde tu propio historial. Tresqu combina ambos y se queda con el más prudente.",
+      },
+      {
+        Icon: ShieldAlert,
+        title: "Te frena cuando no encaja",
+        description:
+          "Si una compra no va con tu tolerancia, Tresqu te lo advierte y te pide una confirmación extra. Nunca te bloquea: te cuida.",
+      },
+      {
+        Icon: Layers,
+        title: "Análisis con tu contexto",
+        description:
+          "El analista cruza el activo con tu perfil de riesgo y tu portafolio: concentración, diversificación y qué significa para ti. Educativo, no prescriptivo.",
       },
     ],
   },
@@ -265,28 +363,58 @@ const sections: FeatureSection[] = [
     accent: "#00FF7F",
     items: [
       {
-        Icon: BarChart3,
-        title: "Gastos e ingresos en gráficas",
+        Icon: KeyRound,
+        title: "Entra sin contraseña",
         description:
-          "Totales por categoría, evolución en el tiempo, comparación entre meses y balance acumulado.",
+          "Pides un código de un solo uso que te llega por WhatsApp o Telegram y listo. Nada que recordar ni que te puedan robar.",
+      },
+      {
+        Icon: BarChart3,
+        title: "Gráficas de gastos e ingresos",
+        description:
+          "Donut por categoría (haz clic y filtra), barras por mes, tendencias en el tiempo, comparación mensual y balance acumulado. Con filtro de fechas global.",
+      },
+      {
+        Icon: Table2,
+        title: "Tablas que se editan",
+        description:
+          "Busca y filtra tus movimientos, edita gastos con un formulario y elimina gastos o ingresos con confirmación, sin salir de la tabla.",
+      },
+      {
+        Icon: FileSpreadsheet,
+        title: "Exporta a Excel",
+        description:
+          "Descarga tus gastos e ingresos del período que elijas en un archivo XLSX, listo para tu contador o tus propias hojas de cálculo.",
+      },
+      {
+        Icon: Palette,
+        title: "Categorías a tu manera",
+        description:
+          "Crea, edita y elimina tus categorías con nombre, color y descripción. Los colores se reflejan en todas las gráficas.",
       },
       {
         Icon: LineChart,
         title: "Tu portafolio en el tiempo",
         description:
-          "Posiciones Wallbit con su ganancia/pérdida histórica reconstruida día a día, no solo la foto de hoy.",
+          "Ganancia/pérdida histórica de tus inversiones reconstruida día a día (1 día a todo el histórico), posiciones en vivo, distribución por activo y explorador de precios por símbolo.",
       },
       {
-        Icon: Target,
-        title: "Metas de ahorro",
+        Icon: MessagesSquare,
+        title: "El equipo, también en la web",
         description:
-          "Define metas, registra aportes y sigue el progreso con proyecciones.",
+          "Chatea con el supervisor o con cada especialista desde el módulo Agentes, o desde el dock contextual que te acompaña en cada sección con sugerencias según lo que estás viendo.",
       },
       {
-        Icon: Gauge,
+        Icon: Radar,
         title: "Perfil de riesgo visual",
         description:
-          "Tu tolerancia explicada con claridad: qué se midió, por qué, y cómo afecta tus operaciones.",
+          "Tu tolerancia explicada con un radar de 5 dimensiones (ahorro, estabilidad, apetito, reserva…), de dónde salió cada dato y un botón para reevaluarte cuando quieras.",
+      },
+      {
+        Icon: Settings2,
+        title: "Tu cuenta, tu control",
+        description:
+          "Cambia tu nombre, moneda por defecto y zona horaria; conecta o desconecta Gmail y Wallbit; reemplaza tu API key o pausa el agente. Todo en un solo lugar.",
       },
     ],
   },
@@ -295,17 +423,37 @@ const sections: FeatureSection[] = [
 const channelMatrix = [
   {
     name: "WhatsApp",
-    items: ["Texto natural", "Notas de voz", "Fotos de recibos", "Notificaciones de Gmail", "Botones de confirmación Wallbit"],
+    items: [
+      "Texto natural",
+      "Notas de voz",
+      "Fotos de recibos",
+      "Notificaciones de Gmail",
+      "Citar mensajes (deslizar para responder)",
+      "Botones de confirmación Wallbit",
+      "Código de acceso a la web",
+    ],
     highlight: true,
   },
   {
     name: "Telegram",
-    items: ["Texto natural", "Notas de voz"],
+    items: [
+      "Texto natural",
+      "Notas de voz",
+      "Comandos rápidos (/start, /registrar)",
+      "Código de acceso a la web",
+    ],
     highlight: false,
   },
   {
     name: "Web",
-    items: ["Chat por texto", "Dashboard completo con gráficas", "Conexión de integraciones (Gmail, Wallbit)"],
+    items: [
+      "Chat por texto con todo el equipo",
+      "Dashboard completo con gráficas y tablas",
+      "Exportación a Excel",
+      "Gestión de categorías",
+      "Conexión de integraciones (Gmail, Wallbit)",
+      "Perfil de riesgo y preferencias",
+    ],
     highlight: false,
   },
 ];
