@@ -28,10 +28,12 @@ Tresqu es un copiloto financiero conversacional. Desde el dashboard puedes:
 
 - Chatear con el **equipo de agentes** (un agente por especialidad) para registrar gastos/ingresos, consultar tu dinero y operar en Wallbit — con **tarjetas de confirmación inline** para las acciones con dinero real
 - Visualizar todo tu dinero en gráficos: torta por categoría, líneas de tendencia, barras apiladas
-- Crear categorías personalizadas y metas de ahorro
+- Crear categorías personalizadas con su color, y exportar tus tablas a Excel
 - Conectar tu **Gmail** para que detecte compras en correos automáticamente
 - Conectar tu cuenta de **Wallbit**, configurar **límites del agente** y confirmar operaciones tanto en el chat web como en WhatsApp/Telegram
 - Ver tu **perfil de inversión** combinando tu cuestionario con una inferencia automática de tu contexto financiero
+
+Además, la página pública [tresqu.com/funciones](https://tresqu.com/funciones) (`src/pages/Features.tsx`) es la **guía exhaustiva de todas las funciones** — se mantiene al día con cada feature nueva.
 
 ---
 
@@ -141,14 +143,15 @@ sequenceDiagram
 
 | Capa | Tecnologías |
 |------|-------------|
-| Framework | React 19, TypeScript 5.5, Vite 6 |
+| Framework | React 19, TypeScript 5.9, Vite 6 |
 | Estilos | Tailwind CSS 4, shadcn/ui (Radix UI) |
 | Estado servidor | TanStack React Query 5 |
 | Estado cliente | Zustand 5 (con persist) |
 | HTTP | Axios con interceptores (auto-refresh JWT) |
 | Routing | React Router DOM 6 |
-| Formularios | React Hook Form + Zod |
-| Charts | Chart.js (react-chartjs-2) y Recharts |
+| Charts | Recharts |
+| Exportación | xlsx (SheetJS) — tablas a Excel |
+| UI auxiliar | lucide-react (iconos), sonner (toasts), date-fns + react-datepicker (fechas), react-markdown (chat) |
 | Chat de agentes | Respuestas en streaming (`services/agents/chatStream.ts`) |
 | Despliegue | Cloudflare Pages — autodeploy en push a `main` |
 
@@ -171,10 +174,11 @@ npm i
 
 ### 2. Configurar variables de entorno
 
-Crea un `.env` en la raíz del proyecto:
+Crea un `.env` en la raíz del proyecto (hay un `.env.example` de referencia):
 
 ```dotenv
-VITE_API_URL=http://localhost:8000
+VITE_API_BASE_URL=http://localhost:8000
+VITE_INSTANCE_NAME=default
 ```
 
 > Para producción ya está apuntando a `https://api.tresqu.com` desde la configuración de Cloudflare Pages.
@@ -236,7 +240,7 @@ Desde **Perfil → Conexiones**, "Conectar Gmail" lanza el flujo OAuth de Compos
 
 1. Backend devuelve un `redirect_url` al Connect Link alojado por Composio (o `already_connected: true` si el lado de Composio ya tiene una conexión activa y solo había que resincronizar el row local).
 2. El usuario autoriza en Google → callback en el backend → redirect a `/dashboard/account?gmail=connected`.
-3. La tarjeta muestra estado, correo conectado, contador de correos procesados y de compras detectadas pendientes de categorizar.
+3. La tarjeta muestra estado, correo conectado y los contadores de **gastos e ingresos detectados** (solo cuentan los registros que siguen existiendo: si el usuario borra el gasto, deja de contar).
 4. Si el trigger de Composio queda en `failed`, se expone un botón "Reintentar" que pega a `/retry-trigger/`.
 
 | Archivo | Función |
@@ -368,6 +372,7 @@ src/
 │   ├── Index.tsx                 # Landing (Hero, equipo de agentes, Wallbit, ...)
 │   ├── Dashboard.tsx             # Dashboard por secciones (/dashboard/:section)
 │   ├── Agents.tsx                # ← nuevo — Equipo de agentes (chat web)
+│   ├── Features.tsx              # Guía pública de funciones (/funciones)
 │   ├── Login.tsx                 # Login en dos pasos (crear cuenta → ingresar)
 │   ├── Profile.tsx               # Cuenta + conexiones (/dashboard/account)
 │   └── {PrivacyPolicy,LegalNotice,...}.tsx
@@ -412,6 +417,7 @@ src/
 │   ├── categories.ts · gmail.ts · wallbit.ts
 │   └── riskProfile.ts
 ├── utils/                        # date helpers, color utils
+├── styles/                       # CSS adicional
 └── lib/                          # shadcn utils, chartColors
 ```
 
