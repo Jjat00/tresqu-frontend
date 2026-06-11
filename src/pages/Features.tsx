@@ -8,6 +8,7 @@ import {
   ListPlus,
   CalendarDays,
   Globe,
+  Coins,
   Tags,
   Mail,
   BellRing,
@@ -121,6 +122,13 @@ const sections: FeatureSection[] = [
         title: "Multi-moneda",
         description:
           "Cada movimiento en su moneda: COP, USD, EUR y más. Defines tu moneda por defecto y, si no especificas, Tresqu usa esa — nunca adivina.",
+      },
+      {
+        Icon: Coins,
+        title: "Montos como los dices",
+        description:
+          "\"Gasté 90 en una camisa\" — si tu moneda es el peso, Tresqu entiende 90.000, no 90 pesos. Lee el contexto de la compra para captar la cifra real; y si dices \"90 dólares\", respeta eso al pie de la letra.",
+        isNew: true,
       },
       {
         Icon: Tags,
