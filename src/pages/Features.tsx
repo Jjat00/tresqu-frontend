@@ -40,6 +40,7 @@ import {
   Radar,
   Settings2,
   KeyRound,
+  CopyCheck,
   type LucideIcon,
 } from "lucide-react";
 import Header from "@/components/Header";
@@ -180,7 +181,14 @@ const sections: FeatureSection[] = [
         Icon: Trash2,
         title: "¿No era un gasto? Bórralo",
         description:
-          "Responde a la notificación pidiendo eliminarlo y el registro desaparece. Útil para reembolsos o correos duplicados.",
+          "Responde a la notificación pidiendo eliminarlo y el registro desaparece. Útil para reembolsos o falsas detecciones.",
+        isNew: true,
+      },
+      {
+        Icon: CopyCheck,
+        title: "Una compra, un registro",
+        description:
+          "Si la misma compra llega en dos correos (el recibo de la tienda y el aviso de tu tarjeta), Tresqu los reconoce como una sola y registra el gasto una vez, con el mejor nombre del comercio.",
         isNew: true,
       },
       {
