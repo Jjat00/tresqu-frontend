@@ -21,7 +21,7 @@ Tresqu (tresqu.com) es una plataforma de finanzas personales conversacional para
 
 ## Registro de gastos e ingresos
 
-- **Por texto:** escribes como hablas ("anoche pagué 20k de cena") y Tresqu entiende y categoriza al instante.
+- **Por texto:** escribes como hablas ("anoche pagué 20k de cena") y Tresqu entiende y categoriza al instante. Entiende montos coloquiales según tu moneda: "gasté 90 en una camisa" con pesos colombianos se registra como 90.000, no 90 — y si dices "90 dólares", lo respeta literal.
 - **Por voz:** mandas un audio (p. ej. en WhatsApp) y lo transcribe, entiende y registra en segundos.
 - **Por foto:** tomas una foto al recibo o factura y extrae monto, comercio y categoría sin que tipees nada.
 - **Gmail automático:** conectas tu correo y detecta compras en tus emails sin que escribas nada. Cada gasto detectado te llega como notificación a WhatsApp; respondes a la notificación para corregir la categoría o eliminar el registro, y Tresqu recuerda tus correcciones: la próxima compra del mismo comercio llega ya con tu categoría.
