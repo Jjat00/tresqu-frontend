@@ -95,6 +95,10 @@ export interface Holding {
   market_value: string;
   pnl_usd: string;
   pnl_pct: number;
+  /** True cuando tenemos las acciones (saldo en vivo) pero aún no su costo
+   * (compra hecha en la app de Wallbit, sin sincronizar/settle). P&L va en 0
+   * y la UI muestra "sincronizando / —" en vez de una ganancia fantasma. */
+  cost_pending?: boolean;
 }
 
 export interface TimelinePoint {

@@ -78,10 +78,28 @@ const HoldingDetailModal = ({ holding, onClose }: HoldingDetailModalProps) => {
               <Stat label="Valor" value={fmtUsd(holding.market_value)} />
               <Stat
                 label="P&L"
-                value={`${isUp ? "+" : ""}${fmtUsd(holding.pnl_usd)} (${holding.pnl_pct.toFixed(1)}%)`}
-                className={isUp ? "text-emerald-400" : "text-red-400"}
+                value={
+                  holding.cost_pending
+                    ? "—"
+                    : `${isUp ? "+" : ""}${fmtUsd(holding.pnl_usd)} (${holding.pnl_pct.toFixed(1)}%)`
+                }
+                className={
+                  holding.cost_pending
+                    ? "text-muted-foreground"
+                    : isUp
+                    ? "text-emerald-400"
+                    : "text-red-400"
+                }
               />
             </div>
+
+            {holding.cost_pending && (
+              <p className="text-[11px] text-muted-foreground">
+                El costo de esta posición se está sincronizando desde Wallbit. La
+                ganancia/pérdida aparecerá cuando termine (puede tardar unos
+                minutos tras una compra hecha en la app de Wallbit).
+              </p>
+            )}
           </>
         )}
       </DialogContent>

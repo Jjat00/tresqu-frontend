@@ -111,7 +111,13 @@ const HoldingsTable = () => {
                         {fmtShares(h.shares)}
                       </TableCell>
                       <TableCell className="text-right tabular-nums hidden sm:table-cell">
-                        {fmt(h.avg_cost)}
+                        {h.cost_pending ? (
+                          <span className="text-[10px] text-muted-foreground">
+                            sincronizando…
+                          </span>
+                        ) : (
+                          fmt(h.avg_cost)
+                        )}
                       </TableCell>
                       <TableCell className="text-right tabular-nums">
                         {fmt(h.current_price)}
@@ -121,23 +127,31 @@ const HoldingsTable = () => {
                       </TableCell>
                       <TableCell
                         className={`text-right font-medium tabular-nums ${
-                          isUp ? "text-emerald-400" : "text-red-400"
+                          h.cost_pending
+                            ? "text-muted-foreground"
+                            : isUp
+                            ? "text-emerald-400"
+                            : "text-red-400"
                         }`}
                       >
-                        <div className="flex items-center justify-end gap-1">
-                          {isUp ? (
-                            <ArrowUpRight className="h-3 w-3" />
-                          ) : (
-                            <ArrowDownRight className="h-3 w-3" />
-                          )}
-                          <span>
-                            {isUp ? "+" : ""}
-                            {fmt(h.pnl_usd)}
-                          </span>
-                          <span className="text-[10px] opacity-70">
-                            ({h.pnl_pct.toFixed(1)}%)
-                          </span>
-                        </div>
+                        {h.cost_pending ? (
+                          <span title="Costo sincronizándose desde Wallbit">—</span>
+                        ) : (
+                          <div className="flex items-center justify-end gap-1">
+                            {isUp ? (
+                              <ArrowUpRight className="h-3 w-3" />
+                            ) : (
+                              <ArrowDownRight className="h-3 w-3" />
+                            )}
+                            <span>
+                              {isUp ? "+" : ""}
+                              {fmt(h.pnl_usd)}
+                            </span>
+                            <span className="text-[10px] opacity-70">
+                              ({h.pnl_pct.toFixed(1)}%)
+                            </span>
+                          </div>
+                        )}
                       </TableCell>
                     </TableRow>
                   );
