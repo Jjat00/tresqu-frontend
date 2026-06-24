@@ -1,8 +1,17 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { isAuthenticated } from "@/services/authService";
 
 const WireframeTerrain = lazy(() => import("./WireframeTerrain"));
 
 const Hero = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- estado de sesión leído al montar
+    setIsLoggedIn(isAuthenticated());
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
       {/* Animated 3D wireframe terrain (lazy — Three.js loads in its own chunk) */}
@@ -97,6 +106,28 @@ const Hero = () => {
               {/* Micro-copy */}
               <p className="text-zinc-500 text-sm">
                 Sin descargar apps. Empieza en menos de 30 segundos.
+              </p>
+
+              {/* Acceso web / dashboard — visible en mobile y desktop */}
+              <p className="text-sm text-zinc-400">
+                {isLoggedIn ? (
+                  <Link
+                    to="/dashboard/home"
+                    className="inline-flex items-center gap-1 font-semibold text-[#00FF7F] hover:underline"
+                  >
+                    Entra a tu dashboard →
+                  </Link>
+                ) : (
+                  <>
+                    ¿Prefieres la web o ya tienes cuenta?{" "}
+                    <Link
+                      to="/login"
+                      className="inline-flex items-center gap-1 font-semibold text-[#00FF7F] hover:underline"
+                    >
+                      Inicia sesión y entra a tu dashboard →
+                    </Link>
+                  </>
+                )}
               </p>
             </div>
           </div>

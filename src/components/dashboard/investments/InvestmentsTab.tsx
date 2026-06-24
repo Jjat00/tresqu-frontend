@@ -1,4 +1,5 @@
 import { RefreshCw, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import {
@@ -34,6 +35,7 @@ const formatLastSync = (iso: string | null | undefined): string => {
 };
 
 const InvestmentsTab = () => {
+  const navigate = useNavigate();
   const { data: status, isLoading } = useWallbitStatus();
   const syncMutation = useWallbitSync();
 
@@ -56,6 +58,15 @@ const InvestmentsTab = () => {
           <strong>Integraciones</strong>, vas a ver aquí tu portfolio completo:
           posiciones, P&L en vivo, distribución por activo y evolución del
           capital invertido.
+          <div className="mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/dashboard/account?tab=integraciones")}
+            >
+              Conectar Wallbit
+            </Button>
+          </div>
         </AlertDescription>
       </Alert>
     );
