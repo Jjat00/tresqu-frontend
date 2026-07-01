@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 
 const REQUEST_CODE_PATH = "/api/auth/telegram/request-code/";
 const VERIFY_CODE_PATH = "/api/auth/telegram/verify-code/";
-const REFRESH_TOKEN_PATH = "/api/auth/token/refresh/";
+const REFRESH_TOKEN_PATH = "/api/token/refresh/";
 
 // Función para solicitar código de verificación
 export const requestTelegramCode = async (
@@ -100,9 +100,13 @@ export const refreshTokenService = async (): Promise<string | null> => {
       config
     );
 
-    // Guardar el nuevo token de acceso en el store
+    // Guardar el nuevo access token y, si el backend rota el refresh
+    // (ROTATE_REFRESH_TOKENS), persistir también el nuevo refresh para
+    // extender la ventana de la sesión ("rolling"). Si no viene uno nuevo,
+    // se conserva el actual.
     const newAccessToken = response.data.access;
-    useAuthStore.getState().setTokens(newAccessToken, refreshToken);
+    const rotatedRefreshToken = response.data.refresh ?? refreshToken;
+    useAuthStore.getState().setTokens(newAccessToken, rotatedRefreshToken);
 
     return newAccessToken;
   } catch (error) {

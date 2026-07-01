@@ -97,7 +97,9 @@ apiClient.interceptors.response.use(
         const newAccessToken = await refreshTokenService();
 
         if (newAccessToken) {
-          useAuthStore.getState().setTokens(newAccessToken, refreshToken);
+          // refreshTokenService() ya persistió el nuevo access token (y el
+          // refresh rotado, si lo hubo) en el store. No volvemos a llamar
+          // setTokens aquí para no pisar el refresh rotado con el viejo.
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest);
         }
