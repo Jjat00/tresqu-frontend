@@ -62,17 +62,24 @@ const PortfolioDonut = () => {
                   outerRadius="90%"
                   paddingAngle={2}
                   dataKey="value"
-                  stroke="none"
                 >
                   {slices.map((s) => (
-                    <Cell key={s.name} fill={s.fill} />
+                    <Cell
+                      key={s.name}
+                      fill={s.fill}
+                      fillOpacity={0.22}
+                      stroke={s.fill}
+                      strokeWidth={1.5}
+                    />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "hsl(0 0% 7%)",
-                    border: "1px solid hsl(0 0% 14%)",
-                    borderRadius: "8px",
+                    backgroundColor: "rgba(10,10,10,0.75)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: "12px",
                     fontSize: "12px",
                   }}
                   formatter={(value: number, name: string) => [

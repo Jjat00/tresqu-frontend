@@ -144,8 +144,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                 <defs>
                   {data?.datasets.map((dataset, i) => (
                     <linearGradient key={`barGrad-${i}`} id={`barGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.9} />
-                      <stop offset="100%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.4} />
+                      <stop offset="0%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.35} />
+                      <stop offset="100%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.06} />
                     </linearGradient>
                   ))}
                 </defs>
@@ -199,6 +199,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                     dataKey={dataset.label}
                     stackId="stack"
                     fill={`url(#barGrad-${i})`}
+                    stroke={neonize(dataset.backgroundColor, i)}
+                    strokeWidth={1}
                     radius={i === (data.datasets.length - 1) ? [4, 4, 0, 0] : [0, 0, 0, 0]}
                   />
                 ))}

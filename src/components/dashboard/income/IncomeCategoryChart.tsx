@@ -98,7 +98,9 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                     <Cell
                       key={`cell-${index}`}
                       fill={neonize(entry.color, index)}
-                      fillOpacity={0.85}
+                      fillOpacity={0.22}
+                      stroke={neonize(entry.color, index)}
+                      strokeWidth={1.5}
                     />
                   ))}
                 </Pie>
@@ -107,9 +109,15 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                     if (active && payload?.[0]) {
                       const value = payload[0].value as number;
                       return (
-                        <div className="bg-card p-2 rounded shadow border text-xs">
+                        <div
+                          className="px-3 py-2.5 rounded-xl text-xs backdrop-blur-xl"
+                          style={{
+                            background: "rgba(10,10,10,0.75)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                          }}
+                        >
                           <p className="font-semibold">{payload[0].name}</p>
-                          <p>{formatCurrency(value)}</p>
+                          <p className="text-muted-foreground">{formatCurrency(value)}</p>
                         </div>
                       );
                     }

@@ -61,8 +61,8 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
           <defs>
             {data.map((entry, i) => (
               <linearGradient key={`grad-${i}`} id={`pieGrad-${i}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor={neonize(entry.color, i)} stopOpacity={0.95} />
-                <stop offset="100%" stopColor={neonize(entry.color, i)} stopOpacity={0.55} />
+                <stop offset="0%" stopColor={neonize(entry.color, i)} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={neonize(entry.color, i)} stopOpacity={0.08} />
               </linearGradient>
             ))}
           </defs>
@@ -76,13 +76,14 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
             dataKey="value"
             nameKey="name"
             cornerRadius={4}
-            stroke="none"
             onClick={(d) => onCategoryClick(d.name)}
           >
-            {data.map((_, index) => (
+            {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={`url(#pieGrad-${index})`}
+                stroke={neonize(entry.color, index)}
+                strokeWidth={1.5}
                 style={{ cursor: "pointer" }}
               />
             ))}
