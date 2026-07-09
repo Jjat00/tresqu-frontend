@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-.mcp.json   
+.mcp.json   __pycache__/
