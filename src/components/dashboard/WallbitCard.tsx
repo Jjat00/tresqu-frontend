@@ -117,28 +117,28 @@ const WallbitCard = () => {
     try {
       await pause.mutateAsync(hours);
       toast.success(
-        `Bot pausado por ${
+        `Agente pausado por ${
           PAUSE_OPTIONS.find((opt) => opt.hours === hours)?.label ?? `${hours}h`
         }.`,
       );
     } catch {
-      toast.error("No se pudo pausar el bot.");
+      toast.error("No se pudo pausar el agente.");
     }
   };
 
   const handleResume = async () => {
     if (
       !window.confirm(
-        "¿Reanudar el bot ahora? Volverá a poder ejecutar operaciones de Wallbit propuestas en el chat (cada operación sigue requiriendo tu confirmación).",
+        "¿Reanudar el agente ahora? Volverá a poder ejecutar operaciones de Wallbit propuestas en el chat (cada operación sigue requiriendo tu confirmación).",
       )
     ) {
       return;
     }
     try {
       await resume.mutateAsync();
-      toast.success("Bot reanudado.");
+      toast.success("Agente reanudado.");
     } catch {
-      toast.error("No se pudo reanudar el bot.");
+      toast.error("No se pudo reanudar el agente.");
     }
   };
 
@@ -209,7 +209,7 @@ const WallbitCard = () => {
             {isPaused && (
               <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-200">
                 <Pause className="h-4 w-4" />
-                <AlertTitle>Bot pausado</AlertTitle>
+                <AlertTitle>Agente pausado</AlertTitle>
                 <AlertDescription>
                   El asistente no ejecutará operaciones en Wallbit hasta{" "}
                   <strong>{formatDate(pausedUntil!.toISOString())}</strong>.
@@ -262,7 +262,7 @@ const WallbitCard = () => {
                   ) : (
                     <Play className="h-4 w-4 mr-2" />
                   )}
-                  Reanudar bot
+                  Reanudar agente
                 </Button>
               ) : (
                 <DropdownMenu>
@@ -276,12 +276,12 @@ const WallbitCard = () => {
                       ) : (
                         <Pause className="h-4 w-4 mr-2" />
                       )}
-                      Pausar bot
+                      Pausar agente
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
                     <DropdownMenuLabel>
-                      Pausa el bot por...
+                      Pausa el agente por...
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {PAUSE_OPTIONS.map((opt) => (

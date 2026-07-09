@@ -26,7 +26,7 @@ Tresqu (tresqu.com) es una plataforma de finanzas personales conversacional para
 - **Por foto:** tomas una foto al recibo o factura y extrae monto, comercio y categoría sin que tipees nada.
 - **Gmail automático:** conectas tu correo y detecta compras en tus emails sin que escribas nada. Cada gasto detectado te llega como notificación a WhatsApp; respondes a la notificación para corregir la categoría o eliminar el registro, y Tresqu recuerda tus correcciones: la próxima compra del mismo comercio llega ya con tu categoría. Si la misma compra llega en dos correos (recibo de la tienda + aviso de la tarjeta), los reconoce como una sola y registra el gasto una vez.
 - **Búsqueda por significado:** preguntas como hablas ("¿cuánto gasté en salidas el mes pasado?") y entiende la intención, sin filtros ni categorías exactas.
-- **Edición y eliminación por chat:** pides corregir o borrar un movimiento describiéndolo ("elimina el gasto de la hamburguesa"), o en WhatsApp citas el mensaje de confirmación del bot (deslizar para responder) y Tresqu sabe exactamente a qué registros te refieres.
+- **Edición y eliminación por chat:** pides corregir o borrar un movimiento describiéndolo ("elimina el gasto de la hamburguesa"), o en WhatsApp citas el mensaje de confirmación de Tresqu (deslizar para responder) y Tresqu sabe exactamente a qué registros te refieres.
 
 ## Inversiones con Wallbit
 

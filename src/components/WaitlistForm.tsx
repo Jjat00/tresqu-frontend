@@ -639,8 +639,8 @@ const WaitlistForm = () => {
                 <span className="text-white font-medium">
                   ¿Aún no tienes cuenta?
                 </span>{" "}
-                Créala desde nuestro bot de WhatsApp o Telegram y luego vuelve
-                aquí a iniciar sesión.
+                Créala hablando con Tresqu por WhatsApp o Telegram y luego
+                vuelve aquí a iniciar sesión.
               </p>
               <div className="flex flex-col sm:flex-row gap-2.5">
                 <Button
