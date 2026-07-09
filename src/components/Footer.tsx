@@ -129,7 +129,7 @@ const Footer = () => {
           className="overflow-hidden pointer-events-none select-none"
           aria-hidden="true"
         >
-          <p className="text-outline-ghost font-display font-extrabold text-center leading-none tracking-tight text-[clamp(3.5rem,12vw,10.5rem)] translate-y-[0.18em]">
+          <p className="text-outline-ghost font-display font-extrabold text-center leading-none tracking-tight text-[clamp(3.5rem,12vw,10.5rem)] translate-y-[0.04em]">
             TRESQU
           </p>
         </div>
