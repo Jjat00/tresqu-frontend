@@ -124,8 +124,18 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Wordmark gigante en outline */}
+        <div
+          className="overflow-hidden pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <p className="text-outline-ghost font-display font-extrabold text-center leading-none tracking-tight text-[clamp(4.5rem,17vw,15rem)] translate-y-[0.18em]">
+            TRESQU
+          </p>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="py-6 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="py-6 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-4 relative bg-[#050505]">
           <p className="text-zinc-600 text-sm">
             &copy; {currentYear} Tresqu. Todos los derechos reservados.
           </p>

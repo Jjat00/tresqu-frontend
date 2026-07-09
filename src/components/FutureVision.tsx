@@ -36,18 +36,17 @@ const FutureVision = () => {
     >
       {/* Decorative */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
+      <div className="absolute inset-0 pointer-events-none section-aura-blue" />
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left - Content */}
           <div>
-            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-              Roadmap
-            </span>
-            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+            <span className="section-label mb-6">07 · Roadmap</span>
+            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
               ESTO ES SOLO
               <br />
-              EL <span className="text-[#00FF7F] italic">PRINCIPIO</span>.
+              EL <span className="holo-text italic">PRINCIPIO</span>.
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
               Hoy el equipo registra, analiza e invierte contigo —siempre con tu
@@ -76,10 +75,10 @@ const FutureVision = () => {
             {futureFeatures.map((feature, index) => (
               <div
                 key={index}
-                className="group relative bg-white/[0.02] border border-white/[0.06] p-6 rounded-md flex items-start gap-5 transition-colors duration-200 hover:border-white/10"
+                className="group holo-card holo-sheen p-6 flex items-start gap-5"
               >
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] flex-shrink-0">
+                <div className="w-12 h-12 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] flex-shrink-0 transition-all duration-300 group-hover:border-[#00FF7F]/40 group-hover:shadow-[0_0_20px_-6px_rgba(0,255,127,0.6)]">
                   {feature.icon}
                 </div>
 
@@ -107,8 +106,8 @@ const FutureVision = () => {
 
         {/* Bottom Note */}
         <div className="mt-16 text-center">
-          <div className="inline-block px-6 py-4 bg-white/[0.02] border border-white/[0.06] rounded-md">
-            <p className="text-zinc-400 text-[15px] font-medium italic tracking-wide">
+          <div className="holo-card hud-corners inline-block px-8 py-5">
+            <p className="text-[15px] font-medium italic tracking-wide holo-text">
               "El primer agente financiero contextual de LATAM."
             </p>
           </div>

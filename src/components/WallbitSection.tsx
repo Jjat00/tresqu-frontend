@@ -86,9 +86,9 @@ const WallbitSection = () => {
   return (
     <section
       id="wallbit"
-      className="relative section-padding bg-[#0a0a0a] scroll-mt-24"
+      className="relative section-padding bg-[#0a0a0a] scroll-mt-24 overflow-hidden"
     >
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none section-aura-blue">
         <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5" />
       </div>
@@ -97,6 +97,7 @@ const WallbitSection = () => {
         {/* Header */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
+            <span className="section-label mb-6">03 · Inversiones</span>
             <div className="flex items-center gap-3 mb-6 flex-wrap">
               <img
                 src="/wallbit_logo.png"
@@ -118,10 +119,10 @@ const WallbitSection = () => {
               </span>
             </div>
 
-            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
               TU COPILOTO,
               <br />
-              NO TU <span className="text-[#0D99FF] italic">CUADERNO</span>.
+              NO TU <span className="holo-text italic">CUADERNO</span>.
             </h2>
             <p className="text-zinc-400 text-base sm:text-lg leading-relaxed">
               Antes, Tresqu te ayudaba a entender en qué gastabas. Con Wallbit
@@ -136,9 +137,9 @@ const WallbitSection = () => {
             {capabilities.map(({ Icon, title, description }) => (
               <div
                 key={title}
-                className="bg-white/[0.02] border border-white/[0.06] p-5 rounded-md transition-colors duration-200 hover:border-white/10"
+                className="group holo-card holo-sheen p-5"
               >
-                <div className="w-10 h-10 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#0D99FF] mb-4">
+                <div className="w-10 h-10 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#0D99FF] mb-4 transition-all duration-300 group-hover:border-[#0D99FF]/40 group-hover:shadow-[0_0_20px_-6px_rgba(13,153,255,0.6)]">
                   <Icon className="w-5 h-5" />
                 </div>
                 <h3 className="text-white font-bold text-base mb-2 font-display tracking-tight">
@@ -153,7 +154,7 @@ const WallbitSection = () => {
         </div>
 
         {/* CTA strip */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-md bg-white/[0.02] border border-white/[0.06] mb-16">
+        <div className="holo-card holo-sheen flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-5 sm:p-6 mb-16">
           <div>
             <p className="text-white text-sm sm:text-base font-semibold mb-1">
               Conecta tu Wallbit desde el dashboard.
@@ -165,7 +166,7 @@ const WallbitSection = () => {
           </div>
           <Link
             to={connectHref}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0D99FF] text-black font-semibold rounded-md hover:bg-[#0D99FF]/90 transition-colors text-sm whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0D99FF] text-black font-semibold rounded-md hover:bg-[#0D99FF]/90 transition-all text-sm whitespace-nowrap shadow-[0_0_24px_-6px_rgba(13,153,255,0.5)] hover:shadow-[0_0_32px_-4px_rgba(13,153,255,0.7)]"
           >
             {isLoggedIn ? "Conectar en mi cuenta" : "Empezar y conectar"}
           </Link>
@@ -182,11 +183,11 @@ const WallbitSection = () => {
               return (
                 <div
                   key={faq.q}
-                  className="rounded-md bg-white/[0.02] border border-white/[0.06] overflow-hidden"
+                  className="holo-card overflow-hidden"
                 >
                   <button
                     onClick={() => setOpenIndex(open ? null : index)}
-                    className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+                    className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left cursor-pointer"
                   >
                     <span className="text-white text-sm sm:text-base font-medium">
                       {faq.q}

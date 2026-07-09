@@ -63,7 +63,7 @@ const RoutingChip = ({ label, brand }: { label: string; brand?: boolean }) => (
 );
 
 const Trace = () => (
-  <div className="rounded-lg bg-white/[0.02] border border-white/[0.06] p-4 sm:p-5 space-y-3">
+  <div className="holo-card holo-sheen hud-corners p-4 sm:p-5 space-y-3">
     {/* Usuario */}
     <div className="flex justify-end">
       <div className="text-white text-xs sm:text-[13px] leading-snug rounded-md px-3 py-2 max-w-[85%] bg-[#00FF7F]/[0.08] border border-[#00FF7F]/20">
@@ -152,9 +152,10 @@ const AgentTeam = () => {
   return (
     <section
       id="equipo"
-      className="relative section-padding bg-[#0a0a0a] scroll-mt-24"
+      className="relative section-padding bg-[#0a0a0a] scroll-mt-24 overflow-hidden"
     >
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none section-aura-green">
+        <div className="absolute inset-0 bg-blueprint" />
         <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5" />
       </div>
@@ -162,13 +163,11 @@ const AgentTeam = () => {
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-          <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-            El equipo de agentes
-          </span>
-          <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+          <span className="section-label mb-6">04 · El equipo de agentes</span>
+          <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
             UN EQUIPO QUE
             <br />
-            DECIDE <span className="text-[#00FF7F] italic">CONTIGO</span>.
+            DECIDE <span className="holo-text italic">CONTIGO</span>.
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
             Detrás de cada mensaje, Tresqu coordina a un equipo de agentes
@@ -182,7 +181,7 @@ const AgentTeam = () => {
           {/* Izquierda — diagrama del equipo */}
           <div>
             {/* Orquestador */}
-            <div className="relative rounded-lg bg-white/[0.03] border border-[#00FF7F]/20 p-5 mb-6">
+            <div className="holo-card holo-sheen hud-corners p-5 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-md bg-[#00FF7F]/10 border border-[#00FF7F]/30 flex items-center justify-center text-[#00FF7F]">
                   <Workflow className="w-5 h-5" />
@@ -218,7 +217,7 @@ const AgentTeam = () => {
                 return (
                   <div
                     key={name}
-                    className="rounded-md bg-white/[0.02] border border-white/[0.06] p-4 transition-colors duration-200 hover:border-white/10"
+                    className="group holo-card holo-sheen p-4"
                   >
                     <div className="flex items-center gap-2.5 mb-2.5">
                       <div

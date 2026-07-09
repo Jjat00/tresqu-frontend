@@ -66,11 +66,9 @@ const Benefits = () => {
         {/* Section Header */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
-            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-              Beneficios
-            </span>
-            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
-              POR QUÉ UN <span className="text-[#00FF7F] italic">AGENTE</span>,
+            <span className="section-label mb-6">06 · Beneficios</span>
+            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white">
+              POR QUÉ UN <span className="holo-text italic">AGENTE</span>,
               <br />
               NO UNA APP.
             </h2>
@@ -94,12 +92,12 @@ const Benefits = () => {
             return (
               <div
                 key={index}
-                className={`group relative overflow-hidden rounded-md bg-white/[0.02] border border-white/[0.06] p-6 lg:p-8 transition-colors duration-200 hover:border-white/10 ${gridClass}`}
+                className={`group holo-card holo-sheen hud-corners overflow-hidden p-6 lg:p-8 ${gridClass}`}
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-6">
                     {/* Icon */}
-                    <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F]">
+                    <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] transition-all duration-300 group-hover:border-[#00FF7F]/40 group-hover:shadow-[0_0_20px_-6px_rgba(0,255,127,0.6)]">
                       {benefit.icon}
                     </div>
 

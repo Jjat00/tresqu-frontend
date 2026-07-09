@@ -213,17 +213,18 @@ const WhatsAppFeatures = () => {
           "linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 50%, #0a0a0a 100%)",
       }}
     >
+      <div className="absolute inset-0 pointer-events-none section-aura-green" />
+
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Section Header — patrón de Benefits */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
-            <span className="inline-flex items-center gap-2 px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-              <WhatsAppIcon className="w-3 h-3" />
-              Disponible en WhatsApp
+            <span className="section-label mb-6">
+              01 · Disponible en WhatsApp
             </span>
-            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
+            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white">
               REGISTRA COMO{" "}
-              <span className="text-[#00FF7F] italic">PREFIERAS</span>,
+              <span className="holo-text italic">PREFIERAS</span>,
               <br />
               CONSULTA LO QUE QUIERAS.
             </h2>
@@ -251,12 +252,12 @@ const WhatsAppFeatures = () => {
             return (
               <div
                 key={index}
-                className={`group relative overflow-hidden rounded-md bg-white/[0.02] border border-white/[0.06] p-6 lg:p-8 transition-colors duration-200 hover:border-white/10 ${gridClass}`}
+                className={`group holo-card holo-sheen hud-corners overflow-hidden p-6 lg:p-8 ${gridClass}`}
               >
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-start mb-6">
                     <div
-                      className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center"
+                      className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center transition-all duration-300 group-hover:border-white/25"
                       style={{ color: accent }}
                     >
                       <Icon className="w-5 h-5" />
@@ -300,7 +301,7 @@ const WhatsAppFeatures = () => {
 
         {/* CTA */}
         <div className="mt-16 md:mt-20 text-center">
-          <p className="text-zinc-600 mb-6 text-sm">
+          <p className="text-zinc-600 mb-6 text-sm font-mono tracking-wide">
             Sin descargas · Sin configuraciones · Empieza en 30 segundos
           </p>
           <button
@@ -310,7 +311,7 @@ const WhatsAppFeatures = () => {
                 "_blank"
               )
             }
-            className="inline-flex items-center gap-2.5 px-7 py-3 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white transition-colors duration-200"
+            className="cta-neon inline-flex items-center gap-2.5 px-7 py-3 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white cursor-pointer"
           >
             <WhatsAppIcon className="w-4 h-4" />
             Probar en WhatsApp

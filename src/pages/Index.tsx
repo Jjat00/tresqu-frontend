@@ -26,6 +26,8 @@ const SectionFallback = () => (
 const Index = () => {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-foreground relative overflow-hidden">
+      {/* Grano de película global (fijo, no interactivo) */}
+      <div className="bg-grain" aria-hidden="true" />
       <Header />
       <Hero />
       <SocialProof />

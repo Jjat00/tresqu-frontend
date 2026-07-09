@@ -543,15 +543,11 @@
     }
   }
 
-  /* Brillo superior sutil (sheen) para tarjetas holográficas */
-  .holo-sheen::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 45%;
-    border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
-    pointer-events: none;
+  /* Brillo superior sutil (sheen) para tarjetas holográficas.
+     Inner highlight vía box-shadow: no usa ::before para no chocar
+     con .hud-corners en la misma tarjeta. */
+  .holo-sheen {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   /* Esquinas HUD (brackets) */

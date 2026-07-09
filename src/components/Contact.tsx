@@ -43,13 +43,11 @@ const Contact = () => {
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Section Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-            Contacto
-          </span>
-          <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
+          <span className="section-label mb-6">08 · Contacto</span>
+          <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
             ¿TIENES
             <br />
-            <span className="text-[#00FF7F] italic">PREGUNTAS?</span>
+            <span className="holo-text italic">PREGUNTAS?</span>
           </h2>
           <p className="text-zinc-400 text-lg">
             Estamos aquí para ayudarte. Elige el canal que prefieras.
@@ -64,12 +62,12 @@ const Contact = () => {
               href={method.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-white/[0.02] border border-white/[0.06] p-8 rounded-md text-center transition-colors duration-200 hover:border-white/10"
+              className="group holo-card holo-sheen hud-corners p-8 text-center cursor-pointer"
             >
               <div className="relative z-10 flex flex-col items-center">
                 {/* Icon Container */}
                 <div
-                  className="w-14 h-14 rounded-md mb-6 flex items-center justify-center border border-white/10"
+                  className="w-14 h-14 rounded-md mb-6 flex items-center justify-center border border-white/10 transition-all duration-300 group-hover:border-white/25"
                   style={{
                     backgroundColor: `${method.color}10`,
                     color: method.color,
@@ -93,7 +91,7 @@ const Contact = () => {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <div className="inline-flex flex-col sm:flex-row items-center gap-6 p-3 bg-white/[0.02] border border-white/[0.06] rounded-md">
+          <div className="holo-card holo-sheen inline-flex flex-col sm:flex-row items-center gap-6 p-3">
             <div className="text-left pl-3 py-2">
               <p className="text-white font-semibold text-[15px]">
                 ¿Prefieres una respuesta rápida?
