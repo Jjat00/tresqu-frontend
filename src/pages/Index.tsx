@@ -5,6 +5,7 @@ import SocialProof from "@/components/SocialProof";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 
 // Lazy load secciones below-the-fold
+const DashboardShowcase = lazy(() => import("@/components/DashboardShowcase"));
 const WhatsAppFeatures = lazy(() => import("@/components/WhatsAppFeatures"));
 const PassiveCapture = lazy(() => import("@/components/PassiveCapture"));
 const WallbitSection = lazy(() => import("@/components/WallbitSection"));
@@ -32,6 +33,9 @@ const Index = () => {
       <Hero />
       <SocialProof />
       <Suspense fallback={<SectionFallback />}>
+        <AnimateOnScroll>
+          <DashboardShowcase />
+        </AnimateOnScroll>
         <AnimateOnScroll>
           <WhatsAppFeatures />
         </AnimateOnScroll>
