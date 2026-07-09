@@ -5,32 +5,45 @@ const platforms = [
   { name: "Wallbit", color: "#2563EB" },
 ];
 
+// Cada mitad del marquee repite la lista para que el loop sea continuo
+const half = [...platforms, ...platforms, ...platforms];
+
+const PlatformChip = ({ name, color }: { name: string; color: string }) => (
+  <div
+    className="flex items-center gap-2.5 px-6 py-3 rounded-full border bg-white/[0.02] whitespace-nowrap"
+    style={{ borderColor: `${color}33` }}
+  >
+    <span
+      className="w-2 h-2 rounded-full"
+      style={{ backgroundColor: color, boxShadow: `0 0 10px ${color}` }}
+    />
+    <span className="text-base font-semibold text-foreground">{name}</span>
+  </div>
+);
+
 const SocialProof = () => {
   return (
-    <section className="relative section-padding overflow-hidden bg-[#0a0a0a]">
+    <section className="relative py-14 md:py-16 overflow-hidden bg-[#0a0a0a]">
       {/* Separador superior */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00FF7F]/20 to-transparent" />
 
-      <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        {/* Integraciones */}
-        <div className="text-center">
-          <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mb-8 sm:mb-10">
-            Integrado con las plataformas que ya usas
-          </p>
-          <div className="flex items-center justify-center gap-4 sm:gap-6 flex-wrap">
-            {platforms.map((platform) => (
+      <div className="relative z-10">
+        <p className="section-label justify-center flex mb-8">
+          Integrado con las plataformas que ya usas
+        </p>
+
+        {/* Marquee infinito */}
+        <div className="marquee-mask overflow-hidden">
+          <div className="marquee gap-5">
+            {[0, 1].map((dup) => (
               <div
-                key={platform.name}
-                className="flex items-center gap-2.5 px-5 sm:px-6 py-3 sm:py-3.5 rounded-lg border bg-white/[0.02] transition-transform duration-200 hover:-translate-y-0.5"
-                style={{ borderColor: `${platform.color}33` }}
+                key={dup}
+                aria-hidden={dup === 1}
+                className="flex items-center gap-5 pr-5"
               >
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: platform.color }}
-                />
-                <span className="text-base sm:text-lg font-semibold text-foreground">
-                  {platform.name}
-                </span>
+                {half.map(({ name, color }, i) => (
+                  <PlatformChip key={`${name}-${i}`} name={name} color={color} />
+                ))}
               </div>
             ))}
           </div>

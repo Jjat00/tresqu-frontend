@@ -33,87 +33,93 @@ const Header = () => {
     // { href: "#pricing", label: "Precios" },
   ];
 
+  const floating = scrolled || mobileMenuOpen;
+
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "py-3 bg-[#0a0a0a]/85 backdrop-blur-md border-b border-white/[0.06]"
-          : "py-6 bg-transparent"
-      }`}
-    >
-      <div className="container flex items-center justify-between max-w-7xl mx-auto px-4 md:px-6">
-        {/* Logo */}
-        <Link to="/" className="group flex items-center hover:scale-105 transition-transform duration-500">
-          <Logo size="md" />
-        </Link>
-
-        {isHomePage ? (
-          <>
-            {/* Navegación Desktop */}
-            <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) =>
-                link.href.startsWith("/") ? (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-white transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-white transition-colors duration-200"
-                  >
-                    {link.label}
-                  </a>
-                )
-              )}
-            </nav>
-
-            {/* Botón CTA */}
-            <div className="hidden lg:block">
-              <Link
-                to={isLoggedIn ? "/dashboard" : "/login"}
-                className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200"
-              >
-                {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
-              </Link>
-            </div>
-
-            {/* Menu Mobile Toggle */}
-            <button
-              className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-          </>
-        ) : (
+    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-3">
+      <div
+        className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
+          floating
+            ? "bg-[#0a0a0a]/70 backdrop-blur-xl border-white/[0.08] shadow-[0_8px_40px_-8px_rgba(0,0,0,0.6)] px-4 md:px-6 py-3"
+            : "bg-transparent border-transparent px-4 md:px-6 py-4"
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          {/* Logo */}
           <Link
             to="/"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-md border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
+            className="group flex items-center hover:scale-105 transition-transform duration-500"
           >
-            Regresar al inicio
+            <Logo size="md" />
           </Link>
-        )}
-      </div>
 
-      {/* Mobile Menu */}
-      {isHomePage && mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-[#0a0a0a] border-b border-white/5">
-          <nav className="container max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4">
+          {isHomePage ? (
+            <>
+              {/* Navegación Desktop */}
+              <nav className="hidden lg:flex items-center gap-1">
+                {navLinks.map((link) =>
+                  link.href.startsWith("/") ? (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors duration-200"
+                    >
+                      {link.label}
+                    </a>
+                  )
+                )}
+              </nav>
+
+              {/* Botón CTA */}
+              <div className="hidden lg:block">
+                <Link
+                  to={isLoggedIn ? "/dashboard" : "/login"}
+                  className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(0,255,127,0.4)] transition-all duration-200"
+                >
+                  {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
+                </Link>
+              </div>
+
+              {/* Menu Mobile Toggle */}
+              <button
+                className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-full border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
+            >
+              Regresar al inicio
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Menu — expande la píldora */}
+        {isHomePage && mobileMenuOpen && (
+          <nav className="lg:hidden pt-4 mt-3 border-t border-white/[0.06] flex flex-col gap-1">
             {navLinks.map((link) =>
               link.href.startsWith("/") ? (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="text-base font-medium text-zinc-400 hover:text-white transition-colors py-2"
+                  className="text-base font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors py-2.5"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -122,25 +128,25 @@ const Header = () => {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-base font-medium text-zinc-400 hover:text-white transition-colors py-2"
+                  className="text-base font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors py-2.5"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
                 </a>
               )
             )}
-            <div className="pt-4 border-t border-zinc-800">
+            <div className="pt-4 mt-2 border-t border-white/[0.06]">
               <Link
                 to={isLoggedIn ? "/dashboard" : "/login"}
-                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200"
+                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] transition-colors duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
               </Link>
             </div>
           </nav>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 };
