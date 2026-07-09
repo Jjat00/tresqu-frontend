@@ -475,9 +475,9 @@ const channelMatrix = [
 ];
 
 const FeatureCard = ({ Icon, title, description, channels, isNew }: FeatureItem & { accent: string }) => (
-  <div className="relative bg-white/[0.02] border border-white/[0.06] p-6 lg:p-8 rounded-md transition-colors duration-200 hover:border-white/10">
+  <div className="group holo-card holo-sheen p-6 lg:p-8">
     <div className="flex items-start justify-between mb-6">
-      <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F]">
+      <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] transition-all duration-300 group-hover:border-[#00FF7F]/40 group-hover:shadow-[0_0_20px_-6px_rgba(0,255,127,0.6)]">
         <Icon className="w-5 h-5" />
       </div>
       {isNew && (
@@ -523,12 +523,10 @@ const Features = () => {
       <section className="relative pt-36 md:pt-44 pb-16 md:pb-20">
         <div className="container max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-              Guía de funciones
-            </span>
+            <span className="section-label mb-6">Guía de funciones</span>
             <h1 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
               TODO LO QUE PUEDES HACER CON{" "}
-              <span className="text-[#00FF7F] italic">TRESQU</span>.
+              <span className="holo-text italic">TRESQU</span>.
             </h1>
             <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto mb-10">
               Registrar, consultar, corregir e invertir — todo por chat, en los
@@ -601,12 +599,10 @@ const Features = () => {
         </div>
         <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl mb-12 md:mb-16">
-            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-              Canales
-            </span>
+            <span className="section-label mb-6">Canales</span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-5">
               EL MISMO TRESQU, DONDE TÚ{" "}
-              <span className="text-[#00FF7F] italic">ESTÉS</span>.
+              <span className="holo-text italic">ESTÉS</span>.
             </h2>
             <p className="text-zinc-400 text-base sm:text-lg max-w-xl">
               Las funciones son las mismas en todos los canales; lo que cambia
@@ -617,10 +613,8 @@ const Features = () => {
             {channelMatrix.map((channel) => (
               <div
                 key={channel.name}
-                className={`bg-white/[0.02] border p-6 lg:p-8 rounded-md ${
-                  channel.highlight
-                    ? "border-[#00FF7F]/25"
-                    : "border-white/[0.06]"
+                className={`holo-card holo-sheen p-6 lg:p-8 ${
+                  channel.highlight ? "hud-corners" : ""
                 }`}
               >
                 <div className="flex items-center justify-between mb-6">
@@ -656,9 +650,9 @@ const Features = () => {
           <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
         </div>
         <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-3xl mx-auto text-center bg-white/[0.02] border border-white/[0.06] rounded-md p-10 md:p-14">
+          <div className="holo-card holo-sheen hud-corners max-w-3xl mx-auto text-center p-10 md:p-14">
             <h2 className="trii-title text-3xl sm:text-4xl text-white mb-5">
-              PRUÉBALO EN UN <span className="text-[#00FF7F] italic">MENSAJE</span>.
+              PRUÉBALO EN UN <span className="holo-text italic">MENSAJE</span>.
             </h2>
             <p className="text-zinc-400 text-base mb-8 max-w-md mx-auto">
               Escríbele a Tresqu por WhatsApp y registra tu primer gasto en
@@ -669,7 +663,7 @@ const Features = () => {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3 bg-[#00FF7F] text-black font-semibold text-sm rounded-md hover:bg-[#00CC66] transition-colors duration-200"
+                className="cta-neon inline-flex items-center justify-center px-6 py-3 bg-[#00FF7F] text-black font-semibold text-sm rounded-md hover:bg-white"
               >
                 Probar en WhatsApp
               </a>

@@ -133,7 +133,7 @@ export const DesktopSidebar = ({
 
   return (
     <aside
-      className={`hidden lg:flex flex-col fixed top-14 left-0 bottom-0 z-20 border-r border-border bg-sidebar-background transition-all duration-200 ${
+      className={`hidden lg:flex flex-col fixed top-14 left-0 bottom-0 z-20 border-r border-white/[0.06] bg-sidebar-background/80 backdrop-blur-xl transition-all duration-200 ${
         collapsed ? "w-14" : "w-48"
       }`}
     >
@@ -173,7 +173,7 @@ export const DesktopSidebar = ({
                 collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5"
               } ${
                 isActive
-                  ? item.activeColor
+                  ? `${item.activeColor} shadow-[inset_2px_0_0_0_currentColor]`
                   : `${item.color} hover:text-foreground hover:bg-muted/50`
               }`}
               aria-label={item.label}
@@ -224,7 +224,7 @@ export const MobileBottomNav = ({
   const navigate = useNavigate();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-lg border-t border-border">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0a0a0a]/85 backdrop-blur-xl border-t border-white/[0.08]">
       <div className="flex items-center justify-around h-14">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
@@ -237,7 +237,7 @@ export const MobileBottomNav = ({
               }`}
               aria-label={item.label}
             >
-              <item.icon className={`h-4.5 w-4.5 ${isActive ? "scale-110" : ""} transition-transform`} />
+              <item.icon className={`h-4.5 w-4.5 ${isActive ? "scale-110 drop-shadow-[0_0_6px_currentColor]" : ""} transition-transform`} />
               <span className="text-[10px] font-medium">{item.label}</span>
             </button>
           );

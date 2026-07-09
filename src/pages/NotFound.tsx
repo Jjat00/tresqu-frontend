@@ -16,12 +16,19 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-success/5 rounded-full blur-[150px] pointer-events-none" />
+      {/* Atmósfera estilo landing */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-blueprint" />
+        <div className="absolute inset-0 section-aura-green" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-success/5 rounded-full blur-[150px]" />
+      </div>
 
       <div className="text-center px-4 relative z-10">
+        {/* Etiqueta terminal */}
+        <span className="section-label mb-4">Error · Ruta no encontrada</span>
+
         {/* Large 404 */}
-        <h1 className="text-[8rem] sm:text-[12rem] font-display font-bold leading-none tracking-tighter text-foreground/5 select-none">
+        <h1 className="text-[8rem] sm:text-[12rem] font-display font-bold leading-none tracking-tighter text-outline-ghost select-none">
           404
         </h1>
 
@@ -45,7 +52,7 @@ const NotFound = () => {
             </Button>
             <Button
               onClick={() => navigate("/")}
-              className="bg-success hover:bg-success/90 gap-2"
+              className="cta-neon bg-success hover:bg-success/90 gap-2"
             >
               <Home className="h-4 w-4" />
               Ir al inicio

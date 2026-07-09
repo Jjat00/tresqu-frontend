@@ -352,25 +352,27 @@ const WaitlistForm = () => {
   };
   return (
     <section className="relative overflow-hidden min-h-screen flex items-center justify-center px-4 py-28 sm:py-32 bg-[#0a0a0a]">
-      {/* Glow verde sutil + separadores finos, estilo landing */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 55% 45% at 50% 30%, rgba(0,255,127,0.05) 0%, transparent 70%)",
-        }}
-      ></div>
+      {/* Atmósfera estilo landing: grid blueprint + auras de color */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-blueprint" />
+        <div className="absolute inset-0 section-aura-green" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 55% 45% at 50% 30%, rgba(0,255,127,0.05) 0%, transparent 70%)",
+          }}
+        />
+      </div>
       <div className="absolute top-0 left-0 right-0 h-px bg-white/5"></div>
       <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5"></div>
 
       <div className="container mx-auto max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-5">
-            Acceso
-          </span>
-          <h1 className="trii-title text-3xl sm:text-4xl text-white mb-4">
-            INICIA <span className="text-[#00FF7F] italic">SESIÓN</span>.
+          <span className="section-label mb-5">Acceso</span>
+          <h1 className="trii-title text-4xl sm:text-5xl text-white mb-4">
+            INICIA <span className="holo-text italic">SESIÓN</span>.
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base">
             Para usar Tresqu primero crea tu cuenta por WhatsApp o Telegram. Si
@@ -380,7 +382,7 @@ const WaitlistForm = () => {
 
         {/* Paso 1 — Crear cuenta */}
         <div className="mx-auto">
-          <Card className="bg-white/[0.02] border border-[#00FF7F]/25 rounded-lg shadow-none">
+          <Card className="holo-card holo-sheen hud-corners border-0 shadow-none">
             <CardContent className="pt-5 pb-5 px-4 sm:px-6">
               <div className="flex items-center gap-2.5 mb-3">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#00FF7F] text-black text-xs font-bold flex-shrink-0">
@@ -400,7 +402,7 @@ const WaitlistForm = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
-                  className="flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white transition-colors hover:cursor-pointer text-sm"
+                  className="cta-neon flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white hover:cursor-pointer text-sm"
                   onClick={() => {
                     window.open(SIGNUP_WHATSAPP_URL, "_blank");
                   }}
@@ -459,7 +461,7 @@ const WaitlistForm = () => {
 
         {/* Paso 2 — Iniciar sesión */}
         <div className="mx-auto">
-          <Card className="bg-white/[0.02] border border-white/[0.06] rounded-lg shadow-none">
+          <Card className="holo-card holo-sheen border-0 shadow-none">
             <CardHeader>
               <div className="flex items-center gap-2.5">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white text-xs font-bold flex-shrink-0">

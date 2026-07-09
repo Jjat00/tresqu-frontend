@@ -77,7 +77,7 @@ const DashboardLayout = ({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Dashboard header */}
-      <header className="border-b sticky top-0 z-30 bg-background">
+      <header className="border-b border-white/[0.06] sticky top-0 z-30 bg-background/75 backdrop-blur-xl">
         <div className="flex h-14 items-center justify-between px-4 lg:px-6">
           <div className="flex items-center gap-2">
             <a href="/" className="text-xl">
