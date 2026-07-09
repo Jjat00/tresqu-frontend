@@ -375,104 +375,20 @@ const WaitlistForm = () => {
             INICIA <span className="holo-text italic">SESIÓN</span>.
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base">
-            Para usar Tresqu primero crea tu cuenta por WhatsApp o Telegram. Si
-            ya la tienes, inicia sesión con tu número.
+            Entra con el número con el que usas Tresqu. ¿Aún no tienes cuenta?
+            Créala en un minuto por WhatsApp o Telegram.
           </p>
         </div>
 
-        {/* Paso 1 — Crear cuenta */}
+        {/* Principal — Iniciar sesión */}
         <div className="mx-auto">
           <Card className="holo-card holo-sheen hud-corners border-0 shadow-none">
-            <CardContent className="pt-5 pb-5 px-4 sm:px-6">
-              <div className="flex items-center gap-2.5 mb-3">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#00FF7F] text-black text-xs font-bold flex-shrink-0">
-                  1
-                </span>
-                <h3 className="text-sm sm:text-base font-semibold text-white">
-                  Crea tu cuenta
-                </h3>
-              </div>
-              <p className="text-sm text-zinc-400 mb-4">
-                ¿Primera vez en Tresqu? Necesitas crear tu cuenta desde nuestro
-                bot de WhatsApp o Telegram{" "}
-                <span className="text-zinc-200 font-medium">
-                  antes de poder iniciar sesión
-                </span>
-                .
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  className="cta-neon flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white hover:cursor-pointer text-sm"
-                  onClick={() => {
-                    window.open(SIGNUP_WHATSAPP_URL, "_blank");
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M14.05 4C18.37 4.07 21.93 7.63 22 11.95"></path>
-                    <path d="M14.05 8C16.15 8.07 17.93 9.85 18 11.95"></path>
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                  Crear por WhatsApp
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 bg-white/[0.03] border border-white/10 text-white font-semibold rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors hover:cursor-pointer text-sm"
-                  onClick={() => {
-                    window.open("https://t.me/tresqu_bot", "_blank");
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-[#0088cc]"
-                  >
-                    <path d="m22 2-7 20-4-9-9-4Z" />
-                    <path d="M22 2 11 13" />
-                  </svg>
-                  Crear por Telegram
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Conector de pasos */}
-        <div className="flex justify-center py-2" aria-hidden="true">
-          <div className="w-px h-5 bg-white/10"></div>
-        </div>
-
-        {/* Paso 2 — Iniciar sesión */}
-        <div className="mx-auto">
-          <Card className="holo-card holo-sheen border-0 shadow-none">
             <CardHeader>
-              <div className="flex items-center gap-2.5">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white text-xs font-bold flex-shrink-0">
-                  2
-                </span>
-                <CardTitle className="text-sm sm:text-base font-semibold text-white">
-                  Inicia sesión con tu número
-                </CardTitle>
-              </div>
-              <p className="text-xs text-zinc-500 mt-2 pl-[34px]">
-                Solo si ya creaste tu cuenta en el paso 1.
+              <CardTitle className="text-sm sm:text-base font-semibold text-white">
+                Inicia sesión con tu número
+              </CardTitle>
+              <p className="text-xs text-zinc-500 mt-1">
+                Te enviamos un código de verificación a tu chat.
               </p>
             </CardHeader>
             <CardContent className="pt-2 pb-6 px-4 sm:px-6">
@@ -607,7 +523,7 @@ const WaitlistForm = () => {
 
                       <Button
                         type="submit"
-                        className="w-full bg-[#00FF7F] hover:bg-white text-black font-semibold rounded-md mt-4 h-10 text-sm transition-colors"
+                        className="cta-neon w-full bg-[#00FF7F] hover:bg-white text-black font-semibold rounded-md mt-4 h-10 text-sm"
                         disabled={isSubmitting || isWhatsappLoading}
                       >
                         {isSubmitting || isWhatsappLoading
@@ -702,6 +618,81 @@ const WaitlistForm = () => {
                   </TabsContent>
                 </Tabs>
               )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Separador */}
+        <div className="flex items-center gap-3 py-5" aria-hidden="true">
+          <div className="h-px flex-1 bg-white/[0.06]" />
+          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-600">
+            ¿Primera vez?
+          </span>
+          <div className="h-px flex-1 bg-white/[0.06]" />
+        </div>
+
+        {/* Secundario — Crear cuenta */}
+        <div className="mx-auto">
+          <Card className="holo-card border-0 shadow-none">
+            <CardContent className="pt-4 pb-4 px-4 sm:px-6">
+              <p className="text-sm text-zinc-400 mb-3.5">
+                <span className="text-white font-medium">
+                  ¿Aún no tienes cuenta?
+                </span>{" "}
+                Créala desde nuestro bot de WhatsApp o Telegram y luego vuelve
+                aquí a iniciar sesión.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2.5">
+                <Button
+                  variant="outline"
+                  className="flex-1 inline-flex items-center justify-center gap-2 h-9 px-4 bg-white/[0.03] border border-[#00FF7F]/30 text-[#00FF7F] font-semibold rounded-md hover:bg-[#00FF7F]/10 hover:border-[#00FF7F]/50 transition-colors hover:cursor-pointer text-sm"
+                  onClick={() => {
+                    window.open(SIGNUP_WHATSAPP_URL, "_blank");
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M14.05 4C18.37 4.07 21.93 7.63 22 11.95"></path>
+                    <path d="M14.05 8C16.15 8.07 17.93 9.85 18 11.95"></path>
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  Crear por WhatsApp
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="flex-1 inline-flex items-center justify-center gap-2 h-9 px-4 bg-white/[0.03] border border-white/10 text-white font-semibold rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors hover:cursor-pointer text-sm"
+                  onClick={() => {
+                    window.open("https://t.me/tresqu_bot", "_blank");
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-[#0088cc]"
+                  >
+                    <path d="m22 2-7 20-4-9-9-4Z" />
+                    <path d="M22 2 11 13" />
+                  </svg>
+                  Crear por Telegram
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
