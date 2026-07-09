@@ -1,8 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import { isAuthenticated } from "@/services/authService";
 
-const WireframeTerrain = lazy(() => import("./WireframeTerrain"));
+const HeroScene = lazy(() => import("./HeroScene"));
 
 const Hero = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,41 +15,58 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
-      {/* Animated 3D wireframe terrain (lazy — Three.js loads in its own chunk) */}
+      {/* Escena 3D holográfica (lazy — Three.js carga en su propio chunk) */}
       <Suspense fallback={null}>
-        <WireframeTerrain />
+        <HeroScene />
       </Suspense>
 
-      {/* Readability vignette + top fade to black */}
+      {/* Viñeta de legibilidad + fade superior a negro */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 42%, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.45) 45%, transparent 75%), linear-gradient(to bottom, #0a0a0a 0%, transparent 22%)",
+            "radial-gradient(ellipse 58% 48% at 50% 44%, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.4) 45%, transparent 75%), linear-gradient(to bottom, #0a0a0a 0%, transparent 22%)",
         }}
       />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 sm:py-24 lg:py-28">
-        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+        <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
           {/* Text Content */}
           <div className="space-y-6 md:space-y-8 w-full">
-            {/* Eyebrow */}
-            <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium">
-              Tu equipo de agentes financieros
-            </span>
-
-            {/* Main Title */}
-            <div className="space-y-2 md:space-y-4">
-              <h1 className="trii-title text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1]">
-                SABE CÓMO{" "}
-                <span className="text-[#00FF7F] italic">VIVES</span>.
-                <br />
-                INVIERTE COMO ERES.
-              </h1>
+            {/* Eyebrow — chip terminal */}
+            <div className="animate-fade-up" style={{ animationDelay: "0.05s" }}>
+              <span className="terminal-chip">
+                <span className="dot" />
+                Tu equipo de agentes financieros
+              </span>
             </div>
 
+            {/* Main Title */}
+            <h1
+              className="trii-title text-[clamp(2.3rem,7vw,5.5rem)] text-white leading-[1.05] animate-fade-up"
+              style={{ animationDelay: "0.15s" }}
+            >
+              SABE CÓMO <span className="holo-text italic">VIVES</span>.
+              <br />
+              INVIERTE COMO{" "}
+              <span className="text-white relative inline-block">
+                ERES
+                <span
+                  className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #00FF7F, #22d3ee, #0D99FF)",
+                  }}
+                />
+              </span>
+              .
+            </h1>
+
             {/* Subtitle */}
-            <p className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+            <p
+              className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto animate-fade-up"
+              style={{ animationDelay: "0.3s" }}
+            >
               Tresqu es un equipo de agentes que registra tus gastos, entiende
               tus ingresos y usa todo ese contexto para invertir contigo en{" "}
               <a
@@ -63,7 +81,10 @@ const Hero = () => {
             </p>
 
             {/* CTAs */}
-            <div className="pt-2 space-y-4">
+            <div
+              className="pt-2 space-y-4 animate-fade-up"
+              style={{ animationDelay: "0.45s" }}
+            >
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
                 {/* Primary — WhatsApp */}
                 <button
@@ -73,7 +94,7 @@ const Hero = () => {
                       "_blank"
                     )
                   }
-                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-[#00FF7F] text-black font-semibold text-base sm:text-lg rounded-md hover:bg-white transition-colors duration-200"
+                  className="cta-neon inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-[#00FF7F] text-black font-semibold text-base sm:text-lg rounded-md hover:bg-white cursor-pointer"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -90,7 +111,7 @@ const Hero = () => {
                   onClick={() =>
                     window.open("https://t.me/tresqu_bot", "_blank")
                   }
-                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-white/[0.03] border border-white/10 text-white font-semibold text-base sm:text-lg rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200"
+                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-white/[0.03] backdrop-blur-sm border border-white/10 text-white font-semibold text-base sm:text-lg rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200 cursor-pointer"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -104,7 +125,7 @@ const Hero = () => {
               </div>
 
               {/* Micro-copy */}
-              <p className="text-zinc-500 text-sm">
+              <p className="text-zinc-500 text-sm font-mono tracking-wide">
                 Sin descargar apps. Empieza en menos de 30 segundos.
               </p>
 
@@ -131,8 +152,12 @@ const Hero = () => {
               </p>
             </div>
           </div>
-
         </div>
+      </div>
+
+      {/* Indicador de scroll */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+        <ChevronDown className="w-5 h-5 text-zinc-600 animate-scroll-hint" />
       </div>
     </section>
   );

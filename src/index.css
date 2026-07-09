@@ -465,6 +465,298 @@
   }
 }
 
+/* ── Capa futurista (landing) ─────────────────────────────────────────────
+   Sistema "holographic command deck": tarjetas holográficas, esquinas HUD,
+   texto con gradiente animado, marquee, grano y grids de fondo. */
+
+@property --holo-angle {
+  syntax: "<angle>";
+  initial-value: 135deg;
+  inherits: false;
+}
+
+@layer components {
+  /* Texto con gradiente animado verde → cyan → azul Wallbit */
+  .holo-text {
+    background: linear-gradient(
+      100deg,
+      #00ff7f 0%,
+      #22d3ee 35%,
+      #0d99ff 55%,
+      #22d3ee 75%,
+      #00ff7f 100%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: holo-shift 7s linear infinite;
+  }
+
+  @keyframes holo-shift {
+    to {
+      background-position: -250% 0;
+    }
+  }
+
+  /* Tarjeta holográfica: vidrio + borde conic-gradient que gira en hover */
+  .holo-card {
+    position: relative;
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(160deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 45%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .holo-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--holo-angle),
+      rgba(255, 255, 255, 0.14),
+      rgba(0, 255, 127, 0.35),
+      rgba(255, 255, 255, 0.06),
+      rgba(13, 153, 255, 0.3),
+      rgba(255, 255, 255, 0.14)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0.55;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .holo-card:hover::after {
+    opacity: 1;
+    animation: holo-rotate 3.2s linear infinite;
+  }
+
+  @keyframes holo-rotate {
+    to {
+      --holo-angle: 495deg;
+    }
+  }
+
+  /* Brillo superior sutil (sheen) para tarjetas holográficas */
+  .holo-sheen::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 45%;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+    pointer-events: none;
+  }
+
+  /* Esquinas HUD (brackets) */
+  .hud-corners {
+    position: relative;
+  }
+
+  .hud-corners::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    pointer-events: none;
+    --hud: rgba(0, 255, 127, 0.4);
+    background:
+      linear-gradient(var(--hud), var(--hud)) top left / 14px 1px,
+      linear-gradient(var(--hud), var(--hud)) top left / 1px 14px,
+      linear-gradient(var(--hud), var(--hud)) top right / 14px 1px,
+      linear-gradient(var(--hud), var(--hud)) top right / 1px 14px,
+      linear-gradient(var(--hud), var(--hud)) bottom left / 14px 1px,
+      linear-gradient(var(--hud), var(--hud)) bottom left / 1px 14px,
+      linear-gradient(var(--hud), var(--hud)) bottom right / 14px 1px,
+      linear-gradient(var(--hud), var(--hud)) bottom right / 1px 14px;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+  }
+
+  .hud-corners:hover::before {
+    opacity: 1;
+  }
+
+  /* Etiqueta de sección estilo terminal: "01 / CAPTURA" */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(0, 255, 127, 0.9);
+  }
+
+  .section-label::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 127, 0.7));
+  }
+
+  .section-label::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0, 255, 127, 0.7), transparent);
+  }
+
+  /* Chip terminal (eyebrow del hero) */
+  .terminal-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid rgba(0, 255, 127, 0.25);
+    border-radius: 999px;
+    background: rgba(0, 255, 127, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #00ff7f;
+  }
+
+  .terminal-chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #00ff7f;
+    box-shadow: 0 0 8px rgba(0, 255, 127, 0.9);
+    animation: chip-pulse 2s var(--ease-in-out) infinite;
+  }
+
+  @keyframes chip-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* CTA con aura neón */
+  .cta-neon {
+    box-shadow:
+      0 0 0 1px rgba(0, 255, 127, 0.4),
+      0 8px 32px -8px rgba(0, 255, 127, 0.45);
+    transition:
+      box-shadow var(--duration-normal) var(--ease-out),
+      transform var(--duration-normal) var(--ease-out),
+      background-color var(--duration-normal) var(--ease-out);
+  }
+
+  .cta-neon:hover {
+    box-shadow:
+      0 0 0 1px rgba(0, 255, 127, 0.7),
+      0 12px 48px -8px rgba(0, 255, 127, 0.65);
+    transform: translateY(-2px);
+  }
+
+  /* Marquee infinito (SocialProof) */
+  .marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 32s linear infinite;
+  }
+
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Fondos: grid blueprint con fade radial */
+  .bg-blueprint {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+  }
+
+  /* Grano de película (overlay global) */
+  .bg-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Aura de sección (nébulas de color muy sutiles) */
+  .section-aura-green {
+    background:
+      radial-gradient(ellipse 45% 40% at 15% 15%, rgba(0, 255, 127, 0.05), transparent 70%),
+      radial-gradient(ellipse 40% 35% at 85% 80%, rgba(34, 211, 238, 0.04), transparent 70%);
+  }
+
+  .section-aura-blue {
+    background:
+      radial-gradient(ellipse 45% 40% at 85% 10%, rgba(13, 153, 255, 0.06), transparent 70%),
+      radial-gradient(ellipse 40% 35% at 10% 85%, rgba(0, 255, 127, 0.04), transparent 70%);
+  }
+
+  /* Wordmark gigante en outline (footer) */
+  .text-outline-ghost {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+    user-select: none;
+  }
+
+  /* Indicador de scroll del hero */
+  @keyframes scroll-hint {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(8px); opacity: 0.25; }
+  }
+
+  .animate-scroll-hint {
+    animation: scroll-hint 2.2s var(--ease-in-out) infinite;
+  }
+
+  /* Flotación lenta para elementos decorativos */
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(2deg); }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 9s var(--ease-in-out) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .holo-text,
+    .marquee,
+    .terminal-chip .dot,
+    .animate-scroll-hint,
+    .animate-float-slow {
+      animation: none !important;
+    }
+
+    .holo-card:hover::after {
+      animation: none !important;
+    }
+
+    .cta-neon:hover {
+      transform: none !important;
+    }
+  }
+}
+
 #root {
   width: 100%;
   max-width: 100%;
