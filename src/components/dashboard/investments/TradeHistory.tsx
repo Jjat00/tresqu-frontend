@@ -26,6 +26,8 @@ import {
 import { useInvestments } from "@/hooks/useInvestments";
 import type { Investment, InvestmentAction } from "@/types/wallbit";
 
+import AssetLogo from "./AssetLogo";
+
 const ACTION_ICON: Record<InvestmentAction, React.ReactNode> = {
   BUY: <ShoppingCart className="h-3.5 w-3.5" />,
   SELL: <TrendingDown className="h-3.5 w-3.5" />,
@@ -146,6 +148,7 @@ const TradeHistory = () => {
                     {ACTION_ICON[inv.action]}
                     {ACTION_LABEL[inv.action]}
                   </Badge>
+                  {inv.symbol && <AssetLogo symbol={inv.symbol} size={22} />}
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate flex items-center gap-1.5">
                       {inv.symbol ||

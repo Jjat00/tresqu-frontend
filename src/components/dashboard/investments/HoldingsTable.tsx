@@ -20,6 +20,7 @@ import {
 import { useHoldings } from "@/hooks/useInvestments";
 import type { Holding } from "@/types/wallbit";
 
+import AssetLogo from "./AssetLogo";
 import HoldingDetailModal from "./HoldingDetailModal";
 
 const fmt = (value: string | number, opts: Intl.NumberFormatOptions = {}) => {
@@ -98,13 +99,16 @@ const HoldingsTable = () => {
                       className="cursor-pointer transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                     >
                       <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-semibold">{h.symbol}</span>
-                          {h.name && (
-                            <span className="text-[10px] text-muted-foreground truncate max-w-[140px]">
-                              {h.name}
-                            </span>
-                          )}
+                        <div className="flex items-center gap-2.5">
+                          <AssetLogo symbol={h.symbol} size={28} />
+                          <div className="flex flex-col">
+                            <span className="font-semibold">{h.symbol}</span>
+                            {h.name && (
+                              <span className="text-[10px] text-muted-foreground truncate max-w-[140px]">
+                                {h.name}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell className="text-right tabular-nums">

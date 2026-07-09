@@ -12,6 +12,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useHoldings } from "@/hooks/useInvestments";
 import { NEON_PALETTE as PALETTE } from "@/lib/chartColors";
 
+import AssetLogo from "./AssetLogo";
+
 const PortfolioDonut = () => {
   const { data, isLoading, error } = useHoldings();
 
@@ -60,16 +62,16 @@ const PortfolioDonut = () => {
                   data={slices}
                   innerRadius="55%"
                   outerRadius="90%"
-                  paddingAngle={2}
+                  paddingAngle={0}
                   dataKey="value"
+                  stroke="none"
                 >
                   {slices.map((s) => (
                     <Cell
                       key={s.name}
                       fill={s.fill}
-                      fillOpacity={0.22}
-                      stroke={s.fill}
-                      strokeWidth={1.5}
+                      fillOpacity={0.55}
+                      stroke="none"
                     />
                   ))}
                 </Pie>
@@ -98,6 +100,7 @@ const PortfolioDonut = () => {
                       className="h-2.5 w-2.5 rounded-sm shrink-0"
                       style={{ backgroundColor: s.fill }}
                     />
+                    <AssetLogo symbol={s.name} size={18} />
                     <span className="truncate font-medium">{s.name}</span>
                   </div>
                   <span className="text-muted-foreground">

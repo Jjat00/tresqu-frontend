@@ -85,7 +85,7 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
     <Card className="overflow-hidden h-full bg-transparent border-0 shadow-none">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col px-[15px]">
         <div className="flex justify-between items-center mb-1 xs:mb-2">
-          <h3 className="text-sm xs:text-base sm:text-lg font-semibold">{chartTitle}</h3>
+          <h3 className="text-xs sm:text-sm font-semibold text-foreground">{chartTitle}</h3>
           {data && <div className="text-xs text-muted-foreground">{data.filter_summary}</div>}
         </div>
         <div className="flex-1 min-h-[200px] flex items-center justify-center">
@@ -106,7 +106,7 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
             <p className="text-sm text-muted-foreground">No hay datos disponibles para este periodo</p>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={rechartsData} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
+              <BarChart data={rechartsData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis
                   dataKey="name"
@@ -122,9 +122,11 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "hsl(0 0% 7%)",
-                    border: "1px solid hsl(0 0% 14%)",
-                    borderRadius: "8px",
+                    backgroundColor: "rgba(10,10,10,0.75)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: "12px",
                     fontSize: "12px",
                   }}
                   formatter={(value: number, name: string) => [formatCurrency(value), name]}
@@ -136,8 +138,8 @@ const IncomeBarChart: React.FC<IncomeBarChartProps> = ({
                     dataKey={dataset.label}
                     stackId="stack"
                     fill={neonize(dataset.backgroundColor, i)}
-                    fillOpacity={0.85}
-                    radius={i === (data.datasets.length - 1) ? [2, 2, 0, 0] : [0, 0, 0, 0]}
+                    fillOpacity={0.55}
+                    radius={i === (data.datasets.length - 1) ? [4, 4, 0, 0] : [0, 0, 0, 0]}
                   />
                 ))}
               </BarChart>

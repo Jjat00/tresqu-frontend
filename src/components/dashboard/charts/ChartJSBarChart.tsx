@@ -115,7 +115,7 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
     <Card className="overflow-hidden h-full bg-transparent border-0 shadow-none">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 xs:px-3 sm:px-4 h-full flex flex-col px-[15px]">
         <div className="flex justify-between items-center mb-1 xs:mb-2">
-          <h3 className="text-sm xs:text-base sm:text-lg font-semibold">
+          <h3 className="text-xs sm:text-sm font-semibold text-foreground">
             {chartTitle}
           </h3>
           {data && (
@@ -140,15 +140,7 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
             <p className="text-sm text-muted-foreground">No hay datos disponibles para este periodo</p>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={rechartsData} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
-                <defs>
-                  {data?.datasets.map((dataset, i) => (
-                    <linearGradient key={`barGrad-${i}`} id={`barGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={neonize(dataset.backgroundColor, i)} stopOpacity={0.06} />
-                    </linearGradient>
-                  ))}
-                </defs>
+              <BarChart data={rechartsData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                 <XAxis
                   dataKey="name"
@@ -161,7 +153,7 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                   tick={{ fontSize: isMobile ? 9 : 11, fill: "rgba(255,255,255,0.4)" }}
                   axisLine={false}
                   tickLine={false}
-                  width={40}
+                  width={44}
                 />
                 <Tooltip
                   cursor={{ fill: "rgba(255,255,255,0.03)", radius: 6 }}
@@ -198,9 +190,8 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                     key={dataset.label}
                     dataKey={dataset.label}
                     stackId="stack"
-                    fill={`url(#barGrad-${i})`}
-                    stroke={neonize(dataset.backgroundColor, i)}
-                    strokeWidth={1}
+                    fill={neonize(dataset.backgroundColor, i)}
+                    fillOpacity={0.55}
                     radius={i === (data.datasets.length - 1) ? [4, 4, 0, 0] : [0, 0, 0, 0]}
                   />
                 ))}

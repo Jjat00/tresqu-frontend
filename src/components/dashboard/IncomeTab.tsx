@@ -304,10 +304,10 @@ const IncomeTab = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <div className="glass-card p-4 sm:p-5 animate-fade-up">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F]" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Total ingresos</span>
           </div>
-          <div className="text-lg sm:text-2xl font-semibold text-emerald-400 tracking-tight font-display">
+          <div className="text-lg sm:text-2xl font-semibold text-[#00FF7F] tracking-tight font-display">
             ${getTotalIncome().toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
@@ -317,10 +317,10 @@ const IncomeTab = ({
 
         <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.05s" }}>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Promedio Diario</span>
           </div>
-          <div className="text-lg sm:text-2xl font-semibold text-sky-400 tracking-tight font-display">
+          <div className="text-lg sm:text-2xl font-semibold text-[#22d3ee] tracking-tight font-display">
             ${calculateDailyAverage().toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
@@ -330,10 +330,10 @@ const IncomeTab = ({
 
         <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#b388ff]" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Categoría Principal</span>
           </div>
-          <div className="text-lg sm:text-2xl font-semibold text-violet-400 tracking-tight font-display truncate">
+          <div className="text-lg sm:text-2xl font-semibold text-[#b388ff] tracking-tight font-display truncate">
             {getMainCategory().name}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
@@ -343,10 +343,10 @@ const IncomeTab = ({
 
         <div className="glass-card p-4 sm:p-5 animate-fade-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#FFD60A]" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Registros</span>
           </div>
-          <div className="text-lg sm:text-2xl font-semibold text-amber-400 tracking-tight font-display">
+          <div className="text-lg sm:text-2xl font-semibold text-[#FFD60A] tracking-tight font-display">
             {getIncomeCount().toLocaleString("es-ES")}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">

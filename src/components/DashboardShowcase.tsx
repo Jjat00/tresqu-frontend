@@ -1,76 +1,162 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import TrendAreaChart from "@/components/dashboard/charts/TrendAreaChart";
-import PieChartDisplay from "@/components/dashboard/charts/PieChartDisplay";
-import type { DonutChartDataItem } from "@/hooks/useCategoryPieChartData";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ArrowRight, MousePointer2 } from "lucide-react";
+import navItems from "@/components/dashboard/DashboardSidebar";
+import ExpensesTab from "@/components/dashboard/ExpensesTab";
+import IncomeTab from "@/components/dashboard/IncomeTab";
+import InvestmentsTab from "@/components/dashboard/investments/InvestmentsTab";
+import {
+  demoDateRange,
+  seedDemoDashboard,
+} from "@/components/showcase/demoDashboardData";
 
-// ── Data de demostración (los componentes son los reales del dashboard) ─────
-const balanceTimeline = [
-  { fecha: "01/07", balance: 1250000 },
-  { fecha: "04/07", balance: 1980000 },
-  { fecha: "07/07", balance: 1720000 },
-  { fecha: "10/07", balance: 2540000 },
-  { fecha: "13/07", balance: 2310000 },
-  { fecha: "16/07", balance: 3080000 },
-  { fecha: "19/07", balance: 2890000 },
-  { fecha: "22/07", balance: 3640000 },
-  { fecha: "25/07", balance: 4120000 },
-  { fecha: "28/07", balance: 3970000 },
-  { fecha: "31/07", balance: 4560000 },
-];
+const VIEW_IDS = ["expenses", "income", "investments"] as const;
+type ViewId = (typeof VIEW_IDS)[number];
 
-const categoryData: DonutChartDataItem[] = [
-  { name: "Mercado", value: 620000, color: "#4ade80", textColor: "#fff" },
-  { name: "Restaurantes", value: 480000, color: "#f472b6", textColor: "#fff" },
-  { name: "Transporte", value: 310000, color: "#60a5fa", textColor: "#fff" },
-  { name: "Suscripciones", value: 190000, color: "#a78bfa", textColor: "#fff" },
-  { name: "Salidas", value: 360000, color: "#fbbf24", textColor: "#fff" },
-];
-
-const kpis = [
-  { label: "Ingresos del mes", value: "$6.5M", accent: "#00FF7F" },
-  { label: "Gastos del mes", value: "$1.96M", accent: "#FF2D95" },
-  { label: "Portfolio Wallbit", value: "$3,480 USD", accent: "#0D99FF" },
-];
-
-const compactCOP = (value: number) =>
-  value >= 1000000
-    ? `$${(value / 1000000).toFixed(1)}M`
-    : `$${Math.round(value / 1000)}K`;
-
-const noop = () => {};
-
-/** Fila de KPIs con el mismo Card del dashboard. */
-const KpiRow = ({ compact = false }: { compact?: boolean }) => (
-  <div className={`grid grid-cols-3 ${compact ? "gap-1.5" : "gap-2 sm:gap-3"}`}>
-    {kpis.map(({ label, value, accent }) => (
-      <Card key={label} className="rounded-md">
-        <CardContent
-          className={`min-h-0 justify-center ${compact ? "p-2" : "p-2.5 sm:p-4"}`}
-        >
-          <p
-            className={`text-muted-foreground truncate ${compact ? "text-[8px]" : "text-[9px] sm:text-[11px]"}`}
-          >
-            {label}
-          </p>
-          <p
-            className={`font-bold font-display tracking-tight ${compact ? "text-[11px]" : "text-xs sm:text-lg"}`}
-            style={{ color: accent }}
-          >
-            {value}
-          </p>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
+const demoViews = navItems.filter((item) =>
+  (VIEW_IDS as readonly string[]).includes(item.id),
 );
 
+const DWELL_MS = 9500; // tiempo que se queda cada vista (incluye auto-scroll)
+const TRAVEL_MS = 900; // viaje del cursor hasta el siguiente tab
+
 /**
- * Vitrina del producto: el dashboard real (mismos componentes, data de
- * demostración) dentro de marcos de navegador y de teléfono.
+ * Vitrina del producto: el dashboard REAL (los mismos tabs de Gastos,
+ * Ingresos e Inversiones) montado con un QueryClient sembrado con data de
+ * demostración — cero red. Un cursor simulado va haciendo clic entre vistas.
  */
 const DashboardShowcase = () => {
+  // QueryClient propio: enabled:false global → ningún hook llega a la red,
+  // todos leen la caché sembrada.
+  const [client] = useState(() => {
+    const qc = new QueryClient({
+      defaultOptions: {
+        queries: {
+          enabled: false,
+          retry: false,
+          staleTime: Infinity,
+          gcTime: Infinity,
+          refetchOnWindowFocus: false,
+        },
+      },
+    });
+    seedDemoDashboard(qc);
+    return qc;
+  });
+
+  const [activeView, setActiveView] = useState<ViewId>("expenses");
+  const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
+  const [clicking, setClicking] = useState(false);
+
+  const idxRef = useRef(0);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  // Con el mouse encima, el visitante toma el control: se pausa el ciclo y
+  // el auto-scroll para que pueda explorar la vista a su ritmo.
+  const pausedRef = useRef(false);
+  const scrollRafRef = useRef(0);
+
+  const cancelAutoScroll = () => cancelAnimationFrame(scrollRafRef.current);
+
+  // Recorre la vista de arriba a abajo con easing suave.
+  const startAutoScroll = (duration: number) => {
+    const el = contentRef.current;
+    if (!el) return;
+    cancelAutoScroll();
+    const max = el.scrollHeight - el.clientHeight;
+    if (max <= 0) return;
+    const from = el.scrollTop;
+    const start = performance.now();
+    const step = (now: number) => {
+      if (pausedRef.current) return;
+      const t = Math.min(1, (now - start) / duration);
+      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      el.scrollTop = from + (max - from) * eased;
+      if (t < 1) scrollRafRef.current = requestAnimationFrame(step);
+    };
+    scrollRafRef.current = requestAnimationFrame(step);
+  };
+
+  // Al cambiar de vista: volver arriba y recorrerla lentamente.
+  useEffect(() => {
+    const el = contentRef.current;
+    if (el) el.scrollTop = 0;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = window.setTimeout(
+      () => startAutoScroll(DWELL_MS - 4000),
+      1400,
+    );
+    return () => {
+      clearTimeout(t);
+      cancelAutoScroll();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startAutoScroll solo usa refs, es estable
+  }, [activeView]);
+
+  const moveCursorTo = (id: ViewId) => {
+    const chip = chipRefs.current[id];
+    const frame = frameRef.current;
+    if (!chip || !frame) return false;
+    const r = chip.getBoundingClientRect();
+    const f = frame.getBoundingClientRect();
+    setCursor({
+      x: r.left - f.left + r.width / 2,
+      y: r.top - f.top + r.height / 2,
+      visible: true,
+    });
+    return true;
+  };
+
+  // Ciclo automático: mover cursor → clic → cambiar vista → esperar.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let cancelled = false;
+    const timers: number[] = [];
+    const later = (fn: () => void, ms: number) => {
+      const t = window.setTimeout(() => {
+        if (!cancelled) fn();
+      }, ms);
+      timers.push(t);
+    };
+
+    const cycle = () => {
+      // Visitante explorando: reintentar en un momento sin cambiar de vista.
+      if (pausedRef.current) {
+        later(cycle, 1500);
+        return;
+      }
+      const nextIdx = (idxRef.current + 1) % VIEW_IDS.length;
+      const next = VIEW_IDS[nextIdx];
+      const moved = moveCursorTo(next);
+      later(
+        () => {
+          setClicking(true);
+          later(() => {
+            setClicking(false);
+            idxRef.current = nextIdx;
+            setActiveView(next);
+            later(cycle, DWELL_MS);
+          }, 280);
+        },
+        moved ? TRAVEL_MS : 0,
+      );
+    };
+
+    later(cycle, DWELL_MS);
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, []);
+
+  const selectView = (id: ViewId) => {
+    idxRef.current = VIEW_IDS.indexOf(id);
+    setActiveView(id);
+  };
+
   return (
     <section className="relative section-padding bg-[#0a0a0a] overflow-hidden">
       <div className="absolute inset-0 pointer-events-none section-aura-blue">
@@ -86,26 +172,35 @@ const DashboardShowcase = () => {
             ASÍ SE VE TU <span className="holo-text italic">DINERO</span>.
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
-            Todo lo que registras por chat aterriza en un dashboard en vivo:
-            balance, gastos por categoría e inversiones, en web y en tu
-            teléfono.
+            Este es el dashboard real de Tresqu: todo lo que registras por chat
+            aterriza aquí — gastos, ingresos e inversiones, en vivo. Y esto es
+            solo una parte.
           </p>
         </div>
 
-        {/* Composición: browser + teléfono superpuesto */}
-        <div className="relative max-w-5xl mx-auto lg:pr-40">
+        {/* Marco de navegador con el dashboard real adentro */}
+        <div className="relative max-w-6xl mx-auto">
           {/* Glow bajo la composición */}
           <div
             className="absolute -inset-8 pointer-events-none"
             aria-hidden="true"
             style={{
               background:
-                "radial-gradient(ellipse 60% 55% at 45% 55%, rgba(0,255,127,0.07), transparent 70%)",
+                "radial-gradient(ellipse 60% 55% at 50% 55%, rgba(0,255,127,0.06), transparent 70%)",
             }}
           />
 
-          {/* Marco de navegador (desktop) */}
-          <div className="holo-card holo-sheen relative overflow-hidden">
+          <div
+            ref={frameRef}
+            className="holo-card holo-sheen relative"
+            onMouseEnter={() => {
+              pausedRef.current = true;
+              cancelAutoScroll();
+            }}
+            onMouseLeave={() => {
+              pausedRef.current = false;
+            }}
+          >
             {/* Chrome del navegador */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-white/[0.06]">
               <div className="flex gap-1.5" aria-hidden="true">
@@ -115,121 +210,122 @@ const DashboardShowcase = () => {
               </div>
               <div className="flex-1 max-w-xs mx-auto px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-center">
                 <span className="text-[10px] font-mono text-zinc-500">
-                  tresqu.com/dashboard
+                  tresqu.com/dashboard/{activeView}
                 </span>
               </div>
               <div className="w-10" aria-hidden="true" />
             </div>
 
-            {/* Contenido: componentes reales del dashboard */}
-            <div className="p-3 sm:p-5 space-y-3 sm:space-y-4">
-              <KpiRow />
-              <div className="grid lg:grid-cols-5 gap-3 sm:gap-4">
-                <Card className="rounded-md lg:col-span-3">
-                  <CardContent className="min-h-0 p-3 sm:p-4 h-full flex flex-col">
-                    <p className="text-[11px] sm:text-xs font-semibold text-foreground mb-2">
-                      Balance acumulado — Julio
-                    </p>
-                    <div className="flex-1 min-h-[180px]">
-                      <TrendAreaChart
-                        data={balanceTimeline}
-                        dataKey="balance"
-                        xKey="fecha"
-                        seriesLabel="Balance"
-                        valueFormatter={compactCOP}
-                        yWidth={42}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="rounded-md lg:col-span-2 hidden sm:block">
-                  <CardContent className="min-h-0 p-3 sm:p-4 h-full flex flex-col">
-                    <p className="text-[11px] sm:text-xs font-semibold text-foreground mb-1">
-                      Gastos por categoría
-                    </p>
-                    <div className="flex-1 min-h-[250px]">
-                      <PieChartDisplay
-                        data={categoryData}
-                        onCategoryClick={noop}
-                        isLoading={false}
-                        error={null}
-                        filterSummary=""
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+            {/* Nav de secciones (los mismos items del sidebar real) */}
+            <div className="flex items-center gap-1 px-3 py-2 border-b border-white/[0.06]">
+              {demoViews.map((item) => {
+                const isActive = activeView === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    ref={(el) => {
+                      chipRefs.current[item.id] = el;
+                    }}
+                    onClick={() => selectView(item.id as ViewId)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                      isActive
+                        ? item.activeColor
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
+                  >
+                    <item.icon className="h-3.5 w-3.5" />
+                    {item.label}
+                  </button>
+                );
+              })}
+              <span className="ml-auto hidden sm:block text-[10px] font-mono text-zinc-600 pr-1">
+                julio 2026 · demo
+              </span>
             </div>
-          </div>
 
-          {/* Marco de teléfono (mobile) — superpuesto en desktop, apilado en mobile */}
-          <div className="lg:absolute lg:-right-4 lg:top-1/2 lg:-translate-y-1/2 mt-6 lg:mt-0 mx-auto lg:mx-0 w-[240px] animate-float-slow">
-            <div className="holo-card holo-sheen rounded-[2rem] p-2 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.8)]">
-              <div className="rounded-[1.6rem] bg-[#0a0a0a] border border-white/[0.06] overflow-hidden">
-                {/* Notch */}
-                <div className="flex justify-center pt-2 pb-1">
-                  <div className="w-16 h-1.5 rounded-full bg-white/10" />
+            {/* Contenido: tabs reales del dashboard (no interactivos) */}
+            <QueryClientProvider client={client}>
+              <div className="relative">
+                <div
+                  ref={contentRef}
+                  className="h-[560px] sm:h-[640px] overflow-y-auto overscroll-contain rounded-b-xl"
+                >
+                  <div
+                    key={activeView}
+                    className="p-3 sm:p-4 pointer-events-none select-none"
+                    aria-hidden="true"
+                  >
+                    {activeView === "expenses" && (
+                      <ExpensesTab
+                        selectedMonth="Julio"
+                        dateRange={demoDateRange}
+                        viewMode="month"
+                      />
+                    )}
+                    {activeView === "income" && (
+                      <IncomeTab
+                        selectedMonth="Julio"
+                        dateRange={demoDateRange}
+                        viewMode="week"
+                      />
+                    )}
+                    {activeView === "investments" && <InvestmentsTab />}
+                  </div>
                 </div>
-                {/* Mini header */}
-                <div className="flex items-center justify-between px-3 pb-2">
-                  <span className="text-xs font-bold font-display text-white">
-                    Tresqu
-                  </span>
-                  <span className="w-5 h-5 rounded-full bg-[#00FF7F]/15 border border-[#00FF7F]/30 text-[#00FF7F] text-[9px] font-bold flex items-center justify-center">
-                    J
-                  </span>
-                </div>
-                <div className="px-2.5 pb-3 space-y-2">
-                  <KpiRow compact />
-                  <Card className="rounded-md">
-                    <CardContent className="min-h-0 p-2">
-                      <p className="text-[9px] font-semibold text-foreground mb-1">
-                        Balance acumulado
-                      </p>
-                      <div className="h-[110px]">
-                        <TrendAreaChart
-                          data={balanceTimeline}
-                          dataKey="balance"
-                          xKey="fecha"
-                          seriesLabel="Balance"
-                          valueFormatter={compactCOP}
-                          showYAxis={false}
-                          showXAxis={false}
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="rounded-md">
-                    <CardContent className="min-h-0 p-2 space-y-1.5">
-                      {categoryData.slice(0, 3).map((c) => (
-                        <div
-                          key={c.name}
-                          className="flex items-center justify-between text-[9px]"
-                        >
-                          <span className="flex items-center gap-1.5 text-zinc-400">
-                            <span
-                              className="w-1.5 h-1.5 rounded-full"
-                              style={{ backgroundColor: c.color }}
-                            />
-                            {c.name}
-                          </span>
-                          <span className="text-white font-medium">
-                            {compactCOP(c.value)}
-                          </span>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </div>
+                {/* Fade inferior: indica que hay más contenido al hacer scroll */}
+                <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none rounded-b-xl" />
               </div>
-            </div>
+            </QueryClientProvider>
+
+            {/* Cursor simulado */}
+            {cursor.visible && (
+              <div
+                className="absolute z-30 pointer-events-none hidden md:block"
+                style={{
+                  left: cursor.x,
+                  top: cursor.y,
+                  transition:
+                    "left 0.85s cubic-bezier(0.16,1,0.3,1), top 0.85s cubic-bezier(0.16,1,0.3,1)",
+                }}
+                aria-hidden="true"
+              >
+                <span
+                  className={`absolute -inset-3 rounded-full border-2 border-[#00FF7F]/70 transition-all duration-200 ${
+                    clicking ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                  }`}
+                />
+                <MousePointer2 className="w-5 h-5 -translate-x-1 -translate-y-0.5 text-white fill-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" />
+              </div>
+            )}
           </div>
         </div>
 
+        {/* Esto es solo una muestra — lo que también hay adentro */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-8 max-w-3xl mx-auto">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 w-full sm:w-auto text-center">
+            Una pequeña muestra — también:
+          </span>
+          {[
+            "Resumen de inicio",
+            "Categorías",
+            "Integraciones Gmail y Wallbit",
+            "Chat con el equipo de agentes",
+            "Perfil de riesgo",
+            "y mucho más",
+          ].map((item) => (
+            <span
+              key={item}
+              className="px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.02] text-[11px] text-zinc-400"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+
         {/* Micro-copy + CTA */}
-        <div className="text-center mt-10 lg:mt-14">
+        <div className="text-center mt-8">
           <p className="text-zinc-600 text-xs font-mono tracking-wide mb-5">
-            Interfaz real del dashboard · datos de demostración
+            Dashboard real de Tresqu · datos de demostración
           </p>
           <Link
             to="/login"

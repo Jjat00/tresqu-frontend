@@ -53,7 +53,7 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
     <Card className="overflow-hidden h-full flex flex-col bg-transparent border-0 shadow-none">
       <CardContent className="pt-3 xs:pt-4 sm:pt-6 px-2 xs:px-3 sm:px-4 h-full flex flex-col grow">
         <div className="flex justify-between items-center mb-1 xs:mb-2">
-          <h3 className="xs:text-base sm:text-lg text-sm font-semibold">
+          <h3 className="text-xs sm:text-sm font-semibold text-foreground">
             Ingresos por Categoría
           </h3>
           {chartData?.filter_summary && (
@@ -79,7 +79,7 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                   cy="50%"
                   innerRadius={isMobile ? 30 : 55}
                   outerRadius={isMobile ? 55 : 85}
-                  paddingAngle={2}
+                  paddingAngle={0}
                   dataKey="value"
                   nameKey="name"
                   label={({ name, percent }) => {
@@ -98,9 +98,8 @@ const IncomeCategoryChart: React.FC<IncomeCategoryChartProps> = ({
                     <Cell
                       key={`cell-${index}`}
                       fill={neonize(entry.color, index)}
-                      fillOpacity={0.22}
-                      stroke={neonize(entry.color, index)}
-                      strokeWidth={1.5}
+                      fillOpacity={0.55}
+                      stroke="none"
                     />
                   ))}
                 </Pie>

@@ -58,32 +58,24 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
     <div className="flex-1 min-h-[250px] sm:min-h-[300px] flex items-center justify-center h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <defs>
-            {data.map((entry, i) => (
-              <linearGradient key={`grad-${i}`} id={`pieGrad-${i}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor={neonize(entry.color, i)} stopOpacity={0.3} />
-                <stop offset="100%" stopColor={neonize(entry.color, i)} stopOpacity={0.08} />
-              </linearGradient>
-            ))}
-          </defs>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
             innerRadius={isMobile ? 40 : 65}
             outerRadius={isMobile ? 65 : 95}
-            paddingAngle={3}
+            paddingAngle={0}
             dataKey="value"
             nameKey="name"
-            cornerRadius={4}
+            stroke="none"
             onClick={(d) => onCategoryClick(d.name)}
           >
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={`url(#pieGrad-${index})`}
-                stroke={neonize(entry.color, index)}
-                strokeWidth={1.5}
+                fill={neonize(entry.color, index)}
+                fillOpacity={0.55}
+                stroke="none"
                 style={{ cursor: "pointer" }}
               />
             ))}
