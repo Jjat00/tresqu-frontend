@@ -222,7 +222,7 @@ const WhatsAppFeatures = () => {
             <span className="section-label mb-6">
               01 · Disponible en WhatsApp
             </span>
-            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white">
+            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
               REGISTRA COMO{" "}
               <span className="holo-text italic">PREFIERAS</span>,
               <br />

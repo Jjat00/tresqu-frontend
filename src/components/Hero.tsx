@@ -25,7 +25,7 @@ const Hero = () => {
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 58% 48% at 50% 44%, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.4) 45%, transparent 75%), linear-gradient(to bottom, #0a0a0a 0%, transparent 22%)",
+            "radial-gradient(ellipse 58% 48% at 50% 44%, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.4) 45%, transparent 75%), radial-gradient(ellipse 55% 32% at 50% 86%, rgba(10,10,10,0.75) 0%, transparent 70%), linear-gradient(to bottom, #0a0a0a 0%, transparent 22%)",
         }}
       />
 
@@ -33,14 +33,6 @@ const Hero = () => {
         <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
           {/* Text Content */}
           <div className="space-y-6 md:space-y-8 w-full">
-            {/* Eyebrow — chip terminal */}
-            <div className="animate-fade-up" style={{ animationDelay: "0.05s" }}>
-              <span className="terminal-chip">
-                <span className="dot" />
-                Tu equipo de agentes financieros
-              </span>
-            </div>
-
             {/* Main Title */}
             <h1
               className="trii-title text-[clamp(2.3rem,7vw,5.5rem)] text-white leading-[1.05] animate-fade-up"

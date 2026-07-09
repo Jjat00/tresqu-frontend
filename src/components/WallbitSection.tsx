@@ -119,7 +119,7 @@ const WallbitSection = () => {
               </span>
             </div>
 
-            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
+            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
               TU COPILOTO,
               <br />
               NO TU <span className="holo-text italic">CUADERNO</span>.

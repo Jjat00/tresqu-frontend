@@ -67,7 +67,7 @@ const Benefits = () => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
             <span className="section-label mb-6">06 · Beneficios</span>
-            <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white">
+            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
               POR QUÉ UN <span className="holo-text italic">AGENTE</span>,
               <br />
               NO UNA APP.

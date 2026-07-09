@@ -164,10 +164,9 @@ const AgentTeam = () => {
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
           <span className="section-label mb-6">04 · El equipo de agentes</span>
-          <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
-            UN EQUIPO QUE
-            <br />
-            DECIDE <span className="holo-text italic">CONTIGO</span>.
+          <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6 text-balance">
+            UN EQUIPO QUE DECIDE{" "}
+            <span className="holo-text italic">CONTIGO</span>.
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
             Detrás de cada mensaje, Tresqu coordina a un equipo de agentes
