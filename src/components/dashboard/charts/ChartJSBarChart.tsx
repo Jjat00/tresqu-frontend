@@ -166,7 +166,9 @@ const ChartJSBarChart: React.FC<ChartJSBarChartProps> = ({
                 <Tooltip
                   cursor={{ fill: "rgba(255,255,255,0.03)", radius: 6 }}
                   contentStyle={{
-                    background: "hsl(0 0% 4%)",
+                    background: "rgba(10,10,10,0.75)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
                     border: "1px solid rgba(255,255,255,0.08)",
                     borderRadius: "12px",
                     fontSize: "12px",

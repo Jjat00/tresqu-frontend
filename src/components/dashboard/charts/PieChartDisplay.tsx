@@ -99,9 +99,9 @@ const PieChartDisplay: React.FC<PieChartDisplayProps> = ({
 
                 return (
                   <div
-                    className="px-3 py-2.5 rounded-xl text-xs"
+                    className="px-3 py-2.5 rounded-xl text-xs backdrop-blur-xl"
                     style={{
-                      background: "hsl(0 0% 4%)",
+                      background: "rgba(10,10,10,0.75)",
                       border: "1px solid rgba(255,255,255,0.08)",
                     }}
                   >
