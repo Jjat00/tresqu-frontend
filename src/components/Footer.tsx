@@ -73,6 +73,15 @@ const Footer = () => {
                     Todas las funciones
                   </Link>
                 </li>
+                <li>
+                  {/* <a> nativo, no <Link>: /blog/ es una página estática fuera del SPA */}
+                  <a
+                    href="/blog/"
+                    className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
+                  >
+                    Blog
+                  </a>
+                </li>
                 {[
                   { label: "Beneficios", href: "#beneficios" },
                   // Oculto hasta tener los pagos configurados (reactivar junto con la sección Pricing)

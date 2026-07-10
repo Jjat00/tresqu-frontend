@@ -45,3 +45,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://tresqu.com/sitemap.xml
+Sitemap: https://tresqu.com/sitemap-index.xml
