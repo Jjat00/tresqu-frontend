@@ -25,3 +25,6 @@ dist-ssr
 
 .env
 .mcp.json   __pycache__/
+
+# Wrangler (server local de Cloudflare Pages)
+.wrangler/
