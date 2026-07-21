@@ -3,13 +3,15 @@ import { Link, useLocation } from "react-router-dom";
 import { isAuthenticated } from "@/services/authService";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
+import { pathFor, routeKeyFromPath, useLocale } from "@/i18n";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  const locale = useLocale();
+  const isHomePage = routeKeyFromPath(location.pathname) === "home";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +49,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link
-            to="/"
+            to={pathFor("home", locale)}
             className="group flex items-center hover:scale-105 transition-transform duration-500"
           >
             <Logo size="md" />
@@ -81,7 +83,7 @@ const Header = () => {
               {/* Botón CTA */}
               <div className="hidden lg:block">
                 <Link
-                  to={isLoggedIn ? "/dashboard" : "/login"}
+                  to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
                   className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(0,255,127,0.4)] transition-all duration-200"
                 >
                   {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
@@ -103,7 +105,7 @@ const Header = () => {
             </>
           ) : (
             <Link
-              to="/"
+              to={pathFor("home", locale)}
               className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-full border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
             >
               Regresar al inicio
@@ -137,7 +139,7 @@ const Header = () => {
             )}
             <div className="pt-4 mt-2 border-t border-white/[0.06]">
               <Link
-                to={isLoggedIn ? "/dashboard" : "/login"}
+                to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
                 className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] transition-colors duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
