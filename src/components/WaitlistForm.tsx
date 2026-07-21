@@ -19,12 +19,8 @@ import { requestTelegramCode, saveAuthTokens } from "@/services/authService";
 import { AuthResponse } from "@/types/auth";
 import { useWhatsappAuth } from "@/hooks/useWhatsappAuth";
 import { AxiosError } from "axios";
-
-const SIGNUP_WHATSAPP_URL =
-  "https://wa.me/573116534337?text=" +
-  encodeURIComponent(
-    "Hola Tresqu quiero crear mi cuenta y tener control de mis finanzas e inversiones"
-  );
+import { useCopy } from "@/i18n";
+import { authCopy } from "@/i18n/copy/auth";
 
 const isAccountNotFoundError = (err: unknown): boolean => {
   const axiosError = err as AxiosError<{ code?: string }> | undefined;
@@ -192,6 +188,10 @@ const onlyDigits = (value: string) => value.replace(/\D/g, "");
 
 const WaitlistForm = () => {
   const navigate = useNavigate();
+  const copy = useCopy(authCopy);
+  const signupWhatsappUrl =
+    "https://wa.me/573116534337?text=" +
+    encodeURIComponent(copy.signupWhatsappText);
   const [activeTab, setActiveTab] = useState("whatsapp");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [telegramPhone, setTelegramPhone] = useState("");
@@ -244,7 +244,7 @@ const WaitlistForm = () => {
     if (activeTab === "telegram") {
       // Verificar que el número de teléfono no esté vacío
       if (!telegramPhone) {
-        toast.error("Por favor ingresa un número de teléfono válido");
+        toast.error(copy.errInvalidPhone);
         setIsSubmitting(false);
         return;
       }
@@ -267,16 +267,14 @@ const WaitlistForm = () => {
           setPhoneHistory(loadPhoneHistory());
           setVerificationStep(true);
         } else {
-          toast.error("Error al solicitar el código de verificación");
+          toast.error(copy.errRequestCode);
         }
       } catch (error) {
         console.error("Error al solicitar código:", error);
         if (isAccountNotFoundError(error)) {
           setAccountNotFound(formattedPhoneNumber);
         } else {
-          toast.error(
-            "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
-          );
+          toast.error(copy.errRequestCodeRetry);
         }
       } finally {
         setIsSubmitting(false);
@@ -284,7 +282,7 @@ const WaitlistForm = () => {
     } else if (activeTab === "whatsapp") {
       // Verificar que el número de teléfono no esté vacío
       if (!phoneNumber) {
-        toast.error("Por favor ingresa un número de teléfono válido");
+        toast.error(copy.errInvalidPhone);
         setIsSubmitting(false);
         return;
       }
@@ -308,7 +306,7 @@ const WaitlistForm = () => {
           if (response.message) {
             toast.success(response.message);
           } else {
-            toast.success("Código enviado a tu WhatsApp");
+            toast.success(copy.codeSentWhatsapp);
           }
 
           savePhoneEntry("whatsapp", {
@@ -319,16 +317,14 @@ const WaitlistForm = () => {
           // Avanzar al paso de verificación
           setVerificationStep(true);
         } else {
-          toast.error("Error al solicitar el código de verificación");
+          toast.error(copy.errRequestCode);
         }
       } catch (error) {
         console.error("Error al solicitar código WhatsApp:", error);
         if (isAccountNotFoundError(error)) {
           setAccountNotFound(formattedPhoneNumber);
         } else {
-          toast.error(
-            "Error al solicitar el código de verificación. Por favor, inténtalo de nuevo."
-          );
+          toast.error(copy.errRequestCodeRetry);
         }
       } finally {
         setIsSubmitting(false);
@@ -370,13 +366,13 @@ const WaitlistForm = () => {
       <div className="container mx-auto max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <span className="section-label mb-5">Acceso</span>
+          <span className="section-label mb-5">{copy.accessLabel}</span>
           <h1 className="trii-title text-4xl sm:text-5xl text-white mb-4">
-            INICIA <span className="holo-text italic">SESIÓN</span>.
+            {copy.title.pre}{" "}
+            <span className="holo-text italic">{copy.title.holo}</span>.
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base">
-            Entra con el número con el que usas Tresqu. ¿Aún no tienes cuenta?
-            Créala en un minuto por WhatsApp o Telegram.
+            {copy.intro}
           </p>
         </div>
 
@@ -385,41 +381,40 @@ const WaitlistForm = () => {
           <Card className="holo-card holo-sheen hud-corners border-0 shadow-none">
             <CardHeader>
               <CardTitle className="text-sm sm:text-base font-semibold text-white">
-                Inicia sesión con tu número
+                {copy.cardTitle}
               </CardTitle>
               <p className="text-xs text-zinc-500 mt-1">
-                Te enviamos un código de verificación a tu chat.
+                {copy.cardSubtitle}
               </p>
             </CardHeader>
             <CardContent className="pt-2 pb-6 px-4 sm:px-6">
               {accountNotFound ? (
                 <div className="flex flex-col items-center text-center gap-4 py-2">
                   <p className="text-sm text-zinc-300">
-                    No encontramos una cuenta asociada a{" "}
+                    {copy.notFoundPre}
                     <span className="font-semibold text-white">
                       {accountNotFound}
                     </span>
                     .
                   </p>
                   <p className="text-xs sm:text-sm text-zinc-500">
-                    Para crear tu cuenta, escríbenos por WhatsApp y empezamos de
-                    inmediato.
+                    {copy.notFoundHelp}
                   </p>
                   <Button
                     type="button"
                     className="w-full bg-[#00FF7F] hover:bg-white text-black font-semibold rounded-md h-10 text-sm transition-colors hover:cursor-pointer"
                     onClick={() => {
-                      window.open(SIGNUP_WHATSAPP_URL, "_blank");
+                      window.open(signupWhatsappUrl, "_blank");
                     }}
                   >
-                    Crear cuenta por WhatsApp
+                    {copy.notFoundCta}
                   </Button>
                   <button
                     type="button"
                     onClick={() => setAccountNotFound(null)}
                     className="text-xs text-zinc-500 underline hover:text-white transition-colors"
                   >
-                    Usar otro número
+                    {copy.notFoundOther}
                   </button>
                 </div>
               ) : verificationStep ? (
@@ -462,7 +457,7 @@ const WaitlistForm = () => {
                           htmlFor="whatsapp-number"
                           className="text-zinc-300 font-medium text-sm"
                         >
-                          Número de WhatsApp
+                          {copy.whatsappNumberLabel}
                         </Label>
                         <div className="flex gap-2">
                           <div className="w-1/3">
@@ -471,7 +466,7 @@ const WaitlistForm = () => {
                               onValueChange={setCountryCode}
                             >
                               <SelectTrigger className="bg-white/[0.03] border-white/10 h-9 text-sm">
-                                <SelectValue placeholder="Código" />
+                                <SelectValue placeholder={copy.codePlaceholder} />
                               </SelectTrigger>
                               <SelectContent className="bg-[#0f0f0f] border-white/10 text-sm">
                                 {countryCodes.map((country) => (
@@ -498,7 +493,7 @@ const WaitlistForm = () => {
                               pattern="[0-9]*"
                               autoComplete="tel-national"
                               list="whatsapp-number-history"
-                              placeholder="Número sin código"
+                              placeholder={copy.numberPlaceholder}
                               value={phoneNumber}
                               onChange={(e) => {
                                 setPhoneNumber(onlyDigits(e.target.value));
@@ -517,7 +512,7 @@ const WaitlistForm = () => {
                           </div>
                         </div>
                         <p className="text-xs text-zinc-500">
-                          Ingresa tu número sin el código de país
+                          {copy.numberHelp}
                         </p>
                       </div>
 
@@ -527,12 +522,12 @@ const WaitlistForm = () => {
                         disabled={isSubmitting || isWhatsappLoading}
                       >
                         {isSubmitting || isWhatsappLoading
-                          ? "Procesando..."
-                          : "Ver mi dashboard"}
+                          ? copy.submitBusy
+                          : copy.submitIdle}
                       </Button>
 
                       <p className="text-xs text-center text-zinc-600 mt-3">
-                        Al continuar, aceptas nuestros términos de servicio
+                        {copy.termsNote}
                       </p>
                     </form>
                   </TabsContent>
@@ -544,7 +539,7 @@ const WaitlistForm = () => {
                           htmlFor="telegram-phone"
                           className="text-zinc-300 font-medium text-sm"
                         >
-                          Número de teléfono
+                          {copy.phoneNumberLabel}
                         </Label>
                         <div className="flex gap-2">
                           <div className="w-1/3">
@@ -553,7 +548,7 @@ const WaitlistForm = () => {
                               onValueChange={setTelegramCountryCode}
                             >
                               <SelectTrigger className="bg-white/[0.03] border-white/10 h-9 text-sm">
-                                <SelectValue placeholder="Código" />
+                                <SelectValue placeholder={copy.codePlaceholder} />
                               </SelectTrigger>
                               <SelectContent className="bg-[#0f0f0f] border-white/10 text-sm">
                                 {countryCodes.map((country) => (
@@ -580,7 +575,7 @@ const WaitlistForm = () => {
                               pattern="[0-9]*"
                               autoComplete="tel-national"
                               list="telegram-number-history"
-                              placeholder="Número sin código"
+                              placeholder={copy.numberPlaceholder}
                               value={telegramPhone}
                               onChange={(e) => {
                                 setTelegramPhone(onlyDigits(e.target.value));
@@ -599,7 +594,7 @@ const WaitlistForm = () => {
                           </div>
                         </div>
                         <p className="text-xs text-zinc-500">
-                          Ingresa tu número sin el código de país
+                          {copy.numberHelp}
                         </p>
                       </div>
 
@@ -608,11 +603,11 @@ const WaitlistForm = () => {
                         className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white font-semibold rounded-md mt-4 h-10 text-sm transition-colors hover:cursor-pointer"
                         disabled={isSubmitting}
                       >
-                        {isSubmitting ? "Procesando..." : "Ver mi dashboard"}
+                        {isSubmitting ? copy.submitBusy : copy.submitIdle}
                       </Button>
 
                       <p className="text-xs text-center text-zinc-600 mt-3">
-                        Al continuar, aceptas nuestros términos de servicio
+                        {copy.termsNote}
                       </p>
                     </form>
                   </TabsContent>
@@ -626,7 +621,7 @@ const WaitlistForm = () => {
         <div className="flex items-center gap-3 py-5" aria-hidden="true">
           <div className="h-px flex-1 bg-white/[0.06]" />
           <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-600">
-            ¿Primera vez?
+            {copy.firstTime}
           </span>
           <div className="h-px flex-1 bg-white/[0.06]" />
         </div>
@@ -637,17 +632,16 @@ const WaitlistForm = () => {
             <CardContent className="pt-4 pb-4 px-4 sm:px-6">
               <p className="text-sm text-zinc-400 mb-3.5">
                 <span className="text-white font-medium">
-                  ¿Aún no tienes cuenta?
-                </span>{" "}
-                Créala hablando con Tresqu por WhatsApp o Telegram y luego
-                vuelve aquí a iniciar sesión.
+                  {copy.createIntroStrong}
+                </span>
+                {copy.createIntroRest}
               </p>
               <div className="flex flex-col sm:flex-row gap-2.5">
                 <Button
                   variant="outline"
                   className="flex-1 inline-flex items-center justify-center gap-2 h-9 px-4 bg-white/[0.03] border border-[#00FF7F]/30 text-[#00FF7F] font-semibold rounded-md hover:bg-[#00FF7F]/10 hover:border-[#00FF7F]/50 transition-colors hover:cursor-pointer text-sm"
                   onClick={() => {
-                    window.open(SIGNUP_WHATSAPP_URL, "_blank");
+                    window.open(signupWhatsappUrl, "_blank");
                   }}
                 >
                   <svg
@@ -665,7 +659,7 @@ const WaitlistForm = () => {
                     <path d="M14.05 8C16.15 8.07 17.93 9.85 18 11.95"></path>
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                   </svg>
-                  Crear por WhatsApp
+                  {copy.createWhatsApp}
                 </Button>
 
                 <Button
@@ -690,7 +684,7 @@ const WaitlistForm = () => {
                     <path d="m22 2-7 20-4-9-9-4Z" />
                     <path d="M22 2 11 13" />
                   </svg>
-                  Crear por Telegram
+                  {copy.createTelegram}
                 </Button>
               </div>
             </CardContent>

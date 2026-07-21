@@ -9,6 +9,8 @@ import { verifyTelegramCode } from "@/services/authService";
 import { verifyWhatsappCode } from "@/services/whatsappAuthService";
 import { AuthResponse } from "@/types/auth";
 import { toast } from "sonner";
+import { useCopy } from "@/i18n";
+import { authCopy } from "@/i18n/copy/auth";
 
 interface VerificationCodeFormProps {
   phoneNumber: string;
@@ -23,6 +25,7 @@ const VerificationCodeForm = ({
   onCancel,
   authMethod,
 }: VerificationCodeFormProps) => {
+  const copy = useCopy(authCopy);
   const [verificationCode, setVerificationCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const timeoutMessageRef = useRef<HTMLParagraphElement>(null);
@@ -41,7 +44,7 @@ const VerificationCodeForm = ({
     e.preventDefault();
 
     if (verificationCode.length !== 6) {
-      toast.error("Por favor ingresa un código válido de 6 dígitos");
+      toast.error(copy.errInvalidCode6);
       return;
     }
 
@@ -74,18 +77,14 @@ const VerificationCodeForm = ({
       }
 
       if (response && response.access) {
-        toast.success("¡Verificación exitosa! Redirigiendo al dashboard...");
+        toast.success(copy.verifySuccess);
         onVerificationSuccess(response);
       } else {
-        toast.error(
-          "Código de verificación inválido. Por favor, inténtalo de nuevo."
-        );
+        toast.error(copy.errWrongCode);
       }
     } catch (error) {
       console.error("Error al verificar el código:", error);
-      toast.error(
-        "Error al verificar el código. Por favor, inténtalo de nuevo."
-      );
+      toast.error(copy.errVerify);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,11 +102,12 @@ const VerificationCodeForm = ({
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-white">
-        Ingresa el código de verificación
+        {copy.verifyTitle}
       </h3>
       <p className="text-sm text-zinc-400">
-        Hemos enviado un código de verificación a tu cuenta de{" "}
-        {messagingService} asociada al número{" "}
+        {copy.verifySentPre}
+        {messagingService}
+        {copy.verifySentMid}
         <span className="font-medium">{phoneNumber}</span>
       </p>
 
@@ -115,8 +115,9 @@ const VerificationCodeForm = ({
         ref={timeoutMessageRef}
         className="text-sm text-amber-500 font-medium hidden animate-fade-in"
       >
-        ¿No has recibido el código? Verifica que el número {phoneNumber} sea
-        correcto o intenta solicitar un nuevo código.
+        {copy.verifyTimeoutPre}
+        {phoneNumber}
+        {copy.verifyTimeoutPost}
       </p>
 
       <form onSubmit={handleVerifyCode} className="space-y-6">
@@ -146,14 +147,14 @@ const VerificationCodeForm = ({
             className="flex-1"
             disabled={isSubmitting}
           >
-            Volver
+            {copy.verifyBack}
           </Button>
           <Button
             type="submit"
             className={`flex-1 ${buttonColorClass} font-semibold`}
             disabled={isSubmitting || verificationCode.length !== 6}
           >
-            {isSubmitting ? "Verificando..." : "Verificar código"}
+            {isSubmitting ? copy.verifySubmitBusy : copy.verifySubmitIdle}
           </Button>
         </div>
       </form>
