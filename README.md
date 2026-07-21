@@ -362,6 +362,24 @@ de mercado.
 
 ---
 
+## Internacionalización (ES/EN)
+
+El sitio público es bilingüe: `/` (español, por defecto) y `/en/*` (inglés: `/en`, `/en/features`, `/en/login`). La app privada (dashboard), las páginas legales y el blog son solo en español.
+
+**Arquitectura** (sin librería i18n — diccionarios TypeScript tipados):
+
+- `src/i18n/routes.ts` — tabla central de rutas ES↔EN (`localizedRoutes`). Única fuente de verdad para `<Route>`, links internos, selector de idioma y canonical/hreflang.
+- `src/i18n/copy/` — un diccionario `Dict<T> = Record<"es" | "en", T>` por componente/página. Si falta una clave en un idioma, no compila. Reglas de traducción en `src/i18n/copy/README.md`.
+- `src/i18n/boot.ts` — detección de idioma en la **primera visita** (`navigator.language`), con exclusión de crawlers (Googlebot vería `/` redirigir a `/en` sin ella) y preferencia persistida en `localStorage["tresqu:locale"]`. Corre en `main.tsx` antes de `root.render`.
+- `src/components/Seo.tsx` — title/description/canonical/hreflang por ruta usando el hoisting de `<title>`/`<meta>` de React 19; elimina los tags `data-seo-static` del shell al montar.
+- `en/index.html` — **shell inglés** para crawlers sin JS (meta, JSON-LD y fallback `#root` en inglés). Vite lo emite como `dist/en/index.html` (segundo entry) y Cloudflare lo sirve para `/en/*` vía `public/_redirects`.
+
+**Espejos que mantener en sync al cambiar copy público**: diccionarios de `src/i18n/copy/` ↔ fallbacks `#root` de `index.html` y `en/index.html` ↔ `public/llms.txt` (sección ES + sección `## English`) ↔ FAQPage del JSON-LD de ambos shells.
+
+**Verificación de routing real**: `vite preview` no lee `_redirects`; usar `npx wrangler pages dev dist` y comprobar `curl -s localhost:8788/en/features | grep '<html lang'` → `en`.
+
+---
+
 ## Estructura del proyecto
 
 ```
