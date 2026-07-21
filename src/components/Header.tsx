@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { isAuthenticated } from "@/services/authService";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { pathFor, routeKeyFromPath, useCopy, useLocale } from "@/i18n";
 import { headerCopy, type NavLink as NavLinkCopy } from "@/i18n/copy/header";
 
@@ -74,8 +75,9 @@ const Header = () => {
                 )}
               </nav>
 
-              {/* Botón CTA */}
-              <div className="hidden lg:block">
+              {/* Selector de idioma + Botón CTA */}
+              <div className="hidden lg:flex items-center gap-2.5">
+                <LanguageSwitcher />
                 <Link
                   to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
                   className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(0,255,127,0.4)] transition-all duration-200"
@@ -98,12 +100,15 @@ const Header = () => {
               </button>
             </>
           ) : (
-            <Link
-              to={pathFor("home", locale)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-full border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
-            >
-              {copy.backHome}
-            </Link>
+            <div className="flex items-center gap-2.5">
+              <LanguageSwitcher />
+              <Link
+                to={pathFor("home", locale)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-full border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
+              >
+                {copy.backHome}
+              </Link>
+            </div>
           )}
         </div>
 
@@ -131,7 +136,10 @@ const Header = () => {
                 </a>
               )
             )}
-            <div className="pt-4 mt-2 border-t border-white/[0.06]">
+            <div className="pt-4 mt-2 border-t border-white/[0.06] space-y-3">
+              <div className="flex justify-center">
+                <LanguageSwitcher />
+              </div>
               <Link
                 to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
                 className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] transition-colors duration-200"

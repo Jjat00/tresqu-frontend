@@ -1,6 +1,7 @@
 import { Mail, Linkedin, Facebook, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { pathFor, useCopy, useLocale } from "@/i18n";
 import { footerCopy } from "@/i18n/copy/footer";
 
@@ -159,6 +160,7 @@ const Footer = () => {
             >
               {copy.termsShort}
             </Link>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
