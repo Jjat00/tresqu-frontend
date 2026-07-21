@@ -1,4 +1,6 @@
 import { Mail, Linkedin, Facebook, MessageCircle, ArrowUpRight } from "lucide-react";
+import { useCopy } from "@/i18n";
+import { contactCopy } from "@/i18n/copy/contact";
 
 const contactMethods = [
   {
@@ -32,6 +34,7 @@ const contactMethods = [
 ];
 
 const Contact = () => {
+  const copy = useCopy(contactCopy);
   return (
     <section
       id="contacto"
@@ -43,14 +46,14 @@ const Contact = () => {
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Section Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <span className="section-label mb-6">08 · Contacto</span>
+          <span className="section-label mb-6">{copy.sectionLabel}</span>
           <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
-            ¿TIENES
+            {copy.title.line1}
             <br />
-            <span className="holo-text italic">PREGUNTAS?</span>
+            <span className="holo-text italic">{copy.title.holo}</span>
           </h2>
           <p className="text-zinc-400 text-lg">
-            Estamos aquí para ayudarte. Elige el canal que prefieras.
+            {copy.intro}
           </p>
         </div>
 
@@ -94,10 +97,10 @@ const Contact = () => {
           <div className="holo-card holo-sheen inline-flex flex-col sm:flex-row items-center gap-6 p-3">
             <div className="text-left pl-3 py-2">
               <p className="text-white font-semibold text-[15px]">
-                ¿Prefieres una respuesta rápida?
+                {copy.fastTitle}
               </p>
               <p className="text-zinc-400 text-[13px] mt-0.5">
-                Escríbenos por WhatsApp y te respondemos en minutos
+                {copy.fastSubtitle}
               </p>
             </div>
 
@@ -107,7 +110,7 @@ const Contact = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 bg-[#25D366] text-black font-semibold rounded-md hover:bg-white transition-colors duration-200 flex-shrink-0"
             >
-              Chatear ahora
+              {copy.fastCta}
               <ArrowUpRight className="w-4 h-4" />
             </a>
           </div>

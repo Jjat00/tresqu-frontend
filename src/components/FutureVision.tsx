@@ -1,30 +1,16 @@
 import { Bot, BellRing, Sliders, ArrowRight } from "lucide-react";
+import { useCopy } from "@/i18n";
+import { futureVisionCopy } from "@/i18n/copy/futureVision";
 
-const futureFeatures = [
-  {
-    icon: <Bot className="w-6 h-6" />,
-    title: "Agente que invierte por ti",
-    description:
-      "Le delegas el aporte mensual y el agente decide qué comprar dentro de los límites que tú definas. Tú confirmas, él ejecuta.",
-    status: "En desarrollo",
-  },
-  {
-    icon: <BellRing className="w-6 h-6" />,
-    title: "Alertas que te buscan a ti",
-    description:
-      "El analista ya responde cuando le preguntas por un activo. El siguiente paso: que te avise él solo cuando algo de tu portafolio lo amerite, no por noticias genéricas.",
-    status: "Próximamente",
-  },
-  {
-    icon: <Sliders className="w-6 h-6" />,
-    title: "Optimización de portafolio",
-    description:
-      "Reequilibrios sugeridos cruzando tu portafolio Wallbit con tu colchón de ahorro y tus metas en Tresqu.",
-    status: "Próximamente",
-  },
+// Mismo orden que copy.features en el diccionario
+const featureIcons = [
+  <Bot className="w-6 h-6" />,
+  <BellRing className="w-6 h-6" />,
+  <Sliders className="w-6 h-6" />,
 ];
 
 const FutureVision = () => {
+  const copy = useCopy(futureVisionCopy);
   return (
     <section
       id="futuro"
@@ -42,44 +28,37 @@ const FutureVision = () => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left - Content */}
           <div>
-            <span className="section-label mb-6">07 · Roadmap</span>
+            <span className="section-label mb-6">{copy.sectionLabel}</span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
-              ESTO ES SOLO
+              {copy.title.line1}
               <br />
-              EL <span className="holo-text italic">PRINCIPIO</span>.
+              {copy.title.line2Pre}{" "}
+              <span className="holo-text italic">{copy.title.line2Holo}</span>.
             </h2>
             <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-              Hoy el equipo registra, analiza e invierte contigo —siempre con tu
-              confirmación—. Lo que viene: que proponga por su cuenta, te avise
-              cuando algo de tu dinero lo amerite y optimice tu portafolio. Tú
-              sigues teniendo la última palabra.
+              {copy.intro}
             </p>
 
             {/* CTA */}
             <button
-              onClick={() =>
-                window.open(
-                  "https://wa.me/573116534337?text=Quiero%20saber%20más",
-                  "_blank"
-                )
-              }
+              onClick={() => window.open(copy.whatsappUrl, "_blank")}
               className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold rounded-md hover:border-[#00FF7F]/40 hover:bg-white/[0.06] transition-colors duration-200 group"
             >
-              Mantenerme informado
+              {copy.cta}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
           {/* Right - Features */}
           <div className="space-y-4">
-            {futureFeatures.map((feature, index) => (
+            {copy.features.map((feature, index) => (
               <div
                 key={index}
                 className="group holo-card holo-sheen p-6 flex items-start gap-5"
               >
                 {/* Icon */}
                 <div className="w-12 h-12 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] flex-shrink-0 transition-all duration-300 group-hover:border-[#00FF7F]/40 group-hover:shadow-[0_0_20px_-6px_rgba(0,255,127,0.6)]">
-                  {feature.icon}
+                  {featureIcons[index]}
                 </div>
 
                 {/* Content */}
@@ -108,7 +87,7 @@ const FutureVision = () => {
         <div className="mt-16 text-center">
           <div className="holo-card hud-corners inline-block px-8 py-5">
             <p className="text-[15px] font-medium italic tracking-wide holo-text">
-              "El primer agente financiero contextual de LATAM."
+              {copy.quote}
             </p>
           </div>
         </div>

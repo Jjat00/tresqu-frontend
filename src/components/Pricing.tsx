@@ -1,113 +1,30 @@
 import { useState } from "react";
 import { Check, X, Sparkles, Building2, Rocket, ArrowRight, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-interface PlanFeature {
-  text: string;
-  included: boolean;
-}
-
-interface Plan {
-  name: string;
-  icon: React.ReactNode;
-  description: string;
-  price: string;
-  period: string;
-  badge?: string;
-  features: PlanFeature[];
-  cta: string;
-  highlighted?: boolean;
-  onClick: () => void;
-}
-
-const faqs = [
-  {
-    question: "¿Puedo cambiar de plan en cualquier momento?",
-    answer: "Sí, puedes actualizar o cambiar tu plan en cualquier momento. Si actualizas a un plan superior, solo pagarás la diferencia prorrateada del mes en curso.",
-  },
-  {
-    question: "¿Qué pasa con mis datos si cancelo?",
-    answer: "Tus datos se mantienen seguros durante 30 días después de la cancelación. Puedes exportar toda tu información en cualquier momento desde el dashboard.",
-  },
-  {
-    question: "¿Cómo funciona el reconocimiento de fotos de recibos?",
-    answer: "Simplemente toma una foto del recibo y envíala por WhatsApp o Telegram. Tresqu extrae automáticamente el monto, categoría, fecha y descripción del gasto.",
-  },
-  {
-    question: "¿Puedo usar Tresqu sin WhatsApp?",
-    answer: "Sí, también está disponible vía Telegram y desde el dashboard web. WhatsApp es solo una de las opciones de interacción.",
-  },
-];
+import { pathFor, useCopy, useLocale } from "@/i18n";
+import { pricingCopy } from "@/i18n/copy/pricing";
 
 const Pricing = () => {
   const navigate = useNavigate();
+  const locale = useLocale();
+  const copy = useCopy(pricingCopy);
   const [isAnnual, setIsAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const plans: Plan[] = [
+  // Estructura (iconos/acciones); el copy vive en i18n/copy, mismo orden
+  const planStructure = [
     {
-      name: "Básico",
       icon: <Rocket className="w-5 h-5" />,
-      description: "Para comenzar a organizar tus finanzas",
-      price: "Gratis",
-      period: "para siempre",
-      features: [
-        { text: "40 movimientos/mes (20 gastos + 20 ingresos)", included: true },
-        { text: "Asistente conversacional (solo texto)", included: true },
-        { text: "Estadísticas mensuales simples", included: true },
-        { text: "Categorías predefinidas", included: true },
-        { text: "WhatsApp + Telegram", included: true },
-        { text: "Exportación mes actual", included: true },
-        { text: "Mensajes de voz", included: false },
-        { text: "Fotos de recibos", included: false },
-        { text: "Metas de ahorro", included: false },
-        { text: "Categorías personalizadas", included: false },
-      ],
-      cta: "Comenzar Gratis",
-      onClick: () => navigate("/login"),
+      free: true,
+      onClick: () => navigate(pathFor("login", locale)),
     },
     {
-      name: "Premium",
       icon: <Sparkles className="w-5 h-5" />,
-      description: "Control financiero completo con el agente avanzado",
-      price: isAnnual ? "$50" : "$5",
-      period: isAnnual ? "/año" : "/mes",
-      badge: "MÁS POPULAR",
       highlighted: true,
-      features: [
-        { text: "Registros ilimitados", included: true },
-        { text: "Metas de ahorro completas", included: true },
-        { text: "Mensajes de voz", included: true },
-        { text: "Fotos de recibos y facturas", included: true },
-        { text: "Extracción automática de datos", included: true },
-        { text: "Analytics avanzados", included: true },
-        { text: "Categorías personalizadas", included: true },
-        { text: "Exportación completa", included: true },
-        { text: "Búsqueda inteligente", included: true },
-        { text: "Soporte prioritario (4-8h)", included: true },
-      ],
-      cta: "Comenzar Premium",
-      onClick: () => navigate("/login"),
+      onClick: () => navigate(pathFor("login", locale)),
     },
     {
-      name: "Business",
       icon: <Building2 className="w-5 h-5" />,
-      description: "Gestión financiera para equipos",
-      price: isAnnual ? "$490" : "$49",
-      period: isAnnual ? "/año" : "/mes",
-      features: [
-        { text: "Todo lo de Premium", included: true },
-        { text: "Hasta 5 usuarios", included: true },
-        { text: "Gestión de organización", included: true },
-        { text: "Reportes consolidados", included: true },
-        { text: "Analytics empresariales", included: true },
-        { text: "Metas grupales", included: true },
-        { text: "Roles y permisos", included: true },
-        { text: "Procesamiento masivo", included: true },
-        { text: "Detección de duplicados", included: true },
-        { text: "Soporte VIP (1-2h)", included: true },
-      ],
-      cta: "Contactar Ventas",
       onClick: () =>
         document
           .getElementById("contacto")
@@ -129,22 +46,21 @@ const Pricing = () => {
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
           <span className="inline-block px-3 py-1 border border-[#00FF7F]/25 rounded-sm text-[#00FF7F] text-xs uppercase tracking-wider font-medium mb-6">
-            Precios
+            {copy.label}
           </span>
           <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
-            PLANES PARA CADA
+            {copy.titleLine1}
             <br />
-            <span className="text-[#00FF7F] italic">NECESIDAD</span>
+            <span className="text-[#00FF7F] italic">{copy.titleAccent}</span>
           </h2>
           <p className="text-zinc-400 text-lg">
-            Control financiero inteligente desde un chat. Elige el plan que
-            mejor se adapte a ti.
+            {copy.intro}
           </p>
 
           {/* Toggle mensual/anual */}
           <div className="flex items-center justify-center gap-3 mt-8">
             <span className={`text-sm font-medium transition-colors ${!isAnnual ? "text-white" : "text-zinc-500"}`}>
-              Mensual
+              {copy.monthly}
             </span>
             <button
               onClick={() => setIsAnnual(!isAnnual)}
@@ -159,7 +75,7 @@ const Pricing = () => {
               />
             </button>
             <span className={`text-sm font-medium transition-colors ${isAnnual ? "text-white" : "text-zinc-500"}`}>
-              Anual
+              {copy.annual}
             </span>
             {isAnnual && (
               <span className="text-xs font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-sm">
@@ -171,9 +87,12 @@ const Pricing = () => {
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => {
-            const isFeatured = plan.highlighted;
-            
+          {copy.plans.map((plan, index) => {
+            const structure = planStructure[index];
+            const isFeatured = structure.highlighted;
+            const price = isAnnual ? plan.price.annual : plan.price.monthly;
+            const period = isAnnual ? plan.period.annual : plan.period.monthly;
+
             return (
               <div
                 key={index}
@@ -204,7 +123,7 @@ const Pricing = () => {
                             : "bg-white/[0.04] border border-white/10 text-white"
                         }`}
                       >
-                        {plan.icon}
+                        {structure.icon}
                       </div>
                       <h3 className="text-2xl font-bold text-white font-display tracking-tight">
                         {plan.name}
@@ -219,16 +138,16 @@ const Pricing = () => {
                   <div className="mb-8 pb-8 border-b border-white/10 relative">
                     <div className="flex items-baseline gap-1.5 relative z-10">
                       <span className="text-5xl lg:text-6xl font-bold font-display tracking-tighter text-white">
-                        {plan.price}
+                        {price}
                       </span>
                       <span className="text-zinc-500 font-medium tracking-wide">
-                        {plan.period}
+                        {period}
                       </span>
                     </div>
-                    {isAnnual && plan.price !== "Gratis" && (
+                    {isAnnual && !structure.free && (
                       <div className="mt-3 inline-flex items-center gap-2 border border-[#00FF7F]/25 px-2.5 py-1 rounded-sm">
                         <span className="text-[11px] font-semibold text-[#00FF7F] uppercase tracking-wider">
-                          Ahorra 2 meses gratis
+                          {copy.saveBadge}
                         </span>
                       </div>
                     )}
@@ -262,7 +181,7 @@ const Pricing = () => {
 
                   {/* CTA Button */}
                   <button
-                    onClick={plan.onClick}
+                    onClick={structure.onClick}
                     className={`w-full py-3.5 rounded-md font-semibold text-[15px] tracking-wide transition-colors duration-200 relative overflow-hidden ${
                       isFeatured
                         ? "bg-[#00FF7F] text-black hover:bg-white"
@@ -283,10 +202,11 @@ const Pricing = () => {
         {/* FAQ Section */}
         <div className="mt-20 max-w-2xl mx-auto">
           <h3 className="trii-title text-2xl sm:text-3xl text-center text-white mb-8">
-            Preguntas <span className="trii-title-accent">frecuentes</span>
+            {copy.faqTitlePre}{" "}
+            <span className="trii-title-accent">{copy.faqTitleAccent}</span>
           </h3>
           <div className="space-y-3">
-            {faqs.map((faq, i) => (
+            {copy.faqs.map((faq, i) => (
               <div
                 key={i}
                 className="glass-card overflow-hidden"
@@ -317,12 +237,12 @@ const Pricing = () => {
             ))}
           </div>
           <p className="mt-8 text-zinc-500 text-sm text-center">
-            ¿Más preguntas?{" "}
+            {copy.morePrompt}
             <a
               href="#contacto"
               className="text-[#00FF7F] hover:underline font-medium"
             >
-              Contáctanos
+              {copy.moreLink}
             </a>
           </p>
         </div>
