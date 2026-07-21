@@ -1,30 +1,12 @@
 import { Mail, Camera, Search } from "lucide-react";
+import { useCopy } from "@/i18n";
+import { passiveCaptureCopy } from "@/i18n/copy/passiveCapture";
 
-const capabilities = [
-  {
-    Icon: Mail,
-    title: "Gmail automático",
-    description:
-      "Conecta tu correo y Tresqu detecta compras en tus emails sin que tengas que escribir nada. Tu inbox se vuelve tu hoja de gastos.",
-    tag: "Pasivo",
-  },
-  {
-    Icon: Camera,
-    title: "Recibos por foto",
-    description:
-      "Manda una foto de tu factura o recibo y Tresqu lee el monto, el comercio y la categoría automáticamente. Sin tipear nada.",
-    tag: "Vision AI",
-  },
-  {
-    Icon: Search,
-    title: "Pregunta por significado",
-    description:
-      "'¿Cuánto gasté en salidas el mes pasado?' — Tresqu entiende lo que quieres decir, no solo palabras sueltas. Sin filtros ni categorías exactas.",
-    tag: "Conversacional",
-  },
-];
+// Mismo orden que copy.capabilities en el diccionario
+const capabilityIcons = [Mail, Camera, Search];
 
 const PassiveCapture = () => {
+  const copy = useCopy(passiveCaptureCopy);
   return (
     <section id="captura" className="relative section-padding bg-[#0a0a0a] scroll-mt-24 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none section-aura-green">
@@ -35,22 +17,23 @@ const PassiveCapture = () => {
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
-          <span className="section-label mb-6">02 · Captura pasiva</span>
+          <span className="section-label mb-6">{copy.sectionLabel}</span>
           <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
-            NO REGISTRES.
+            {copy.title.line1}
             <br />
-            DEJA QUE TRESQU LO{" "}
-            <span className="holo-text italic">HAGA</span>.
+            {copy.title.line2Pre}{" "}
+            <span className="holo-text italic">{copy.title.line2Holo}</span>.
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
-            Tres formas en las que el agente captura tu actividad financiera sin
-            que muevas un dedo.
+            {copy.intro}
           </p>
         </div>
 
         {/* Cards */}
         <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-          {capabilities.map(({ Icon, title, description, tag }) => (
+          {copy.capabilities.map(({ title, description, tag }, index) => {
+            const Icon = capabilityIcons[index];
+            return (
             <div
               key={title}
               className="group holo-card holo-sheen hud-corners p-6 lg:p-8"
@@ -70,7 +53,8 @@ const PassiveCapture = () => {
                 {description}
               </p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

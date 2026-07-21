@@ -10,6 +10,8 @@ import {
   demoDateRange,
   seedDemoDashboard,
 } from "@/components/showcase/demoDashboardData";
+import { pathFor, useCopy, useLocale } from "@/i18n";
+import { dashboardShowcaseCopy } from "@/i18n/copy/dashboardShowcase";
 
 const VIEW_IDS = ["expenses", "income", "investments"] as const;
 type ViewId = (typeof VIEW_IDS)[number];
@@ -27,6 +29,8 @@ const TRAVEL_MS = 900; // viaje del cursor hasta el siguiente tab
  * demostración — cero red. Un cursor simulado va haciendo clic entre vistas.
  */
 const DashboardShowcase = () => {
+  const locale = useLocale();
+  const copy = useCopy(dashboardShowcaseCopy);
   // QueryClient propio: enabled:false global → ningún hook llega a la red,
   // todos leen la caché sembrada.
   const [client] = useState(() => {
@@ -167,14 +171,14 @@ const DashboardShowcase = () => {
       <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-          <span className="section-label mb-6">El producto</span>
+          <span className="section-label mb-6">{copy.sectionLabel}</span>
           <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
-            ASÍ SE VE TU <span className="holo-text italic">DINERO</span>.
+            {copy.title.pre}{" "}
+            <span className="holo-text italic">{copy.title.holo}</span>
+            {copy.title.post}
           </h2>
           <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
-            Este es el dashboard real de Tresqu: todo lo que registras por chat
-            aterriza aquí — gastos, ingresos e inversiones, en vivo. Y esto es
-            solo una parte.
+            {copy.intro}
           </p>
         </div>
 
@@ -239,7 +243,7 @@ const DashboardShowcase = () => {
                 );
               })}
               <span className="ml-auto hidden sm:block text-[10px] font-mono text-zinc-600 pr-1">
-                julio 2026 · demo
+                {copy.browserBadge}
               </span>
             </div>
 
@@ -303,16 +307,9 @@ const DashboardShowcase = () => {
         {/* Esto es solo una muestra — lo que también hay adentro */}
         <div className="flex flex-wrap items-center justify-center gap-2 mt-8 max-w-3xl mx-auto">
           <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 w-full sm:w-auto text-center">
-            Una pequeña muestra — también:
+            {copy.sampleLabel}
           </span>
-          {[
-            "Resumen de inicio",
-            "Categorías",
-            "Integraciones Gmail y Wallbit",
-            "Chat con el equipo de agentes",
-            "Perfil de riesgo",
-            "y mucho más",
-          ].map((item) => (
+          {copy.sampleChips.map((item) => (
             <span
               key={item}
               className="px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.02] text-[11px] text-zinc-400"
@@ -325,13 +322,13 @@ const DashboardShowcase = () => {
         {/* Micro-copy + CTA */}
         <div className="text-center mt-8">
           <p className="text-zinc-600 text-xs font-mono tracking-wide mb-5">
-            Dashboard real de Tresqu · datos de demostración
+            {copy.microCopy}
           </p>
           <Link
-            to="/login"
+            to={pathFor("login", locale)}
             className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:border-[#00FF7F]/40 hover:bg-white/[0.06] transition-colors duration-200 group"
           >
-            Entrar a mi dashboard
+            {copy.cta}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

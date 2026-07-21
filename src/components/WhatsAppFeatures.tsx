@@ -8,6 +8,13 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
+import { useCopy } from "@/i18n";
+import {
+  whatsappFeaturesCopy,
+  type WhatsAppFeaturesCopy,
+} from "@/i18n/copy/whatsappFeatures";
+
+type MockupCopy = WhatsAppFeaturesCopy["mockups"];
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor">
@@ -36,17 +43,17 @@ const Bubble = ({
   </div>
 );
 
-const TextMockup = () => (
+const TextMockup = ({ mockups }: { mockups: MockupCopy }) => (
   <div className="flex flex-col gap-1.5">
     <Bubble side="right">
-      <p>anoche pagué 20k de cena</p>
+      <p>{mockups.text.userMsg}</p>
     </Bubble>
     <Bubble side="left">
-      <p className="text-[#00FF7F] font-semibold">Registrado</p>
+      <p className="text-[#00FF7F] font-semibold">{mockups.text.confirm}</p>
       <p className="text-zinc-300 mt-0.5">
-        <span className="text-white">$20,000 COP</span>
+        <span className="text-white">{mockups.text.amount}</span>
         {" · "}
-        <span className="text-[#00FF7F]/90">Restaurantes</span>
+        <span className="text-[#00FF7F]/90">{mockups.text.category}</span>
       </p>
     </Bubble>
   </div>
@@ -67,7 +74,7 @@ const Waveform = () => {
   );
 };
 
-const VoiceMockup = () => (
+const VoiceMockup = ({ mockups }: { mockups: MockupCopy }) => (
   <div className="flex flex-col gap-1.5">
     <Bubble side="right">
       <div className="flex items-center gap-2">
@@ -78,58 +85,58 @@ const VoiceMockup = () => (
       </div>
     </Bubble>
     <Bubble side="left">
-      <p className="text-zinc-300">"Almuerzo con el equipo"</p>
+      <p className="text-zinc-300">{mockups.voice.transcript}</p>
       <p className="text-[#00FF7F] font-semibold mt-0.5">
-        Alimentación · $18,000
+        {mockups.voice.result}
       </p>
     </Bubble>
   </div>
 );
 
-const ImageMockup = () => (
+const ImageMockup = ({ mockups }: { mockups: MockupCopy }) => (
   <div className="flex flex-col gap-1.5">
     <Bubble side="right">
       <div className="flex items-center gap-2">
         <div className="w-9 h-7 rounded-sm bg-neutral-100 text-zinc-700 flex items-center justify-center text-[7px] font-bold uppercase">
-          Recibo
+          {mockups.image.receiptLabel}
         </div>
-        <span className="text-[10px] text-white/70">Foto del recibo</span>
+        <span className="text-[10px] text-white/70">{mockups.image.caption}</span>
       </div>
     </Bubble>
     <Bubble side="left">
-      <p className="text-white">Tienda Nube</p>
-      <p className="text-[#00FF7F] font-semibold mt-0.5">Mercado · $47.500</p>
+      <p className="text-white">{mockups.image.merchant}</p>
+      <p className="text-[#00FF7F] font-semibold mt-0.5">{mockups.image.result}</p>
     </Bubble>
   </div>
 );
 
-const InvestmentsMockup = () => (
+const InvestmentsMockup = ({ mockups }: { mockups: MockupCopy }) => (
   <div className="flex flex-col gap-2">
     <Bubble side="right">
-      <p>¿Cuánto tengo libre para invertir en Wallbit?</p>
+      <p>{mockups.investments.userMsg}</p>
     </Bubble>
 
     <div className="bg-white/[0.04] border border-white/10 rounded-md px-3 py-2.5">
       <div className="flex items-center gap-2 mb-2.5">
         <LineChart className="w-3.5 h-3.5 text-wallbit" />
         <p className="text-wallbit text-[11px] font-semibold">
-          Tu cuenta Wallbit
+          {mockups.investments.accountTitle}
         </p>
       </div>
 
       <div className="space-y-1.5 text-[10px]">
         <div className="flex items-center justify-between">
-          <span className="text-zinc-400">Efectivo disponible</span>
-          <span className="text-white font-medium">$1,250.00 USD</span>
+          <span className="text-zinc-400">{mockups.investments.cashLabel}</span>
+          <span className="text-white font-medium">{mockups.investments.cashValue}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-zinc-400">En cuenta de inversión</span>
-          <span className="text-white font-medium">$3,480.00 USD</span>
+          <span className="text-zinc-400">{mockups.investments.investedLabel}</span>
+          <span className="text-white font-medium">{mockups.investments.investedValue}</span>
         </div>
       </div>
 
       <div className="border-t border-white/5 mt-2.5 pt-2">
-        <p className="text-[10px] text-zinc-500 mb-1.5">Acciones</p>
+        <p className="text-[10px] text-zinc-500 mb-1.5">{mockups.investments.stocksLabel}</p>
         <div className="space-y-1.5 text-[10px]">
           <div className="flex items-center justify-between">
             <span className="text-zinc-300">META</span>
@@ -150,61 +157,31 @@ const InvestmentsMockup = () => (
 
       <div className="border-t border-white/5 mt-2.5 pt-2">
         <p className="text-[10px] text-zinc-400 leading-relaxed">
-          Dime si quieres comprar, vender o mover fondos y lo gestionamos. 🚀
+          {mockups.investments.closing}
         </p>
       </div>
     </div>
   </div>
 );
 
-// ── Feature definitions ────────────────────────────────────────────────────
-type Feature = {
+// ── Feature definitions (estructura; el copy vive en i18n/copy) ────────────
+type FeatureStructure = {
   Icon: typeof MessageSquare;
-  title: string;
-  description: string;
-  highlight: string;
-  Mockup: () => React.JSX.Element;
+  Mockup: ({ mockups }: { mockups: MockupCopy }) => React.JSX.Element;
   brand?: "wallbit";
 };
 
-const features: Feature[] = [
-  {
-    Icon: LineChart,
-    title: "Consulta tus inversiones",
-    description:
-      "Pregúntale a Tresqu por tu cuenta Wallbit: cuánto tienes libre, tus acciones y cómo van. Y cuando quieras, compra, vende o mueve fondos desde el chat.",
-    highlight: "Inversiones",
-    Mockup: InvestmentsMockup,
-    brand: "wallbit",
-  },
-  {
-    Icon: MessageSquare,
-    title: "Registra por texto",
-    description:
-      "Escribe como hablas. Sin formatos ni comandos. Tresqu entiende en lenguaje natural y categoriza al instante.",
-    highlight: "Modo texto",
-    Mockup: TextMockup,
-  },
-  {
-    Icon: Mic,
-    title: "Registra por voz",
-    description:
-      "Manda un audio de WhatsApp. Tresqu transcribe, entiende y registra el movimiento en segundos.",
-    highlight: "Modo voz",
-    Mockup: VoiceMockup,
-  },
-  {
-    Icon: Camera,
-    title: "Registra por foto",
-    description:
-      "Toma una foto al recibo o factura. Tresqu extrae monto, comercio y categoría sin que tipees nada.",
-    highlight: "Modo foto",
-    Mockup: ImageMockup,
-  },
+// Mismo orden que copy.features en el diccionario
+const featureStructure: FeatureStructure[] = [
+  { Icon: LineChart, Mockup: InvestmentsMockup, brand: "wallbit" },
+  { Icon: MessageSquare, Mockup: TextMockup },
+  { Icon: Mic, Mockup: VoiceMockup },
+  { Icon: Camera, Mockup: ImageMockup },
 ];
 
 // ── Section ────────────────────────────────────────────────────────────────
 const WhatsAppFeatures = () => {
+  const copy = useCopy(whatsappFeaturesCopy);
   return (
     <section
       className="relative section-padding overflow-hidden"
@@ -219,30 +196,26 @@ const WhatsAppFeatures = () => {
         {/* Section Header — patrón de Benefits */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
-            <span className="section-label mb-6">
-              01 · Disponible en WhatsApp
-            </span>
+            <span className="section-label mb-6">{copy.sectionLabel}</span>
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white">
-              REGISTRA COMO{" "}
-              <span className="holo-text italic">PREFIERAS</span>,
+              {copy.title.line1Pre}{" "}
+              <span className="holo-text italic">{copy.title.line1Holo}</span>,
               <br />
-              CONSULTA LO QUE QUIERAS.
+              {copy.title.line2}
             </h2>
           </div>
           <div className="lg:pt-16">
             <p className="text-zinc-400 text-lg leading-relaxed">
-              Texto, voz o foto para registrar tus movimientos. Y cuando
-              quieras, pregúntale a Tresqu por tus inversiones — todo desde
-              WhatsApp, sin abrir nada más.
+              {copy.intro}
             </p>
           </div>
         </div>
 
         {/* Bento Grid — patrón de Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 lg:gap-6">
-          {features.map((feature, index) => {
-            const { Icon, title, description, highlight, Mockup, brand } =
-              feature;
+          {featureStructure.map((feature, index) => {
+            const { Icon, Mockup, brand } = feature;
+            const { title, description, highlight } = copy.features[index];
             const isLarge = index === 0;
             const gridClass = isLarge
               ? "md:col-span-2 md:row-span-2"
@@ -291,7 +264,7 @@ const WhatsAppFeatures = () => {
                   </div>
 
                   <div className="mt-auto">
-                    <Mockup />
+                    <Mockup mockups={copy.mockups} />
                   </div>
                 </div>
               </div>
@@ -302,19 +275,14 @@ const WhatsAppFeatures = () => {
         {/* CTA */}
         <div className="mt-16 md:mt-20 text-center">
           <p className="text-zinc-600 mb-6 text-sm font-mono tracking-wide">
-            Sin descargas · Sin configuraciones · Empieza en 30 segundos
+            {copy.ctaMicro}
           </p>
           <button
-            onClick={() =>
-              window.open(
-                "https://wa.me/573116534337?text=Hola%20Tresqu%2C%20quiero%20empezar",
-                "_blank"
-              )
-            }
+            onClick={() => window.open(copy.whatsappUrl, "_blank")}
             className="cta-neon inline-flex items-center gap-2.5 px-7 py-3 bg-[#00FF7F] text-black font-semibold rounded-md hover:bg-white cursor-pointer"
           >
             <WhatsAppIcon className="w-4 h-4" />
-            Probar en WhatsApp
+            {copy.ctaButton}
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
