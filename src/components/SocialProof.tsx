@@ -1,3 +1,6 @@
+import { useCopy } from "@/i18n";
+import { socialProofCopy } from "@/i18n/copy/socialProof";
+
 const platforms = [
   { name: "WhatsApp", color: "#25D366" },
   { name: "Telegram", color: "#0088cc" },
@@ -22,6 +25,7 @@ const PlatformChip = ({ name, color }: { name: string; color: string }) => (
 );
 
 const SocialProof = () => {
+  const copy = useCopy(socialProofCopy);
   return (
     <section className="relative py-14 md:py-16 overflow-hidden bg-[#0a0a0a]">
       {/* Separador superior */}
@@ -29,7 +33,7 @@ const SocialProof = () => {
 
       <div className="relative z-10">
         <p className="section-label justify-center flex mb-8">
-          Integrado con las plataformas que ya usas
+          {copy.label}
         </p>
 
         {/* Marquee infinito */}
