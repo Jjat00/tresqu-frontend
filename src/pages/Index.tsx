@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
+import Seo from "@/components/Seo";
 
 // Lazy load secciones below-the-fold
 const DashboardShowcase = lazy(() => import("@/components/DashboardShowcase"));
@@ -27,6 +28,7 @@ const SectionFallback = () => (
 const Index = () => {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-foreground relative overflow-hidden">
+      <Seo page="home" />
       {/* Grano de película global (fijo, no interactivo) */}
       <div className="bg-grain" aria-hidden="true" />
       <Header />

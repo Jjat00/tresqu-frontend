@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WaitlistForm from "@/components/WaitlistForm";
+import Seo from "@/components/Seo";
 import { useIsAuthenticated } from "@/store/authStore";
 
 const Login = () => {
@@ -20,6 +21,7 @@ const Login = () => {
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-foreground relative overflow-hidden">
+      <Seo page="login" />
       <Header />
       <WaitlistForm />
       <Footer />

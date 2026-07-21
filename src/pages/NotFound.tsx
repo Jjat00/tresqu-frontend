@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";
 import { pathFor, useCopy, useLocale } from "@/i18n";
 import { notFoundCopy } from "@/i18n/copy/notFound";
+import { SeoNotFound } from "@/components/Seo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -20,6 +21,7 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
+      <SeoNotFound />
       {/* Atmósfera estilo landing */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-blueprint" />

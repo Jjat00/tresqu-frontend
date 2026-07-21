@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Seo from "@/components/Seo";
 import { pathFor, useCopy, useLocale } from "@/i18n";
 import {
   featuresPageCopy,
@@ -130,15 +131,11 @@ const Features = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const previousTitle = document.title;
-    document.title = "Funciones — Todo lo que puedes hacer con Tresqu";
-    return () => {
-      document.title = previousTitle;
-    };
   }, []);
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-foreground">
+      <Seo page="features" />
       <Header />
 
       {/* Hero */}
