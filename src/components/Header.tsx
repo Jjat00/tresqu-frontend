@@ -3,7 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { isAuthenticated } from "@/services/authService";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
-import { pathFor, routeKeyFromPath, useLocale } from "@/i18n";
+import { pathFor, routeKeyFromPath, useCopy, useLocale } from "@/i18n";
+import { headerCopy, type NavLink as NavLinkCopy } from "@/i18n/copy/header";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -11,6 +12,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const locale = useLocale();
+  const copy = useCopy(headerCopy);
   const isHomePage = routeKeyFromPath(location.pathname) === "home";
 
   useEffect(() => {
@@ -25,15 +27,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [location]);
 
-  const navLinks = [
-    { href: "#equipo", label: "El equipo" },
-    { href: "#wallbit", label: "Inversiones" },
-    { href: "#agente", label: "Capacidades" },
-    { href: "#captura", label: "Captura automática" },
-    { href: "/funciones", label: "Funciones" },
-    // Oculto hasta tener los pagos configurados (reactivar junto con la sección Pricing)
-    // { href: "#pricing", label: "Precios" },
-  ];
+  const navLinks: NavLinkCopy[] = copy.navLinks;
 
   const floating = scrolled || mobileMenuOpen;
 
@@ -60,18 +54,18 @@ const Header = () => {
               {/* Navegación Desktop */}
               <nav className="hidden lg:flex items-center gap-1">
                 {navLinks.map((link) =>
-                  link.href.startsWith("/") ? (
+                  link.route ? (
                     <Link
-                      key={link.href}
-                      to={link.href}
+                      key={link.route}
+                      to={pathFor(link.route, locale)}
                       className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors duration-200"
                     >
                       {link.label}
                     </Link>
                   ) : (
                     <a
-                      key={link.href}
-                      href={link.href}
+                      key={link.anchor}
+                      href={link.anchor}
                       className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors duration-200"
                     >
                       {link.label}
@@ -86,14 +80,14 @@ const Header = () => {
                   to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
                   className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(0,255,127,0.4)] transition-all duration-200"
                 >
-                  {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
+                  {isLoggedIn ? copy.ctaDashboard : copy.ctaLogin}
                 </Link>
               </div>
 
               {/* Menu Mobile Toggle */}
               <button
                 className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
-                aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+                aria-label={mobileMenuOpen ? copy.closeMenu : copy.openMenu}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? (
@@ -108,7 +102,7 @@ const Header = () => {
               to={pathFor("home", locale)}
               className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-full border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
             >
-              Regresar al inicio
+              {copy.backHome}
             </Link>
           )}
         </div>
@@ -117,10 +111,10 @@ const Header = () => {
         {isHomePage && mobileMenuOpen && (
           <nav className="lg:hidden pt-4 mt-3 border-t border-white/[0.06] flex flex-col gap-1">
             {navLinks.map((link) =>
-              link.href.startsWith("/") ? (
+              link.route ? (
                 <Link
-                  key={link.href}
-                  to={link.href}
+                  key={link.route}
+                  to={pathFor(link.route, locale)}
                   className="text-base font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors py-2.5"
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -128,8 +122,8 @@ const Header = () => {
                 </Link>
               ) : (
                 <a
-                  key={link.href}
-                  href={link.href}
+                  key={link.anchor}
+                  href={link.anchor}
                   className="text-base font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors py-2.5"
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -143,7 +137,7 @@ const Header = () => {
                 className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] transition-colors duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {isLoggedIn ? "Mi Dashboard" : "Ingresar"}
+                {isLoggedIn ? copy.ctaDashboard : copy.ctaLogin}
               </Link>
             </div>
           </nav>

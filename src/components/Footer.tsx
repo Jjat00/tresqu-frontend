@@ -1,6 +1,8 @@
 import { Mail, Linkedin, Facebook, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import { pathFor, useCopy, useLocale } from "@/i18n";
+import { footerCopy } from "@/i18n/copy/footer";
 
 const socialLinks = [
   {
@@ -27,6 +29,8 @@ const socialLinks = [
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const locale = useLocale();
+  const copy = useCopy(footerCopy);
 
   return (
     <footer className="relative bg-[#050505] border-t border-zinc-900">
@@ -36,13 +40,11 @@ const Footer = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
             {/* Brand Column */}
             <div className="lg:col-span-2">
-              <Link to="/" className="inline-block mb-4">
+              <Link to={pathFor("home", locale)} className="inline-block mb-4">
                 <Logo size="md" />
               </Link>
               <p className="text-zinc-500 text-sm leading-relaxed max-w-sm mb-6">
-                Tu agente financiero que vive en WhatsApp y Telegram.
-                Registra gastos, analiza tendencias y toma el control de tus
-                finanzas.
+                {copy.tagline}
               </p>
               {/* Social Links */}
               <div className="flex items-center gap-3">
@@ -63,31 +65,26 @@ const Footer = () => {
 
             {/* Links Column */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Producto</h4>
+              <h4 className="text-white font-semibold mb-4">{copy.productTitle}</h4>
               <ul className="space-y-3">
                 <li>
                   <Link
-                    to="/funciones"
+                    to={pathFor("features", locale)}
                     className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
                   >
-                    Todas las funciones
+                    {copy.allFeatures}
                   </Link>
                 </li>
                 <li>
-                  {/* <a> nativo, no <Link>: /blog/ es una página estática fuera del SPA */}
+                  {/* <a> nativo, no <Link>: /blog/ es una página estática fuera del SPA (solo ES) */}
                   <a
                     href="/blog/"
                     className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
                   >
-                    Blog
+                    {copy.blog}
                   </a>
                 </li>
-                {[
-                  { label: "Beneficios", href: "#beneficios" },
-                  // Oculto hasta tener los pagos configurados (reactivar junto con la sección Pricing)
-                  // { label: "Precios", href: "#pricing" },
-                  { label: "Roadmap", href: "#futuro" },
-                ].map((item, index) => (
+                {copy.anchorLinks.map((item, index) => (
                   <li key={index}>
                     <a
                       href={item.href}
@@ -102,14 +99,15 @@ const Footer = () => {
 
             {/* Legal Column */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Legal</h4>
+              <h4 className="text-white font-semibold mb-4">{copy.legalTitle}</h4>
               <ul className="space-y-3">
                 <li>
+                  {/* Las páginas legales solo existen en español */}
                   <Link
                     to="/privacy-policy"
                     className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
                   >
-                    Política de privacidad
+                    {copy.privacyPolicy}
                   </Link>
                 </li>
                 <li>
@@ -117,7 +115,7 @@ const Footer = () => {
                     to="/legal-notice"
                     className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
                   >
-                    Términos y condiciones
+                    {copy.terms}
                   </Link>
                 </li>
                 <li>
@@ -125,7 +123,7 @@ const Footer = () => {
                     href="#contacto"
                     className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
                   >
-                    Contacto
+                    {copy.contact}
                   </a>
                 </li>
               </ul>
@@ -146,20 +144,20 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="py-6 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-4 relative bg-[#050505]">
           <p className="text-zinc-600 text-sm">
-            &copy; {currentYear} Tresqu. Todos los derechos reservados.
+            &copy; {currentYear} Tresqu. {copy.rights}
           </p>
           <div className="flex items-center gap-6">
             <Link
               to="/privacy-policy"
               className="text-zinc-600 text-xs hover:text-zinc-400 transition-colors"
             >
-              Privacidad
+              {copy.privacyShort}
             </Link>
             <Link
               to="/legal-notice"
               className="text-zinc-600 text-xs hover:text-zinc-400 transition-colors"
             >
-              Términos
+              {copy.termsShort}
             </Link>
           </div>
         </div>

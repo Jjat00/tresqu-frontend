@@ -2,10 +2,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";
+import { pathFor, useCopy, useLocale } from "@/i18n";
+import { notFoundCopy } from "@/i18n/copy/notFound";
 
 const NotFound = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const locale = useLocale();
+  const copy = useCopy(notFoundCopy);
 
   useEffect(() => {
     console.error(
@@ -25,7 +29,7 @@ const NotFound = () => {
 
       <div className="text-center px-4 relative z-10">
         {/* Etiqueta terminal */}
-        <span className="section-label mb-4">Error · Ruta no encontrada</span>
+        <span className="section-label mb-4">{copy.label}</span>
 
         {/* Large 404 */}
         <h1 className="text-[8rem] sm:text-[12rem] font-display font-bold leading-none tracking-tighter text-outline-ghost select-none">
@@ -35,10 +39,10 @@ const NotFound = () => {
         {/* Content */}
         <div className="-mt-10 sm:-mt-14">
           <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-            Página no encontrada
+            {copy.title}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto mb-8">
-            La página que buscas no existe o fue movida. Verifica la URL o regresa al inicio.
+            {copy.body}
           </p>
 
           <div className="flex items-center justify-center gap-3">
@@ -48,14 +52,14 @@ const NotFound = () => {
               className="gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              Volver
+              {copy.back}
             </Button>
             <Button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(pathFor("home", locale))}
               className="cta-neon bg-success hover:bg-success/90 gap-2"
             >
               <Home className="h-4 w-4" />
-              Ir al inicio
+              {copy.home}
             </Button>
           </div>
         </div>
