@@ -4,23 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/3q.png" />
-    <title>Tresqu — Tu equipo de agentes financieros</title>
+    <!--
+      Las etiquetas con data-seo-static las reemplaza <Seo>
+      (src/components/Seo.tsx) al montar. Mantener en sync con en/index.html.
+    -->
+    <title data-seo-static>Tresqu — Tu equipo de agentes financieros</title>
     <meta
+      data-seo-static
       name="description"
       content="Un equipo de agentes que registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit — todo por chat, desde WhatsApp."
     />
     <meta name="author" content="Tresqu" />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Tresqu — Tu equipo de agentes financieros" />
+    <meta data-seo-static property="og:title" content="Tresqu — Tu equipo de agentes financieros" />
     <meta
+      data-seo-static
       property="og:description"
       content="Un equipo de agentes que registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit — todo por chat, desde WhatsApp."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://tresqu.com/" />
+    <meta data-seo-static property="og:url" content="https://tresqu.com/" />
     <meta property="og:site_name" content="Tresqu" />
-    <meta property="og:locale" content="es_LA" />
+    <meta data-seo-static property="og:locale" content="es_LA" />
+    <meta data-seo-static property="og:locale:alternate" content="en_US" />
     <meta property="og:image" content="https://tresqu.com/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -40,7 +47,10 @@
       content="3f0gloidm3ok3zabq2x8qxtk8oul45"
     />
 
-    <link rel="canonical" href="https://tresqu.com/" />
+    <link data-seo-static rel="canonical" href="https://tresqu.com/" />
+    <link data-seo-static rel="alternate" hreflang="es" href="https://tresqu.com/" />
+    <link data-seo-static rel="alternate" hreflang="en" href="https://tresqu.com/en/" />
+    <link data-seo-static rel="alternate" hreflang="x-default" href="https://tresqu.com/" />
 
     <!-- Datos estructurados (Schema.org) para SEO / AEO / GEO -->
     <script type="application/ld+json">

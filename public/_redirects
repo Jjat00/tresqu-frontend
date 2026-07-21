@@ -1,1 +1,5 @@
-/* /index.html 200 
+# Cloudflare Pages evalúa top-down y sirve archivos reales (blog Astro,
+# assets) antes de aplicar estos rewrites 200.
+/en /en/index.html 200
+/en/* /en/index.html 200
+/* /index.html 200
