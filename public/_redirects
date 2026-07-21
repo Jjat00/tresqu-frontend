@@ -1,5 +1,12 @@
 # Cloudflare Pages evalúa top-down y sirve archivos reales (blog Astro,
 # assets) antes de aplicar estos rewrites 200.
-/en /en/index.html 200
-/en/* /en/index.html 200
+#
+# OJO con el shell inglés (en.html → pretty URL /en):
+# - El destino del rewrite debe ser /en SIN extensión. Con /en.html o
+#   /en/index.html, Pages lo descarta como "bucle infinito" o responde
+#   308 a la pretty URL en vez de servir el contenido.
+# - La regla /* /index.html 200 la ignora Pages por la misma detección;
+#   se conserva porque el fallback SPA nativo (no hay 404.html) cubre ese
+#   caso y así queda documentado el comportamiento esperado.
+/en/* /en 200
 /* /index.html 200

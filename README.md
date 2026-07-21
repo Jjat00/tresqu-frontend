@@ -372,9 +372,9 @@ El sitio público es bilingüe: `/` (español, por defecto) y `/en/*` (inglés: 
 - `src/i18n/copy/` — un diccionario `Dict<T> = Record<"es" | "en", T>` por componente/página. Si falta una clave en un idioma, no compila. Reglas de traducción en `src/i18n/copy/README.md`.
 - `src/i18n/boot.ts` — detección de idioma en la **primera visita** (`navigator.language`), con exclusión de crawlers (Googlebot vería `/` redirigir a `/en` sin ella) y preferencia persistida en `localStorage["tresqu:locale"]`. Corre en `main.tsx` antes de `root.render`.
 - `src/components/Seo.tsx` — title/description/canonical/hreflang por ruta usando el hoisting de `<title>`/`<meta>` de React 19; elimina los tags `data-seo-static` del shell al montar.
-- `en/index.html` — **shell inglés** para crawlers sin JS (meta, JSON-LD y fallback `#root` en inglés). Vite lo emite como `dist/en/index.html` (segundo entry) y Cloudflare lo sirve para `/en/*` vía `public/_redirects`.
+- `en.html` — **shell inglés** para crawlers sin JS (meta, JSON-LD y fallback `#root` en inglés). Vite lo emite como `dist/en.html` (segundo entry); Cloudflare lo sirve como pretty URL `/en` y para `/en/*` vía `public/_redirects`. OJO: debe llamarse `en.html`, no `en/index.html` — Pages descarta como bucle infinito los rewrites a `*/index.html`.
 
-**Espejos que mantener en sync al cambiar copy público**: diccionarios de `src/i18n/copy/` ↔ fallbacks `#root` de `index.html` y `en/index.html` ↔ `public/llms.txt` (sección ES + sección `## English`) ↔ FAQPage del JSON-LD de ambos shells.
+**Espejos que mantener en sync al cambiar copy público**: diccionarios de `src/i18n/copy/` ↔ fallbacks `#root` de `index.html` y `en.html` ↔ `public/llms.txt` (sección ES + sección `## English`) ↔ FAQPage del JSON-LD de ambos shells.
 
 **Verificación de routing real**: `vite preview` no lee `_redirects`; usar `npx wrangler pages dev dist` y comprobar `curl -s localhost:8788/en/features | grep '<html lang'` → `en`.
 

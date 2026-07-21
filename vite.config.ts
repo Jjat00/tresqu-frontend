@@ -4,13 +4,16 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 // El fallback SPA de Vite reescribe toda ruta sin extensión a /index.html
-// (shell español). En producción Cloudflare Pages sirve en/index.html vía
+// (shell español). En producción Cloudflare Pages sirve en.html vía
 // public/_redirects; este plugin replica eso en dev y preview.
+// OJO: el shell es en.html (NO en/index.html) — Cloudflare descarta como
+// "bucle infinito" cualquier rewrite cuyo destino normalizado (sin
+// /index.html) vuelva a coincidir con su propio patrón.
 function enHtmlFallback(): Plugin {
   const rewrite = (req: { url?: string }) => {
     const url = (req.url ?? "").split("?")[0];
     if ((url === "/en" || url.startsWith("/en/")) && !url.includes(".")) {
-      req.url = "/en/index.html";
+      req.url = "/en.html";
     }
   };
   return {
@@ -45,8 +48,8 @@ export default defineConfig(() => ({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "index.html"),
-        // Shell inglés para crawlers sin JS; se emite como dist/en/index.html
-        en: path.resolve(__dirname, "en/index.html"),
+        // Shell inglés para crawlers sin JS; se emite como dist/en.html
+        en: path.resolve(__dirname, "en.html"),
       },
       output: {
         manualChunks: {},

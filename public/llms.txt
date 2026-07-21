@@ -58,7 +58,7 @@ Preguntas frecuentes:
 - Cómo registrar gastos por WhatsApp: https://tresqu.com/blog/registrar-gastos-por-whatsapp/
 - Política de privacidad: https://tresqu.com/privacy-policy
 - Aviso legal: https://tresqu.com/legal-notice
-- English version of the site: https://tresqu.com/en/
+- English version of the site: https://tresqu.com/en
 
 ## English
 
@@ -114,8 +114,8 @@ Frequently asked questions:
 
 ### Links
 
-- Site (English): https://tresqu.com/en/
-- Full feature guide (English): https://tresqu.com/en/features
+- Site (English): https://tresqu.com/en
+- Full feature guide (English): https://tresqu.com/enfeatures
 - Site (Spanish): https://tresqu.com
 - Blog (Spanish, AI personal-finance guides): https://tresqu.com/blog/
 - Privacy policy (Spanish): https://tresqu.com/privacy-policy

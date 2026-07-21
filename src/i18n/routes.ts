@@ -56,12 +56,11 @@ export const altPathFor = (pathname: string): string => {
 };
 
 /**
- * URL absoluta para canonical/hreflang/sitemap. El home EN siempre con
- * slash final (Cloudflare normaliza /en → /en/ al existir en/index.html).
+ * URL absoluta para canonical/hreflang/sitemap. El home EN es /en sin
+ * slash final (Cloudflare sirve en.html como pretty URL /en).
  */
 export const canonicalUrlFor = (key: RouteKey, locale: Locale): string => {
   const path = localizedRoutes[key][locale];
   if (path === "/") return `${ORIGIN}/`;
-  if (path === "/en") return `${ORIGIN}/en/`;
   return `${ORIGIN}${path}`;
 };
