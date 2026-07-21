@@ -10,68 +10,24 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "@/services/authService";
+import { pathFor, useCopy, useLocale } from "@/i18n";
+import { wallbitSectionCopy } from "@/i18n/copy/wallbit";
 
-const capabilities = [
-  {
-    Icon: TrendingUp,
-    title: "Compra y vende por chat",
-    description:
-      "Acciones, ETFs y bonos desde Wallbit. Le pides la orden al agente y tú la confirmas en el chat antes de ejecutar.",
-  },
-  {
-    Icon: PiggyBank,
-    title: "Aporta a tus Chests",
-    description:
-      "Deposita o retira USD de tus Robo Advisors directamente desde la conversación. Tú decides cuándo y cuánto.",
-  },
-  {
-    Icon: ArrowLeftRight,
-    title: "Mueve fondos entre cuentas",
-    description:
-      "Pasa saldo de tu cuenta principal a inversión (y al revés) sin abrir Wallbit. Confirmación en el chat.",
-  },
-  {
-    Icon: CreditCard,
-    title: "Activa o suspende tu tarjeta",
-    description:
-      "Si quieres cortar el plástico al instante, le escribes al agente y queda suspendido. Reactívalo cuando lo necesites.",
-  },
-  {
-    Icon: Wallet,
-    title: "Consulta saldos y posiciones",
-    description:
-      "Pregunta '¿cuánto tengo en Wallbit?' y el agente te trae efectivo por moneda y acciones por símbolo, en vivo.",
-  },
-  {
-    Icon: Search,
-    title: "Cruza Tresqu + Wallbit",
-    description:
-      "Pregunta por significado y el agente cruza tus gastos, ingresos y operaciones Wallbit en una sola respuesta.",
-  },
-];
-
-const faqs = [
-  {
-    q: "¿Tresqu maneja mi dinero?",
-    a: "No. Tu dinero vive en Wallbit. Tresqu solo propone acciones que tú confirmas, con límites que tú defines.",
-  },
-  {
-    q: "¿Mi API key está segura?",
-    a: "Sí. La ciframos con encriptación militar Fernet en el backend. Nunca sale al cliente, nunca aparece en logs. Puedes revocarla cuando quieras.",
-  },
-  {
-    q: "¿Cómo conecto mi Wallbit?",
-    a: "Entras a tu dashboard de Tresqu, vas a Mi perfil y pegas tu API key. Toma un minuto. Si aún no tienes cuenta Wallbit, abres una y luego la conectas.",
-  },
-  {
-    q: "¿Funciona fuera de USD?",
-    a: "Wallbit opera principalmente en USD, con saldos en otras monedas según tu cuenta. El catálogo cubre acciones, ETFs y bonos globales.",
-  },
+// Mismo orden que copy.capabilities en el diccionario
+const capabilityIcons = [
+  TrendingUp,
+  PiggyBank,
+  ArrowLeftRight,
+  CreditCard,
+  Wallet,
+  Search,
 ];
 
 const WallbitSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const locale = useLocale();
+  const copy = useCopy(wallbitSectionCopy);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- estado de sesión leído al montar
@@ -81,7 +37,7 @@ const WallbitSection = () => {
   // Logueado: directo a conectar en Integraciones. Anónimo: a login primero.
   const connectHref = isLoggedIn
     ? "/dashboard/account?tab=integraciones"
-    : "/login";
+    : pathFor("login", locale);
 
   return (
     <section
@@ -97,7 +53,7 @@ const WallbitSection = () => {
         {/* Header */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start mb-16">
           <div>
-            <span className="section-label mb-6">03 · Inversiones</span>
+            <span className="section-label mb-6">{copy.sectionLabel}</span>
             <div className="flex items-center gap-3 mb-6 flex-wrap">
               <img
                 src="/wallbit_logo.png"
@@ -114,27 +70,27 @@ const WallbitSection = () => {
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0D99FF]" />
                 </span>
                 <span className="text-[10px] uppercase tracking-wider text-[#0D99FF] font-semibold">
-                  En vivo
+                  {copy.liveBadge}
                 </span>
               </span>
             </div>
 
             <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-6">
-              TU COPILOTO,
+              {copy.title.line1}
               <br />
-              NO TU <span className="holo-text italic">CUADERNO</span>.
+              {copy.title.line2Pre}{" "}
+              <span className="holo-text italic">{copy.title.line2Holo}</span>.
             </h2>
             <p className="text-zinc-400 text-base sm:text-lg leading-relaxed">
-              Antes, Tresqu te ayudaba a entender en qué gastabas. Con Wallbit
-              ahora también compra acciones, mueve dinero entre cuentas,
-              alimenta tus metas y bloquea tu tarjeta — desde el mismo chat.
-              Operaciones reales, dinero real.
+              {copy.intro}
             </p>
           </div>
 
           {/* Right — capabilities */}
           <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
-            {capabilities.map(({ Icon, title, description }) => (
+            {copy.capabilities.map(({ title, description }, index) => {
+              const Icon = capabilityIcons[index];
+              return (
               <div
                 key={title}
                 className="group holo-card holo-sheen p-5"
@@ -149,7 +105,8 @@ const WallbitSection = () => {
                   {description}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -157,28 +114,27 @@ const WallbitSection = () => {
         <div className="holo-card holo-sheen flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-5 sm:p-6 mb-16">
           <div>
             <p className="text-white text-sm sm:text-base font-semibold mb-1">
-              Conecta tu Wallbit desde el dashboard.
+              {copy.ctaTitle}
             </p>
             <p className="text-zinc-500 text-xs sm:text-sm">
-              Pegas tu API key y listo. Después, cada acción del agente requiere
-              tu confirmación en el chat.
+              {copy.ctaSubtitle}
             </p>
           </div>
           <Link
             to={connectHref}
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0D99FF] text-black font-semibold rounded-md hover:bg-[#0D99FF]/90 transition-all text-sm whitespace-nowrap shadow-[0_0_24px_-6px_rgba(13,153,255,0.5)] hover:shadow-[0_0_32px_-4px_rgba(13,153,255,0.7)]"
           >
-            {isLoggedIn ? "Conectar en mi cuenta" : "Empezar y conectar"}
+            {isLoggedIn ? copy.ctaConnected : copy.ctaAnonymous}
           </Link>
         </div>
 
         {/* FAQ */}
         <div className="max-w-3xl mx-auto">
           <h3 className="text-white text-xl font-bold font-display tracking-tight mb-6 text-center">
-            Preguntas frecuentes
+            {copy.faqTitle}
           </h3>
           <div className="space-y-2">
-            {faqs.map((faq, index) => {
+            {copy.faqs.map((faq, index) => {
               const open = openIndex === index;
               return (
                 <div
