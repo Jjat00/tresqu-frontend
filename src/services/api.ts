@@ -5,7 +5,10 @@ import axios, {
 } from "axios";
 import { useAuthStore } from "../store/authStore";
 import { env } from "@/config";
-import { refreshTokenService } from "@/services/authService"; //         Importar el nuevo servicio
+import {
+  ensureFreshAccessToken,
+  refreshSession,
+} from "@/services/authService";
 
 // Determinar la URL base dependiendo del entorno
 const API_BASE_URL = env.apiUrl;
@@ -21,7 +24,9 @@ interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
  */
 const apiClientConfig: AxiosRequestConfig = {
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  // 20 s: el backend puede tardar en la primera petición del día (arranque en
+  // frío). Con 10 s la carga inicial del dashboard fallaba por timeout.
+  timeout: 20000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -50,8 +55,17 @@ const forceLogout = () => {
  * Interceptor para añadir el token de autenticación a las peticiones
  */
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore.getState().accessToken;
+  async (config) => {
+    const request = config as ExtendedAxiosRequestConfig;
+
+    // Refresco anticipado: si al access token le quedan menos de dos minutos
+    // se renueva ANTES de salir. Como el refresh es "single flight", las N
+    // peticiones que arranca el dashboard comparten un único refresh en vez
+    // de disparar N (que era de donde salían los cierres de sesión).
+    const token = request.skipAuthRefresh
+      ? useAuthStore.getState().accessToken
+      : await ensureFreshAccessToken();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -93,31 +107,28 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
       }
 
-      try {
-        const newAccessToken = await refreshTokenService();
+      // refreshSession() ya persiste el access nuevo y el refresh rotado; no
+      // volvemos a llamar setTokens aquí para no pisar el refresh rotado.
+      const result = await refreshSession();
 
-        if (newAccessToken) {
-          // refreshTokenService() ya persistió el nuevo access token (y el
-          // refresh rotado, si lo hubo) en el store. No volvemos a llamar
-          // setTokens aquí para no pisar el refresh rotado con el viejo.
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return apiClient(originalRequest);
-        }
-
-        forceLogout();
-        return Promise.reject(error);
-      } catch (refreshError) {
-        console.error("Error al refrescar token:", refreshError);
-        forceLogout();
-        return Promise.reject(error);
+      if (result.status === "ok") {
+        originalRequest.headers.Authorization = `Bearer ${result.accessToken}`;
+        return apiClient(originalRequest);
       }
+
+      // Solo cerramos sesión si el backend rechazó el refresh token. Si no se
+      // pudo contactar (timeout, red, backend arrancando), la sesión sigue
+      // siendo válida: se propaga el error y el siguiente intento la recupera.
+      if (result.status === "invalid") {
+        forceLogout();
+      }
+
+      return Promise.reject(error);
     }
 
-    // Si es un 401 en un intento de refresh o después de retry, cerrar sesión
-    if (
-      status === 401 &&
-      (originalRequest.skipAuthRefresh || originalRequest._retry)
-    ) {
+    // 401 que persiste tras haber refrescado con éxito: el token nuevo tampoco
+    // sirve (usuario borrado, firma cambiada...). Ahí sí toca volver a entrar.
+    if (status === 401 && originalRequest._retry) {
       forceLogout();
     }
 
