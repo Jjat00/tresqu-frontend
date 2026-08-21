@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { logout, isAuthenticated, getUser } from "@/services/authService";
+import { logout, getUser } from "@/services/authService";
+import { useSessionKeepAlive } from "@/hooks/useSessionKeepAlive";
 import { toast } from "sonner";
 import Logo from "@/components/Logo";
 import {
@@ -51,22 +52,17 @@ const DashboardLayout = ({
       return next;
     });
 
+  // Renueva el token antes de que caduque y redirige a /login solo cuando la
+  // sesión ha caducado de verdad (ver useSessionKeepAlive).
+  useSessionKeepAlive();
+
   useEffect(() => {
-    try {
-      if (!isAuthenticated()) {
-        navigate("/login");
-        return;
-      }
-      const user = getUser();
-      if (user) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- bootstrap del nombre tras validar la sesión
-        setUserName(user.first_name || "Usuario");
-      }
-    } catch (error) {
-      console.error("Error al verificar autenticación:", error);
-      navigate("/login");
+    const user = getUser();
+    if (user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- bootstrap del nombre tras validar la sesión
+      setUserName(user.first_name || "Usuario");
     }
-  }, [navigate]);
+  }, []);
 
   const handleLogout = () => {
     logout();
