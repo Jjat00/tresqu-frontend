@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAccessToken } from "@/services/authService";
-import { env } from "@/config";
+import { apiClient } from "@/services/api";
 
 export interface ExpenseRow {
   id: number;
@@ -94,17 +93,13 @@ const fetchExpensesMonthSummary = async (
   month: number,
   year: number
 ): Promise<ExpensesMonthSummary> => {
-  const token = getAccessToken();
-  if (!token) throw new Error("No auth token available");
-
-  const url = `${env.apiUrl}/api/expenses/summary/?month=${month}&year=${year}`;
-  const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!response.ok) {
-    throw new Error(`Error fetching expenses: ${response.status}`);
-  }
-  return response.json();
+  // Vía apiClient: así hereda el refresco de token del interceptor. Con fetch
+  // a pelo, un access token caducado devolvía 401 sin renovar la sesión.
+  const response = await apiClient.get<ExpensesMonthSummary>(
+    "/api/expenses/summary/",
+    { params: { month, year } }
+  );
+  return response.data;
 };
 
 export const useExpensesMonthSummary = (month: number, year: number) =>

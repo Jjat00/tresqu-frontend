@@ -1,5 +1,8 @@
 import { env } from "@/config";
-import { getAccessToken, refreshTokenService } from "@/services/authService";
+import {
+  ensureFreshAccessToken,
+  refreshTokenService,
+} from "@/services/authService";
 import type {
   ChatRole,
   ChatStreamEvent,
@@ -58,7 +61,7 @@ export async function streamChat(
 
   let response: Response;
   try {
-    response = await send(getAccessToken());
+    response = await send(await ensureFreshAccessToken());
     if (response.status === 401) {
       const refreshed = await refreshTokenService();
       if (refreshed) response = await send(refreshed);
