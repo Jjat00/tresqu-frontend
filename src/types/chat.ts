@@ -84,6 +84,9 @@ export interface FinalEvent {
   type: "final";
   text: string;
   pending_confirmation: RawPendingConfirmation | null;
+  // El guardrail de tema cortó el turno y no hay nada que decir: la burbuja
+  // del asistente se descarta en vez de quedar vacía.
+  silent?: boolean;
 }
 
 export interface ErrorEvent {

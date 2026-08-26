@@ -91,6 +91,13 @@ export const useChatBot = ({ agentId, greeting }: UseChatBotOptions) => {
             ),
           ),
         onFinal: (final) => {
+          // Turno silenciado por el guardrail de tema: se retira la burbuja en
+          // lugar de dejarla vacía.
+          if (final.silent || (!final.text && !final.pending_confirmation)) {
+            setMessages((prev) => prev.filter((m) => m.id !== assistantId));
+            setIsProcessing(false);
+            return;
+          }
           // ``final.text`` is authoritative — it replaces whatever the tokens
           // accumulated (normally identical), and covers paths that emit no
           // tokens at all (risk profiler, errors surfaced as a final).
