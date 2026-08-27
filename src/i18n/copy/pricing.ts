@@ -46,7 +46,7 @@ export const pricingCopy: Dict<PricingCopy> = {
         price: { monthly: "Gratis", annual: "Gratis" },
         period: { monthly: "para siempre", annual: "para siempre" },
         features: [
-          { text: "40 movimientos/mes (20 gastos + 20 ingresos)", included: true },
+          { text: "100 gastos + 50 ingresos al mes", included: true },
           { text: "Asistente conversacional (solo texto)", included: true },
           { text: "Estadísticas mensuales simples", included: true },
           { text: "Categorías predefinidas", included: true },
@@ -141,7 +141,7 @@ export const pricingCopy: Dict<PricingCopy> = {
         price: { monthly: "Free", annual: "Free" },
         period: { monthly: "forever", annual: "forever" },
         features: [
-          { text: "40 transactions/month (20 expenses + 20 income)", included: true },
+          { text: "100 expenses + 50 income entries per month", included: true },
           { text: "Conversational assistant (text only)", included: true },
           { text: "Simple monthly statistics", included: true },
           { text: "Predefined categories", included: true },
