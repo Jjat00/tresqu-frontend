@@ -15,6 +15,12 @@ import type {
 const PORTFOLIO_SUMMARY_KEY = ["wallbit", "portfolio", "summary"];
 const PORTFOLIO_HOLDINGS_KEY = ["wallbit", "portfolio", "holdings"];
 
+// El backend cachea el snapshot en vivo de Wallbit 60 s (compartido entre
+// summary, holdings y pnl-timeline). Un staleTime de 30 s evita que un
+// remount o volver a la pestaña disparen otra ronda de peticiones.
+const LIVE_REFETCH_MS = 60_000;
+const LIVE_STALE_MS = 30_000;
+
 export const useInvestments = (filters: InvestmentFilters = {}) =>
   useQuery<InvestmentListResponse>({
     queryKey: ["wallbit", "investments", filters],
@@ -27,7 +33,8 @@ export const usePortfolioSummary = () =>
     queryKey: PORTFOLIO_SUMMARY_KEY,
     queryFn: () => investmentsService.getSummary(),
     // Live valuation — refresh every 60s while tab is open
-    refetchInterval: 60_000,
+    refetchInterval: LIVE_REFETCH_MS,
+    staleTime: LIVE_STALE_MS,
     refetchOnWindowFocus: true,
     retry: false,
   });
@@ -36,7 +43,8 @@ export const useHoldings = () =>
   useQuery<Holding[]>({
     queryKey: PORTFOLIO_HOLDINGS_KEY,
     queryFn: () => investmentsService.getHoldings(),
-    refetchInterval: 60_000,
+    refetchInterval: LIVE_REFETCH_MS,
+    staleTime: LIVE_STALE_MS,
     refetchOnWindowFocus: true,
     retry: false,
   });
@@ -53,7 +61,8 @@ export const usePnLTimeline = (period: PnLPeriod = "1m") =>
     queryKey: ["wallbit", "portfolio", "pnl-timeline", period],
     queryFn: () => investmentsService.getPnLTimeline(period),
     // Endpoint anchors its last point to the live summary → refresh like it.
-    refetchInterval: 60_000,
+    refetchInterval: LIVE_REFETCH_MS,
+    staleTime: LIVE_STALE_MS,
     refetchOnWindowFocus: true,
     retry: false,
   });

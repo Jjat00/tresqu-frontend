@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
   Banknote,
@@ -25,6 +26,20 @@ const formatUsd = (value: string | number) => {
 const formatPct = (value: number) => {
   const sign = value >= 0 ? "+" : "";
   return `${sign}${value.toFixed(2)}%`;
+};
+
+/** "hace 3 min" / "hace 2 h" / fecha — cuándo se leyeron los datos de Wallbit. */
+const formatAsOf = (iso: string | null | undefined): string => {
+  if (!iso) return "hace un momento";
+  const read = new Date(iso);
+  const diffMs = Date.now() - read.getTime();
+  if (Number.isNaN(diffMs) || diffMs < 0) return read.toLocaleString();
+  const minutes = Math.floor(diffMs / 60_000);
+  if (minutes < 1) return "hace instantes";
+  if (minutes < 60) return `hace ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `hace ${hours} h`;
+  return read.toLocaleString();
 };
 
 const PortfolioHeroMetrics = () => {
@@ -63,6 +78,18 @@ const PortfolioHeroMetrics = () => {
 
   return (
     <div className="space-y-3">
+      {data.stale && (
+        <div
+          className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-400"
+          role="status"
+        >
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+          <span>
+            Wallbit no responde en este momento. Mostrando los últimos datos
+            disponibles ({formatAsOf(data.as_of)}); se actualizarán solos.
+          </span>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <Card className="glass-card">
         <CardContent className="p-4 space-y-1">

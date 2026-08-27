@@ -82,6 +82,12 @@ export interface PortfolioSummary {
    * muestran aparte y NO cuentan como capital invertido ni en el P&L.
    */
   pending_trades: PendingTrade[];
+  /**
+   * true → Wallbit no respondió (caído o limitando peticiones) y estos números
+   * vienen del último snapshot bueno; `as_of` es cuándo se leyeron.
+   */
+  stale: boolean;
+  as_of: string | null;
 }
 
 export interface Holding {
