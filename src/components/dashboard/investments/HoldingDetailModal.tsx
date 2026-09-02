@@ -72,12 +72,20 @@ const HoldingDetailModal = ({ holding, onClose }: HoldingDetailModalProps) => {
 
             <StockPriceChart symbol={holding.symbol} />
 
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/10 pt-4 sm:grid-cols-4">
-              <Stat label="Precio" value={fmtUsd(holding.current_price)} />
-              <Stat label="Shares" value={fmtShares(holding.shares)} />
-              <Stat label="Valor" value={fmtUsd(holding.market_value)} />
+            <div className="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/10 pt-4 sm:grid-cols-3">
+              <Stat label="Acciones" value={fmtShares(holding.shares)} />
               <Stat
-                label="P&L"
+                label="Precio compra"
+                value={holding.cost_pending ? "sincronizando…" : fmtUsd(holding.avg_cost)}
+              />
+              <Stat label="Precio hoy" value={fmtUsd(holding.current_price)} />
+              <Stat
+                label="Invertido"
+                value={holding.cost_pending ? "sincronizando…" : fmtUsd(holding.cost_basis)}
+              />
+              <Stat label="Valor hoy" value={fmtUsd(holding.market_value)} />
+              <Stat
+                label="Ganancia / Pérdida"
                 value={
                   holding.cost_pending
                     ? "—"
