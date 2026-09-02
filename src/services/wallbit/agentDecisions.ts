@@ -1,7 +1,14 @@
 import { apiClient } from "../api";
 
 export interface ConfirmResult {
-  result: { ok: boolean; error?: string; wallbit_tx_uuid?: string };
+  // `uncertain` (HTTP 202): Wallbit gave no answer in time. The backend did
+  // NOT retry and is reconciling against Wallbit's history — not a rejection.
+  result: {
+    ok: boolean;
+    uncertain?: boolean;
+    error?: string;
+    wallbit_tx_uuid?: string;
+  };
   decision: unknown;
 }
 

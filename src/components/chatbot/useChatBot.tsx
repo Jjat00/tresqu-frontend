@@ -133,13 +133,24 @@ export const useChatBot = ({ agentId, greeting }: UseChatBotOptions) => {
       }
       const res = await agentDecisionsService.confirm(decisionId);
       const ok = res.result?.ok;
+      const uncertain = res.result?.uncertain === true;
       const tx = res.result?.wallbit_tx_uuid;
-      const content = ok
-        ? `✅ Operación ejecutada en Wallbit.${tx ? `\n\n🧾 Tx: \`${tx}\`` : ""}`
-        : `❌ Wallbit rechazó la operación: ${res.result?.error ?? "error desconocido"}`;
+      let content: string;
+      if (ok) {
+        content = `✅ Operación ejecutada en Wallbit.${tx ? `\n\n🧾 Tx: \`${tx}\`` : ""}`;
+      } else if (uncertain) {
+        // Real money: never call a timeout a rejection. The order may have
+        // filled; the backend is checking Wallbit's history and will settle it.
+        content =
+          "⏳ Wallbit no confirmó la operación a tiempo. No se reintentó para no duplicarla: " +
+          "estamos verificando en tu historial de Wallbit si se ejecutó. " +
+          "Revisa tus posiciones en unos minutos y no la vuelvas a pedir mientras tanto.";
+      } else {
+        content = `❌ Wallbit rechazó la operación: ${res.result?.error ?? "error desconocido"}`;
+      }
       setMessages((prev) => [
         ...prev,
-        { id: newId(), role: "assistant", content, error: !ok },
+        { id: newId(), role: "assistant", content, error: !ok && !uncertain },
       ]);
     } catch {
       toast({
