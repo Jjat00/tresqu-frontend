@@ -34,6 +34,14 @@ const fmt = (value: string | number, opts: Intl.NumberFormatOptions = {}) => {
   });
 };
 
+// Ganancias de centavos hacia un lado u otro son ruido: sin esto una posición
+// recién comprada salía como "↗ +-$0.00 (-0.0%)".
+const cleanPnl = (value: string | number) => {
+  const n = typeof value === "string" ? parseFloat(value) : value;
+  if (!Number.isFinite(n)) return 0;
+  return Math.abs(n) < 0.005 ? 0 : n;
+};
+
 const fmtShares = (value: string | number) => {
   const n = typeof value === "string" ? parseFloat(value) : value;
   if (!Number.isFinite(n)) return "—";
@@ -51,7 +59,10 @@ const HoldingsTable = () => {
       <CardHeader>
         <CardTitle className="text-base">Posiciones actuales</CardTitle>
         <CardDescription className="text-xs">
-          Precios en vivo desde Wallbit · refresca cada 60s
+          Precios en vivo desde Wallbit · refresca cada 60s.{" "}
+          <span className="text-foreground/70">Invertido</span> es lo que pagaste
+          por la posición y <span className="text-foreground/70">Valor hoy</span>{" "}
+          lo que vale ahora; la diferencia es tu ganancia o pérdida.
         </CardDescription>
       </CardHeader>
       <CardContent className="px-0 sm:px-2">
@@ -71,17 +82,19 @@ const HoldingsTable = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Símbolo</TableHead>
-                  <TableHead className="text-right">Shares</TableHead>
-                  <TableHead className="text-right hidden sm:table-cell">Costo prom.</TableHead>
-                  <TableHead className="text-right">Precio</TableHead>
-                  <TableHead className="text-right">Valor</TableHead>
-                  <TableHead className="text-right">P&L</TableHead>
+                  <TableHead>Activo</TableHead>
+                  <TableHead className="text-right hidden sm:table-cell">Acciones</TableHead>
+                  <TableHead className="text-right hidden md:table-cell">Precio compra</TableHead>
+                  <TableHead className="text-right hidden md:table-cell">Precio hoy</TableHead>
+                  <TableHead className="text-right">Invertido</TableHead>
+                  <TableHead className="text-right">Valor hoy</TableHead>
+                  <TableHead className="text-right">Ganancia / Pérdida</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {data.map((h) => {
-                  const pnl = parseFloat(h.pnl_usd || "0");
+                  const pnl = cleanPnl(h.pnl_usd || "0");
+                  const pct = cleanPnl(h.pnl_pct);
                   const isUp = pnl >= 0;
                   return (
                     <TableRow
@@ -111,10 +124,10 @@ const HoldingsTable = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right tabular-nums">
+                      <TableCell className="text-right tabular-nums hidden sm:table-cell">
                         {fmtShares(h.shares)}
                       </TableCell>
-                      <TableCell className="text-right tabular-nums hidden sm:table-cell">
+                      <TableCell className="text-right tabular-nums hidden md:table-cell">
                         {h.cost_pending ? (
                           <span className="text-[10px] text-muted-foreground">
                             sincronizando…
@@ -123,8 +136,20 @@ const HoldingsTable = () => {
                           fmt(h.avg_cost)
                         )}
                       </TableCell>
-                      <TableCell className="text-right tabular-nums">
+                      <TableCell className="text-right tabular-nums hidden md:table-cell">
                         {fmt(h.current_price)}
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums">
+                        {h.cost_pending ? (
+                          <span
+                            className="text-[10px] text-muted-foreground"
+                            title="El costo real de esta compra todavía se está sincronizando desde Wallbit"
+                          >
+                            sincronizando…
+                          </span>
+                        ) : (
+                          fmt(h.cost_basis)
+                        )}
                       </TableCell>
                       <TableCell className="text-right font-medium tabular-nums">
                         {fmt(h.market_value)}
@@ -148,11 +173,11 @@ const HoldingsTable = () => {
                               <ArrowDownRight className="h-3 w-3" />
                             )}
                             <span>
-                              {isUp ? "+" : ""}
-                              {fmt(h.pnl_usd)}
+                              {pnl > 0 ? "+" : ""}
+                              {fmt(pnl)}
                             </span>
                             <span className="text-[10px] opacity-70">
-                              ({h.pnl_pct.toFixed(1)}%)
+                              ({pct.toFixed(1)}%)
                             </span>
                           </div>
                         )}
