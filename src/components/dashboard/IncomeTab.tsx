@@ -6,12 +6,7 @@ import { useIncomeBarData } from "@/hooks/useIncomeBarData";
 import { useIncomePieChart } from "@/hooks/useIncomePieChart";
 import { Input } from "@/components/ui/input";
 import { DateRange } from "./DateRangePicker";
-import {
-  CurrencyTotals,
-  formatAmountWithCurrency,
-  formatCurrencyTotals,
-  sortedCurrencyTotals,
-} from "@/utils/currency";
+import { CurrencyTotals, sortedCurrencyTotals } from "@/utils/currency";
 
 // Import refactored components
 import IncomeLineChart from "./income/IncomeLineChart";
@@ -90,6 +85,11 @@ const IncomeTab = ({
       maximumFractionDigits: 0,
     });
   };
+
+  const totalEntries = useMemo(
+    () => sortedCurrencyTotals(totalsByCurrency),
+    [totalsByCurrency]
+  );
 
   // Promedio diario por moneda: se divide cada moneda entre los días del
   // período, nunca se mezclan monedas en una sola cifra.
