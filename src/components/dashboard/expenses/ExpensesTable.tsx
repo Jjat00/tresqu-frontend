@@ -24,11 +24,12 @@ import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
 import * as XLSX from "xlsx";
 import { useDeleteExpense } from "@/hooks/expenses";
+import { useExpensesMonthSummary } from "@/hooks/useExpensesMonthSummary";
 import {
-  useExpensesMonthSummary,
-  computeExpensesTotalsByCurrency,
+  computeTotalsByCurrency,
+  formatAmountWithCurrency,
   formatCurrencyTotals,
-} from "@/hooks/useExpensesMonthSummary";
+} from "@/utils/currency";
 import {
   Dialog,
   DialogContent,
@@ -229,7 +230,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
   }, [data, categoryFilter, searchQuery, sortField, sortOrder]);
 
   const totalsByCurrency = React.useMemo(
-    () => computeExpensesTotalsByCurrency(filteredExpenses),
+    () => computeTotalsByCurrency(filteredExpenses),
     [filteredExpenses]
   );
 
@@ -546,7 +547,10 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                     </div>
                     <div className="text-right flex-shrink-0 ml-3">
                       <p className="text-sm font-bold text-rose-500">
-                        ${parseFloat(expense.amount).toLocaleString("es-CO")}
+                        {formatAmountWithCurrency(
+                          expense.amount,
+                          expense.currency
+                        )}
                       </p>
                       <p className="text-[10px] text-muted-foreground">
                         {formatDate(expense.spent_at)}
@@ -610,6 +614,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   >
                     Monto {renderSortIcon("amount")}
                   </TableHead>
+                  <TableHead className="text-xs">Moneda</TableHead>
                   <TableHead
                     className="text-xs cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort("date")}
@@ -627,13 +632,14 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                       <TableCell className="py-2"><Skeleton className="h-4 w-24" /></TableCell>
                       <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
                       <TableCell className="py-2"><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell className="py-2"><Skeleton className="h-4 w-10" /></TableCell>
                       <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
                       <TableCell className="py-2"><Skeleton className="h-4 w-14" /></TableCell>
                     </TableRow>
                   ))
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
+                    <TableCell colSpan={7} className="h-24 text-center">
                       <div className="flex flex-col items-center justify-center">
                         <AlertCircle className="h-8 w-8 text-destructive mb-2" />
                         <p className="text-sm text-muted-foreground">
@@ -644,7 +650,7 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                   </TableRow>
                 ) : filteredExpenses.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={7}>
                       <EmptyState
                         title="Sin gastos registrados"
                         description="Envía un mensaje por WhatsApp o Telegram para registrar tu primer gasto"
@@ -681,8 +687,13 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
                           </span>
                         </div>
                       </TableCell>
+                      <TableCell className="py-2 text-xs sm:text-sm whitespace-nowrap">
+                        {parseFloat(expense.amount).toLocaleString("es-CO", {
+                          maximumFractionDigits:
+                            expense.currency === "COP" ? 0 : 2,
+                        })}
+                      </TableCell>
                       <TableCell className="py-2 text-xs sm:text-sm">
-                        {parseFloat(expense.amount).toLocaleString("es-CO")}{" "}
                         {expense.currency}
                       </TableCell>
                       <TableCell className="py-2 text-xs sm:text-sm whitespace-nowrap">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -7,14 +7,21 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, Loader2, AlertCircle, Trash2 } from "lucide-react";
+import { Download, AlertCircle, Trash2, Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/EmptyState";
-import { useIncomeSummary } from "@/hooks/useIncomeSummary";
-import { IncomeSummaryItem, IncomeTableItem } from "@/types/incomes";
-import { useDeleteIncome } from "@/hooks/incomes";
+import { useDeleteIncome, useIncomesMonthSummary } from "@/hooks/incomes";
+import { IncomeRow } from "@/types/incomes";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 import {
   Dialog,
   DialogContent,
@@ -23,105 +30,153 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useQueryClient } from "@tanstack/react-query";
-
-// Convertir los datos del resumen a un formato de tabla
-const transformSummaryToTableData = (
-  summary: IncomeSummaryItem[]
-): IncomeTableItem[] => {
-  return summary.map((item) => ({
-    id: item.id,
-    description: `Ingreso por ${item.category__name || "Sin categoría"}`,
-    category: item.category__name || "Sin categoría",
-    subcategory: "",
-    amount: item.total,
-    date: new Date().toISOString().split("T")[0], // Usamos la fecha actual como fallback
-  }));
-};
+import EditIncomeDialog from "./EditIncomeDialog";
+import {
+  computeTotalsByCurrency,
+  formatAmountWithCurrency,
+  formatCurrencyTotals,
+} from "@/utils/currency";
+import {
+  getIncomeCategoryColor as getCategoryColor,
+  getIncomeCategoryName,
+  getIncomeDescription as getDescription,
+  isCustomIncomeCategory as isCustomCategory,
+} from "@/utils/incomes";
 
 interface IncomeTableProps {
   categoryFilter: string;
   searchQuery: string;
-  formatCurrency: (amount: number) => string;
-  onExportPDF: () => void;
-  onExportExcel: () => void;
-  onShare: () => void;
-  period?: "week" | "month" | "year" | "all";
 }
+
+const MONTH_NAMES = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+
+// La fecha llega como YYYY-MM-DD: se construye local para que no reste un día
+// al pasar por UTC.
+const formatDate = (value: string | null) => {
+  if (!value) return "-";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [year, month, day] = value.split("-");
+    return new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day)
+    ).toLocaleDateString("es-CO", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  }
+  return new Date(value).toLocaleDateString("es-CO", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
 
 const IncomeTable: React.FC<IncomeTableProps> = ({
   categoryFilter,
   searchQuery,
-  formatCurrency,
-  onExportPDF,
-  onExportExcel,
-  onShare,
-  period = "month",
 }) => {
-  const [incomeToDelete, setIncomeToDelete] = useState<IncomeTableItem | null>(
-    null
-  );
+  const today = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear());
+  const [incomeToDelete, setIncomeToDelete] = useState<IncomeRow | null>(null);
+  const [incomeToEdit, setIncomeToEdit] = useState<IncomeRow | null>(null);
+
   const deleteIncome = useDeleteIncome();
-  const queryClient = useQueryClient();
+  const { data, isLoading, error } = useIncomesMonthSummary(
+    selectedMonth,
+    selectedYear
+  );
 
-  // Obtener datos del resumen de ingresos
-  const { data: summaryData, isLoading, error } = useIncomeSummary({ period });
+  const years = Array.from({ length: 5 }, (_, i) => today.getFullYear() - i);
 
-  // Estado para los datos de la tabla
-  const [tableData, setTableData] = useState<IncomeTableItem[]>([]);
-  const [filteredIncome, setFilteredIncome] = useState<IncomeTableItem[]>([]);
+  const filteredIncomes = useMemo(() => {
+    const incomes = data?.incomes ?? [];
+    let filtered = [...incomes];
 
-  // Transformar los datos del resumen cuando se reciben
-  useEffect(() => {
-    if (summaryData && summaryData.summary) {
-      const transformedData = transformSummaryToTableData(summaryData.summary);
-      setTableData(transformedData);
-    }
-  }, [summaryData]);
-
-  // Aplicar filtros a los datos
-  useEffect(() => {
-    if (!tableData.length) {
-      setFilteredIncome([]);
-      return;
-    }
-
-    let filtered = [...tableData];
-
-    // Aplicar filtro de categoría
     if (categoryFilter !== "all") {
-      const normalizedCategoryFilter = categoryFilter
-        .toLowerCase()
-        .replace("salary", "empleo")
-        .replace("freelance", "freelance")
-        .replace("investments", "inversiones")
-        .replace("other", "otros");
-
       filtered = filtered.filter(
-        (income) => income.category.toLowerCase() === normalizedCategoryFilter
+        (income) =>
+          getIncomeCategoryName(income).toLowerCase() ===
+          categoryFilter.toLowerCase()
       );
     }
 
-    // Aplicar filtro de búsqueda
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (income) =>
-          income.description.toLowerCase().includes(query) ||
-          income.category.toLowerCase().includes(query) ||
-          (income.subcategory &&
-            income.subcategory.toLowerCase().includes(query))
+          getDescription(income).toLowerCase().includes(query) ||
+          getIncomeCategoryName(income).toLowerCase().includes(query) ||
+          income.currency.toLowerCase().includes(query)
       );
     }
 
-    // Ordenar por monto (mayor a menor)
-    filtered.sort((a, b) => b.amount - a.amount);
-    setFilteredIncome(filtered);
-  }, [tableData, categoryFilter, searchQuery]);
+    return filtered;
+  }, [data, categoryFilter, searchQuery]);
 
-  const handleDeleteClick = (e: React.MouseEvent, income: IncomeTableItem) => {
-    e.stopPropagation();
-    setIncomeToDelete(income);
+  // Nunca se suman monedas distintas: un total por moneda.
+  const totalsByCurrency = useMemo(
+    () => computeTotalsByCurrency(filteredIncomes),
+    [filteredIncomes]
+  );
+
+  const handleExportExcel = () => {
+    if (!filteredIncomes.length) {
+      toast.error("No hay datos para exportar");
+      return;
+    }
+
+    try {
+      const excelData = filteredIncomes.map((income) => ({
+        Descripción: getDescription(income),
+        Categoría: getIncomeCategoryName(income) || "Sin categoría",
+        Monto: Number(income.amount),
+        Moneda: income.currency,
+        Fecha: formatDate(income.received_at),
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Ingresos");
+
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const monthStr = String(selectedMonth).padStart(2, "0");
+      link.download = `ingresos_${selectedYear}_${monthStr}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Archivo Excel descargado exitosamente");
+    } catch (exportError) {
+      console.error("Error al exportar a Excel:", exportError);
+      toast.error("Error al exportar a Excel");
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -129,108 +184,139 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
 
     try {
       await deleteIncome.mutateAsync(incomeToDelete.id);
-      await queryClient.invalidateQueries({ queryKey: ["incomeSummary"] });
       toast.success("Ingreso eliminado exitosamente");
-    } catch (error) {
+    } catch (deleteError) {
       toast.error("Error al eliminar el ingreso");
     } finally {
       setIncomeToDelete(null);
     }
   };
 
-  // Mostrar estado de carga
-  if (isLoading) {
-    return (
-      <div className="space-y-3">
-        {/* Mobile skeleton */}
-        <div className="sm:hidden space-y-2">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={`mobile-skeleton-${i}`} className="glass-card p-3 space-y-2">
-              <div className="flex justify-between">
-                <Skeleton className="h-4 w-28" />
-                <Skeleton className="h-4 w-20" />
-              </div>
-              <Skeleton className="h-3 w-20" />
-            </div>
-          ))}
-        </div>
-        {/* Desktop skeleton */}
-        <div className="hidden sm:block rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-xs">Descripción</TableHead>
-                <TableHead className="text-xs">Categoría</TableHead>
-                <TableHead className="text-xs">Monto</TableHead>
-                <TableHead className="text-xs">Período</TableHead>
-                <TableHead className="text-xs w-[50px]">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array.from({ length: 4 }).map((_, i) => (
-                <TableRow key={`skeleton-${i}`}>
-                  <TableCell className="py-2"><Skeleton className="h-4 w-32" /></TableCell>
-                  <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell className="py-2"><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell className="py-2"><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell className="py-2"><Skeleton className="h-4 w-8" /></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-    );
-  }
-
-  // Mostrar error
-  if (error) {
-    return (
-      <div className="space-y-3">
-        <div className="rounded-md border p-8">
-          <div className="flex flex-col items-center justify-center">
-            <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-            <p className="text-sm text-muted-foreground">
-              Error al cargar los datos de ingresos
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const emptyState = (
+    <EmptyState
+      title="Sin ingresos registrados"
+      description="Registra tu primer ingreso por WhatsApp, Telegram o desde el chat de Tresqu"
+    />
+  );
 
   return (
     <>
       <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Select
+              value={selectedMonth.toString()}
+              onValueChange={(value) => setSelectedMonth(parseInt(value))}
+            >
+              <SelectTrigger className="w-[140px] h-8 text-xs">
+                <SelectValue placeholder="Mes" />
+              </SelectTrigger>
+              <SelectContent>
+                {MONTH_NAMES.map((month, index) => (
+                  <SelectItem key={month} value={(index + 1).toString()}>
+                    {month}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={selectedYear.toString()}
+              onValueChange={(value) => setSelectedYear(parseInt(value))}
+            >
+              <SelectTrigger className="w-[100px] h-8 text-xs">
+                <SelectValue placeholder="Año" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportExcel}
+            className="h-8 text-xs glass"
+          >
+            <Download className="mr-1 h-3 w-3" />
+            Excel
+          </Button>
+        </div>
+
         {/* Vista mobile: cards */}
         <div className="sm:hidden space-y-2 max-h-[400px] overflow-y-auto">
-          {filteredIncome.length === 0 ? (
-            <EmptyState
-              title="Sin ingresos registrados"
-              description="Registra tu primer ingreso por WhatsApp, Telegram o desde el dashboard"
-            />
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={`mobile-skeleton-${i}`}
+                className="glass-card p-3 space-y-2"
+              >
+                <div className="flex justify-between">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+                <div className="flex justify-between">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+            ))
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+              <p className="text-sm text-muted-foreground">
+                Error al cargar los datos de ingresos
+              </p>
+            </div>
+          ) : filteredIncomes.length === 0 ? (
+            emptyState
           ) : (
-            filteredIncome.map((income) => (
+            filteredIncomes.map((income) => (
               <div key={income.id} className="glass-card p-3 space-y-1.5">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{income.category}</p>
-                    <span className="text-xs text-muted-foreground">
-                      {period === "week" ? "Esta semana" : period === "month" ? "Este mes" : period === "year" ? "Este año" : "Todo"}
-                    </span>
+                    <p className="text-sm font-medium truncate">
+                      {getDescription(income)}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      {getCategoryColor(income) && (
+                        <div
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: getCategoryColor(income) }}
+                        />
+                      )}
+                      <span className="text-xs text-muted-foreground">
+                        {getIncomeCategoryName(income) || "Sin categoría"}
+                      </span>
+                    </div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-3">
                     <p className="text-sm font-bold text-success">
-                      {formatCurrency(income.amount)}
+                      {formatAmountWithCurrency(income.amount, income.currency)}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {formatDate(income.received_at)}
                     </p>
                   </div>
                 </div>
-                <div className="flex justify-end pt-1 border-t border-border/50">
+                <div className="flex justify-end gap-1 pt-1 border-t border-border/50">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    onClick={() => setIncomeToEdit(income)}
+                    aria-label="Editar ingreso"
+                  >
+                    <Edit className="h-3.5 w-3.5" />
+                  </Button>
                   <Button
                     variant="ghost"
                     size="sm"
                     className="h-7 w-7 p-0 hover:text-destructive"
-                    onClick={(e) => handleDeleteClick(e, income)}
+                    onClick={() => setIncomeToDelete(income)}
                     aria-label="Eliminar ingreso"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -242,58 +328,97 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
         </div>
 
         {/* Vista desktop: tabla */}
-        <div className="hidden sm:block rounded-md border overflow-auto">
+        <div className="hidden sm:block rounded-md border overflow-x-auto max-h-[300px] sm:max-h-[400px]">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="text-xs">Descripción</TableHead>
                 <TableHead className="text-xs">Categoría</TableHead>
-                <TableHead className="text-xs">Subcategoría</TableHead>
                 <TableHead className="text-xs">Monto</TableHead>
-                <TableHead className="text-xs">Período</TableHead>
-                <TableHead className="text-xs w-[50px]">Acciones</TableHead>
+                <TableHead className="text-xs">Moneda</TableHead>
+                <TableHead className="text-xs">Fecha</TableHead>
+                <TableHead className="text-xs w-[80px]">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredIncome.length === 0 ? (
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`}>
+                    {Array.from({ length: 6 }).map((__, cell) => (
+                      <TableCell key={`skeleton-cell-${cell}`} className="py-2">
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={6}>
-                    <EmptyState
-                      title="Sin ingresos registrados"
-                      description="Registra tu primer ingreso por WhatsApp, Telegram o desde el dashboard"
-                    />
+                  <TableCell colSpan={6} className="h-24 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+                      <p className="text-sm text-muted-foreground">
+                        Error al cargar los datos de ingresos
+                      </p>
+                    </div>
                   </TableCell>
                 </TableRow>
+              ) : filteredIncomes.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6}>{emptyState}</TableCell>
+                </TableRow>
               ) : (
-                filteredIncome.map((income) => (
-                  <TableRow key={income.id} className="text-xs sm:text-sm">
-                    <TableCell className="py-2">{income.description}</TableCell>
-                    <TableCell className="py-2">{income.category}</TableCell>
-                    <TableCell className="py-2">
-                      {income.subcategory || "-"}
+                filteredIncomes.map((income) => (
+                  <TableRow key={income.id} className="hover:bg-muted/50">
+                    <TableCell className="py-2 text-xs sm:text-sm">
+                      {getDescription(income)}
                     </TableCell>
-                    <TableCell className="py-2">
-                      {formatCurrency(income.amount)}
+                    <TableCell className="py-2 text-xs sm:text-sm">
+                      <div className="flex items-center gap-2">
+                        {getCategoryColor(income) && (
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: getCategoryColor(income) }}
+                          />
+                        )}
+                        <span>
+                          {getIncomeCategoryName(income) || "Sin categoría"}
+                          {isCustomCategory(income) && " ★"}
+                        </span>
+                      </div>
                     </TableCell>
-                    <TableCell className="py-2">
-                      {period === "week"
-                        ? "Esta semana"
-                        : period === "month"
-                        ? "Este mes"
-                        : period === "year"
-                        ? "Este año"
-                        : "Todo el período"}
+                    <TableCell className="py-2 text-xs sm:text-sm whitespace-nowrap">
+                      {parseFloat(income.amount).toLocaleString("es-CO", {
+                        maximumFractionDigits:
+                          income.currency === "COP" ? 0 : 2,
+                      })}
                     </TableCell>
-                    <TableCell className="py-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
-                        onClick={(e) => handleDeleteClick(e, income)}
-                        aria-label="Eliminar ingreso"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                    <TableCell className="py-2 text-xs sm:text-sm">
+                      {income.currency}
+                    </TableCell>
+                    <TableCell className="py-2 text-xs sm:text-sm whitespace-nowrap">
+                      {formatDate(income.received_at)}
+                    </TableCell>
+                    <TableCell className="py-2 text-xs sm:text-sm">
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+                          onClick={() => setIncomeToEdit(income)}
+                          aria-label="Editar ingreso"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() => setIncomeToDelete(income)}
+                          aria-label="Eliminar ingreso"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -303,37 +428,17 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
         </div>
 
         <div className="flex flex-wrap justify-between items-center gap-2 mt-3 sm:mt-4">
-          <div>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Total:{" "}
-              <span className="font-semibold">
-                {formatCurrency(
-                  summaryData?.total ||
-                    filteredIncome.reduce(
-                      (sum, income) => sum + income.amount,
-                      0
-                    )
-                )}
-              </span>
-            </p>
-            {summaryData && summaryData.start_date && (
-              <p className="text-xs text-muted-foreground">
-                Desde: {new Date(summaryData.start_date).toLocaleDateString()}
-              </p>
-            )}
-          </div>
-
-          <div className="flex sm:hidden gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onExportExcel}
-              className="h-8 text-xs"
-            >
-              <Download className="mr-1 h-3 w-3" />
-              Excel
-            </Button>
-          </div>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Total:{" "}
+            <span className="font-semibold">
+              {formatCurrencyTotals(totalsByCurrency)}
+            </span>
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {filteredIncomes.length} ingreso
+            {filteredIncomes.length === 1 ? "" : "s"} en{" "}
+            {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
+          </p>
         </div>
       </div>
 
@@ -367,6 +472,11 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <EditIncomeDialog
+        income={incomeToEdit}
+        onClose={() => setIncomeToEdit(null)}
+      />
     </>
   );
 };

@@ -213,3 +213,68 @@ export interface IncomeTableItem {
   amount: number;
   date: string;
 }
+
+/**
+ * Un ingreso tal como lo devuelve la API (`/api/incomes/month_summary/`).
+ * Es la fila que muestra y edita la tabla de ingresos del dashboard.
+ */
+export interface IncomeRow {
+  id: number;
+  user: number;
+  amount: string;
+  currency: string;
+  description: string;
+  timestamp: string;
+  received_at: string | null;
+  note: string;
+  raw_message: string;
+  created_at: string;
+  updated_at: string;
+  category: number | null;
+  category_str: string;
+
+  user_income_category?: number | null;
+  user_income_category_detail?: {
+    id: number;
+    name: string;
+    color: string;
+    is_default: boolean;
+    description?: string;
+    example?: string;
+  };
+
+  // Categoría vigente calculada por el backend (prioriza la del usuario).
+  current_category?: {
+    id: number;
+    name: string;
+    color: string;
+    description?: string;
+    example?: string;
+    is_default?: boolean;
+    type: string;
+  } | null;
+}
+
+/**
+ * Respuesta de `/api/incomes/month_summary/?month&year`.
+ * `totals_by_currency` viene separado por moneda: nunca se convierte entre ellas.
+ */
+export interface IncomesMonthSummary {
+  month: number;
+  year: number;
+  by_category: Record<string, number>;
+  total: number;
+  totals_by_currency: Record<string, number>;
+  incomes: IncomeRow[];
+}
+
+/**
+ * Campos editables de un ingreso (PATCH `/api/incomes/{id}/`).
+ */
+export interface UpdateIncomeRequest {
+  amount?: string;
+  currency?: string;
+  note?: string;
+  received_at?: string;
+  user_category_name?: string;
+}

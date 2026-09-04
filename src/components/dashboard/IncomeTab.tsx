@@ -1,27 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import * as XLSX from "xlsx";
-import { toast } from "sonner";
+import { Card, CardContent } from "@/components/ui/card";
 import { useIncomeSummary } from "@/hooks/useIncomeSummary";
 import { useIncomeLineData } from "@/hooks/useIncomeLineData";
 import { useIncomeBarData } from "@/hooks/useIncomeBarData";
 import { useIncomePieChart } from "@/hooks/useIncomePieChart";
-import {
-  IncomeSummaryItem,
-  IncomeTableItem,
-  DonutChartData,
-} from "@/types/incomes";
 import { Input } from "@/components/ui/input";
-import {
-  Plus,
-  Download,
-  TrendingUpIcon,
-  WalletIcon,
-  CalendarIcon,
-  TagIcon,
-} from "lucide-react";
 import { DateRange } from "./DateRangePicker";
+import {
+  CurrencyTotals,
+  formatAmountWithCurrency,
+  formatCurrencyTotals,
+  sortedCurrencyTotals,
+} from "@/utils/currency";
 
 // Import refactored components
 import IncomeLineChart from "./income/IncomeLineChart";
@@ -29,7 +19,6 @@ import IncomeCategoryChart from "./income/IncomeCategoryChart";
 import IncomeBarChart from "./income/IncomeBarChart";
 import IncomeSummaryStats from "./income/IncomeSummaryStats";
 import IncomeTable from "./income/IncomeTable";
-import NewIncomeDialog, { IncomeFormData } from "./income/NewIncomeDialog";
 
 interface IncomeTabProps {
   selectedMonth?: string;
@@ -49,7 +38,6 @@ const IncomeTab = ({
   );
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [newIncomeOpen, setNewIncomeOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewModeLocal, setViewModeLocal] = useState<
     "day" | "week" | "month" | "year"
@@ -69,61 +57,15 @@ const IncomeTab = ({
   const { isLoading: isBarLoading } = useIncomeBarData();
   const { data: pieData, isLoading: isPieLoading } = useIncomePieChart();
 
-  // Datos de la tabla derivados del resumen de ingresos
-  const tableData = useMemo<IncomeTableItem[]>(() => {
-    if (summaryData && summaryData.summary) {
-      return summaryData.summary.map(
-        (item: IncomeSummaryItem, index: number) => ({
-          id: index + 1,
-          description: `Ingreso por ${item.category__name || "Sin categoría"}`,
-          category: item.category__name || "Sin categoría",
-          subcategory: "",
-          amount: item.total,
-          date: new Date().toISOString().split("T")[0],
-        })
-      );
-    }
-    return [];
+  // Totales del período separados por moneda: cada fila del resumen trae su
+  // propia moneda, así que sumarlas todas juntas daría un número falso.
+  const totalsByCurrency = useMemo<CurrencyTotals>(() => {
+    return (summaryData?.summary ?? []).reduce<CurrencyTotals>((totals, item) => {
+      const currency = item.currency || "COP";
+      totals[currency] = (totals[currency] ?? 0) + item.total;
+      return totals;
+    }, {});
   }, [summaryData]);
-
-  // Ingresos filtrados derivados de la tabla y los filtros activos
-  const filteredIncome = useMemo<IncomeTableItem[]>(() => {
-    if (!tableData.length) {
-      return [];
-    }
-
-    let filtered = [...tableData];
-
-    // Aplicar filtro de categoría
-    if (categoryFilter !== "all") {
-      const normalizedCategoryFilter = categoryFilter
-        .toLowerCase()
-        .replace("salary", "empleo")
-        .replace("freelance", "freelance")
-        .replace("investments", "inversiones")
-        .replace("other", "otros");
-
-      filtered = filtered.filter(
-        (income) => income.category.toLowerCase() === normalizedCategoryFilter
-      );
-    }
-
-    // Aplicar filtro de búsqueda
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (income) =>
-          income.description.toLowerCase().includes(query) ||
-          income.category.toLowerCase().includes(query) ||
-          (income.subcategory &&
-            income.subcategory.toLowerCase().includes(query))
-      );
-    }
-
-    // Ordenar por monto (mayor a menor)
-    filtered.sort((a, b) => b.amount - a.amount);
-    return filtered;
-  }, [tableData, categoryFilter, searchQuery]);
 
   // Sincroniza el estado local editable cuando cambia la prop selectedMonth.
   useEffect(() => {
@@ -135,76 +77,8 @@ const IncomeTab = ({
     }
   }, [selectedMonth]);
 
-  const handleAddIncome = (newIncome: IncomeFormData) => {
-    console.log("Adding new income:", newIncome);
-    // Here you would add logic to add the income to the backend
-  };
-
-  const handleExportPDF = () => {
-    console.log("Exporting income data to PDF");
-    // Implementation would go here
-  };
-
-  const handleExportExcel = () => {
-    if (!filteredIncome || filteredIncome.length === 0) {
-      toast.error("No hay datos para exportar");
-      return;
-    }
-
-    try {
-      // Preparar los datos para Excel
-      const excelData = filteredIncome.map((income: IncomeTableItem) => ({
-        Descripción: income.description || "Sin descripción",
-        Categoría: income.category || "Sin categoría",
-        Subcategoría: income.subcategory || "-",
-        Monto: formatCurrency(income.amount),
-        Período:
-          period === "week"
-            ? "Esta semana"
-            : period === "month"
-            ? "Este mes"
-            : period === "year"
-            ? "Este año"
-            : "Todo el período",
-      }));
-
-      // Crear un nuevo libro de Excel
-      const worksheet = XLSX.utils.json_to_sheet(excelData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Ingresos");
-
-      // Generar el archivo Excel
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
-      const blob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-
-      // Crear un enlace de descarga
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `ingresos_${new Date().toISOString().split("T")[0]}.xlsx`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      toast.success("Archivo Excel descargado exitosamente");
-    } catch (error) {
-      console.error("Error al exportar a Excel:", error);
-      toast.error("Error al exportar a Excel");
-    }
-  };
-
-  const handleShare = () => {
-    console.log("Sharing Tresqu");
-    // Implementation would go here
-  };
-
-  // Format currency for display
+  // Las gráficas siguen recibiendo un formateador en COP para sus ejes y
+  // tooltips; los importes con moneda propia usan formatAmountWithCurrency.
   const formatCurrency = (amount: number | undefined | null) => {
     if (amount === undefined || amount === null) {
       return "$ 0";
@@ -217,36 +91,35 @@ const IncomeTab = ({
     });
   };
 
-  // Calcular el ingreso total
-  const getTotalIncome = () => {
-    if (!summaryData?.summary) return 0;
-    return summaryData.summary.reduce((total, item) => total + item.total, 0);
-  };
-
-  // Calcular el ingreso promedio diario
-  const calculateDailyAverage = () => {
-    if (!dateRange?.from || !dateRange?.to || !getTotalIncome()) return 0;
-
-    // Si es el mismo día, retornar el total directamente
-    if (dateRange.from.toDateString() === dateRange.to.toDateString()) {
-      return getTotalIncome();
-    }
+  // Promedio diario por moneda: se divide cada moneda entre los días del
+  // período, nunca se mezclan monedas en una sola cifra.
+  const dailyAverageByCurrency = useMemo<CurrencyTotals>(() => {
+    if (!dateRange?.from || !dateRange?.to) return {};
 
     const startDate = new Date(dateRange.from);
     const endDate = new Date(dateRange.to);
-
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
 
-    const daysDiff =
+    const days =
       Math.floor(
         (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
       ) + 1;
+    if (days <= 0) return {};
 
-    return Number((getTotalIncome() / daysDiff).toFixed(2));
-  };
+    return Object.fromEntries(
+      Object.entries(totalsByCurrency).map(([currency, total]) => [
+        currency,
+        total / days,
+      ])
+    );
+  }, [totalsByCurrency, dateRange]);
 
-  // Obtener la categoría principal de ingresos
+  const dailyAverageEntries = useMemo(
+    () => sortedCurrencyTotals(dailyAverageByCurrency),
+    [dailyAverageByCurrency]
+  );
+
   const getMainCategory = () => {
     if (
       !pieData ||
@@ -284,22 +157,6 @@ const IncomeTab = ({
   return (
     <div className="space-y-3 md:space-y-4 flex flex-col relative">
 
-      {/* <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-2 sm:gap-3">
-        <Button
-          className="bg-success hover:bg-success/90 h-8 xs:h-9 w-[200] xs:w-auto whitespace-nowrap text-[10px] xs:text-xs sm:text-sm animate-fade-up"
-          onClick={() => setNewIncomeOpen(true)}
-        >
-          <Plus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-          Nuevo ingreso
-        </Button>
-
-        <NewIncomeDialog
-          open={newIncomeOpen}
-          onOpenChange={setNewIncomeOpen}
-          onAddIncome={handleAddIncome}
-        />
-      </div> */}
-
       {/* KPIs Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <div className="glass-card p-4 sm:p-5 animate-fade-up">
@@ -307,8 +164,23 @@ const IncomeTab = ({
             <div className="w-1.5 h-1.5 rounded-full bg-[#00FF7F]" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Total ingresos</span>
           </div>
-          <div className="text-lg sm:text-2xl font-semibold text-[#00FF7F] tracking-tight font-display">
-            ${getTotalIncome().toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          <div className="text-lg sm:text-2xl font-semibold text-[#00FF7F] tracking-tight font-display tabular-nums break-words">
+            {totalEntries.length === 0 ? (
+              <span>$0</span>
+            ) : (
+              totalEntries.map(([currency, value]) => (
+                <div key={currency} className="leading-tight">
+                  $
+                  {value.toLocaleString("es-ES", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })}
+                  <span className="ml-1 text-xs sm:text-sm text-muted-foreground font-normal">
+                    {currency}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
             {isSummaryLoading ? "Cargando..." : "En el período seleccionado"}
@@ -320,8 +192,23 @@ const IncomeTab = ({
             <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />
             <span className="text-[11px] sm:text-xs text-muted-foreground font-medium tracking-wide">Promedio Diario</span>
           </div>
-          <div className="text-lg sm:text-2xl font-semibold text-[#22d3ee] tracking-tight font-display">
-            ${calculateDailyAverage().toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          <div className="text-lg sm:text-2xl font-semibold text-[#22d3ee] tracking-tight font-display tabular-nums break-words">
+            {dailyAverageEntries.length === 0 ? (
+              <span>$0</span>
+            ) : (
+              dailyAverageEntries.map(([currency, value]) => (
+                <div key={currency} className="leading-tight">
+                  $
+                  {value.toLocaleString("es-ES", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })}
+                  <span className="ml-1 text-xs sm:text-sm text-muted-foreground font-normal">
+                    {currency}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
           <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 opacity-60">
             {isSummaryLoading ? "Cargando..." : "Promedio por día"}
@@ -429,27 +316,12 @@ const IncomeTab = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="hidden sm:flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleExportExcel}
-                  className="h-9 text-xs glass"
-                >
-                  <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                  Excel
-                </Button>
-              </div>
             </div>
           </div>
 
           <IncomeTable
             categoryFilter={categoryFilter}
             searchQuery={searchQuery}
-            formatCurrency={formatCurrency}
-            onExportPDF={handleExportPDF}
-            onExportExcel={handleExportExcel}
-            onShare={handleShare}
           />
         </CardContent>
       </Card>

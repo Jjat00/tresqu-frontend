@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/services/api";
+import { computeTotalsByCurrency } from "@/utils/currency";
 
 export interface ExpenseRow {
   id: number;
@@ -43,51 +44,16 @@ export interface ExpensesMonthSummary {
   recent_expenses: ExpenseRow[];
 }
 
-// Sumamos por moneda en lugar de convertir todo a COP con una tasa fija:
-// no inventamos un tipo de cambio. Cada moneda se reporta por separado.
-export type CurrencyTotals = Record<string, number>;
+// Los helpers de moneda viven en `@/utils/currency` (los comparten gastos e
+// ingresos). Se re-exportan aquí para no romper los imports existentes.
+export type { CurrencyTotals } from "@/utils/currency";
+export {
+  sortedCurrencyTotals,
+  formatCurrencyTotals,
+  formatAmountWithCurrency,
+} from "@/utils/currency";
 
-// Acepta cualquier objeto con `amount` y `currency` (ExpenseRow del summary
-// o Expense del endpoint de la dona).
-type AmountWithCurrency = { amount: string; currency: string };
-
-export const computeExpensesTotalsByCurrency = (
-  expenses: AmountWithCurrency[]
-): CurrencyTotals =>
-  expenses.reduce<CurrencyTotals>((totals, expense) => {
-    const amount = parseFloat(expense.amount);
-    if (Number.isNaN(amount)) return totals;
-    const currency = expense.currency || "COP";
-    totals[currency] = (totals[currency] ?? 0) + amount;
-    return totals;
-  }, {});
-
-// Entradas ordenadas con COP primero, luego el resto alfabéticamente.
-export const sortedCurrencyTotals = (
-  totals: CurrencyTotals
-): [string, number][] =>
-  Object.entries(totals)
-    .filter(([, value]) => value !== 0)
-    .sort(([a], [b]) =>
-      a === "COP" ? -1 : b === "COP" ? 1 : a.localeCompare(b)
-    );
-
-// Texto compacto para el footer: "$140.536 COP · $98 USD"
-export const formatCurrencyTotals = (
-  totals: CurrencyTotals,
-  locale = "es-CO"
-): string => {
-  const entries = sortedCurrencyTotals(totals);
-  if (entries.length === 0) return "$0 COP";
-  return entries
-    .map(
-      ([currency, value]) =>
-        `$${value.toLocaleString(locale, {
-          maximumFractionDigits: 0,
-        })} ${currency}`
-    )
-    .join(" · ");
-};
+export const computeExpensesTotalsByCurrency = computeTotalsByCurrency;
 
 const fetchExpensesMonthSummary = async (
   month: number,
