@@ -122,10 +122,10 @@ export class ExpenseCategoriesService {
    */
   async getDefaultCategories(): Promise<UserExpenseCategory[]> {
     try {
-      const response = await apiClient.get<UserExpenseCategory[]>(
-        `${this.baseUrl}/categories/expenses/default/`
+      const response = await apiClient.get<{ categories: UserExpenseCategory[] }>(
+        `${this.baseUrl}/categories/expenses/predefined/`
       );
-      return response.data;
+      return response.data?.categories ?? [];
     } catch (error) {
       console.error("Error al obtener categorías predefinidas:", error);
       throw error;
@@ -137,10 +137,10 @@ export class ExpenseCategoriesService {
    */
   async getCustomCategories(): Promise<UserExpenseCategory[]> {
     try {
-      const response = await apiClient.get<UserExpenseCategory[]>(
+      const response = await apiClient.get<{ categories: UserExpenseCategory[] }>(
         `${this.baseUrl}/categories/expenses/custom/`
       );
-      return response.data;
+      return response.data?.categories ?? [];
     } catch (error) {
       console.error("Error al obtener categorías personalizadas:", error);
       throw error;
@@ -160,7 +160,7 @@ export class ExpenseCategoriesService {
       const response = await apiClient.get<UserExpenseCategoryWithUsage[]>(
         `${
           this.baseUrl
-        }/categories/expenses/with_usage/?${queryParams.toString()}`
+        }/categories/expenses/with-usage/?${queryParams.toString()}`
       );
       return response.data;
     } catch (error) {
@@ -258,7 +258,7 @@ export class ExpenseCategoriesService {
   ): Promise<UserExpenseCategory[]> {
     try {
       const response = await apiClient.post<UserExpenseCategory[]>(
-        `${this.baseUrl}/categories/expenses/bulk_create/`,
+        `${this.baseUrl}/categories/expenses/bulk-create/`,
         request
       );
       return response.data;
@@ -276,7 +276,7 @@ export class ExpenseCategoriesService {
   ): Promise<UserExpenseCategory[]> {
     try {
       const response = await apiClient.patch<UserExpenseCategory[]>(
-        `${this.baseUrl}/categories/expenses/bulk_update/`,
+        `${this.baseUrl}/categories/expenses/bulk-update/`,
         request
       );
       return response.data;
@@ -294,7 +294,7 @@ export class ExpenseCategoriesService {
   ): Promise<void> {
     try {
       await apiClient.delete(
-        `${this.baseUrl}/categories/expenses/bulk_delete/`,
+        `${this.baseUrl}/categories/expenses/bulk-delete/`,
         { data: request }
       );
     } catch (error) {
@@ -383,7 +383,7 @@ export class ExpenseCategoriesService {
   async resetToDefaults(): Promise<UserExpenseCategory[]> {
     try {
       const response = await apiClient.post<UserExpenseCategory[]>(
-        `${this.baseUrl}/categories/expenses/reset_to_defaults/`
+        `${this.baseUrl}/categories/expenses/reset-to-defaults/`
       );
       return response.data;
     } catch (error) {
