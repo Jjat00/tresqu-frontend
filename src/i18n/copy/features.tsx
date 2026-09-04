@@ -331,7 +331,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
           {
             title: "Tablas que se editan",
             description:
-              "Busca y filtra tus movimientos, edita gastos con un formulario y elimina gastos o ingresos con confirmación, sin salir de la tabla.",
+              "Busca y filtra tus movimientos, edita gastos e ingresos con un formulario (monto, moneda, categoría y fecha) y elimínalos con confirmación, sin salir de la tabla.",
           },
           {
             title: "Exporta a Excel",
@@ -713,7 +713,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
           {
             title: "Tables you can edit",
             description:
-              "Search and filter your transactions, edit expenses with a form, and delete expenses or income with confirmation — without leaving the table.",
+              "Search and filter your transactions, edit expenses and income with a form (amount, currency, category and date), and delete them with confirmation — without leaving the table.",
           },
           {
             title: "Export to Excel",
