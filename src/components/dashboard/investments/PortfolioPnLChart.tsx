@@ -31,6 +31,8 @@ const PERIODS: Array<{ value: PnLPeriod; label: string }> = [
   { value: "1d", label: "1D" },
   { value: "1w", label: "1S" },
   { value: "1m", label: "1M" },
+  { value: "2m", label: "2M" },
+  { value: "6m", label: "6M" },
   { value: "1y", label: "1A" },
   { value: "ytd", label: "YTD" },
   { value: "all", label: "Todo" },
@@ -40,6 +42,8 @@ const PERIOD_PHRASE: Record<PnLPeriod, string> = {
   "1d": "en el día",
   "1w": "vs hace 1 semana",
   "1m": "vs hace 1 mes",
+  "2m": "vs hace 2 meses",
+  "6m": "vs hace 6 meses",
   "1y": "vs hace 1 año",
   ytd: "en lo que va del año",
   all: "desde el inicio",
@@ -197,6 +201,7 @@ const PortfolioPnLChart = () => {
         </div>
         <ToggleGroup
           type="single"
+          className="flex-wrap justify-start sm:justify-end"
           value={period}
           onValueChange={(v) => {
             if (!v) return;
