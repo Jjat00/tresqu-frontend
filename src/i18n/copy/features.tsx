@@ -341,7 +341,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
           {
             title: "Categorías a tu manera",
             description:
-              "Crea, edita y elimina tus categorías con nombre, color y descripción. Los colores se reflejan en todas las gráficas.",
+              "Crea, edita y elimina tus categorías de gastos y de ingresos con nombre, color, descripción y ejemplos. Los colores se reflejan en todas las gráficas y Tresqu las usa para clasificar por chat.",
           },
           {
             title: "Tu portafolio en el tiempo",
@@ -723,7 +723,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
           {
             title: "Categories your way",
             description:
-              "Create, edit, and delete your categories with name, color, and description. The colors show up across every chart.",
+              "Create, edit, and delete your expense and income categories with name, color, description, and examples. The colors show up across every chart, and Tresqu uses them to classify from chat.",
           },
           {
             title: "Your portfolio over time",
