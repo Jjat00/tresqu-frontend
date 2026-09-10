@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { heroCopy } from '../../../src/i18n/copy/hero';
+
+export async function getStaticPaths() {
+  return (await getCollection('solutions')).map((page) => ({
+    params: { solution: page.id }, props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const { title, heading, description, intro, updatedDate, faqs } = page.data;
+const path = `/${page.id}/`;
+const url = new URL(path, Astro.site).href;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org', '@type': 'WebPage',
+    '@id': `${url}#webpage`, url, name: heading, description, inLanguage: 'es',
+    dateModified: updatedDate.toISOString(),
+    publisher: { '@id': 'https://tresqu.com/#organization' },
+    author: { '@type': 'Organization', '@id': 'https://tresqu.com/sobre-tresqu/#equipo', name: 'Equipo Tresqu', url: 'https://tresqu.com/sobre-tresqu/#equipo' },
+    about: { '@type': 'SoftwareApplication', '@id': 'https://tresqu.com/#application', name: 'Tresqu', url: 'https://tresqu.com/', applicationCategory: 'FinanceApplication', operatingSystem: 'Web, WhatsApp, Telegram' },
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://tresqu.com/' },
+      { '@type': 'ListItem', position: 2, name: heading, item: url },
+    ],
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: faqs.map(({ q, a }) => ({
+      '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={jsonLd}>
+  <article>
+    <nav aria-label="Ruta de navegación"><a href="/">Inicio</a> › {title}</nav>
+    <header class="solution-hero">
+      <p class="eyebrow">TRESQU / TU DINERO, CONECTADO</p>
+      <h1>{heading}</h1>
+      <p class="intro">{intro}</p>
+      <a class="start-link" href={heroCopy.es.whatsappUrl}>Empezar en WhatsApp</a>
+      <a class="secondary-link" href="/login">Entrar a la web</a>
+      <p class="byline">Por <a href="/sobre-tresqu/#equipo">Equipo Tresqu</a> · Actualizado el <time datetime={updatedDate.toISOString()}>{new Intl.DateTimeFormat('es', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(updatedDate)}</time></p>
+    </header>
+    <Content />
+    <section aria-labelledby="faq-title">
+      <h2 id="faq-title">Preguntas frecuentes</h2>
+      {faqs.map(({ q, a }) => <details><summary>{q}</summary><p>{a}</p></details>)}
+    </section>
+    <aside class="closing">
+      <h2>Empieza por una conversación</h2>
+      <p>Registra tu primer movimiento y pregunta por tu dinero. Puedes añadir Gmail y Wallbit desde tu perfil cuando los necesites.</p>
+      <a class="start-link" href={heroCopy.es.whatsappUrl}>Abrir Tresqu en WhatsApp</a>
+      <p><a href="/funciones">Ver todas las funciones</a> · <a href="/privacy-policy">Consultar privacidad</a></p>
+    </aside>
+  </article>
+</BaseLayout>
+
+<style>
+  .solution-hero { padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .eyebrow { color: var(--accent); font: 0.75rem var(--font-mono); letter-spacing: .08em; }
+  .intro { font-size: 1.15rem; }
+  .start-link { display: inline-block; padding: 12px 20px; background: var(--accent); color: #050505; border-radius: 999px; font-weight: 700; text-decoration: none; }
+  .secondary-link { display: inline-block; padding: 12px 16px; }
+  .byline { color: var(--muted); font-size: .85rem; margin-top: 24px; }
+  details { padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  .closing { margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 16px; background: var(--card); }
+  .closing h2 { margin-top: 0; }
+</style>

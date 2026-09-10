@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:content": "astro dev --root content",
-    "build": "vite build && astro build --root content && cp -r content/dist/. dist/",
+    "check:seo": "node scripts/check-content-seo.mjs",
+    "build": "vite build && astro build --root content && cp -r content/dist/. dist/ && npm run check:seo",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"

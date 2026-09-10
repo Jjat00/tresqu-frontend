@@ -2,6 +2,7 @@
 title: "Cómo registrar tus gastos por WhatsApp con IA: texto, voz o foto del recibo"
 description: "Registra un gasto escribiendo «pagué 25.000 de almuerzo», mandando un audio o una foto del recibo por WhatsApp. Así funciona el registro por chat de Tresqu."
 pubDate: 2026-07-09
+updatedDate: 2026-09-10
 author: "Equipo Tresqu"
 tags: ["gastos", "whatsapp", "ia"]
 faqs:
@@ -36,7 +37,7 @@ Además entiende los montos como los dices en tu país. Si tu moneda es el peso 
 
 ## ¿Puedo registrar un gasto con un mensaje de voz?
 
-Sí. En WhatsApp puedes mandar una nota de voz diciendo lo que gastaste, y Tresqu la transcribe, la entiende y registra el movimiento en segundos. Es la forma más rápida cuando vas por la calle o estás manejando: no tienes que escribir nada.
+Sí. En WhatsApp puedes mandar una nota de voz diciendo lo que gastaste, y Tresqu la transcribe, la entiende y registra el movimiento. Es una alternativa cuando prefieres hablar. Revisa la confirmación para comprobar que el monto y el concepto quedaron correctos.
 
 ## ¿Cómo funciona la foto del recibo?
 
@@ -60,3 +61,9 @@ Para corregir o borrar, lo describes («elimina el gasto de la hamburguesa») o,
 ## ¿Qué monedas soporta?
 
 Tresqu es multi-moneda: maneja pesos colombianos (COP), dólares (USD), euros (EUR) y otras monedas principales, con conversiones y saldos en vivo. Cada gasto queda registrado en su moneda original y los totales se muestran por moneda real, sin mezclar cifras.
+
+## Después del primer registro
+
+Para conocer el flujo de consulta y el dashboard, visita [control de gastos por WhatsApp](/control-gastos-whatsapp/). Puedes convertir ese registro en una rutina con la guía de [finanzas personales con IA](/finanzas-personales-ia/).
+
+Tresqu también funciona como [asistente financiero con IA](/asistente-financiero-ia/) para consultar ingresos y conectar tu portafolio. Si usas pesos colombianos, revisa [finanzas personales en Colombia](/app-finanzas-personales-colombia/); si tienes Wallbit, conoce el flujo de [inversiones con inteligencia artificial](/inversiones-con-inteligencia-artificial/) y sus requisitos.

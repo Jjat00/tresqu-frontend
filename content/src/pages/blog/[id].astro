@@ -25,8 +25,8 @@ const jsonLd: object[] = [
     datePublished: post.data.pubDate.toISOString(),
     dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
     inLanguage: 'es',
-    author: { '@type': 'Organization', name: post.data.author, url: 'https://tresqu.com' },
-    publisher: { '@type': 'Organization', name: 'Tresqu', url: 'https://tresqu.com' },
+    author: { '@type': 'Organization', name: post.data.author, url: 'https://tresqu.com/sobre-tresqu/#equipo' },
+    publisher: { '@id': 'https://tresqu.com/#organization' },
     image: new URL('/og-image.png', Astro.site).href,
   },
   {
@@ -68,7 +68,7 @@ if (post.data.faqs.length > 0) {
     <h1>{post.data.title}</h1>
 
     <p class="byline">
-      Por {post.data.author} ·
+      Por <a href="/sobre-tresqu/#equipo">{post.data.author}</a> ·
       <time datetime={post.data.pubDate.toISOString()}>
         Publicado el {fmt.format(post.data.pubDate)}
       </time>

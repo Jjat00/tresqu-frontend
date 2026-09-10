@@ -1,122 +1,71 @@
 # Tresqu
 
-> Tresqu es un equipo de agentes financieros con los que hablas por chat (WhatsApp, Telegram, Gmail o web). Registra tus gastos, entiende tus ingresos y usa todo ese contexto para invertir contigo en Wallbit. Su lema: "Sabe cómo vives. Invierte como eres."
+> Sabe cómo vives. Invierte como eres.
 
-Tresqu (tresqu.com) es una plataforma de finanzas personales conversacional para LATAM. En vez de formularios, dashboards o reglas, le escribes a un agente como a una persona —por texto, voz o foto— y él interpreta, categoriza y actúa. El dinero del usuario nunca vive en Tresqu: las operaciones de inversión se ejecutan en Wallbit y siempre requieren confirmación explícita del usuario.
+Tresqu es un asistente financiero con IA que reúne gastos, ingresos e inversiones mediante integraciones con WhatsApp, Telegram, Gmail y Wallbit. Disponible en español e inglés, con chat web y dashboard.
 
-## Cómo funciona
+## Qué puedes hacer
 
-- **Sin formularios:** le escribes al agente en lenguaje natural. No hay campos que llenar ni dropdowns que aprender.
-- **Sin descargas:** vive en los canales que ya usas (WhatsApp, Telegram, Gmail, web). Cero apps nuevas.
-- **Sin configuración:** el agente aprende de tus mensajes; no tienes que armar categorías, reglas ni dashboards.
-- **Multi-moneda:** maneja COP, USD, EUR y otras monedas principales, con conversiones y saldos en vivo.
-- **Datos seguros:** los tokens y API keys de integraciones (bancos, plataformas externas) se cifran con encriptación Fernet en el backend; nunca salen al cliente ni aparecen en logs, y se pueden revocar cuando quieras.
+- Registrar y categorizar gastos e ingresos por texto, audio o foto del recibo.
+- Consultar movimientos, comparar periodos y obtener resúmenes basados en tus registros.
+- Revisar movimientos, categorías y portafolio en el dashboard. Los registros conservan su moneda, como COP o USD.
+- Conectar Gmail para detectar comprobantes de compra y registrar gastos automáticamente.
+- Conectar una cuenta propia de Wallbit para consultar posiciones y preparar compras o ventas de acciones y ETFs. Las operaciones requieren confirmación del usuario y el dinero permanece en Wallbit.
 
-## El equipo de agentes
+## Cómo empezar
 
-- **Gastos e ingresos:** registra y clasifica cada movimiento, arma resúmenes del mes y encuentra patrones en tu historial.
-- **Inversiones (Wallbit):** prepara compras, ventas y movimientos de fondos. Nunca ejecuta sin tu confirmación.
-- **Analista de mercado:** trae precio, evolución y fundamentales de una acción o ETF y los cruza con tu perfil de riesgo y tu portafolio. Da contexto, no consejos: no te dice qué comprar.
-- **Perfil de riesgo:** mide tu tolerancia real a partir de tu historial (no un cuestionario de 5 preguntas) y frena las compras que no encajan contigo.
+Puedes empezar registrando movimientos por chat sin conectar tu banco. Gmail y Wallbit son integraciones opcionales. La conexión de Wallbit se configura desde el perfil de Tresqu.
 
-## Registro de gastos e ingresos
-
-- **Por texto:** escribes como hablas ("anoche pagué 20k de cena") y Tresqu entiende y categoriza al instante. Entiende montos coloquiales según tu moneda: "gasté 90 en una camisa" con pesos colombianos se registra como 90.000, no 90 — y si dices "90 dólares", lo respeta literal.
-- **Por voz:** mandas un audio (p. ej. en WhatsApp) y lo transcribe, entiende y registra en segundos.
-- **Por foto:** tomas una foto al recibo o factura y extrae monto, comercio y categoría sin que tipees nada.
-- **Gmail automático:** conectas tu correo y detecta compras en tus emails sin que escribas nada. Cada gasto detectado te llega como notificación a WhatsApp; respondes a la notificación para corregir la categoría o eliminar el registro, y Tresqu recuerda tus correcciones: la próxima compra del mismo comercio llega ya con tu categoría. Si la misma compra llega en dos correos (recibo de la tienda + aviso de la tarjeta), los reconoce como una sola y registra el gasto una vez.
-- **Búsqueda por significado:** preguntas como hablas ("¿cuánto gasté en salidas el mes pasado?") y entiende la intención, sin filtros ni categorías exactas.
-- **Edición y eliminación por chat:** pides corregir o borrar un movimiento describiéndolo ("elimina el gasto de la hamburguesa"), o en WhatsApp citas el mensaje de confirmación de Tresqu (deslizar para responder) y Tresqu sabe exactamente a qué registros te refieres.
-
-## Inversiones con Wallbit
-
-Tresqu se integra con Wallbit (cuenta de inversión del usuario). Desde el chat puedes:
-
-- Comprar y vender acciones, ETFs y bonos. El agente prepara la orden y tú la confirmas antes de ejecutar.
-- Aportar (depositar o retirar USD) a tus Chests / Robo Advisors.
-- Mover fondos entre tu cuenta principal y la de inversión.
-- Activar o suspender tu tarjeta al instante.
-- Consultar saldos y posiciones en vivo: efectivo por moneda y acciones por símbolo.
-- Cruzar datos: el agente combina tus gastos, ingresos y operaciones de Wallbit en una sola respuesta.
-
-Preguntas frecuentes:
-- **¿Tresqu maneja mi dinero?** No. Tu dinero vive en Wallbit. Tresqu solo propone acciones que tú confirmas, con límites que tú defines.
-- **¿Mi API key está segura?** Sí. Se cifra con encriptación Fernet en el backend, nunca sale al cliente ni aparece en logs, y puedes revocarla cuando quieras.
-- **¿Funciona fuera de USD?** Wallbit opera principalmente en USD, con saldos en otras monedas según la cuenta. El catálogo cubre acciones, ETFs y bonos globales.
-
-## En desarrollo
-
-- Agente que invierte por ti: le delegas el aporte mensual y decide qué comprar dentro de los límites que definas (tú confirmas, él ejecuta).
-- Alertas proactivas: que el analista te avise cuando algo de tu portafolio lo amerite, no por noticias genéricas.
-- Optimización de portafolio: reequilibrios sugeridos cruzando tu portafolio Wallbit con tu colchón de ahorro y tus metas.
+Las conversaciones y cifras de la landing son ejemplos ilustrativos, no resultados de usuarios ni recomendaciones de inversión. La política de privacidad detalla el tratamiento de movimientos, mensajes y datos de las integraciones.
 
 ## Enlaces
 
-- Sitio: https://tresqu.com
-- Guía completa de funciones: https://tresqu.com/funciones
-- Blog (guías de finanzas personales con IA): https://tresqu.com/blog/
-- Cómo registrar gastos por WhatsApp: https://tresqu.com/blog/registrar-gastos-por-whatsapp/
-- Política de privacidad: https://tresqu.com/privacy-policy
-- Aviso legal: https://tresqu.com/legal-notice
-- English version of the site: https://tresqu.com/en
+- [Inicio](https://tresqu.com/)
+- [Todas las funciones](https://tresqu.com/funciones)
+- [Empezar en WhatsApp](https://wa.me/573116534337?text=Hola%20Tresqu)
+- [Telegram](https://t.me/tresqu_bot)
+- [Acceso web](https://tresqu.com/login)
+- [Blog](https://tresqu.com/blog/)
+- [Cómo registrar gastos por WhatsApp](https://tresqu.com/blog/registrar-gastos-por-whatsapp/)
+- [Política de privacidad](https://tresqu.com/privacy-policy)
+- [Aviso legal](https://tresqu.com/legal-notice)
+
+## Finanzas personales e inversiones
+
+- [Sobre Tresqu y el equipo editorial](https://tresqu.com/sobre-tresqu/): identidad del producto, alcance, fuentes y contacto para correcciones.
+- [Asistente financiero con IA](https://tresqu.com/asistente-financiero-ia/): capacidades, contexto disponible e integraciones.
+- [Finanzas personales con IA](https://tresqu.com/finanzas-personales-ia/): rutina de registro y revisión de movimientos.
+- [Control de gastos por WhatsApp](https://tresqu.com/control-gastos-whatsapp/): registro, consulta y correcciones por chat.
+- [App de finanzas personales en Colombia](https://tresqu.com/app-finanzas-personales-colombia/): uso en COP y criterios para elegir una app.
+- [Inversiones con inteligencia artificial](https://tresqu.com/inversiones-con-inteligencia-artificial/): portafolio, análisis y operaciones con Wallbit que el usuario confirma.
 
 ## English
 
-> Tresqu is a team of financial agents you talk to through chat (WhatsApp, Telegram, Gmail, or the web). It logs your expenses, understands your income, and uses all that context to invest with you on Wallbit. Its motto: "Knows how you live. Invests like you."
+> Knows how you live. Invests like you.
 
-Tresqu (tresqu.com) is a conversational personal-finance platform born in LATAM, available in Spanish and English. Instead of forms, dashboards, or rules, you message an agent like a person — by text, voice, or photo — and it interprets, categorizes, and acts. The user's money never lives in Tresqu: investment operations execute on Wallbit and always require the user's explicit confirmation.
+Tresqu is an AI financial assistant that brings together expenses, income, and investments through integrations with WhatsApp, Telegram, Gmail, and Wallbit. Available in Spanish and English, with web chat and a dashboard.
 
-### How it works
+### What you can do
 
-- **No forms:** you write to the agent in natural language. No fields to fill, no dropdowns to learn.
-- **No downloads:** it lives in the channels you already use (WhatsApp, Telegram, Gmail, web). Zero new apps.
-- **No configuration:** the agent learns from your messages; you don't have to set up categories, rules, or dashboards.
-- **Multi-currency:** handles COP, USD, EUR, and other major currencies, with live conversions and balances.
-- **Secure data:** integration tokens and API keys (banks, external platforms) are encrypted with Fernet encryption on the backend; they never reach the client or appear in logs, and you can revoke them whenever you want.
+- Log and categorize expenses and income using text, voice notes, or receipt photos.
+- Look up transactions, compare periods, and get summaries based on your records.
+- Review transactions, categories, and your portfolio in the dashboard. Records keep their own currency, such as COP or USD.
+- Connect Gmail to detect purchase receipts and automatically log expenses.
+- Connect your own Wallbit account to check positions and prepare stock and ETF purchases or sales. Transactions require user confirmation, and money stays in Wallbit.
 
-### The agent team
+### Getting started
 
-- **Expenses & income:** logs and classifies every transaction, builds monthly summaries, and finds patterns in your history.
-- **Investments (Wallbit):** prepares buys, sells, and fund transfers. It never executes without your confirmation.
-- **Market analyst:** brings the price, performance, and fundamentals of a stock or ETF and crosses them with your risk profile and portfolio. Context, not advice: it doesn't tell you what to buy.
-- **Risk profile:** measures your real tolerance from your history (not a 5-question quiz) and holds back purchases that don't fit you.
+Start by logging transactions through chat without connecting your bank. Gmail and Wallbit are optional integrations. Set up your Wallbit connection from your Tresqu profile.
 
-### Logging expenses and income
-
-- **By text:** write the way you talk ("paid $14 for dinner last night") and Tresqu understands and categorizes instantly. It understands colloquial amounts in your currency: "spent 90 on a shirt" with Colombian pesos is logged as 90,000, not 90 — and if you say "90 dollars", it takes that literally.
-- **By voice:** send a voice note (e.g. on WhatsApp) and it transcribes, understands, and logs it in seconds.
-- **By photo:** snap a photo of the receipt or invoice and it extracts the amount, merchant, and category without you typing anything.
-- **Automatic Gmail:** connect your inbox and it detects purchases in your emails without you typing anything. Every detected expense reaches you as a WhatsApp notification; reply to it to fix the category or delete the record, and Tresqu remembers your corrections: the next purchase from the same merchant arrives with your category already set. If the same purchase arrives in two emails (store receipt + card alert), it recognizes them as one and logs the expense once.
-- **Search by meaning:** ask the way you talk ("how much did I spend on going out last month?") and it understands the intent, no filters or exact categories.
-- **Edit and delete by chat:** ask to correct or remove a transaction by describing it ("delete the burger expense"), or on WhatsApp quote Tresqu's confirmation message (swipe to reply) and it knows exactly which records you mean.
-
-### Investing with Wallbit
-
-Tresqu integrates with Wallbit (the user's investment account). From the chat you can:
-
-- Buy and sell stocks, ETFs, and bonds. The agent prepares the order and you confirm it before it executes.
-- Contribute to (deposit or withdraw USD from) your Chests / Robo Advisors.
-- Move funds between your main account and your investment account.
-- Activate or pause your card instantly.
-- Check live balances and positions: cash by currency and stocks by symbol.
-- Cross data: the agent combines your expenses, income, and Wallbit operations in a single answer.
-
-Frequently asked questions:
-- **Does Tresqu handle my money?** No. Your money lives in Wallbit. Tresqu only proposes actions that you confirm, with limits you define.
-- **Is my API key safe?** Yes. It's encrypted with Fernet encryption on the backend, never reaches the client or appears in logs, and you can revoke it whenever you want.
-- **Does it work outside USD?** Wallbit operates mainly in USD, with balances in other currencies depending on the account. The catalog covers global stocks, ETFs, and bonds.
-
-### In development
-
-- An agent that invests for you: delegate your monthly contribution and it decides what to buy within the limits you define (you confirm, it executes).
-- Proactive alerts: the analyst reaches out when something in your portfolio deserves it, not for generic news.
-- Portfolio optimization: suggested rebalancing that crosses your Wallbit portfolio with your savings cushion and goals.
+Conversations and figures on the landing page are illustrative examples, not user results or investment recommendations. The privacy policy details how transactions, messages, and integration data are processed.
 
 ### Links
 
-- Site (English): https://tresqu.com/en
-- Full feature guide (English): https://tresqu.com/enfeatures
-- Site (Spanish): https://tresqu.com
-- Blog (Spanish, AI personal-finance guides): https://tresqu.com/blog/
-- Privacy policy (Spanish): https://tresqu.com/privacy-policy
-- Legal notice (Spanish): https://tresqu.com/legal-notice
+- [Home](https://tresqu.com/en)
+- [All features](https://tresqu.com/en/features)
+- [Start on WhatsApp](https://wa.me/573116534337?text=Hi%20Tresqu)
+- [Telegram](https://t.me/tresqu_bot)
+- [Web sign-in](https://tresqu.com/en/login)
+- [Blog (Spanish)](https://tresqu.com/blog/)
+- [Privacy policy (Spanish)](https://tresqu.com/privacy-policy)
+- [Legal notice (Spanish)](https://tresqu.com/legal-notice)

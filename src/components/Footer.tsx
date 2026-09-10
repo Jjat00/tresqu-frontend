@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { pathFor, useCopy, useLocale } from "@/i18n";
 import { footerCopy } from "@/i18n/copy/footer";
+import solutionLinks from "@/lib/solutionLinks.json";
 
 const socialLinks = [
   {
@@ -131,6 +132,20 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+
+        <nav
+          aria-label={locale === "es" ? "Explora Tresqu" : "Explore Tresqu (Spanish)"}
+          className="flex flex-wrap gap-x-6 gap-y-3 pb-8"
+          lang="es"
+        >
+          <a href="/sobre-tresqu/" hrefLang="es" className="text-zinc-400 text-sm hover:text-[#00FF7F]">Sobre Tresqu</a>
+          {solutionLinks.map(({ path, label }) => (
+            <a key={path} href={path} hrefLang="es" className="text-zinc-400 text-sm hover:text-[#00FF7F] focus-visible:outline-2 focus-visible:outline-[#00FF7F] focus-visible:outline-offset-4">
+              {label}
+            </a>
+          ))}
+        </nav>
 
         {/* Wordmark gigante en outline */}
         <div

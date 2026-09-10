@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const url = 'https://tresqu.com/sobre-tresqu/';
+const jsonLd = [
+  {
+    '@context': 'https://schema.org', '@type': 'AboutPage',
+    '@id': `${url}#webpage`, url, name: 'Sobre Tresqu y su contenido', inLanguage: 'es',
+    mainEntity: { '@id': 'https://tresqu.com/#organization' },
+    publisher: { '@id': 'https://tresqu.com/#organization' },
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'Organization',
+    '@id': `${url}#equipo`, name: 'Equipo Tresqu', url: `${url}#equipo`,
+    parentOrganization: { '@id': 'https://tresqu.com/#organization' },
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://tresqu.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Sobre Tresqu', item: url },
+    ],
+  },
+];
+---
+<BaseLayout title="Sobre Tresqu: producto, equipo y contenido" description="Qué es Tresqu, qué integra y quién publica sus guías. Conoce el alcance del asistente financiero con IA y cómo contactar al equipo para corregir información." path="/sobre-tresqu/" jsonLd={jsonLd}>
+  <nav aria-label="Ruta de navegación"><a href="/">Inicio</a> › Sobre Tresqu</nav>
+  <h1>Sobre Tresqu y su contenido</h1>
+  <p>Tresqu es un asistente financiero con IA que reúne gastos, ingresos e inversiones mediante integraciones con WhatsApp, Telegram, Gmail y Wallbit. Puedes conversar en español o inglés y revisar tu información desde un dashboard web.</p>
+  <p>Información revisada el <time datetime="2026-09-10">10 de septiembre de 2026</time>.</p>
+
+  <h2>Qué hace cada integración</h2>
+  <dl>
+    <dt><strong>WhatsApp y Telegram</strong></dt><dd>Canales para conversar con Tresqu, registrar movimientos y consultar tu información.</dd>
+    <dt><strong>Gmail</strong></dt><dd>Conexión opcional para detectar compras recibidas por correo e incorporar gastos.</dd>
+    <dt><strong>Wallbit</strong></dt><dd>Conexión opcional con tu cuenta propia para consultar el portafolio y preparar operaciones que tú confirmas. Los fondos permanecen en Wallbit.</dd>
+    <dt><strong>Web</strong></dt><dd>Chat y dashboard para consultar movimientos, categorías e inversiones conectadas.</dd>
+  </dl>
+  <p>Consulta el <a href="/asistente-financiero-ia/">alcance del asistente</a> y el <a href="/inversiones-con-inteligencia-artificial/">flujo de inversiones con Wallbit</a>. Las integraciones descritas no implican conexión universal con bancos o intermediarios.</p>
+
+  <h2 id="equipo">Quién publica estas páginas</h2>
+  <p>Las páginas firmadas por Equipo Tresqu son contenido del propio producto. Explican funciones y ejemplos de uso desde esa perspectiva; no son reseñas independientes ni asesoría financiera personalizada.</p>
+  <p>La autoría de equipo no implica una acreditación profesional en inversiones. Cuando una página utiliza información de un proveedor, enlaza la fuente correspondiente para que puedas contrastarla.</p>
+
+  <h2>Cómo interpretar ejemplos y fuentes</h2>
+  <p>Las conversaciones y cifras ilustrativas muestran cómo usar Tresqu. No representan resultados de clientes, testimonios ni promesas de ahorro o rentabilidad. Tus respuestas dependen de tus registros, de la información disponible y de las integraciones que conectes.</p>
+  <p>Para requisitos, activos disponibles y tarifas de Wallbit, consulta su <a href="https://www.wallbit.io/">sitio oficial</a> y su <a href="https://help.wallbit.io/">centro de ayuda</a>. La información financiera y las condiciones de los proveedores pueden cambiar.</p>
+
+  <h2>Privacidad y correcciones</h2>
+  <p>La <a href="/privacy-policy">política de privacidad</a> describe el tratamiento de datos y permisos. El <a href="/legal-notice">aviso legal</a> recoge las condiciones del servicio.</p>
+  <p>Si encuentras información incorrecta, escribe a <a href="mailto:contacto@tresqu.com">contacto@tresqu.com</a> e indica la página y el dato que conviene revisar. Evita incluir credenciales o documentos financieros en esa consulta.</p>
+</BaseLayout>
