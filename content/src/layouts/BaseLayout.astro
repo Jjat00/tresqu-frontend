@@ -17,7 +17,7 @@ const ogImage = new URL('/og-image.png', Astro.site).href;
 const organization = {
   '@context': 'https://schema.org', '@type': 'Organization',
   '@id': 'https://tresqu.com/#organization', name: 'Tresqu',
-  url: 'https://tresqu.com/', logo: 'https://tresqu.com/logo_teal.png',
+  url: 'https://tresqu.com/', logo: 'https://tresqu.com/3q.png',
   email: 'contacto@tresqu.com',
 };
 ---
@@ -57,7 +57,8 @@ const organization = {
   <body>
     <header class="site-header">
       <a href="https://tresqu.com/" class="brand" aria-label="Ir al inicio de Tresqu">
-        <img src="/completo_teal.png" alt="Tresqu" height="26" />
+        <img src="/3q.png" alt="" height="26" />
+        <span>Tresqu</span>
       </a>
       <nav aria-label="Navegación principal">
         <a href="/blog/">Blog</a>
@@ -123,8 +124,20 @@ const organization = {
     padding: 20px 24px;
   }
 
+  .site-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fg);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
   .site-header .brand img {
     display: block;
+    border-radius: 6px;
   }
 
   .site-header nav {
