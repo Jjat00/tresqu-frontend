@@ -9,6 +9,10 @@
 # VITE_API_BASE_URL. Si el backend cambia de dominio (fuera de *.up.railway.app)
 # hay que actualizarlo aquí o el dashboard se queda sin datos.
 #
+# static.cloudflareinsights.com esta en script-src (y cloudflareinsights.com en
+# connect-src) por el beacon de Cloudflare Web Analytics: Pages lo inyecta solo
+# en produccion, no aparece en dist, asi que una prueba local nunca lo detecta.
+#
 # Si algo se rompiera en producción, el arreglo inmediato es renombrar
 # Content-Security-Policy a Content-Security-Policy-Report-Only: deja de
 # bloquear y sigue reportando las violaciones en la consola del navegador.
@@ -20,7 +24,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://assets.parqet.com; connect-src 'self' https://*.up.railway.app https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://assets.parqet.com; connect-src 'self' https://*.up.railway.app https://cloudflareinsights.com https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 # Bundles con hash en el nombre: cada build cambia el nombre, así que el
 # navegador puede cachearlos para siempre en vez de revalidar cada 4 h.
