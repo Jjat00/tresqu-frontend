@@ -1,0 +1,28 @@
+# Cabeceras HTTP que aplica Cloudflare Pages a todo lo que sirve
+# (SPA de Vite + páginas estáticas de Astro).
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# OJO: Pages FUSIONA todas las reglas cuyo patrón haga match, no gana la más
+# específica. Por eso /assets/* hereda además todo lo declarado en /*.
+#
+# OJO con connect-src: lleva el host de la API que Cloudflare Pages inyecta en
+# VITE_API_BASE_URL. Si el backend cambia de dominio (fuera de *.up.railway.app)
+# hay que actualizarlo aquí o el dashboard se queda sin datos.
+#
+# Si algo se rompiera en producción, el arreglo inmediato es renombrar
+# Content-Security-Policy a Content-Security-Policy-Report-Only: deja de
+# bloquear y sigue reportando las violaciones en la consola del navegador.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.gpteng.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://assets.parqet.com; connect-src 'self' https://*.up.railway.app https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
+# Bundles con hash en el nombre: cada build cambia el nombre, así que el
+# navegador puede cachearlos para siempre en vez de revalidar cada 4 h.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
