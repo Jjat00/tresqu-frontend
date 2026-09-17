@@ -21,7 +21,6 @@ import EmptyState from "@/components/EmptyState";
 import { useDeleteIncome, useIncomesMonthSummary } from "@/hooks/incomes";
 import { IncomeRow } from "@/types/incomes";
 import { toast } from "sonner";
-import * as XLSX from "xlsx";
 import {
   Dialog,
   DialogContent,
@@ -135,13 +134,17 @@ const IncomeTable: React.FC<IncomeTableProps> = ({
     [filteredIncomes]
   );
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (!filteredIncomes.length) {
       toast.error("No hay datos para exportar");
       return;
     }
 
     try {
+      // xlsx pesa ~400 kB: se descarga solo cuando el usuario exporta,
+      // no al abrir el dashboard.
+      const XLSX = await import("xlsx");
+
       const excelData = filteredIncomes.map((income) => ({
         Descripción: getDescription(income),
         Categoría: getIncomeCategoryName(income) || "Sin categoría",

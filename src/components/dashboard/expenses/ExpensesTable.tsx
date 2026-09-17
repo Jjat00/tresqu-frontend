@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { DateRange } from "../DateRangePicker";
-import * as XLSX from "xlsx";
 import { useDeleteExpense } from "@/hooks/expenses";
 import { useExpensesMonthSummary } from "@/hooks/useExpensesMonthSummary";
 import {
@@ -348,13 +347,17 @@ const ExpensesTable: React.FC<ExpensesTableProps> = ({
     return false;
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (!filteredExpenses.length) {
       toast.error("No hay datos para exportar");
       return;
     }
 
     try {
+      // xlsx pesa ~400 kB: se descarga solo cuando el usuario exporta,
+      // no al abrir el dashboard.
+      const XLSX = await import("xlsx");
+
       const excelData = filteredExpenses.map((expense) => ({
         Descripción: expense.note || "Sin descripción",
         Categoría: getCategoryName(expense), // ✅ Usar nombre correcto de categoría
