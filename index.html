@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/3q.png" />
     <!--
+      Fuentes por <link> y no por @import en index.css: el @import obliga al
+      navegador a descargar el CSS, parsearlo y solo entonces pedir la hoja de
+      Google Fonts (cadena en serie que retrasa el primer pintado).
+      Mantener en sync con en.html y con content/src/layouts/BaseLayout.astro.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" />
+    <!--
       Las etiquetas con data-seo-static las reemplaza <Seo>
       (src/components/Seo.tsx) al montar. Mantener en sync con en.html.
     -->
