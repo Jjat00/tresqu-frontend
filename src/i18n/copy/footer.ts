@@ -18,15 +18,16 @@ export interface FooterCopy {
 export const footerCopy: Dict<FooterCopy> = {
   es: {
     tagline:
-      "Tu agente financiero que vive en WhatsApp y Telegram. Registra gastos, analiza tendencias y toma el control de tus finanzas.",
+      "Sabe cómo vives. Invierte como eres. Un equipo de agentes financieros en WhatsApp, Telegram y la web.",
     productTitle: "Producto",
     allFeatures: "Todas las funciones",
     blog: "Blog",
     anchorLinks: [
-      { label: "Beneficios", href: "#beneficios" },
+      { label: "Cómo funciona", href: "#vives" },
+      { label: "Inversiones", href: "#inviertes" },
       // Oculto hasta tener los pagos configurados (reactivar junto con Pricing)
       // { label: "Precios", href: "#pricing" },
-      { label: "Roadmap", href: "#futuro" },
+      { label: "Preguntas frecuentes", href: "#faq" },
     ],
     legalTitle: "Legal",
     privacyPolicy: "Política de privacidad",
@@ -38,14 +39,15 @@ export const footerCopy: Dict<FooterCopy> = {
   },
   en: {
     tagline:
-      "Your financial agent that lives in WhatsApp and Telegram. Log expenses, analyze trends, and take control of your finances.",
+      "Knows how you live. Invests like you. A team of financial agents on WhatsApp, Telegram, and the web.",
     productTitle: "Product",
     allFeatures: "All features",
     blog: "Blog",
     anchorLinks: [
-      { label: "Benefits", href: "#beneficios" },
+      { label: "How it works", href: "#vives" },
+      { label: "Investing", href: "#inviertes" },
       // { label: "Pricing", href: "#pricing" },
-      { label: "Roadmap", href: "#futuro" },
+      { label: "FAQ", href: "#faq" },
     ],
     legalTitle: "Legal",
     privacyPolicy: "Privacy policy",

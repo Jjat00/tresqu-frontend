@@ -1,29 +1,39 @@
 import { lazy, Suspense } from "react";
+import { useInView } from "@/hooks/useInView";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import SocialProof from "@/components/SocialProof";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
 import Seo from "@/components/Seo";
 
-// Lazy load secciones below-the-fold
+// Lazy load secciones below-the-fold. La historia sigue el lema:
+// «Sabe cómo vives» → «Invierte como eres» → producto → confianza → empezar.
+const LiveSection = lazy(() => import("@/components/landing/LiveSection"));
+const InvestSection = lazy(() => import("@/components/landing/InvestSection"));
 const DashboardShowcase = lazy(() => import("@/components/DashboardShowcase"));
-const WhatsAppFeatures = lazy(() => import("@/components/WhatsAppFeatures"));
-const PassiveCapture = lazy(() => import("@/components/PassiveCapture"));
-const WallbitSection = lazy(() => import("@/components/WallbitSection"));
-const AgentTeam = lazy(() => import("@/components/AgentTeam"));
-const AgentCapabilities = lazy(() => import("@/components/AgentCapabilities"));
-const Benefits = lazy(() => import("@/components/Benefits"));
 // Oculto hasta tener los pagos configurados (se mantiene para reactivar después)
 // const Pricing = lazy(() => import("@/components/Pricing"));
-const FutureVision = lazy(() => import("@/components/FutureVision"));
-const Contact = lazy(() => import("@/components/Contact"));
+const TrustSection = lazy(() => import("@/components/landing/TrustSection"));
+const FinalCta = lazy(() => import("@/components/landing/FinalCta"));
 const Footer = lazy(() => import("@/components/Footer"));
 
-const SectionFallback = () => (
-  <div className="section-padding flex items-center justify-center">
-    <div className="animate-pulse h-40 w-full max-w-4xl rounded-md bg-muted/20" />
-  </div>
-);
+const SectionFallback = () => <div className="min-h-[60vh]" />;
+
+/**
+ * La vitrina monta los tabs reales del dashboard (Recharts incluido): se
+ * carga solo al acercarse al viewport y con su propio Suspense, para que no
+ * retenga al resto de la página mientras se resuelve.
+ */
+const DeferredShowcase = () => {
+  const { ref, isInView } = useInView({ rootMargin: "600px 0px" });
+  return (
+    <div ref={ref} className="min-h-[60vh]">
+      {isInView && (
+        <Suspense fallback={<SectionFallback />}>
+          <DashboardShowcase />
+        </Suspense>
+      )}
+    </div>
+  );
+};
 
 const Index = () => {
   return (
@@ -33,40 +43,18 @@ const Index = () => {
       <div className="bg-grain" aria-hidden="true" />
       <Header />
       <Hero />
-      <SocialProof />
       <Suspense fallback={<SectionFallback />}>
-        <AnimateOnScroll>
-          <DashboardShowcase />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <WhatsAppFeatures />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <PassiveCapture />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <WallbitSection />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <AgentTeam />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <AgentCapabilities />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <Benefits />
-        </AnimateOnScroll>
+        <LiveSection />
+        <div className="lx-hairline mx-auto max-w-5xl" />
+        <InvestSection />
+      </Suspense>
+      <DeferredShowcase />
+      <Suspense fallback={<SectionFallback />}>
         {/* Sección de precios oculta hasta tener los pagos configurados.
             No eliminar: el componente Pricing se mantiene para reactivarlo después. */}
-        {/* <AnimateOnScroll>
-          <Pricing />
-        </AnimateOnScroll> */}
-        <AnimateOnScroll>
-          <FutureVision />
-        </AnimateOnScroll>
-        <AnimateOnScroll>
-          <Contact />
-        </AnimateOnScroll>
+        <div className="lx-hairline mx-auto max-w-5xl" />
+        <TrustSection />
+        <FinalCta />
         <Footer />
       </Suspense>
     </main>

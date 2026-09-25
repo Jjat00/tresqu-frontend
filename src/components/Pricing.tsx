@@ -239,7 +239,7 @@ const Pricing = () => {
           <p className="mt-8 text-zinc-500 text-sm text-center">
             {copy.morePrompt}
             <a
-              href="#contacto"
+              href="mailto:contacto@tresqu.com"
               className="text-[#00FF7F] hover:underline font-medium"
             >
               {copy.moreLink}

@@ -20,10 +20,10 @@ export interface HeaderCopy {
 export const headerCopy: Dict<HeaderCopy> = {
   es: {
     navLinks: [
-      { label: "El equipo", anchor: "#equipo" },
-      { label: "Inversiones", anchor: "#wallbit" },
-      { label: "Capacidades", anchor: "#agente" },
-      { label: "Captura automática", anchor: "#captura" },
+      { label: "Cómo funciona", anchor: "#vives" },
+      { label: "Inversiones", anchor: "#inviertes" },
+      { label: "Producto", anchor: "#producto" },
+      { label: "Preguntas", anchor: "#faq" },
       { label: "Funciones", route: "features" },
       // Oculto hasta tener los pagos configurados (reactivar junto con Pricing)
       // { label: "Precios", anchor: "#pricing" },
@@ -36,10 +36,10 @@ export const headerCopy: Dict<HeaderCopy> = {
   },
   en: {
     navLinks: [
-      { label: "The team", anchor: "#equipo" },
-      { label: "Investing", anchor: "#wallbit" },
-      { label: "Capabilities", anchor: "#agente" },
-      { label: "Auto capture", anchor: "#captura" },
+      { label: "How it works", anchor: "#vives" },
+      { label: "Investing", anchor: "#inviertes" },
+      { label: "Product", anchor: "#producto" },
+      { label: "FAQ", anchor: "#faq" },
       { label: "Features", route: "features" },
       // { label: "Pricing", anchor: "#pricing" },
     ],

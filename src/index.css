@@ -809,3 +809,204 @@
   background: rgba(0, 255, 127, 0.3);
   color: white;
 }
+
+/* ─── Landing refinada ───────────────────────────────────────────────
+   Sistema propio de la home: titulares en caja normal, superficies con
+   borde fino y luz interior, y revelado escalonado por scroll. */
+@layer components {
+  .lx-section {
+    position: relative;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    scroll-margin-top: 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    .lx-section {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+    }
+  }
+
+  .lx-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: rgb(161 161 170);
+  }
+
+  .lx-eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #00ff7f;
+    box-shadow: 0 0 12px rgba(0, 255, 127, 0.8);
+  }
+
+  .lx-h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .lx-lead {
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    line-height: 1.6;
+    color: rgb(161 161 170);
+    text-wrap: pretty;
+  }
+
+  .lx-surface {
+    position: relative;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.045), transparent 60%),
+      #0e0e0e;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 40px 120px -40px rgba(0, 0, 0, 0.9);
+  }
+
+  .lx-hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  }
+
+  .lx-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 26px;
+    border-radius: 999px;
+    background: #00ff7f;
+    color: #000;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 10px 40px -12px rgba(0, 255, 127, 0.55);
+    transition:
+      transform var(--duration-normal) var(--ease-out),
+      box-shadow var(--duration-normal) var(--ease-out),
+      background-color var(--duration-normal) var(--ease-out);
+  }
+
+  .lx-btn-primary:hover {
+    background: #3dff9b;
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 16px 50px -12px rgba(0, 255, 127, 0.7);
+  }
+
+  .lx-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: #fff;
+    font-weight: 500;
+    font-size: 15px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition:
+      border-color var(--duration-normal) var(--ease-out),
+      background-color var(--duration-normal) var(--ease-out);
+  }
+
+  .lx-btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Revelado por scroll: el padre recibe .is-in y los hijos .lx-rise
+     entran escalonados según --i. */
+  .lx-rise {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+    transition:
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  .is-in .lx-rise,
+  .lx-rise.is-in {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* Vitrina del dashboard: se endereza al entrar en pantalla */
+  .lx-tilt {
+    opacity: 0.35;
+    transform: rotateX(16deg) scale(0.94) translateY(40px);
+    transform-origin: 50% 0%;
+    transition:
+      opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .is-in .lx-tilt {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Burbujas del chat: entran desde abajo con un leve rebote */
+  @keyframes lx-bubble {
+    from { opacity: 0; transform: translateY(10px) scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .lx-bubble {
+    animation: lx-bubble 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes lx-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .lx-progress {
+    transform-origin: left;
+    animation: lx-progress linear both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lx-rise {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition: none;
+    }
+
+    .lx-bubble,
+    .lx-progress {
+      animation: none;
+    }
+
+    .lx-tilt {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}

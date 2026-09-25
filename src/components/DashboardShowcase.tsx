@@ -11,6 +11,8 @@ import {
   seedDemoDashboard,
 } from "@/components/showcase/demoDashboardData";
 import { pathFor, useCopy, useLocale } from "@/i18n";
+import Reveal from "@/components/landing/Reveal";
+import { stagger } from "@/components/landing/stagger";
 import { dashboardShowcaseCopy } from "@/i18n/copy/dashboardShowcase";
 
 const VIEW_IDS = ["expenses", "income", "investments"] as const;
@@ -162,41 +164,32 @@ const DashboardShowcase = () => {
   };
 
   return (
-    <section className="relative section-padding bg-[#0a0a0a] overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none section-aura-blue">
-        <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5" />
-      </div>
-
-      <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+    <section id="producto" className="lx-section overflow-hidden">
+      <div className="container max-w-7xl mx-auto px-5 md:px-8 relative z-10">
         {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-          <span className="section-label mb-6">{copy.sectionLabel}</span>
-          <h2 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
-            {copy.title.pre}{" "}
-            <span className="holo-text italic">{copy.title.holo}</span>
-            {copy.title.post}
-          </h2>
-          <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
+        <Reveal className="max-w-3xl mx-auto text-center mb-16 md:mb-20">
+          <p className="lx-eyebrow lx-rise" style={stagger(0)}>{copy.sectionLabel}</p>
+          <h2 className="lx-h2 lx-rise mt-6" style={stagger(1)}>{copy.title}</h2>
+          <p className="lx-lead lx-rise mt-6 max-w-xl mx-auto" style={stagger(2)}>
             {copy.intro}
           </p>
-        </div>
+        </Reveal>
 
         {/* Marco de navegador con el dashboard real adentro */}
-        <div className="relative max-w-6xl mx-auto">
+        <Reveal className="relative max-w-6xl mx-auto [perspective:1600px]" threshold={0.12}>
           {/* Glow bajo la composición */}
           <div
             className="absolute -inset-8 pointer-events-none"
             aria-hidden="true"
             style={{
               background:
-                "radial-gradient(ellipse 60% 55% at 50% 55%, rgba(0,255,127,0.06), transparent 70%)",
+                "radial-gradient(ellipse 60% 55% at 50% 55%, rgba(0,255,127,0.08), transparent 70%)",
             }}
           />
 
           <div
             ref={frameRef}
-            className="holo-card holo-sheen relative"
+            className="lx-surface lx-tilt relative overflow-hidden"
             onMouseEnter={() => {
               pausedRef.current = true;
               cancelAutoScroll();
@@ -302,31 +295,12 @@ const DashboardShowcase = () => {
               </div>
             )}
           </div>
-        </div>
+        </Reveal>
 
-        {/* Esto es solo una muestra — lo que también hay adentro */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-8 max-w-3xl mx-auto">
-          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 w-full sm:w-auto text-center">
-            {copy.sampleLabel}
-          </span>
-          {copy.sampleChips.map((item) => (
-            <span
-              key={item}
-              className="px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.02] text-[11px] text-zinc-400"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-
-        {/* Micro-copy + CTA */}
-        <div className="text-center mt-8">
-          <p className="text-zinc-600 text-xs font-mono tracking-wide mb-5">
-            {copy.microCopy}
-          </p>
+        <div className="text-center mt-10">
           <Link
             to={pathFor("login", locale)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:border-[#00FF7F]/40 hover:bg-white/[0.06] transition-colors duration-200 group"
+            className="group inline-flex items-center gap-2 text-[15px] text-zinc-300 hover:text-white transition-colors"
           >
             {copy.cta}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
 import { isAuthenticated } from "@/services/authService";
 import { pathFor, useCopy, useLocale } from "@/i18n";
 import { heroCopy } from "@/i18n/copy/hero";
+import { TelegramIcon, WhatsAppIcon } from "./landing/BrandIcons";
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
@@ -33,122 +33,93 @@ const Hero = () => {
         }}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 sm:py-24 lg:py-28">
+      <div className="container max-w-7xl mx-auto px-5 md:px-8 relative z-10 pt-32 pb-40 sm:pt-36">
         <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
-          {/* Text Content */}
-          <div className="space-y-6 md:space-y-8 w-full">
-            {/* Main Title */}
-            <h1
-              className="trii-title text-[clamp(2.3rem,7vw,5.5rem)] text-white leading-[1.05] animate-fade-up"
-              style={{ animationDelay: "0.15s" }}
-            >
+          <h1
+            className="trii-title text-[clamp(2.1rem,4.5vw,4.1rem)] text-white !leading-[1.02] !tracking-[-0.04em] animate-fade-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <span className="sm:whitespace-nowrap">
               {copy.title.line1Pre}{" "}
-              <span className="holo-text italic">{copy.title.line1Holo}</span>.
-              <br />
-              {copy.title.line2Pre}{" "}
-              <span className="text-white relative inline-block">
-                {copy.title.line2Underline}
-                <span
-                  className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #00FF7F, #22d3ee, #0D99FF)",
-                  }}
-                />
-              </span>
-              .
-            </h1>
+              <span className="holo-text italic pr-[0.06em]">{copy.title.line1Holo}</span>.
+            </span>
+            <br />
+            <span className="sm:whitespace-nowrap">
+            {copy.title.line2Pre}{" "}
+            <span className="relative inline-block">
+              {copy.title.line2Underline}
+              <span
+                className="absolute -bottom-[0.06em] left-0 right-0 h-[3px] rounded-full"
+                style={{ background: "linear-gradient(90deg, #00FF7F, #22d3ee, #0D99FF)" }}
+              />
+            </span>
+            .
+            </span>
+          </h1>
 
-            {/* Subtitle */}
-            <p
-              className="trii-subtitle text-base sm:text-lg md:text-xl max-w-2xl mx-auto animate-fade-up"
-              style={{ animationDelay: "0.3s" }}
+          <p
+            className="lx-lead mt-8 max-w-xl text-zinc-300/80 animate-fade-up"
+            style={{ animationDelay: "0.25s" }}
+          >
+            {copy.subtitle.pre}
+            <a
+              href={copy.wallbitUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white underline decoration-[#0D99FF]/60 decoration-1 underline-offset-4 hover:decoration-[#0D99FF] transition-colors"
             >
-              {copy.subtitle.pre}
-              <a
-                href={copy.wallbitUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-wallbit font-medium hover:underline"
-              >
-                {copy.subtitle.wallbitLabel}
-              </a>
-              {copy.subtitle.post}
-            </p>
+              {copy.subtitle.wallbitLabel}
+            </a>
+            {copy.subtitle.post}
+          </p>
 
-            {/* CTAs */}
-            <div
-              className="pt-2 space-y-4 animate-fade-up"
-              style={{ animationDelay: "0.45s" }}
-            >
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-                {/* Primary — WhatsApp */}
-                <button
-                  onClick={() => window.open(copy.whatsappUrl, "_blank")}
-                  className="cta-neon inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-[#00FF7F] text-black font-semibold text-base sm:text-lg rounded-md hover:bg-white cursor-pointer"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="w-6 h-6 sm:w-7 sm:h-7"
-                    fill="currentColor"
-                  >
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                  {copy.ctaWhatsApp}
-                </button>
-
-                {/* Secondary — Telegram */}
-                <button
-                  onClick={() =>
-                    window.open("https://t.me/tresqu_bot", "_blank")
-                  }
-                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-white/[0.03] backdrop-blur-sm border border-white/10 text-white font-semibold text-base sm:text-lg rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors duration-200 cursor-pointer"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="w-6 h-6 sm:w-7 sm:h-7 text-[#0088cc]"
-                    fill="currentColor"
-                  >
-                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-                  </svg>
-                  {copy.ctaTelegram}
-                </button>
-              </div>
-
-              {/* Micro-copy */}
-              <p className="text-zinc-500 text-sm font-mono tracking-wide">
-                {copy.microCopy}
-              </p>
-
-              {/* Acceso web / dashboard — visible en mobile y desktop */}
-              <p className="text-sm text-zinc-400">
-                {isLoggedIn ? (
-                  <Link
-                    to="/dashboard/home"
-                    className="inline-flex items-center gap-1 font-semibold text-[#00FF7F] hover:underline"
-                  >
-                    {copy.dashboardLink}
-                  </Link>
-                ) : (
-                  <>
-                    {copy.loginPrompt}
-                    <Link
-                      to={pathFor("login", locale)}
-                      className="inline-flex items-center gap-1 font-semibold text-[#00FF7F] hover:underline"
-                    >
-                      {copy.loginLink}
-                    </Link>
-                  </>
-                )}
-              </p>
-            </div>
+          <div
+            className="mt-10 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row animate-fade-up"
+            style={{ animationDelay: "0.4s" }}
+          >
+            <a href={copy.whatsappUrl} target="_blank" rel="noopener noreferrer" className="lx-btn-primary w-full sm:w-auto">
+              <WhatsAppIcon />
+              {copy.ctaWhatsApp}
+            </a>
+            <a href="https://t.me/tresqu_bot" target="_blank" rel="noopener noreferrer" className="lx-btn-ghost w-full sm:w-auto">
+              <TelegramIcon className="h-5 w-5 text-[#2AABEE]" />
+              {copy.ctaTelegram}
+            </a>
           </div>
+
+          <p
+            className="mt-6 text-[14px] text-zinc-500 animate-fade-up"
+            style={{ animationDelay: "0.5s" }}
+          >
+            {isLoggedIn ? (
+              <Link to="/dashboard/home" className="text-zinc-300 hover:text-white transition-colors">
+                {copy.dashboardLink}
+              </Link>
+            ) : (
+              <>
+                {copy.loginPrompt}
+                <Link to={pathFor("login", locale)} className="text-zinc-300 hover:text-white transition-colors">
+                  {copy.loginLink}
+                </Link>
+              </>
+            )}
+          </p>
         </div>
       </div>
 
-      {/* Indicador de scroll */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-        <ChevronDown className="w-5 h-5 text-zinc-600 animate-scroll-hint" />
+      {/* Funciona con: reemplaza al antiguo marquee de plataformas */}
+      <div
+        className="absolute bottom-10 left-0 right-0 z-10 animate-fade-in"
+        style={{ animationDelay: "0.8s" }}
+      >
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 px-5 text-[13px] sm:gap-x-8 text-zinc-500">
+          <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-600 sm:inline">{copy.worksWith}</span>
+          {["WhatsApp", "Telegram", "Gmail", "Wallbit"].map((name) => (
+            <span key={name} className="font-medium tracking-tight text-zinc-400">
+              {name}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -122,7 +122,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="#contacto"
+                    href="mailto:contacto@tresqu.com"
                     className="text-zinc-500 text-sm hover:text-[#00FF7F] transition-colors"
                   >
                     {copy.contact}

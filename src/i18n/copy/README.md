@@ -14,11 +14,11 @@ incluye ReactNode (títulos con `<span>` de énfasis).
 - Nombres de marca intactos: Wallbit, Chests, WhatsApp, Telegram, Gmail.
 - URL de Wallbit por idioma: `https://www.wallbit.io/es` (ES) vs
   `https://www.wallbit.io` (EN).
-- Los anchors de secciones (`#equipo`, `#wallbit`, …) son los mismos en
+- Los anchors de secciones (`#vives`, `#inviertes`, `#producto`, `#faq`) son los mismos en
   ambos idiomas — solo se traduce el label visible.
 
 ## Espejos que mantener en sync al tocar copy
 
 - Fallback estático `#root` de `/index.html` (ES) y `/en/index.html` (EN).
-- FAQPage del JSON-LD en ambos shells ↔ FAQs de `wallbit.tsx`.
+- FAQPage del JSON-LD en ambos shells ↔ FAQs de `landing.ts` (trust.faqs).
 - `/public/llms.txt` (sección ES y sección English).
