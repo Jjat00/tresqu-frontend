@@ -10,4 +10,6 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://tresqu.com',
   integrations: [sitemap()],
+  // CSS inline como antes del rediseño: sin peticiones extra ni <link> nuevos en el head.
+  build: { inlineStylesheets: 'always' },
 });
