@@ -340,7 +340,7 @@ export const homeCopy: Dict<HomeCopy> = {
         "Example: Tresqu logging a dinner, a voice note, a receipt photo, and a Gmail purchase on WhatsApp. Drag to rotate the phone.",
       dragHint: "Drag the phone to rotate it",
       showEyebrow: "Chat on WhatsApp, Telegram, and the web",
-      showTitle: ["You tell it about your day.", "It keeps the books."],
+      showTitle: ["Tell it about your day.", "It keeps the books."],
       modes: [
         { title: "Text it", body: "“paid 20k for dinner last night” → $20,000 COP · Restaurants" },
         { title: "Talk to it", body: "A voice note: “team lunch, 18 thousand” → $18,000 COP · Food" },
