@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Seo from "@/components/Seo";
 import HomeHero from "@/components/home/HomeHero";
 import WhatsAppFab from "@/components/home/WhatsAppFab";
+import "@/styles/noche.css";
 import "@/components/home/home.css";
 
 // Landing «Noche de puntos»: hero → por qué → ejemplos → preguntas.
