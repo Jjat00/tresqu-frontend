@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import VerificationCodeForm from "./VerificationCodeForm";
+import PageDots from "./PageDots";
 import { requestTelegramCode, saveAuthTokens } from "@/services/authService";
 import { AuthResponse } from "@/types/auth";
 import { useWhatsappAuth } from "@/hooks/useWhatsappAuth";
@@ -347,62 +348,46 @@ const WaitlistForm = () => {
     setIsSubmitting(false);
   };
   return (
-    <section className="relative overflow-hidden min-h-screen flex items-center justify-center px-4 py-28 sm:py-32 bg-[#0a0a0a]">
-      {/* Atmósfera estilo landing: grid blueprint + auras de color */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-blueprint" />
-        <div className="absolute inset-0 section-aura-green" />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 55% 45% at 50% 30%, rgba(0,255,127,0.05) 0%, transparent 70%)",
-          }}
-        />
-      </div>
-      <div className="absolute top-0 left-0 right-0 h-px bg-white/5"></div>
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5"></div>
+    <section className="tq-auth">
+      {/* Retícula de puntos «Noche de puntos» */}
+      <PageDots />
 
-      <div className="container mx-auto max-w-md relative z-10">
+      <div className="tq-auth-inner">
         {/* Header */}
-        <div className="text-center mb-8">
-          <span className="section-label mb-5">{copy.accessLabel}</span>
-          <h1 className="trii-title text-4xl sm:text-5xl text-white mb-4">
+        <div className="text-center mb-9">
+          <p className="tq-eyebrow">{copy.accessLabel}</p>
+          <h1 className="tq-display">
             {copy.title.pre}{" "}
-            <span className="holo-text italic">{copy.title.holo}</span>.
+            <span className="tq-accent-grad">{copy.title.holo}</span>.
           </h1>
-          <p className="text-zinc-400 text-sm sm:text-base">
-            {copy.intro}
-          </p>
+          <p className="tq-auth-intro">{copy.intro}</p>
         </div>
 
         {/* Principal — Iniciar sesión */}
         <div className="mx-auto">
-          <Card className="holo-card holo-sheen hud-corners border-0 shadow-none">
-            <CardHeader>
-              <CardTitle className="text-sm sm:text-base font-semibold text-white">
-                {copy.cardTitle}
-              </CardTitle>
-              <p className="text-xs text-zinc-500 mt-1">
+          <Card className="tq-auth-card shadow-none">
+            <CardHeader className="p-0 pb-6">
+              <CardTitle>{copy.cardTitle}</CardTitle>
+              <p className="text-sm text-[#6f7489] mt-1">
                 {copy.cardSubtitle}
               </p>
             </CardHeader>
-            <CardContent className="pt-2 pb-6 px-4 sm:px-6">
+            <CardContent className="p-0">
               {accountNotFound ? (
                 <div className="flex flex-col items-center text-center gap-4 py-2">
-                  <p className="text-sm text-zinc-300">
+                  <p className="text-sm text-[#c9cee0]">
                     {copy.notFoundPre}
                     <span className="font-semibold text-white">
                       {accountNotFound}
                     </span>
                     .
                   </p>
-                  <p className="text-xs sm:text-sm text-zinc-500">
+                  <p className="text-xs sm:text-sm text-[#6f7489]">
                     {copy.notFoundHelp}
                   </p>
                   <Button
                     type="button"
-                    className="w-full bg-[#00FF7F] hover:bg-white text-black font-semibold rounded-md h-10 text-sm transition-colors hover:cursor-pointer"
+                    className="tq-btn tq-btn-sm tq-btn-wa w-full"
                     onClick={() => {
                       window.open(signupWhatsappUrl, "_blank");
                     }}
@@ -412,7 +397,7 @@ const WaitlistForm = () => {
                   <button
                     type="button"
                     onClick={() => setAccountNotFound(null)}
-                    className="text-xs text-zinc-500 underline hover:text-white transition-colors"
+                    className="text-xs text-[#6f7489] underline underline-offset-4 hover:text-white transition-colors"
                   >
                     {copy.notFoundOther}
                   </button>
@@ -433,17 +418,19 @@ const WaitlistForm = () => {
                   }}
                   className="w-full"
                 >
-                  <TabsList className="grid grid-cols-2 mb-5 bg-white/[0.03] border border-white/[0.06]">
+                  <TabsList className="tq-auth-tabs mb-6">
                     <TabsTrigger
                       value="whatsapp"
-                      className="flex gap-2 items-center text-zinc-400 data-[state=active]:bg-[#00FF7F]/15 data-[state=active]:text-white font-medium text-sm py-1.5"
+                      data-channel="whatsapp"
+                      className="flex gap-2 items-center"
                     >
                       <MessageSquare className="h-4 w-4" />
                       <span>WhatsApp</span>
                     </TabsTrigger>
                     <TabsTrigger
                       value="telegram"
-                      className="flex gap-2 items-center text-zinc-400 data-[state=active]:bg-[#0088cc]/20 data-[state=active]:text-white font-medium text-sm py-1.5"
+                      data-channel="telegram"
+                      className="flex gap-2 items-center"
                     >
                       <MessageSquare className="h-4 w-4" />
                       <span>Telegram</span>
@@ -455,7 +442,7 @@ const WaitlistForm = () => {
                       <div className="space-y-1.5">
                         <Label
                           htmlFor="whatsapp-number"
-                          className="text-zinc-300 font-medium text-sm"
+                          className="text-[#c9cee0] font-medium text-sm"
                         >
                           {copy.whatsappNumberLabel}
                         </Label>
@@ -465,10 +452,10 @@ const WaitlistForm = () => {
                               value={countryCode}
                               onValueChange={setCountryCode}
                             >
-                              <SelectTrigger className="bg-white/[0.03] border-white/10 h-9 text-sm">
+                              <SelectTrigger className="tq-auth-field">
                                 <SelectValue placeholder={copy.codePlaceholder} />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0f0f0f] border-white/10 text-sm">
+                              <SelectContent className="bg-[#0b0c14] border-white/10 rounded-xl font-jakarta text-sm">
                                 {countryCodes.map((country) => (
                                   <SelectItem
                                     key={country.code}
@@ -500,7 +487,7 @@ const WaitlistForm = () => {
                                 if (accountNotFound) setAccountNotFound(null);
                               }}
                               required
-                              className="bg-white/[0.03] border-white/10 text-white placeholder:text-zinc-600 h-9 text-sm"
+                              className="tq-auth-field placeholder:text-[#4a4f62]"
                             />
                             {whatsappSuggestions.length > 0 && (
                               <datalist id="whatsapp-number-history">
@@ -511,14 +498,14 @@ const WaitlistForm = () => {
                             )}
                           </div>
                         </div>
-                        <p className="text-xs text-zinc-500">
+                        <p className="text-xs text-[#6f7489]">
                           {copy.numberHelp}
                         </p>
                       </div>
 
                       <Button
                         type="submit"
-                        className="cta-neon w-full bg-[#00FF7F] hover:bg-white text-black font-semibold rounded-md mt-4 h-10 text-sm"
+                        className="tq-btn tq-btn-sm tq-btn-wa w-full mt-5"
                         disabled={isSubmitting || isWhatsappLoading}
                       >
                         {isSubmitting || isWhatsappLoading
@@ -526,7 +513,7 @@ const WaitlistForm = () => {
                           : copy.submitIdle}
                       </Button>
 
-                      <p className="text-xs text-center text-zinc-600 mt-3">
+                      <p className="text-xs text-center text-[#4a4f62] mt-3">
                         {copy.termsNote}
                       </p>
                     </form>
@@ -537,7 +524,7 @@ const WaitlistForm = () => {
                       <div className="space-y-1.5">
                         <Label
                           htmlFor="telegram-phone"
-                          className="text-zinc-300 font-medium text-sm"
+                          className="text-[#c9cee0] font-medium text-sm"
                         >
                           {copy.phoneNumberLabel}
                         </Label>
@@ -547,10 +534,10 @@ const WaitlistForm = () => {
                               value={telegramCountryCode}
                               onValueChange={setTelegramCountryCode}
                             >
-                              <SelectTrigger className="bg-white/[0.03] border-white/10 h-9 text-sm">
+                              <SelectTrigger className="tq-auth-field">
                                 <SelectValue placeholder={copy.codePlaceholder} />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0f0f0f] border-white/10 text-sm">
+                              <SelectContent className="bg-[#0b0c14] border-white/10 rounded-xl font-jakarta text-sm">
                                 {countryCodes.map((country) => (
                                   <SelectItem
                                     key={country.code}
@@ -582,7 +569,7 @@ const WaitlistForm = () => {
                                 if (accountNotFound) setAccountNotFound(null);
                               }}
                               required
-                              className="bg-white/[0.03] border-white/10 text-white placeholder:text-zinc-600 h-9 text-sm"
+                              className="tq-auth-field placeholder:text-[#4a4f62]"
                             />
                             {telegramSuggestions.length > 0 && (
                               <datalist id="telegram-number-history">
@@ -593,20 +580,20 @@ const WaitlistForm = () => {
                             )}
                           </div>
                         </div>
-                        <p className="text-xs text-zinc-500">
+                        <p className="text-xs text-[#6f7489]">
                           {copy.numberHelp}
                         </p>
                       </div>
 
                       <Button
                         type="submit"
-                        className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white font-semibold rounded-md mt-4 h-10 text-sm transition-colors hover:cursor-pointer"
+                        className="tq-btn tq-btn-sm tq-btn-tg w-full mt-5"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? copy.submitBusy : copy.submitIdle}
                       </Button>
 
-                      <p className="text-xs text-center text-zinc-600 mt-3">
+                      <p className="text-xs text-center text-[#4a4f62] mt-3">
                         {copy.termsNote}
                       </p>
                     </form>
@@ -618,28 +605,24 @@ const WaitlistForm = () => {
         </div>
 
         {/* Separador */}
-        <div className="flex items-center gap-3 py-5" aria-hidden="true">
-          <div className="h-px flex-1 bg-white/[0.06]" />
-          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-600">
-            {copy.firstTime}
-          </span>
-          <div className="h-px flex-1 bg-white/[0.06]" />
+        <div className="tq-auth-divider" aria-hidden="true">
+          {copy.firstTime}
         </div>
 
         {/* Secundario — Crear cuenta */}
         <div className="mx-auto">
-          <Card className="holo-card border-0 shadow-none">
-            <CardContent className="pt-4 pb-4 px-4 sm:px-6">
-              <p className="text-sm text-zinc-400 mb-3.5">
+          <Card className="tq-auth-card shadow-none">
+            <CardContent className="p-0">
+              <p className="text-sm text-[#8a90a6] mb-4">
                 <span className="text-white font-medium">
                   {copy.createIntroStrong}
                 </span>
                 {copy.createIntroRest}
               </p>
-              <div className="flex flex-col sm:flex-row gap-2.5">
+              <div className="grid gap-2.5">
                 <Button
                   variant="outline"
-                  className="flex-1 inline-flex items-center justify-center gap-2 h-9 px-4 bg-white/[0.03] border border-[#00FF7F]/30 text-[#00FF7F] font-semibold rounded-md hover:bg-[#00FF7F]/10 hover:border-[#00FF7F]/50 transition-colors hover:cursor-pointer text-sm"
+                  className="tq-btn tq-btn-sm tq-btn-outline is-green flex-1"
                   onClick={() => {
                     window.open(signupWhatsappUrl, "_blank");
                   }}
@@ -664,7 +647,7 @@ const WaitlistForm = () => {
 
                 <Button
                   variant="outline"
-                  className="flex-1 inline-flex items-center justify-center gap-2 h-9 px-4 bg-white/[0.03] border border-white/10 text-white font-semibold rounded-md hover:border-[#0088cc]/50 hover:bg-white/[0.06] transition-colors hover:cursor-pointer text-sm"
+                  className="tq-btn tq-btn-sm tq-btn-outline flex-1"
                   onClick={() => {
                     window.open("https://t.me/tresqu_bot", "_blank");
                   }}

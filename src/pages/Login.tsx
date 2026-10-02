@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import WaitlistForm from "@/components/WaitlistForm";
 import Seo from "@/components/Seo";
 import { useIsAuthenticated } from "@/store/authStore";
+import "@/styles/noche.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,12 +21,14 @@ const Login = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] text-foreground relative overflow-hidden">
+    <div className="tq-page">
       <Seo page="login" />
       <Header />
-      <WaitlistForm />
+      <main>
+        <WaitlistForm />
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 };
 

@@ -1,404 +1,318 @@
 import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageDots from "@/components/PageDots";
+import "@/styles/noche.css";
 
+// Turquesa de la marca Cent: identifica todo lo que es de la alianza.
+const CENT = "#3bbcc8";
+
+const centInsurance = [
+  "Gastos médicos por accidente: Hasta $50,000 MXN",
+  "Gastos funerarios por accidente: Hasta $50,000 MXN",
+  "Asesoría funeraria 24/7 (por cualquier causa)",
+  "Servicio funerario completo (cremación o inhumación)",
+  "Asistencias médicas, legales, psicológicas, nutricionales",
+  "Taxi seguro, laboratorio a domicilio, enfermera, asistencia dental y visual",
+  "Videollamada médica de emergencia",
+  "Planes dentales y visuales gratuitos (consultas, exámenes y descuentos)",
+  "Descuentos en clínicas, hospitales, laboratorios y farmacias",
+];
+
+const tresquPlan = [
+  "Registro automático de gastos vía Telegram",
+  "Categorización inteligente de transacciones",
+  "Reportes financieros automáticos",
+  "Análisis de patrones de gasto",
+  "Alertas y notificaciones inteligentes",
+  "Dashboard de control financiero",
+  "CENT asiste x Tresqu ilimitado",
+];
+
+const Dot = ({ color, small = false }: { color: string; small?: boolean }) => (
+  <span
+    aria-hidden="true"
+    className={`${small ? "mt-[9px] h-1 w-1" : "mt-2 h-2 w-2"} shrink-0 rounded-full`}
+    style={{ background: color }}
+  />
+);
+
+/** Página de la alianza Cent × Tresqu (solo español), estilo «Noche de puntos». */
 const TresquCent = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <main className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Efectos de fondo globales - combinando estilos de Cent y Tresqu */}
-      <div className="fixed inset-0 z-[-2] opacity-50 pointer-events-none">
-        <div
-          className="absolute top-0 left-0 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 25% 25%, rgba(59, 188, 200, 0.1), transparent 40%)",
-          }}
-        ></div>
-        <div
-          className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 75% 75%, rgba(74, 222, 128, 0.1), transparent 40%)",
-          }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at center, rgba(96, 165, 250, 0.05), transparent 50%)",
-          }}
-        ></div>
-      </div>
-
-      {/* Patrón sutil de puntos o rejilla */}
-      <div
-        className="fixed inset-0 z-[-2] opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
-          backgroundSize: "30px 30px",
-        }}
-      ></div>
-
+    <div className="tq-page">
       <Header />
 
-      {/* Contenido principal */}
-      <div className="container max-w-6xl mx-auto px-4 section-padding">
-        {/* Encabezado centrado */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 px-4 py-2 rounded-full mb-6">
-            <div className="w-3 h-3 bg-[#3bbcc8] rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-300">Alianza Estratégica</span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight animate-fade-up">
-            Convierte tu cambio en inversión y controla tus gastos con
-            inteligencia
-          </h1>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto mb-8">
-            Explora cómo Cent y Tresqu juntos te ayudan a alcanzar tus metas
-            financieras
-          </p>
-          {/* Botón principal CTA */}
-          <a
-            href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20controlar%20mis%20finanzas%20gratis%20con%20la%20alianza%20Cent%20x%20Tresqu"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-          >
-            <button className="bg-gradient-to-r from-[#3bbcc8] to-success hover:from-[#3bbcc8]/80 hover:to-success/80 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg">
-              Controla tus finanzas gratis
-            </button>
-          </a>
-        </div>
+      <main className="tq-cent">
+        <PageDots />
 
-        {/* Logos de alianza */}
-        <div className="flex items-center justify-center gap-6 sm:gap-8 mb-16">
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Logo Cent - usando el logo real */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+        <div className="tq-wrap tq-cent-inner">
+          {/* Encabezado centrado */}
+          <div className="text-center mb-16">
+            <span className="tq-cent-pill">
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 rounded-full animate-pulse"
+                style={{ background: CENT }}
+              />
+              Alianza Estratégica
+            </span>
+            <h1>
+              Convierte tu cambio en inversión y controla tus gastos con
+              inteligencia
+            </h1>
+            <p className="tq-lead">
+              Explora cómo Cent y Tresqu juntos te ayudan a alcanzar tus metas
+              financieras
+            </p>
+            {/* Botón principal CTA */}
+            <div className="tq-ctas">
+              <a
+                href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20controlar%20mis%20finanzas%20gratis%20con%20la%20alianza%20Cent%20x%20Tresqu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tq-btn tq-btn-wa"
+              >
+                Controla tus finanzas gratis
+              </a>
+            </div>
+          </div>
+
+          {/* Logos de alianza */}
+          <div className="flex items-center justify-center gap-6 sm:gap-8 mb-16">
+            <div className="flex items-center gap-3 sm:gap-4">
               <img
                 src="/logo_teal.png"
                 alt="Cent Logo"
-                className="w-full h-full object-contain"
+                className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
               />
+              <span
+                className="hidden sm:inline text-2xl font-semibold tracking-[-0.02em]"
+                style={{ color: CENT }}
+              >
+                CENT
+              </span>
             </div>
-            <span className="hidden sm:inline text-2xl font-bold text-[#3bbcc8]">
-              CENT
-            </span>
-          </div>
 
-          <div className="text-gray-400 text-xl sm:text-2xl font-light">×</div>
+            <div className="text-[#6f7489] text-xl sm:text-2xl font-light">×</div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Logo Tresqu - usando el logo real */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+            <div className="flex items-center gap-3 sm:gap-4">
               <img
                 src="/3q.png"
                 alt="Tresqu Logo"
-                className="w-full h-full object-contain"
+                className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-contain"
               />
+              <span className="hidden sm:inline text-2xl font-semibold tracking-[-0.02em] text-[#00FF7F]">
+                TRESQU
+              </span>
             </div>
-            <span className="hidden sm:inline text-2xl font-bold text-success">
-              TRESQU
-            </span>
           </div>
-        </div>
 
-        {/* Sección con dos tarjetas comparativas */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-16">
-          {/* Tarjeta 1: Plan CENT */}
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-[#3bbcc8]/50 relative flex flex-col">
-            {/* Etiqueta "Completo" */}
-            <div className="absolute top-4 right-4 bg-[#3bbcc8] text-white text-xs font-semibold px-3 py-1 rounded-full">
-              Completo
-            </div>
+          {/* Sección con dos tarjetas comparativas */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mb-16">
+            {/* Tarjeta 1: Plan CENT */}
+            <div className="tq-surface relative flex flex-col p-6 sm:p-8">
+              {/* Etiqueta "Completo" */}
+              <span
+                className="absolute top-6 right-6 rounded-full px-3 py-1 text-xs font-semibold text-black"
+                style={{ background: CENT }}
+              >
+                Completo
+              </span>
 
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center">
+              <div className="flex items-center gap-3 mb-6">
                 <img
                   src="/logo_teal.png"
                   alt="Cent Logo"
-                  className="w-full h-full object-contain"
+                  className="h-10 w-10 object-contain"
                 />
+                <div>
+                  <h3>Plan CENT</h3>
+                  <p className="text-sm font-medium" style={{ color: CENT }}>
+                    $200 MXN/mes
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white">Plan CENT</h3>
-                <p className="text-[#3bbcc8] text-sm font-medium">
-                  $200 MXN/mes
-                </p>
-              </div>
-            </div>
 
-            <div className="space-y-2 mb-6 flex-grow">
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-[#3bbcc8] rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Inversiones ilimitadas en CETES
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  <span className="font-semibold text-yellow-400">
-                    Seguro CENT:
-                  </span>{" "}
-                  Microseguros CENT x THONA
-                </p>
-              </div>
-              <div className="ml-5 space-y-1">
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Gastos médicos por accidente: Hasta $50,000 MXN
+              <div className="space-y-2.5 mb-8 flex-grow text-[15px]">
+                <div className="flex items-start gap-3">
+                  <Dot color={CENT} />
+                  <p className="text-[#c9cee0]">Inversiones ilimitadas en CETES</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Dot color="#ffcf6b" />
+                  <p className="text-[#c9cee0]">
+                    <span className="font-semibold text-[#ffcf6b]">
+                      Seguro CENT:
+                    </span>{" "}
+                    Microseguros CENT x THONA
                   </p>
                 </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Gastos funerarios por accidente: Hasta $50,000 MXN
-                  </p>
+                <div className="ml-5 space-y-1.5">
+                  {centInsurance.map((item) => (
+                    <div key={item} className="flex items-start gap-2.5">
+                      <Dot color="#ffcf6b" small />
+                      <p className="text-[13px] leading-relaxed text-[#8a90a6]">
+                        {item}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Asesoría funeraria 24/7 (por cualquier causa)
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Servicio funerario completo (cremación o inhumación)
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Asistencias médicas, legales, psicológicas, nutricionales
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Taxi seguro, laboratorio a domicilio, enfermera, asistencia
-                    dental y visual
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Videollamada médica de emergencia
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Planes dentales y visuales gratuitos (consultas, exámenes y
-                    descuentos)
-                  </p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1 h-1 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-400">
-                    Descuentos en clínicas, hospitales, laboratorios y farmacias
-                  </p>
+                <div className="flex items-start gap-3">
+                  <Dot color="#00FF7F" />
+                  <p className="text-[#c9cee0]">CENT asiste x Tresqu ilimitado</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  CENT asiste x Tresqu ilimitado
-                </p>
-              </div>
-            </div>
 
-            <a
-              href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20adquirir%20el%20Plan%20CENT%20por%20%24200%20MXN%2Fmes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block w-full"
-            >
-              <button className="w-full bg-[#3bbcc8] hover:bg-[#3bbcc8]/80 text-white py-3 px-4 rounded-md transition-colors font-medium">
+              <a
+                href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20adquirir%20el%20Plan%20CENT%20por%20%24200%20MXN%2Fmes"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tq-btn tq-btn-sm tq-btn-cent w-full"
+              >
                 Obtener Plan CENT
-              </button>
-            </a>
-          </div>
+              </a>
+            </div>
 
-          {/* Tarjeta 2: Plan Tresqu */}
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-success/50 flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center">
+            {/* Tarjeta 2: Plan Tresqu */}
+            <div className="tq-surface flex flex-col p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-6">
                 <img
                   src="/3q.png"
                   alt="Tresqu Logo"
-                  className="w-full h-full object-contain"
+                  className="h-10 w-10 rounded-lg object-contain"
                 />
+                <div>
+                  <h3>Plan Tresqu</h3>
+                  <p className="text-sm font-medium text-[#00FF7F]">
+                    $100 MXN/mes
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white">
-                  Plan Tresqu
-                </h3>
-                <p className="text-success text-sm font-medium">$100 MXN/mes</p>
-              </div>
-            </div>
 
-            <div className="space-y-2 mb-6 flex-grow">
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Registro automático de gastos vía Telegram
-                </p>
+              <div className="space-y-2.5 mb-8 flex-grow text-[15px]">
+                {tresquPlan.map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <Dot color="#00FF7F" />
+                    <p className="text-[#c9cee0]">{item}</p>
+                  </div>
+                ))}
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Categorización inteligente de transacciones
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Reportes financieros automáticos
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Análisis de patrones de gasto
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Alertas y notificaciones inteligentes
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  Dashboard de control financiero
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-sm text-gray-300">
-                  CENT asiste x Tresqu ilimitado
-                </p>
-              </div>
-            </div>
 
-            <a
-              href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20adquirir%20el%20Plan%20Tresqu%20por%20%24100%20MXN%2Fmes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block w-full"
-            >
-              <button className="w-full bg-success hover:bg-success/80 text-white py-3 px-4 rounded-md transition-colors font-medium">
+              <a
+                href="https://wa.me/525564654393?text=Hola%2C%20me%20gustar%C3%ADa%20adquirir%20el%20Plan%20Tresqu%20por%20%24100%20MXN%2Fmes"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tq-btn tq-btn-sm tq-btn-wa w-full"
+              >
                 Próximamente disponible
-              </button>
-            </a>
+              </a>
+            </div>
           </div>
-        </div>
 
-        {/* Sección de flujo de trabajo */}
-        <div className="mb-16 bg-gray-900/50 backdrop-blur-sm rounded-3xl p-4 sm:p-6 lg:p-8 border border-gray-700">
-          <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-8 sm:mb-12">
-            ¿Cómo funciona la alianza?
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 relative border-2 border-[#3bbcc8]">
-                <img
-                  src="/logo_teal.png"
-                  alt="Cent Logo"
-                  className="w-10 h-10 object-contain"
-                />
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#3bbcc8] rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">1</span>
-                </div>
-              </div>
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
-                Paga con Cent
-              </h3>
-              <p className="text-gray-300 text-xs sm:text-sm">
-                Usa tu número de teléfono para pagar en tiendas afiliadas y
-                convierte el cambio en inversión
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 relative border-2 border-success">
-                <img
-                  src="/3q.png"
-                  alt="Tresqu Logo"
-                  className="w-10 h-10 object-contain"
-                />
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">2</span>
-                </div>
-              </div>
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
-                Registra con Tresqu
-              </h3>
-              <p className="text-gray-300 text-xs sm:text-sm">
-                Envía un mensaje por WhatsApp o Telegram y Tresqu registrará
-                automáticamente tu gasto
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 relative border-2 border-purple-500">
-                <div className="flex -space-x-1">
+          {/* Sección de flujo de trabajo */}
+          <div className="tq-surface mb-16 p-6 sm:p-10">
+            <h2 className="text-center mb-10 sm:mb-12">
+              ¿Cómo funciona la alianza?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div
+                  className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border-2 bg-[#05060c]"
+                  style={{ borderColor: CENT }}
+                >
                   <img
                     src="/logo_teal.png"
                     alt="Cent Logo"
-                    className="w-6 h-6 object-contain"
+                    className="w-10 h-10 object-contain"
                   />
+                  <span
+                    className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-black"
+                    style={{ background: CENT }}
+                  >
+                    1
+                  </span>
+                </div>
+                <h3 className="mb-2">Paga con Cent</h3>
+                <p className="text-sm leading-relaxed text-[#8a90a6]">
+                  Usa tu número de teléfono para pagar en tiendas afiliadas y
+                  convierte el cambio en inversión
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#00FF7F] bg-[#05060c]">
                   <img
                     src="/3q.png"
                     alt="Tresqu Logo"
-                    className="w-6 h-6 object-contain"
+                    className="w-10 h-10 rounded-lg object-contain"
                   />
+                  <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#00FF7F] text-xs font-bold text-black">
+                    2
+                  </span>
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">3</span>
-                </div>
+                <h3 className="mb-2">Registra con Tresqu</h3>
+                <p className="text-sm leading-relaxed text-[#8a90a6]">
+                  Envía un mensaje por WhatsApp o Telegram y Tresqu registrará
+                  automáticamente tu gasto
+                </p>
               </div>
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
-                Obtén insights
-              </h3>
-              <p className="text-gray-300 text-xs sm:text-sm">
-                Recibe reportes detallados y análisis inteligente de tus hábitos
-                financieros
-              </p>
+              <div className="text-center">
+                <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#6b5bff] bg-[#05060c]">
+                  <div className="flex -space-x-1">
+                    <img
+                      src="/logo_teal.png"
+                      alt="Cent Logo"
+                      className="w-6 h-6 object-contain"
+                    />
+                    <img
+                      src="/3q.png"
+                      alt="Tresqu Logo"
+                      className="w-6 h-6 rounded object-contain"
+                    />
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#6b5bff] text-xs font-bold text-white">
+                    3
+                  </span>
+                </div>
+                <h3 className="mb-2">Obtén insights</h3>
+                <p className="text-sm leading-relaxed text-[#8a90a6]">
+                  Recibe reportes detallados y análisis inteligente de tus hábitos
+                  financieros
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Sección final explicativa */}
-        <div className="text-center">
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 max-w-3xl mx-auto">
+          {/* Sección final explicativa */}
+          <div className="tq-surface mx-auto max-w-3xl p-6 sm:p-8 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-blue-400">
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 rounded-full bg-[#3aa7ff] animate-pulse"
+              />
+              <span className="text-sm font-medium text-[#3aa7ff]">
                 Prueba Piloto Activa
               </span>
             </div>
-            <p className="text-gray-300 text-sm mb-4">
+            <p className="mb-4 text-[15px] leading-relaxed text-[#c9cee0]">
               Tresqu es un asistente inteligente que transforma tus mensajes de
               WhatsApp y Telegram en reportes financieros automáticos y
               organizados.
             </p>
-            <p className="text-gray-400 text-xs">
+            <p className="text-[13px] text-[#6f7489]">
               Estamos validando esta alianza con usuarios seleccionados de Cent
               para crear la mejor experiencia financiera integral.
             </p>
           </div>
         </div>
-      </div>
+      </main>
 
       <Footer />
-    </main>
+    </div>
   );
 };
 

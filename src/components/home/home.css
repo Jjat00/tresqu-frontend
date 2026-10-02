@@ -2,110 +2,7 @@
  * Landing «Noche de puntos» (/ y /en). Port de landing-lab/u21-noche-de-puntos.
  * Todo va bajo .tq-home para no tocar el resto del SPA (dashboard, Features…).
  */
-.tq-home {
-  --bg: #010208;
-  --bg-2: #05060c;
-  --ink: #dde4ff; /* blanco lavanda de los titulares */
-  --text: #c9cee0;
-  --muted: #6f7489;
-  --dim: #4a4f62;
-  --line: rgba(160, 170, 220, 0.09);
-  --green: #00ff7f;
-  --teal: #19d3c5;
-  --indigo: #3a46ff;
-  --violet: #6b5bff;
-  position: relative;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size: 16px;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
-  color-scheme: dark;
-}
-html:has(.tq-home) {
-  scroll-behavior: smooth;
-  background: #010208;
-}
-.tq-home section[id] {
-  scroll-margin-top: 80px;
-}
-.tq-home :is(h1, h2, h3, h4) {
-  font-family: inherit; /* el base del SPA pone Syne en los headings */
-}
-.tq-home b {
-  color: #fff;
-  font-weight: 500;
-}
-.tq-wrap {
-  width: min(1100px, 100% - 32px);
-  margin-inline: auto;
-}
-
-/* ---------- Botones ---------- */
-.tq-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 34px;
-}
-.tq-btn {
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 60px;
-  padding: 0 30px;
-  border-radius: 999px;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s;
-}
-.tq-btn svg {
-  width: 22px;
-  height: 22px;
-}
-.tq-btn-wa {
-  background: var(--green);
-  color: #000;
-}
-.tq-btn-wa svg {
-  fill: #000;
-}
-.tq-btn-wa:hover {
-  transform: translateY(-2px);
-  background: #3dff9b;
-}
-.tq-btn-dash {
-  color: #fff;
-  background: rgba(10, 11, 20, 0.85);
-}
-.tq-btn-dash svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  width: 18px;
-  height: 18px;
-}
-.tq-btn-dash:hover {
-  transform: translateY(-2px);
-  background: #12141f;
-}
-.tq-home a:focus-visible,
-.tq-home summary:focus-visible,
-.tq-home .iphone-giro:focus-visible,
-.tq-marquee:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 3px;
-}
+/* Tokens, botones, .tq-wrap y .tq-eyebrow: src/styles/noche.css */
 
 /* ---------- 1 · Hero ---------- */
 .tq-hero {
@@ -116,13 +13,6 @@ html:has(.tq-home) {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.tq-dots {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
 }
 .tq-hero::after {
   /* oscurece el borde inferior para entrar a la sección siguiente */
@@ -334,14 +224,6 @@ html:has(.tq-home) {
 }
 .tq-work-head {
   text-align: center;
-}
-.tq-eyebrow {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--dim);
 }
 .tq-work-title {
   margin: 18px 0 0;
@@ -950,17 +832,6 @@ html:has(.tq-home) {
     font-size: 15px;
     margin-top: 18px;
   }
-  .tq-ctas {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 26px;
-    padding: 0 4px;
-  }
-  .tq-btn {
-    min-height: 58px;
-    font-size: 17px;
-  }
   .tq-hero-art {
     --th: 640px;
   }
@@ -993,9 +864,6 @@ html:has(.tq-home) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:has(.tq-home) {
-    scroll-behavior: auto;
-  }
   .tq-track,
   .tq-tel-rise {
     animation: none !important;
@@ -1005,7 +873,6 @@ html:has(.tq-home) {
     transform: none;
     transition: none;
   }
-  .tq-btn,
   .tq-fab,
   .tq-faq-item summary svg {
     transition: none;

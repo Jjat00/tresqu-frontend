@@ -46,85 +46,87 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Seo from "@/components/Seo";
+import DotField from "@/components/home/DotField";
+import WhatsAppIcon from "@/components/home/WhatsAppIcon";
 import { pathFor, useCopy, useLocale } from "@/i18n";
 import {
   featuresPageCopy,
   type FeatureItemCopy,
 } from "@/i18n/copy/features";
+import "@/styles/noche.css";
 
-// Estructura de cada sección (id de anchor, acento e iconos).
+type Tone = "green" | "blue";
+
+// Estructura de cada sección (id de anchor, tono e iconos).
 // El copy vive en src/i18n/copy/features.tsx, mismo orden de secciones e items.
-const sectionStructure: { id: string; accent: string; icons: LucideIcon[] }[] = [
+const sectionStructure: { id: string; tone: Tone; icons: LucideIcon[] }[] = [
   {
     id: "registro",
-    accent: "#00FF7F",
+    tone: "green",
     icons: [MessageSquare, Mic, Camera, Banknote, ListPlus, CalendarDays, Globe, Coins, Tags],
   },
   {
     id: "gmail",
-    accent: "#00FF7F",
+    tone: "green",
     icons: [Mail, BellRing, Reply, Brain, Trash2, CopyCheck, Settings2],
   },
   {
     id: "control",
-    accent: "#00FF7F",
+    tone: "green",
     icons: [Search, Filter, Sparkles, Pencil, Trash2, Hand, Layers],
   },
   {
     id: "inversiones",
-    accent: "#0D99FF",
+    tone: "blue",
     icons: [Wallet, Compass, ShieldCheck, ArrowLeftRight, PiggyBank, CreditCard, Pause, Table2],
   },
   {
     id: "analisis",
-    accent: "#0D99FF",
+    tone: "blue",
     icons: [TrendingUp, LineChart, Gauge, ShieldAlert, Layers],
   },
   {
     id: "dashboard",
-    accent: "#00FF7F",
+    tone: "green",
     icons: [KeyRound, BarChart3, Table2, FileSpreadsheet, Palette, LineChart, MessagesSquare, Radar, Settings2],
   },
 ];
 
 const FeatureCard = ({
   Icon,
+  tone,
   title,
   description,
   channels,
   isNew,
   newBadge,
-}: FeatureItemCopy & { Icon: LucideIcon; newBadge: string }) => (
-  <div className="group holo-card holo-sheen p-6 lg:p-8">
-    <div className="flex items-start justify-between mb-6">
-      <div className="w-11 h-11 rounded-md bg-white/[0.04] border border-white/10 flex items-center justify-center text-[#00FF7F] transition-all duration-300 group-hover:border-[#00FF7F]/40 group-hover:shadow-[0_0_20px_-6px_rgba(0,255,127,0.6)]">
-        <Icon className="w-5 h-5" />
+}: FeatureItemCopy & { Icon: LucideIcon; tone: Tone; newBadge: string }) => (
+  <article className="tq-surface tq-fx-card">
+    <div className="tq-fx-card-top">
+      <div className={`tq-fx-icon is-${tone}`}>
+        <Icon aria-hidden="true" />
       </div>
-      {isNew && (
-        <span className="px-2 py-0.5 border border-[#00FF7F]/30 bg-[#00FF7F]/5 rounded-sm text-[10px] uppercase tracking-wider text-[#00FF7F] font-medium">
-          {newBadge}
-        </span>
-      )}
+      {isNew && <span className="tq-tag tq-tag-new">{newBadge}</span>}
     </div>
-    <h3 className="text-xl font-bold text-white mb-3 font-display tracking-tight">
-      {title}
-    </h3>
-    <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
+    <h3>{title}</h3>
+    <p>{description}</p>
     {channels && (
-      <div className="flex flex-wrap gap-1.5 mt-4">
+      <div className="tq-fx-tags">
         {channels.map((channel) => (
-          <span
-            key={channel}
-            className="px-2 py-0.5 border border-white/10 rounded-sm text-[10px] uppercase tracking-wider text-zinc-500 font-medium"
-          >
+          <span key={channel} className="tq-tag">
             {channel}
           </span>
         ))}
       </div>
     )}
-  </div>
+  </article>
 );
 
+/**
+ * Guía pública de funciones (/funciones y /en/features), estilo «Noche de
+ * puntos»: retícula de puntos en el hero, titulares ligeros con acento de
+ * color y tarjetas sobrias como las de la landing.
+ */
 const Features = () => {
   const locale = useLocale();
   const copy = useCopy(featuresPageCopy);
@@ -134,173 +136,147 @@ const Features = () => {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] text-foreground">
+    <div className="tq-page">
       <Seo page="features" />
       <Header />
 
-      {/* Hero */}
-      <section className="relative pt-36 md:pt-44 pb-16 md:pb-20">
-        <div className="container max-w-7xl mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="section-label mb-6">{copy.heroLabel}</span>
-            <h1 className="trii-title text-4xl sm:text-5xl md:text-6xl text-white mb-6">
+      <main>
+        {/* Hero */}
+        <section className="tq-fx-hero" aria-labelledby="features-title">
+          <DotField />
+          <div className="tq-fx-hero-inner">
+            <p className="tq-eyebrow">{copy.heroLabel}</p>
+            <h1 id="features-title" className="tq-display">
               {copy.heroTitle}
             </h1>
-            <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto mb-10">
-              {copy.heroIntro}
-            </p>
+            <p className="tq-lead">{copy.heroIntro}</p>
             {/* Quick nav */}
-            <nav className="flex flex-wrap justify-center gap-2">
+            <nav className="tq-fx-nav" aria-label={copy.heroLabel}>
               {copy.sections.map((section, index) => (
                 <a
                   key={sectionStructure[index].id}
                   href={`#${sectionStructure[index].id}`}
-                  className="px-3 py-1.5 bg-white/[0.02] border border-white/[0.08] rounded-sm text-xs font-medium text-zinc-400 hover:text-white hover:border-white/20 transition-colors duration-200"
                 >
                   {section.badge}
                 </a>
               ))}
-              <a
-                href="#canales"
-                className="px-3 py-1.5 bg-white/[0.02] border border-white/[0.08] rounded-sm text-xs font-medium text-zinc-400 hover:text-white hover:border-white/20 transition-colors duration-200"
-              >
-                {copy.navChannels}
-              </a>
+              <a href="#canales">{copy.navChannels}</a>
             </nav>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Feature sections */}
-      {copy.sections.map((section, sectionIndex) => {
-        const structure = sectionStructure[sectionIndex];
-        return (
-          <section
-            key={structure.id}
-            id={structure.id}
-            className="relative section-padding bg-[#0a0a0a] scroll-mt-24"
-          >
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
-            </div>
-            <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-              <div className="max-w-3xl mb-12 md:mb-16">
-                <span
-                  className="inline-block px-3 py-1 border rounded-sm text-xs uppercase tracking-wider font-medium mb-6"
-                  style={{
-                    color: structure.accent,
-                    borderColor: `${structure.accent}40`,
-                  }}
-                >
-                  {section.badge}
-                </span>
-                <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-5">
-                  {section.title}
-                </h2>
-                <p className="text-zinc-400 text-base sm:text-lg max-w-xl">
-                  {section.intro}
-                </p>
-              </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                {section.items.map((item, itemIndex) => (
-                  <FeatureCard
-                    key={item.title}
-                    {...item}
-                    Icon={structure.icons[itemIndex]}
-                    newBadge={copy.newBadge}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-
-      {/* Channel matrix */}
-      <section id="canales" className="relative section-padding bg-[#0a0a0a] scroll-mt-24">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
-        </div>
-        <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-3xl mb-12 md:mb-16">
-            <span className="section-label mb-6">{copy.channelsLabel}</span>
-            <h2 className="trii-title text-3xl sm:text-4xl md:text-5xl text-white mb-5">
-              {copy.channelsTitle}
-            </h2>
-            <p className="text-zinc-400 text-base sm:text-lg max-w-xl">
-              {copy.channelsIntro}
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-            {copy.channelMatrix.map((channel) => (
-              <div
-                key={channel.name}
-                className={`holo-card holo-sheen p-6 lg:p-8 ${
-                  channel.highlight ? "hud-corners" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-white font-display tracking-tight">
-                    {channel.name}
-                  </h3>
-                  {channel.highlight && (
-                    <span className="px-2 py-0.5 border border-[#00FF7F]/30 bg-[#00FF7F]/5 rounded-sm text-[10px] uppercase tracking-wider text-[#00FF7F] font-medium">
-                      {copy.recommendedBadge}
-                    </span>
-                  )}
+        {/* Feature sections */}
+        {copy.sections.map((section, sectionIndex) => {
+          const structure = sectionStructure[sectionIndex];
+          return (
+            <section
+              key={structure.id}
+              id={structure.id}
+              className="tq-fx-section"
+              aria-labelledby={`${structure.id}-title`}
+            >
+              <div className="tq-wrap">
+                <div className="tq-fx-head">
+                  <p className={`tq-eyebrow tq-fx-eyebrow is-${structure.tone}`}>
+                    {section.badge}
+                  </p>
+                  <h2 id={`${structure.id}-title`} className="tq-h2">
+                    {section.title}
+                  </h2>
+                  <p className="tq-lead">{section.intro}</p>
                 </div>
-                <ul className="space-y-3">
-                  {channel.items.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-2.5 text-sm text-zinc-400"
-                    >
-                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#00FF7F] shrink-0" />
-                      {item}
-                    </li>
+                <div className="tq-fx-grid">
+                  {section.items.map((item, itemIndex) => (
+                    <FeatureCard
+                      key={item.title}
+                      {...item}
+                      Icon={structure.icons[itemIndex]}
+                      tone={structure.tone}
+                      newBadge={copy.newBadge}
+                    />
                   ))}
-                </ul>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </section>
+          );
+        })}
 
-      {/* Final CTA */}
-      <section className="relative section-padding bg-[#0a0a0a]">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 right-0 h-px bg-white/5" />
-        </div>
-        <div className="container max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <div className="holo-card holo-sheen hud-corners max-w-3xl mx-auto text-center p-10 md:p-14">
-            <h2 className="trii-title text-3xl sm:text-4xl text-white mb-5">
+        {/* Channel matrix */}
+        <section
+          id="canales"
+          className="tq-fx-section"
+          aria-labelledby="canales-title"
+        >
+          <div className="tq-wrap">
+            <div className="tq-fx-head">
+              <p className="tq-eyebrow tq-fx-eyebrow is-green">
+                {copy.channelsLabel}
+              </p>
+              <h2 id="canales-title" className="tq-h2">
+                {copy.channelsTitle}
+              </h2>
+              <p className="tq-lead">{copy.channelsIntro}</p>
+            </div>
+            <div className="tq-fx-grid">
+              {copy.channelMatrix.map((channel) => (
+                <article
+                  key={channel.name}
+                  className={`tq-surface tq-fx-card tq-fx-channel ${
+                    channel.highlight ? "is-highlight tq-grad-border" : ""
+                  }`}
+                >
+                  <div className="tq-fx-card-top">
+                    <h3>{channel.name}</h3>
+                    {channel.highlight && (
+                      <span className="tq-tag tq-tag-new">
+                        {copy.recommendedBadge}
+                      </span>
+                    )}
+                  </div>
+                  <ul>
+                    {channel.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="tq-fx-cta" aria-labelledby="features-cta-title">
+          <div className="tq-wrap">
+            <h2 id="features-cta-title" className="tq-h2">
               {copy.ctaTitle}
             </h2>
-            <p className="text-zinc-400 text-base mb-8 max-w-md mx-auto">
-              {copy.ctaBody}
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <p className="tq-lead">{copy.ctaBody}</p>
+            <div className="tq-ctas">
               <a
                 href={copy.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="cta-neon inline-flex items-center justify-center px-6 py-3 bg-[#00FF7F] text-black font-semibold text-sm rounded-md hover:bg-white"
+                className="tq-btn tq-btn-wa"
               >
+                <WhatsAppIcon />
                 {copy.ctaWhatsApp}
               </a>
               <Link
                 to={pathFor("login", locale)}
-                className="inline-flex items-center justify-center px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-md hover:bg-white/[0.06] hover:border-white/20 transition-colors duration-200"
+                className="tq-btn tq-btn-dash tq-grad-border"
               >
                 {copy.ctaLogin}
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
               </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       <Footer />
-    </main>
+    </div>
   );
 };
 

@@ -46,8 +46,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
     heroLabel: "Guía de funciones",
     heroTitle: (
       <>
-        TODO LO QUE PUEDES HACER CON{" "}
-        <span className="holo-text italic">TRESQU</span>.
+        <span className="l1">Todo lo que puedes hacer</span>{" "}
+        <span className="l2">con Tresqu.</span>
       </>
     ),
     heroIntro:
@@ -60,7 +60,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Registro",
         title: (
           <>
-            REGISTRA COMO <span className="text-[#00FF7F] italic">PREFIERAS</span>.
+            Registra como <span className="tq-accent">prefieras</span>.
           </>
         ),
         intro:
@@ -121,8 +121,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Gmail automático",
         title: (
           <>
-            TU INBOX SE VUELVE TU{" "}
-            <span className="text-[#00FF7F] italic">HOJA DE GASTOS</span>.
+            Tu inbox se vuelve tu{" "}
+            <span className="tq-accent">hoja de gastos</span>.
           </>
         ),
         intro:
@@ -172,7 +172,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Consulta y control",
         title: (
           <>
-            TU HISTORIAL <span className="text-[#00FF7F] italic">RESPONDE</span>.
+            Tu historial <span className="tq-accent">responde</span>.
           </>
         ),
         intro:
@@ -221,8 +221,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Inversiones · Wallbit",
         title: (
           <>
-            INVIERTE SIN SALIR DEL{" "}
-            <span className="text-[#0D99FF] italic">CHAT</span>.
+            Invierte sin salir del{" "}
+            <span className="tq-accent-blue">chat</span>.
           </>
         ),
         intro:
@@ -274,7 +274,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Analista y riesgo",
         title: (
           <>
-            CONTEXTO, NO <span className="text-[#0D99FF] italic">CONSEJOS</span>.
+            Contexto, no <span className="tq-accent-blue">consejos</span>.
           </>
         ),
         intro:
@@ -311,8 +311,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Dashboard web",
         title: (
           <>
-            Y CUANDO QUIERAS <span className="text-[#00FF7F] italic">VERLO</span>{" "}
-            TODO.
+            Y cuando quieras <span className="tq-accent">verlo</span>{" "}
+            todo.
           </>
         ),
         intro:
@@ -369,8 +369,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
     channelsLabel: "Canales",
     channelsTitle: (
       <>
-        EL MISMO TRESQU, DONDE TÚ{" "}
-        <span className="holo-text italic">ESTÉS</span>.
+        El mismo Tresqu, donde tú{" "}
+        <span className="tq-accent-grad">estés</span>.
       </>
     ),
     channelsIntro:
@@ -414,7 +414,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
     ],
     ctaTitle: (
       <>
-        PRUÉBALO EN UN <span className="holo-text italic">MENSAJE</span>.
+        Pruébalo en un <span className="tq-accent-grad">mensaje</span>.
       </>
     ),
     ctaBody:
@@ -428,8 +428,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
     heroLabel: "Feature guide",
     heroTitle: (
       <>
-        EVERYTHING YOU CAN DO WITH{" "}
-        <span className="holo-text italic">TRESQU</span>.
+        <span className="l1">Everything you can do</span>{" "}
+        <span className="l2">with Tresqu.</span>
       </>
     ),
     heroIntro:
@@ -442,7 +442,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Logging",
         title: (
           <>
-            LOG IT <span className="text-[#00FF7F] italic">YOUR WAY</span>.
+            Log it <span className="tq-accent">your way</span>.
           </>
         ),
         intro:
@@ -503,8 +503,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Automatic Gmail",
         title: (
           <>
-            YOUR INBOX BECOMES YOUR{" "}
-            <span className="text-[#00FF7F] italic">EXPENSE SHEET</span>.
+            Your inbox becomes your{" "}
+            <span className="tq-accent">expense sheet</span>.
           </>
         ),
         intro:
@@ -554,7 +554,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Query & control",
         title: (
           <>
-            YOUR HISTORY <span className="text-[#00FF7F] italic">ANSWERS</span>.
+            Your history <span className="tq-accent">answers</span>.
           </>
         ),
         intro:
@@ -603,8 +603,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Investing · Wallbit",
         title: (
           <>
-            INVEST WITHOUT LEAVING THE{" "}
-            <span className="text-[#0D99FF] italic">CHAT</span>.
+            Invest without leaving the{" "}
+            <span className="tq-accent-blue">chat</span>.
           </>
         ),
         intro:
@@ -656,7 +656,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Analyst & risk",
         title: (
           <>
-            CONTEXT, NOT <span className="text-[#0D99FF] italic">ADVICE</span>.
+            Context, not <span className="tq-accent-blue">advice</span>.
           </>
         ),
         intro:
@@ -693,8 +693,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
         badge: "Web dashboard",
         title: (
           <>
-            AND WHEN YOU WANT TO{" "}
-            <span className="text-[#00FF7F] italic">SEE IT ALL</span>.
+            And when you want to{" "}
+            <span className="tq-accent">see it all</span>.
           </>
         ),
         intro:
@@ -751,8 +751,8 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
     channelsLabel: "Channels",
     channelsTitle: (
       <>
-        THE SAME TRESQU, WHEREVER{" "}
-        <span className="holo-text italic">YOU ARE</span>.
+        The same Tresqu, wherever{" "}
+        <span className="tq-accent-grad">you are</span>.
       </>
     ),
     channelsIntro:
@@ -796,7 +796,7 @@ export const featuresPageCopy: Dict<FeaturesPageCopy> = {
     ],
     ctaTitle: (
       <>
-        TRY IT IN ONE <span className="holo-text italic">MESSAGE</span>.
+        Try it in one <span className="tq-accent-grad">message</span>.
       </>
     ),
     ctaBody:
