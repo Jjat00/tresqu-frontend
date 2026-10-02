@@ -1,0 +1,1010 @@
+/*
+ * Landing «Noche de puntos» (/ y /en). Port de landing-lab/u21-noche-de-puntos.
+ * Todo va bajo .tq-home para no tocar el resto del SPA (dashboard, Features…).
+ */
+.tq-home {
+  --bg: #010208;
+  --bg-2: #05060c;
+  --ink: #dde4ff; /* blanco lavanda de los titulares */
+  --text: #c9cee0;
+  --muted: #6f7489;
+  --dim: #4a4f62;
+  --line: rgba(160, 170, 220, 0.09);
+  --green: #00ff7f;
+  --teal: #19d3c5;
+  --indigo: #3a46ff;
+  --violet: #6b5bff;
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  color-scheme: dark;
+}
+html:has(.tq-home) {
+  scroll-behavior: smooth;
+  background: #010208;
+}
+.tq-home section[id] {
+  scroll-margin-top: 80px;
+}
+.tq-home b {
+  color: #fff;
+  font-weight: 500;
+}
+.tq-wrap {
+  width: min(1100px, 100% - 32px);
+  margin-inline: auto;
+}
+
+/* ---------- Botones ---------- */
+.tq-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 34px;
+}
+.tq-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 0 30px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s;
+}
+.tq-btn svg {
+  width: 22px;
+  height: 22px;
+}
+.tq-btn-wa {
+  background: var(--green);
+  color: #000;
+}
+.tq-btn-wa svg {
+  fill: #000;
+}
+.tq-btn-wa:hover {
+  transform: translateY(-2px);
+  background: #3dff9b;
+}
+.tq-btn-dash {
+  color: #fff;
+  background: rgba(10, 11, 20, 0.85);
+}
+.tq-btn-dash svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  width: 18px;
+  height: 18px;
+}
+.tq-btn-dash:hover {
+  transform: translateY(-2px);
+  background: #12141f;
+}
+.tq-home a:focus-visible,
+.tq-home summary:focus-visible,
+.tq-home .iphone-giro:focus-visible,
+.tq-marquee:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+/* ---------- 1 · Hero ---------- */
+.tq-hero {
+  position: relative;
+  min-height: 100svh;
+  padding: 128px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tq-dots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+.tq-hero::after {
+  /* oscurece el borde inferior para entrar a la sección siguiente */
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 160px;
+  z-index: 2;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+}
+.tq-hero-inner {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 0 16px;
+}
+.tq-hero-title {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(42px, 6.3vw, 92px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.tq-hero-title span {
+  display: block;
+}
+.tq-hero-title .l2 {
+  font-weight: 400;
+  background: linear-gradient(95deg, var(--green) 10%, #2df0a8 55%, var(--teal) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.06em;
+}
+.tq-hero-sub {
+  max-width: 560px;
+  margin: 26px auto 0;
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.tq-hero-micro {
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.tq-hero-micro a {
+  color: #cfd5ea;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 255, 255, 0.25);
+}
+
+/* iPhone 3D: fotogramas 760×1140, el teléfono ocupa ~50 % del ancho y va de
+   ~15 % a ~85 % del alto. .tq-hero-art recorta su parte baja: el teléfono
+   «sale» desde el borde inferior del hero. */
+.tq-hero-art {
+  --th: 900px; /* alto del visor */
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 100%;
+  height: calc(var(--th) * 0.56);
+  margin-top: auto;
+}
+.tq-hero-art .tq-tel {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--th) * -0.1);
+  height: var(--th);
+  aspect-ratio: 760 / 1140;
+  translate: -50% 0;
+  color: var(--green);
+}
+.tq-tel-rise {
+  animation: tq-rise 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both 0.2s;
+}
+.tq-hero-glow {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--th) * 0.02);
+  width: calc(var(--th) * 0.62);
+  height: calc(var(--th) * 0.62);
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 255, 127, 0.16), rgba(0, 255, 127, 0.06) 55%, transparent);
+  pointer-events: none;
+}
+@keyframes tq-rise {
+  from {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+}
+
+/* visor del iPhone */
+.iphone-giro {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin-inline: auto;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 12%;
+}
+.iphone-giro.is-drag {
+  cursor: grabbing;
+}
+.iphone-giro img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------- 2 · Por qué ---------- */
+.tq-why {
+  position: relative;
+  padding: 120px 0 110px;
+}
+.tq-why-title {
+  margin: 0 auto;
+  text-align: center;
+  max-width: 900px;
+  font-weight: 300;
+  font-size: clamp(34px, 4.6vw, 66px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.tq-why-lead {
+  max-width: 520px;
+  margin: 22px auto 0;
+  text-align: center;
+  font-size: 17px;
+  color: var(--muted);
+}
+.tq-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 88px;
+}
+.tq-stat {
+  padding: 0 34px;
+  border-left: 1px solid var(--line);
+}
+.tq-stat:first-child {
+  border-left: 0;
+  padding-left: 8px;
+}
+.tq-stat-num {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(64px, 6.4vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  padding-bottom: 0.04em;
+}
+.tq-stat-num.n1 {
+  background-image: linear-gradient(100deg, var(--green), #4dffa6);
+}
+.tq-stat-num.n2 {
+  background-image: linear-gradient(100deg, #2df0a8, var(--teal) 60%, #3aa7ff);
+}
+.tq-stat-num.n3 {
+  background-image: linear-gradient(100deg, #5b7bff, var(--violet) 55%, #8f6bff);
+}
+.tq-stat-label {
+  margin: 12px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.tq-stat h3 {
+  margin: 34px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  color: #eef1ff;
+}
+.tq-stat h3 + p {
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* ---------- 3 · Ejemplos ---------- */
+.tq-work {
+  position: relative;
+  padding: 104px 0 110px;
+  background: linear-gradient(to bottom, var(--bg-2), #07080f 40%, var(--bg-2));
+  border-top: 1px solid var(--line);
+}
+.tq-work-head {
+  text-align: center;
+}
+.tq-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.tq-work-title {
+  margin: 18px 0 0;
+  font-weight: 300;
+  font-size: clamp(34px, 4.4vw, 62px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+.tq-work-title span {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.tq-work-title .w1 {
+  background-image: linear-gradient(90deg, var(--green), #4dffa6);
+}
+.tq-work-title .w2 {
+  background-image: linear-gradient(90deg, #2df0a8, var(--teal));
+}
+.tq-work-title .w3 {
+  background-image: linear-gradient(90deg, #3aa7ff, #5b7bff);
+}
+.tq-work-title .w4 {
+  background-image: linear-gradient(90deg, var(--violet), #9a7bff);
+}
+.tq-work-lead {
+  max-width: 560px;
+  margin: 18px auto 0;
+  font-size: 17px;
+  color: var(--muted);
+}
+
+/* registro por chat: segundo iPhone 3D junto al copy. El fotograma deja
+   ~25 % vacío a cada lado y ~15 % arriba/abajo: la ventana recorta ese aire. */
+.tq-show {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 56px;
+  margin-top: 64px;
+}
+.tq-show-phone {
+  --th: 820px; /* alto del visor */
+  position: relative;
+  margin: 0;
+  overflow: clip;
+  height: calc(var(--th) * 0.78);
+}
+.tq-show-phone .tq-tel {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--th) * -0.11);
+  height: var(--th);
+  aspect-ratio: 760 / 1140;
+  translate: -50% 0;
+  color: var(--green);
+}
+.tq-show-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(calc(var(--th) * 0.7), 100%);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(0, 255, 127, 0.17),
+    rgba(0, 255, 127, 0.05) 50%,
+    rgba(58, 70, 255, 0.04) 75%,
+    transparent
+  );
+  pointer-events: none;
+}
+.tq-show-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  translate: -50% 0;
+  white-space: nowrap;
+  width: max-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.tq-show-hint svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tq-show-copy {
+  max-width: 460px;
+}
+.tq-show-title {
+  margin: 14px 0 0;
+  font-weight: 300;
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.tq-show-title span {
+  color: var(--green);
+  font-weight: 400;
+}
+.tq-modes {
+  list-style: none;
+  counter-reset: m;
+  margin: 34px 0 0;
+  padding: 0;
+  display: grid;
+}
+.tq-modes li {
+  counter-increment: m;
+  position: relative;
+  padding: 16px 0 16px 46px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tq-modes li::before {
+  content: "0" counter(m);
+  position: absolute;
+  left: 0;
+  top: 17px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--green);
+}
+.tq-modes b {
+  font-size: 17px;
+  font-weight: 500;
+  color: #eef1ff;
+}
+.tq-modes span {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* carrusel */
+.tq-marquee {
+  margin-top: 64px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.tq-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  padding: 6px 0;
+  animation: tq-slide 60s linear infinite;
+}
+.tq-marquee:hover .tq-track,
+.tq-marquee:focus-within .tq-track {
+  animation-play-state: paused;
+}
+.tq-marquee.is-static {
+  overflow-x: auto;
+}
+.tq-marquee.is-static .tq-track {
+  animation: none;
+  padding-inline: 16px;
+}
+@keyframes tq-slide {
+  to {
+    transform: translateX(calc(-50% - 9px));
+  }
+}
+
+.tq-card {
+  position: relative;
+  flex: none;
+  width: 250px;
+  height: 340px;
+  margin: 0;
+  padding: 20px 16px 16px;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e9edff;
+}
+.tq-card.c-green {
+  background: radial-gradient(120% 80% at 50% 0%, rgba(0, 255, 127, 0.3), transparent 60%), #06140e;
+}
+.tq-card.c-indigo {
+  background: radial-gradient(120% 80% at 50% 0%, rgba(58, 70, 255, 0.42), transparent 60%), #070a1d;
+}
+.tq-card.c-violet {
+  background: radial-gradient(120% 80% at 50% 0%, rgba(107, 91, 255, 0.4), transparent 60%), #0c0a1e;
+}
+.tq-card.shot {
+  width: 600px;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(160, 170, 220, 0.12), transparent 60%), #0a0b12;
+}
+.tq-card-title {
+  margin: 0;
+  text-align: center;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.tq-card-title em {
+  font-style: normal;
+  color: var(--green);
+}
+.tq-card.c-indigo .tq-card-title em,
+.tq-card.c-violet .tq-card-title em {
+  color: #a9b2ff;
+}
+.tq-chip {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(233, 237, 255, 0.45);
+}
+.tq-panel {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+}
+.tq-card .kpi-l {
+  margin: 0;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8189a6;
+}
+.tq-card .kpi-v {
+  margin: 2px 0 10px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.tq-radar {
+  width: 100%;
+  height: 118px;
+  margin-top: 2px;
+}
+.tq-radar .grid {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+.tq-radar .area {
+  fill: rgba(0, 255, 127, 0.55);
+  stroke: none;
+}
+.tq-card .mini {
+  margin: auto 0 18px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #9aa1bb;
+}
+.tq-order {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 255, 127, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tq-order p {
+  margin: 0;
+}
+.tq-wb {
+  width: 92px;
+  height: auto;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+.tq-order .o-title {
+  font-size: 13px;
+  color: #aeb5cc;
+}
+.tq-order .o-val {
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.tq-order .o-val small {
+  font-size: 13px;
+  color: #aeb5cc;
+}
+.tq-order .o-risk {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: #ffcf6b;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 190, 60, 0.08);
+}
+.tq-order .o-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-bottom: 14px;
+}
+.tq-order .o-btns span {
+  flex: 1;
+  text-align: center;
+  padding: 9px 0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.tq-order .yes {
+  background: var(--green);
+  color: #000;
+}
+.tq-order .no {
+  background: rgba(255, 255, 255, 0.07);
+  color: #d6dbee;
+}
+.tq-lock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 18px;
+}
+.tq-lock svg {
+  width: 76px;
+  height: 76px;
+  fill: none;
+  stroke: #a9b2ff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.tq-lock svg circle {
+  fill: #a9b2ff;
+  stroke: none;
+}
+.tq-lock .lock-v {
+  margin: 16px 0 6px;
+  font-size: 40px;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  background: linear-gradient(100deg, #5b7bff, var(--violet), #9a7bff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.tq-lock .mini {
+  margin: 0;
+  padding: 0 6px;
+}
+/* capturas reales de la app web en marco de ventana */
+.tq-win {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: #0c0c0e;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+.tq-win-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #111218;
+}
+.tq-win-bar i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+.tq-win-bar u {
+  margin-left: 8px;
+  text-decoration: none;
+  font-size: 10.5px;
+  color: #7d84a0;
+}
+.tq-win img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* cierre */
+.tq-closing {
+  text-align: center;
+  margin-top: 96px;
+}
+.tq-closing-title {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(32px, 3.8vw, 52px);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.tq-closing-title span {
+  color: var(--green);
+  font-weight: 400;
+}
+.tq-closing .tq-ctas {
+  margin-top: 28px;
+}
+
+/* ---------- 4 · Preguntas frecuentes ---------- */
+.tq-faq {
+  padding: 104px 0 112px;
+  border-top: 1px solid var(--line);
+}
+.tq-faq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 56px;
+  align-items: start;
+}
+.tq-faq-title {
+  margin: 14px 0 0;
+  font-weight: 300;
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.tq-faq-list {
+  border-bottom: 1px solid var(--line);
+}
+.tq-faq-item {
+  border-top: 1px solid var(--line);
+}
+.tq-faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.tq-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.tq-faq-item h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  color: #eef1ff;
+  transition: color 0.2s;
+}
+.tq-faq-item summary:hover h3 {
+  color: #fff;
+}
+.tq-faq-item summary svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  transition: transform 0.25s ease;
+}
+.tq-faq-item[open] summary svg {
+  transform: rotate(45deg);
+}
+.tq-faq-item p {
+  margin: -6px 0 0;
+  padding: 0 40px 24px 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* botón flotante de WhatsApp */
+.tq-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 40;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #12141d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+.tq-fab svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+}
+.tq-fab:hover {
+  transform: scale(1.06);
+  background: #1a1d29;
+}
+
+/* aparición suave (solo con JS: el contenido existe igual en el DOM) */
+.tq-home .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+.tq-home .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+.tq-stats .reveal:nth-child(2) {
+  transition-delay: 0.1s;
+}
+.tq-stats .reveal:nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .tq-hero {
+    padding-top: 104px;
+  }
+  .tq-stats {
+    grid-template-columns: 1fr;
+    gap: 52px;
+    margin-top: 60px;
+  }
+  .tq-stat,
+  .tq-stat:first-child {
+    border-left: 0;
+    padding: 0;
+  }
+  .tq-stat + .tq-stat {
+    border-top: 1px solid var(--line);
+    padding-top: 44px;
+  }
+  .tq-stat h3 {
+    margin-top: 22px;
+  }
+  .tq-why {
+    padding: 84px 0 80px;
+  }
+  .tq-work {
+    padding: 80px 0 84px;
+  }
+  .tq-marquee {
+    margin-top: 44px;
+  }
+  .tq-show {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    margin-top: 40px;
+  }
+  .tq-show-phone {
+    --th: 700px;
+  }
+  .tq-show-copy {
+    margin-inline: auto;
+  }
+  .tq-faq {
+    padding: 80px 0 84px;
+  }
+  .tq-faq-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+@media (max-width: 480px) {
+  .tq-hero-title {
+    font-size: 35px;
+  }
+  .tq-hero-sub {
+    font-size: 15px;
+    margin-top: 18px;
+  }
+  .tq-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 26px;
+    padding: 0 4px;
+  }
+  .tq-btn {
+    min-height: 58px;
+    font-size: 17px;
+  }
+  .tq-hero-art {
+    --th: 640px;
+  }
+  .tq-why-title br {
+    display: none;
+  }
+  .tq-card {
+    width: 230px;
+    height: 330px;
+  }
+  .tq-card.shot {
+    width: 320px;
+  }
+  .tq-show-phone {
+    --th: 600px;
+  }
+  .tq-modes li {
+    padding-left: 40px;
+  }
+  .tq-faq-item h3 {
+    font-size: 16.5px;
+  }
+  .tq-faq-item p {
+    padding-right: 0;
+  }
+  .tq-fab {
+    right: 14px;
+    bottom: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.tq-home) {
+    scroll-behavior: auto;
+  }
+  .tq-track,
+  .tq-tel-rise {
+    animation: none !important;
+  }
+  .tq-home .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .tq-btn,
+  .tq-fab,
+  .tq-faq-item summary svg {
+    transition: none;
+  }
+}
