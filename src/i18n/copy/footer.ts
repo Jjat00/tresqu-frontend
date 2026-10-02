@@ -5,6 +5,7 @@ export interface FooterCopy {
   productTitle: string;
   allFeatures: string;
   blog: string;
+  /** Anclas de la landing; el Footer les antepone la ruta del home del idioma. */
   anchorLinks: { label: string; href: string }[];
   legalTitle: string;
   privacyPolicy: string;
@@ -23,8 +24,8 @@ export const footerCopy: Dict<FooterCopy> = {
     allFeatures: "Todas las funciones",
     blog: "Blog",
     anchorLinks: [
-      { label: "Cómo funciona", href: "#vives" },
-      { label: "Inversiones", href: "#inviertes" },
+      { label: "Por qué Tresqu", href: "#por-que" },
+      { label: "Ejemplos", href: "#ejemplos" },
       // Oculto hasta tener los pagos configurados (reactivar junto con Pricing)
       // { label: "Precios", href: "#pricing" },
       { label: "Preguntas frecuentes", href: "#faq" },
@@ -44,8 +45,8 @@ export const footerCopy: Dict<FooterCopy> = {
     allFeatures: "All features",
     blog: "Blog",
     anchorLinks: [
-      { label: "How it works", href: "#vives" },
-      { label: "Investing", href: "#inviertes" },
+      { label: "Why Tresqu", href: "#por-que" },
+      { label: "Examples", href: "#ejemplos" },
       // { label: "Pricing", href: "#pricing" },
       { label: "FAQ", href: "#faq" },
     ],

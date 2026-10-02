@@ -15,30 +15,32 @@ export interface HeaderCopy {
   openMenu: string;
   closeMenu: string;
   backHome: string;
+  navLabel: string;
+  homeLabel: string;
 }
 
 export const headerCopy: Dict<HeaderCopy> = {
   es: {
     navLinks: [
-      { label: "Cómo funciona", anchor: "#vives" },
-      { label: "Inversiones", anchor: "#inviertes" },
-      { label: "Producto", anchor: "#producto" },
+      { label: "Por qué", anchor: "#por-que" },
+      { label: "Ejemplos", anchor: "#ejemplos" },
       { label: "Preguntas", anchor: "#faq" },
       { label: "Funciones", route: "features" },
       // Oculto hasta tener los pagos configurados (reactivar junto con Pricing)
       // { label: "Precios", anchor: "#pricing" },
     ],
     ctaDashboard: "Mi Dashboard",
-    ctaLogin: "Ingresar",
+    ctaLogin: "Entrar",
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
     backHome: "Regresar al inicio",
+    navLabel: "Principal",
+    homeLabel: "Tresqu, inicio",
   },
   en: {
     navLinks: [
-      { label: "How it works", anchor: "#vives" },
-      { label: "Investing", anchor: "#inviertes" },
-      { label: "Product", anchor: "#producto" },
+      { label: "Why", anchor: "#por-que" },
+      { label: "Examples", anchor: "#ejemplos" },
       { label: "FAQ", anchor: "#faq" },
       { label: "Features", route: "features" },
       // { label: "Pricing", anchor: "#pricing" },
@@ -48,5 +50,7 @@ export const headerCopy: Dict<HeaderCopy> = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
     backHome: "Back to home",
+    navLabel: "Main",
+    homeLabel: "Tresqu, home",
   },
 };
