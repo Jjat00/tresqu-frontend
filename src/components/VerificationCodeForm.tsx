@@ -96,19 +96,19 @@ const VerificationCodeForm = ({
   // Determinar la clase de color para el botón según el servicio
   const buttonColorClass =
     authMethod === "telegram"
-      ? "bg-[#0088cc] hover:bg-[#0088cc]/90 text-white"
-      : "bg-[#00FF7F] hover:bg-white text-black";
+      ? "tq-btn-tg"
+      : "tq-btn-wa";
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-white">
+      <h3>
         {copy.verifyTitle}
       </h3>
-      <p className="text-sm text-zinc-400">
+      <p className="text-sm text-[#8a90a6]">
         {copy.verifySentPre}
         {messagingService}
         {copy.verifySentMid}
-        <span className="font-medium">{phoneNumber}</span>
+        <span className="font-medium text-white">{phoneNumber}</span>
       </p>
 
       <p
@@ -129,12 +129,12 @@ const VerificationCodeForm = ({
             className="gap-2"
           >
             <InputOTPGroup>
-              <InputOTPSlot index={0} className="h-12 w-12" />
-              <InputOTPSlot index={1} className="h-12 w-12" />
-              <InputOTPSlot index={2} className="h-12 w-12" />
-              <InputOTPSlot index={3} className="h-12 w-12" />
-              <InputOTPSlot index={4} className="h-12 w-12" />
-              <InputOTPSlot index={5} className="h-12 w-12" />
+              <InputOTPSlot index={0} className="tq-otp-slot h-12 w-12" />
+              <InputOTPSlot index={1} className="tq-otp-slot h-12 w-12" />
+              <InputOTPSlot index={2} className="tq-otp-slot h-12 w-12" />
+              <InputOTPSlot index={3} className="tq-otp-slot h-12 w-12" />
+              <InputOTPSlot index={4} className="tq-otp-slot h-12 w-12" />
+              <InputOTPSlot index={5} className="tq-otp-slot h-12 w-12" />
             </InputOTPGroup>
           </InputOTP>
         </div>
@@ -144,14 +144,14 @@ const VerificationCodeForm = ({
             type="button"
             variant="outline"
             onClick={onCancel}
-            className="flex-1"
+            className="tq-btn tq-btn-sm tq-btn-outline flex-1"
             disabled={isSubmitting}
           >
             {copy.verifyBack}
           </Button>
           <Button
             type="submit"
-            className={`flex-1 ${buttonColorClass} font-semibold`}
+            className={`tq-btn tq-btn-sm flex-1 ${buttonColorClass}`}
             disabled={isSubmitting || verificationCode.length !== 6}
           >
             {isSubmitting ? copy.verifySubmitBusy : copy.verifySubmitIdle}

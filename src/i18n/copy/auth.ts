@@ -8,7 +8,7 @@ import type { Dict } from "../types";
 export interface AuthCopy {
   signupWhatsappText: string;
   accessLabel: string;
-  /** "{pre} {holo}." — estilos en el componente */
+  /** "{pre} {holo}." — la segunda palabra va en color (estilos en el componente) */
   title: { pre: string; holo: string };
   intro: string;
   cardTitle: string;
@@ -53,7 +53,7 @@ export const authCopy: Dict<AuthCopy> = {
     signupWhatsappText:
       "Hola Tresqu quiero crear mi cuenta y tener control de mis finanzas e inversiones",
     accessLabel: "Acceso",
-    title: { pre: "INICIA", holo: "SESIÓN" },
+    title: { pre: "Inicia", holo: "sesión" },
     intro:
       "Entra con el número con el que usas Tresqu. ¿Aún no tienes cuenta? Créala en un minuto por WhatsApp o Telegram.",
     cardTitle: "Inicia sesión con tu número",
@@ -101,7 +101,7 @@ export const authCopy: Dict<AuthCopy> = {
     signupWhatsappText:
       "Hi Tresqu, I want to create my account and take control of my finances and investments",
     accessLabel: "Access",
-    title: { pre: "SIGN", holo: "IN" },
+    title: { pre: "Sign", holo: "in" },
     intro:
       "Sign in with the number you use Tresqu with. Don't have an account yet? Create one in a minute via WhatsApp or Telegram.",
     cardTitle: "Sign in with your number",
