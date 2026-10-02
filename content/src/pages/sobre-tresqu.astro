@@ -23,10 +23,12 @@ const jsonLd = [
 ];
 ---
 <BaseLayout title="Sobre Tresqu: producto, equipo y contenido" description="Qué es Tresqu, qué integra y quién publica sus guías. Conoce el alcance del asistente financiero con IA y cómo contactar al equipo para corregir información." path="/sobre-tresqu/" jsonLd={jsonLd}>
-  <nav aria-label="Ruta de navegación"><a href="/">Inicio</a> › Sobre Tresqu</nav>
-  <h1>Sobre Tresqu y su contenido</h1>
-  <p>Tresqu es un asistente financiero con IA que reúne gastos, ingresos e inversiones mediante integraciones con WhatsApp, Telegram, Gmail y Wallbit. Puedes conversar en español o inglés y revisar tu información desde un dashboard web.</p>
+  <nav class="breadcrumbs" aria-label="Ruta de navegación"><a href="/">Inicio</a> › Sobre Tresqu</nav>
+  <header class="about-hero">
+  <h1>Sobre Tresqu <span class="accent">y su contenido</span></h1>
+  <p class="lede">Tresqu es un asistente financiero con IA que reúne gastos, ingresos e inversiones mediante integraciones con WhatsApp, Telegram, Gmail y Wallbit. Puedes conversar en español o inglés y revisar tu información desde un dashboard web.</p>
   <p>Información revisada el <time datetime="2026-09-10">10 de septiembre de 2026</time>.</p>
+  </header>
 
   <h2>Qué hace cada integración</h2>
   <dl>
@@ -37,7 +39,7 @@ const jsonLd = [
   </dl>
   <p>Consulta el <a href="/asistente-financiero-ia/">alcance del asistente</a> y el <a href="/inversiones-con-inteligencia-artificial/">flujo de inversiones con Wallbit</a>. Las integraciones descritas no implican conexión universal con bancos o intermediarios.</p>
 
-  <h2 id="equipo">Quién publica estas páginas</h2>
+  <h2 id="equipo" class="anchor">Quién publica estas páginas</h2>
   <p>Las páginas firmadas por Equipo Tresqu son contenido del propio producto. Explican funciones y ejemplos de uso desde esa perspectiva; no son reseñas independientes ni asesoría financiera personalizada.</p>
   <p>La autoría de equipo no implica una acreditación profesional en inversiones. Cuando una página utiliza información de un proveedor, enlaza la fuente correspondiente para que puedas contrastarla.</p>
 
@@ -49,3 +51,12 @@ const jsonLd = [
   <p>La <a href="/privacy-policy">política de privacidad</a> describe el tratamiento de datos y permisos. El <a href="/legal-notice">aviso legal</a> recoge las condiciones del servicio.</p>
   <p>Si encuentras información incorrecta, escribe a <a href="mailto:contacto@tresqu.com">contacto@tresqu.com</a> e indica la página y el dato que conviene revisar. Evita incluir credenciales o documentos financieros en esa consulta.</p>
 </BaseLayout>
+
+<style>
+  .about-hero { padding-bottom: 12px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .about-hero h1 { margin-top: 22px; }
+  .about-hero .accent { display: block; }
+  .lede { color: #dfe3f2; font-size: clamp(17px, 1.5vw, 19px); line-height: 1.7; }
+  .about-hero p:last-child { color: var(--muted); font-size: 14px; }
+  .anchor { scroll-margin-top: 96px; }
+</style>

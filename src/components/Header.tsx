@@ -2,13 +2,22 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { isAuthenticated } from "@/services/authService";
 import { Menu, X } from "lucide-react";
-import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { pathFor, routeKeyFromPath, useCopy, useLocale } from "@/i18n";
 import { headerCopy, type NavLink as NavLinkCopy } from "@/i18n/copy/header";
 
+const linkClass =
+  "inline-flex items-center px-3 py-2 rounded-full text-[13px] font-medium text-[#b8bdd0] hover:text-white transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#00FF7F] focus-visible:outline-offset-2";
+
+const ctaClass =
+  "tq-grad-border inline-flex items-center justify-center px-[18px] py-2 rounded-full bg-[#0b0c14] text-sm font-medium text-white hover:bg-[#12141f] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#00FF7F] focus-visible:outline-offset-2";
+
+/**
+ * Nav en píldora centrada (diseño «Noche de puntos»), compartido por todas
+ * las páginas públicas. En la landing: anclas de sección, Funciones, idioma y
+ * Entrar (en móvil, detrás de un menú). En el resto: idioma y volver al inicio.
+ */
 const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -17,138 +26,104 @@ const Header = () => {
   const isHomePage = routeKeyFromPath(location.pathname) === "home";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
     // eslint-disable-next-line react-hooks/set-state-in-effect -- estado de sesión leído al montar y al navegar
     setIsLoggedIn(isAuthenticated());
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, [location]);
 
-  const navLinks: NavLinkCopy[] = copy.navLinks;
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileMenuOpen]);
 
-  const floating = scrolled || mobileMenuOpen;
+  const navLinks: NavLinkCopy[] = copy.navLinks;
+  const ctaTo = isLoggedIn ? "/dashboard" : pathFor("login", locale);
+  const ctaLabel = isLoggedIn ? copy.ctaDashboard : copy.ctaLogin;
+  const close = () => setMobileMenuOpen(false);
+
+  const renderLink = (link: NavLinkCopy, className: string) =>
+    link.route ? (
+      <Link
+        key={link.route}
+        to={pathFor(link.route, locale)}
+        className={className}
+        onClick={close}
+      >
+        {link.label}
+      </Link>
+    ) : (
+      <a key={link.anchor} href={link.anchor} className={className} onClick={close}>
+        {link.label}
+      </a>
+    );
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-3">
-      <div
-        className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
-          floating
-            ? "bg-[#0a0a0a]/70 backdrop-blur-xl border-white/[0.08] shadow-[0_8px_40px_-8px_rgba(0,0,0,0.6)] px-4 md:px-6 py-3"
-            : "bg-transparent border-transparent px-4 md:px-6 py-4"
-        }`}
-      >
-        <div className="flex items-center justify-between">
-          {/* Logo */}
+    <header className="fixed inset-x-0 top-[18px] z-50 flex justify-center px-3 pointer-events-none font-jakarta">
+      <div className="relative pointer-events-auto max-w-full">
+        <nav
+          aria-label={copy.navLabel}
+          className="flex items-center gap-1 rounded-full border border-white/[0.09] bg-[rgba(8,9,16,0.72)] backdrop-blur-[14px] py-1.5 pr-1.5 pl-3.5"
+        >
           <Link
             to={pathFor("home", locale)}
-            className="group flex items-center hover:scale-105 transition-transform duration-500"
+            aria-label={copy.homeLabel}
+            className="mr-2.5 inline-flex items-center gap-2 rounded-full font-semibold tracking-[-0.01em] text-white focus-visible:outline-2 focus-visible:outline-[#00FF7F] focus-visible:outline-offset-2"
           >
-            <Logo size="md" />
+            <img src="/3q.png" alt="" width={24} height={24} className="h-6 w-6 rounded-md" />
+            <span>Tresqu</span>
           </Link>
 
           {isHomePage ? (
             <>
-              {/* Navegación Desktop */}
-              <nav className="hidden lg:flex items-center gap-1">
-                {navLinks.map((link) =>
-                  link.route ? (
-                    <Link
-                      key={link.route}
-                      to={pathFor(link.route, locale)}
-                      className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors duration-200"
-                    >
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a
-                      key={link.anchor}
-                      href={link.anchor}
-                      className="px-4 py-2 text-[13px] font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors duration-200"
-                    >
-                      {link.label}
-                    </a>
-                  )
-                )}
-              </nav>
-
-              {/* Selector de idioma + Botón CTA */}
-              <div className="hidden lg:flex items-center gap-2.5">
-                <LanguageSwitcher />
-                <Link
-                  to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
-                  className="inline-flex items-center gap-2 px-5 py-2 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(0,255,127,0.4)] transition-all duration-200"
-                >
-                  {isLoggedIn ? copy.ctaDashboard : copy.ctaLogin}
-                </Link>
+              <div className="hidden md:flex items-center gap-1">
+                {navLinks.map((link) => renderLink(link, linkClass))}
+                <LanguageSwitcher variant="plain" />
               </div>
-
-              {/* Menu Mobile Toggle */}
+              <Link to={ctaTo} className={`${ctaClass} ml-1.5`}>
+                {ctaLabel}
+              </Link>
               <button
-                className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                type="button"
+                className="md:hidden ml-0.5 grid h-9 w-9 place-items-center rounded-full text-[#b8bdd0] hover:text-white transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#00FF7F]"
                 aria-label={mobileMenuOpen ? copy.closeMenu : copy.openMenu}
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="tq-mobile-menu"
+                onClick={() => setMobileMenuOpen((open) => !open)}
               >
-                {mobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </>
           ) : (
-            <div className="flex items-center gap-2.5">
-              <LanguageSwitcher />
-              <Link
-                to={pathFor("home", locale)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 text-zinc-300 font-medium text-sm rounded-full border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors duration-200"
-              >
+            <>
+              <LanguageSwitcher variant="plain" />
+              <Link to={pathFor("home", locale)} className={`${ctaClass} ml-1`}>
                 {copy.backHome}
               </Link>
-            </div>
+            </>
           )}
-        </div>
+        </nav>
 
-        {/* Mobile Menu — expande la píldora */}
+        {/* Menú móvil: panel bajo la píldora */}
         {isHomePage && mobileMenuOpen && (
-          <nav className="lg:hidden pt-4 mt-3 border-t border-white/[0.06] flex flex-col gap-1">
-            {navLinks.map((link) =>
-              link.route ? (
-                <Link
-                  key={link.route}
-                  to={pathFor(link.route, locale)}
-                  className="text-base font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors py-2.5"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.anchor}
-                  href={link.anchor}
-                  className="text-base font-medium text-zinc-400 hover:text-[#00FF7F] transition-colors py-2.5"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              )
-            )}
-            <div className="pt-4 mt-2 border-t border-white/[0.06] space-y-3">
-              <div className="flex justify-center">
-                <LanguageSwitcher />
-              </div>
-              <Link
-                to={isLoggedIn ? "/dashboard" : pathFor("login", locale)}
-                className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-white/[0.03] border border-white/10 text-white font-semibold text-sm rounded-full hover:border-[#00FF7F]/50 hover:bg-white/[0.06] transition-colors duration-200"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {isLoggedIn ? copy.ctaDashboard : copy.ctaLogin}
-              </Link>
+          <div
+            id="tq-mobile-menu"
+            className="md:hidden absolute left-1/2 top-full mt-2 w-[min(320px,calc(100vw-24px))] -translate-x-1/2 rounded-3xl border border-white/[0.09] bg-[rgba(8,9,16,0.94)] backdrop-blur-[14px] p-3 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]"
+          >
+            <div className="flex flex-col">
+              {navLinks.map((link) =>
+                renderLink(
+                  link,
+                  "rounded-2xl px-3 py-3 text-base font-medium text-[#c9cee0] hover:bg-white/[0.04] hover:text-white transition-colors",
+                ),
+              )}
             </div>
-          </nav>
+            <div className="mt-2 flex justify-center border-t border-white/[0.06] pt-3">
+              <LanguageSwitcher variant="pill" />
+            </div>
+          </div>
         )}
       </div>
     </header>

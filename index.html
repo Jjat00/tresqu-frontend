@@ -12,7 +12,7 @@
     -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" />
     <!--
       Las etiquetas con data-seo-static las reemplaza <Seo>
       (src/components/Seo.tsx) al montar. Mantener en sync con en.html.
@@ -21,7 +21,7 @@
     <meta
       data-seo-static
       name="description"
-      content="Un equipo de agentes que registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit — todo por chat, desde WhatsApp."
+      content="Tresqu registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit, todo por chat en WhatsApp, Telegram y la web. Por ahora, gratis."
     />
     <meta name="author" content="Tresqu" />
 
@@ -30,7 +30,7 @@
     <meta
       data-seo-static
       property="og:description"
-      content="Un equipo de agentes que registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit — todo por chat, desde WhatsApp."
+      content="Tresqu registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit, todo por chat en WhatsApp, Telegram y la web. Por ahora, gratis."
     />
     <meta property="og:type" content="website" />
     <meta data-seo-static property="og:url" content="https://tresqu.com/" />
@@ -48,7 +48,7 @@
     <meta name="twitter:title" content="Tresqu — Tu equipo de agentes financieros" />
     <meta
       name="twitter:description"
-      content="Un equipo de agentes que registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit — todo por chat, desde WhatsApp."
+      content="Tresqu registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit, todo por chat en WhatsApp, Telegram y la web. Por ahora, gratis."
     />
     <meta name="twitter:image" content="https://tresqu.com/og-image.png" />
     <meta
@@ -72,8 +72,12 @@
           "name": "Tresqu",
           "url": "https://tresqu.com/",
           "logo": "https://tresqu.com/3q.png",
-          "description": "Equipo de agentes financieros con los que hablas por chat (WhatsApp, Telegram, Gmail o web): registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit.",
-          "sameAs": ["https://twitter.com/tresqu"]
+          "description": "Equipo de agentes financieros con los que hablas por chat (WhatsApp, Telegram o web): registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit.",
+          "sameAs": [
+            "https://twitter.com/tresqu",
+            "https://www.linkedin.com/company/tresqu/",
+            "https://www.facebook.com/people/Tresqu/61576223664321/"
+          ]
         },
         {
           "@type": "WebSite",
@@ -81,7 +85,9 @@
           "url": "https://tresqu.com/",
           "name": "Tresqu",
           "inLanguage": "es",
-          "publisher": { "@id": "https://tresqu.com/#organization" }
+          "publisher": {
+            "@id": "https://tresqu.com/#organization"
+          }
         },
         {
           "@type": "SoftwareApplication",
@@ -91,20 +97,43 @@
           "operatingSystem": "Web, WhatsApp, Telegram",
           "url": "https://tresqu.com/",
           "inLanguage": "es",
-          "description": "Tresqu es un equipo de agentes que registra tus gastos por texto, voz o foto, entiende tus ingresos e invierte contigo en Wallbit desde el chat, con confirmación del usuario y límites definidos por ti.",
+          "description": "Tresqu es un equipo de agentes que registra tus gastos por texto, voz, foto del recibo o Gmail, entiende tus ingresos e invierte contigo en Wallbit desde el chat, siempre con tu confirmación y límites definidos por ti. Funciona en WhatsApp, Telegram y la web, sin descargar apps.",
           "featureList": [
-            "Registro de gastos e ingresos por texto, voz y foto",
+            "Registro de gastos e ingresos por texto, voz y foto del recibo",
             "Detección automática de compras desde Gmail",
-            "Búsqueda y consultas en lenguaje natural",
-            "Operaciones en Wallbit (comprar, vender, mover fondos) con confirmación",
-            "Analista de mercado contextual (precio, evolución y fundamentales)",
-            "Perfil de riesgo inferido desde el historial real",
-            "Multi-moneda (COP, USD, EUR y otras)"
-          ]
+            "Consultas y resúmenes en lenguaje natural",
+            "Dashboard web con gráficas por categoría y exportación a Excel",
+            "Operaciones en Wallbit (comprar, vender, mover fondos) con tu confirmación",
+            "Analista de mercado contextual (precio, evolución y fundamentales), sin asesoría",
+            "Perfil de riesgo con advertencia y doble confirmación si una compra no encaja",
+            "Multi-moneda (COP, USD y otras)"
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Temporalmente, Tresqu es totalmente gratis."
+          }
         },
         {
           "@type": "FAQPage",
           "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Cuánto cuesta Tresqu?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Temporalmente, Tresqu es totalmente gratis. Solo necesitas WhatsApp, Telegram o un navegador."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Tengo que descargar una app?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Tresqu vive en el chat: le escribes por WhatsApp o Telegram, o entras desde la web. El dashboard se abre en el navegador."
+              }
+            },
             {
               "@type": "Question",
               "name": "¿Tresqu maneja mi dinero?",
@@ -115,10 +144,10 @@
             },
             {
               "@type": "Question",
-              "name": "¿Mi API key está segura?",
+              "name": "¿Mi API key de Wallbit está segura?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Sí. La ciframos con encriptación Fernet en el backend. Nunca sale al cliente, nunca aparece en logs y puedes revocarla cuando quieras."
+                "text": "Sí. La ciframos con AES-128 en nuestro servidor. Nunca llega a tu navegador ni aparece en los registros, y puedes revocarla cuando quieras."
               }
             },
             {
@@ -126,15 +155,7 @@
               "name": "¿Cómo conecto mi cuenta de Wallbit?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Entras a tu dashboard de Tresqu, vas a Mi perfil y pegas tu API key. Toma un minuto. Si aún no tienes cuenta Wallbit, abres una y luego la conectas."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "¿Funciona fuera de USD?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wallbit opera principalmente en USD, con saldos en otras monedas según tu cuenta. El catálogo cubre acciones, ETFs y bonos globales."
+                "text": "Entras a tu dashboard de Tresqu, vas a tu perfil y pegas tu API key. Toma un minuto. Si aún no tienes cuenta en Wallbit, abres una y luego la conectas."
               }
             }
           ]
@@ -152,37 +173,54 @@
         Mantener sincronizado con el copy de la landing (src/i18n/copy/),
         con /llms.txt y con su espejo inglés en en.html.
       -->
-      <main style="background:#0a0a0a;color:#e5e5e5;min-height:100vh;margin:0;padding:48px 24px;font-family:system-ui,sans-serif;line-height:1.6;max-width:760px;margin:0 auto;">
-        <h1 style="color:#fff;">Sabe cómo vives. Invierte como eres.</h1>
+      <main style="background:#010208;color:#c9cee0;min-height:100vh;margin:0 auto;padding:48px 24px;font-family:system-ui,sans-serif;line-height:1.6;max-width:760px;">
+        <h1 style="color:#fff;">A un solo mensaje de… tu plata en orden</h1>
         <p>
-          <strong>Tresqu</strong> es un equipo de agentes financieros con los que
-          hablas por chat (WhatsApp, Telegram, Gmail o web). Registra tus gastos,
-          entiende tus ingresos y usa todo ese contexto para invertir contigo en
-          <a href="https://www.wallbit.io/es" style="color:#00FF7F;">Wallbit</a>.
+          <strong>Tresqu</strong> registra tus gastos, entiende tus ingresos e
+          invierte contigo en
+          <a href="https://www.wallbit.io/es" style="color:#00FF7F;">Wallbit</a>,
+          todo por chat en WhatsApp, Telegram y la web. Sin descargar ninguna
+          app. Temporalmente, Tresqu es totalmente gratis.
         </p>
-        <h2>El equipo de agentes</h2>
-        <ul>
-          <li><strong>Gastos e ingresos:</strong> registra, clasifica cada movimiento, arma resúmenes del mes y encuentra patrones en tu historial.</li>
-          <li><strong>Inversiones (Wallbit):</strong> prepara compras, ventas y movimientos de fondos. Nunca ejecuta sin tu confirmación.</li>
-          <li><strong>Analista de mercado:</strong> trae precio, evolución y fundamentales de una acción o ETF y los cruza con tu perfil de riesgo y tu portafolio. Da contexto, no consejos.</li>
-          <li><strong>Perfil de riesgo:</strong> mide tu tolerancia real desde tu historial, no un cuestionario, y frena las compras que no encajan contigo.</li>
-        </ul>
-        <h2>Cómo registras</h2>
-        <ul>
-          <li><strong>Por texto, voz o foto:</strong> escribes como hablas, mandas un audio o una foto del recibo y Tresqu entiende, extrae y categoriza al instante.</li>
-          <li><strong>Gmail automático:</strong> conectas tu correo y detecta compras en tus emails sin que escribas nada.</li>
-          <li><strong>Búsqueda por significado:</strong> preguntas en lenguaje natural, sin filtros ni categorías exactas.</li>
-        </ul>
-        <h2>Inversiones con Wallbit</h2>
         <p>
-          Tu dinero vive en Wallbit, no en Tresqu. Desde el chat puedes comprar y
-          vender acciones, ETFs y bonos, aportar a tus Chests, mover fondos,
-          activar o suspender tu tarjeta y consultar saldos y posiciones en vivo.
-          Tresqu solo propone operaciones que tú confirmas, con límites que tú
-          defines. Las API keys se cifran con encriptación Fernet y nunca salen al cliente.
+          <a href="https://wa.me/573116534337?text=Hola%20Tresqu" style="color:#00FF7F;">Empezar en WhatsApp</a> ·
+          <a href="/login" style="color:#00FF7F;">Entrar al dashboard</a> ·
+          <a href="https://t.me/tresqu_bot" style="color:#00FF7F;">Telegram</a>
         </p>
-        <p>Multi-moneda: COP, USD, EUR y otras monedas principales, con conversiones en vivo.</p>
-        <p><a href="/funciones" style="color:#00FF7F;">Todas las funciones</a> · <a href="/privacy-policy" style="color:#00FF7F;">Política de privacidad</a> · <a href="/legal-notice" style="color:#00FF7F;">Aviso legal</a></p>
+        <h2>Llevar tus cuentas a mano te cuesta tiempo y plata</h2>
+        <ul>
+          <li><strong>0 apps que descargar:</strong> Tresqu vive en el chat que ya usas. Le escribes, le mandas un audio o una foto del recibo, y él registra y categoriza.</li>
+          <li><strong>$0, por ahora:</strong> temporalmente, Tresqu es totalmente gratis. Si conectas Gmail, tus comprobantes de compra se registran solos.</li>
+          <li><strong>100 % de las órdenes confirmadas por ti:</strong> antes de preparar una orden en Wallbit, Tresqu cruza tu gasto, tu ingreso y tu perfil de riesgo. Si una compra no encaja, te avisa y pide doble confirmación.</li>
+        </ul>
+        <h2>Escríbele. Háblale. Tómale foto. Invierte.</h2>
+        <p>Ejemplos ilustrativos de cómo registra Tresqu:</p>
+        <ul>
+          <li><strong>Escríbele:</strong> «anoche pagué 20k de cena» → $20.000 COP · Restaurantes.</li>
+          <li><strong>Háblale:</strong> un audio, «almuerzo con el equipo, 18 mil» → $18.000 COP · Alimentación.</li>
+          <li><strong>Mándale foto del recibo:</strong> lee el total y el comercio → $47.500 COP · Mercado.</li>
+          <li><strong>O no hagas nada:</strong> conectas Gmail y la compra se registra sola → $32.900 COP · Compras.</li>
+        </ul>
+        <p>
+          En el dashboard web ves tus gastos e ingresos por categoría, comparas
+          meses y exportas a Excel. Con Wallbit (acciones y ETFs de EE. UU., en
+          USD) Tresqu prepara compras y ventas que solo se ejecutan cuando tú
+          confirmas: dinero real que sigue en Wallbit, no en Tresqu. Tu llave de
+          Wallbit se guarda cifrada con AES-128. El analista de mercado da
+          contexto, no asesoría.
+        </p>
+        <h2>Preguntas frecuentes</h2>
+        <h3>¿Cuánto cuesta Tresqu?</h3>
+        <p>Temporalmente, Tresqu es totalmente gratis. Solo necesitas WhatsApp, Telegram o un navegador.</p>
+        <h3>¿Tengo que descargar una app?</h3>
+        <p>No. Tresqu vive en el chat: le escribes por WhatsApp o Telegram, o entras desde la web. El dashboard se abre en el navegador.</p>
+        <h3>¿Tresqu maneja mi dinero?</h3>
+        <p>No. Tu dinero vive en Wallbit. Tresqu solo propone acciones que tú confirmas, con límites que tú defines.</p>
+        <h3>¿Mi API key de Wallbit está segura?</h3>
+        <p>Sí. La ciframos con AES-128 en nuestro servidor. Nunca llega a tu navegador ni aparece en los registros, y puedes revocarla cuando quieras.</p>
+        <h3>¿Cómo conecto mi cuenta de Wallbit?</h3>
+        <p>Entras a tu dashboard de Tresqu, vas a tu perfil y pegas tu API key. Toma un minuto. Si aún no tienes cuenta en Wallbit, abres una y luego la conectas.</p>
+        <p><a href="/funciones" style="color:#00FF7F;">Todas las funciones</a> · <a href="/blog/" style="color:#00FF7F;">Blog</a> · <a href="/privacy-policy" style="color:#00FF7F;">Política de privacidad</a> · <a href="/legal-notice" style="color:#00FF7F;">Aviso legal</a> · <a href="/en" hreflang="en" style="color:#00FF7F;">English</a></p>
         <nav lang="es" aria-label="Explora Tresqu">
           <a href="/sobre-tresqu/" hreflang="es">Sobre Tresqu</a> · <a href="/asistente-financiero-ia/" hreflang="es">Asistente financiero con IA</a> · <a href="/finanzas-personales-ia/" hreflang="es">Finanzas personales con IA</a> · <a href="/control-gastos-whatsapp/" hreflang="es">Control de gastos por WhatsApp</a> · <a href="/app-finanzas-personales-colombia/" hreflang="es">Finanzas personales en Colombia</a> · <a href="/inversiones-con-inteligencia-artificial/" hreflang="es">Inversiones con inteligencia artificial</a>
         </nav>

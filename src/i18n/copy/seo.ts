@@ -12,12 +12,12 @@ export const seoCopy: Record<RouteKey, Dict<PageSeo>> = {
     es: {
       title: "Tresqu — Tu equipo de agentes financieros",
       description:
-        "Un equipo de agentes que registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit — todo por chat, desde WhatsApp.",
+        "Tresqu registra tus gastos, entiende tus ingresos e invierte contigo en Wallbit, todo por chat en WhatsApp, Telegram y la web. Por ahora, gratis.",
     },
     en: {
       title: "Tresqu — Your team of financial agents",
       description:
-        "A team of agents that logs your expenses, understands your income, and invests with you on Wallbit — all through chat, from WhatsApp.",
+        "Tresqu logs your expenses, understands your income, and invests with you on Wallbit, all through chat on WhatsApp, Telegram, and the web. Free for now.",
     },
   },
   features: {

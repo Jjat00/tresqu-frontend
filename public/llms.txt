@@ -14,7 +14,7 @@ Tresqu es un asistente financiero con IA que reúne gastos, ingresos e inversion
 
 ## Cómo empezar
 
-Puedes empezar registrando movimientos por chat sin conectar tu banco. Gmail y Wallbit son integraciones opcionales. La conexión de Wallbit se configura desde el perfil de Tresqu.
+Temporalmente, Tresqu es totalmente gratis y no hay que descargar ninguna app. Puedes empezar registrando movimientos por chat sin conectar tu banco. Gmail y Wallbit son integraciones opcionales. La conexión de Wallbit se configura desde el perfil de Tresqu.
 
 Las conversaciones y cifras de la landing son ejemplos ilustrativos, no resultados de usuarios ni recomendaciones de inversión. La política de privacidad detalla el tratamiento de movimientos, mensajes y datos de las integraciones.
 
@@ -55,7 +55,7 @@ Tresqu is an AI financial assistant that brings together expenses, income, and i
 
 ### Getting started
 
-Start by logging transactions through chat without connecting your bank. Gmail and Wallbit are optional integrations. Set up your Wallbit connection from your Tresqu profile.
+For now, Tresqu is completely free and there's no app to download. Start by logging transactions through chat without connecting your bank. Gmail and Wallbit are optional integrations. Set up your Wallbit connection from your Tresqu profile.
 
 Conversations and figures on the landing page are illustrative examples, not user results or investment recommendations. The privacy policy details how transactions, messages, and integration data are processed.
 
