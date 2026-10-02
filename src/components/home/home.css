@@ -32,6 +32,9 @@ html:has(.tq-home) {
 .tq-home section[id] {
   scroll-margin-top: 80px;
 }
+.tq-home :is(h1, h2, h3, h4) {
+  font-family: inherit; /* el base del SPA pone Syne en los headings */
+}
 .tq-home b {
   color: #fff;
   font-weight: 500;
