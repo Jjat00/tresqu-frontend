@@ -24,6 +24,7 @@ import { useAssetSearch } from "@/hooks/useAssetSearch";
 import type { AssetSearchResult } from "@/types/wallbit";
 
 import AssetDetailModal from "./AssetDetailModal";
+import AssetLogo from "./AssetLogo";
 
 /** The category buckets shown as tabs. The first one loads by default on mount. */
 const CATEGORY_TABS: Array<{ value: string; label: string }> = [
@@ -189,20 +190,7 @@ const AssetExplorer = () => {
                       >
                         <TableCell>
                           <div className="flex items-center gap-2.5">
-                            {asset.logo_url ? (
-                              <img
-                                src={asset.logo_url}
-                                alt=""
-                                width={28}
-                                height={28}
-                                loading="lazy"
-                                className="h-7 w-7 shrink-0 rounded-full bg-white/5 object-contain"
-                              />
-                            ) : (
-                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/5 text-[10px] font-semibold text-muted-foreground">
-                                {asset.symbol.slice(0, 3)}
-                              </span>
-                            )}
+                            <AssetLogo symbol={asset.symbol} fallbackSrc={asset.logo_url} size={28} />
                             <span className="font-semibold">{asset.symbol}</span>
                           </div>
                         </TableCell>
